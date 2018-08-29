@@ -1,0 +1,8 @@
+using Intrusion.Common;
+
+// Fires when a JIP player is connecting.
+addMissionEventHandler ["PlayerConnected",
+{
+	// Update all client's invitation actions.
+	["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+}];

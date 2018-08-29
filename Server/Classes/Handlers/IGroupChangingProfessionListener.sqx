@@ -1,0 +1,22 @@
+/*
+ * Name:	IGroupChangingProfessionListener
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * An interface implemented by objects that wants to react each time when groups are changing their profession.
+ */
+namespace Intrusion.Server
+{
+	public interface IGroupChangingProfessionListener
+	{
+		// Gets the side of the group that will react to the profession change.
+		property Side Side { get; };
+		
+		// Called when a group is changing its profession.
+		// _group (Group): The group changing its profession.
+		// _professionType (ProfessionType): The group's new profession type.
+		method OnGroupChangingProfession;
+	};
+};

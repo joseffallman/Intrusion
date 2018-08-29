@@ -1,0 +1,36 @@
+/*
+ * Name:    MessageHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all messages that can be shown on screen for the player.
+ */
+namespace Intrusion.Client
+{
+	public class ClientMessageHandler
+	{
+        // Shows a message as a hint.
+        // _message (String): The message to be shown.
+        public static method ShowHint {
+		    params ["_message" as String];
+            hint _message;
+		};
+
+        // Shows a message to the user.
+        // _message (String): The message to be shown.
+        public static method ShowMessage {
+		    params ["_message" as String];
+		    
+            titleText [_message, "PLAIN"];
+		};
+
+        // Shows a sub title to the user.
+        // _message (String): The message to be shown.
+        public static method ShowSubTitle {
+		    params ["_message" as String];
+		    
+            titleText [_message, "PLAIN DOWN"];
+		};
+	};
+};

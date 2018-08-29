@@ -1,0 +1,36 @@
+/*
+ * Name:	SideMarkersInfo
+ * Date:	2017-11-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class modeling config information for a side.
+ */
+namespace Intrusion.Server
+{
+	public class SideMarkersInfo
+	{
+		// Creates a SideMarkersInfo object.
+		public constructor {
+			params ["_side" as Side, "_baseMarkerName" as String, "_carParkMarkerName" as String, "_flagTexture" as String];
+			
+			_self.Side = _side;
+			_self.BaseMarkerName = _baseMarkerName;
+			_self.CarParkMarkerName = _carParkMarkerName;
+			_self.FlagTexture = _flagTexture;
+		};
+		
+		// Gets the side.
+		public property Side { get; private set; };
+		
+		// Gets the side's base marker name.
+		public property String BaseMarkerName { get; private set; };
+		
+		// Gets the side's car park marker name.
+		public property String CarParkMarkerName { get; private set; };
+		
+		// Gets the side's flag texture path.
+		public property String FlagTexture { get; private set; };
+	};
+};

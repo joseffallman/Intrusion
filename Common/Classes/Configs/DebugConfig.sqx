@@ -1,0 +1,32 @@
+/*
+ * Name:    DebugConfig
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all necessary information for debug settings.
+ */
+namespace Intrusion.Common
+{
+	public class DebugConfig
+	{
+		public static method Init {
+			_self.InDebugMode = true;
+			_self.ShowTutorials = true;
+			_self.LogLevelFile = LogLevel.Debug;
+			_self.LogLevelScreen = LogLevel.Info;
+		};
+	
+		// Gets whether the mission is in debug mode or not.
+		public static property Boolean InDebugMode { get; private set; };
+		
+		// Gets whether the mission shows tutorials or not
+		public static property Boolean ShowTutorials { get; private set; };
+		
+		// Gets the current log level.
+		public static property LogLevel LogLevelFile { get; private set; };
+		
+		// Gets the current log level.
+		public static property LogLevel LogLevelScreen { get; private set; };
+	};
+};

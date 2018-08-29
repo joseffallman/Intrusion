@@ -1,0 +1,53 @@
+/*
+ * Name:	PublicVariableHandler
+ * Date:	2017-11-30
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Encapsulates all global variable handling and keeps its global properties persistent and at sync 
+ * over the network.
+ */ 
+namespace Intrusion.Common
+{
+	public class PublicVariableHandler
+	{
+		// Sets and broadcasts an array of resource locations across the network.
+		// _resourceLocations (Array): An array of resource locations.
+		public static method BroadcastResourceLocations {
+			params ["_resourceLocations" as Array /* of ResourceLocation */];
+			INT_Public_resourceLocations = _resourceLocations;
+			publicVariable "INT_Public_resourceLocations";
+		};
+		
+		// Gets all resource locations from the public network synchronized variable.
+		public static method Array GetResourceLocations { 
+			INT_Public_resourceLocations
+		};
+		
+		// Gets whether the resource locations has been set on the current machine or not.
+		public static method Boolean ResourceLocationsHasValue {
+			!isNil "INT_Public_resourceLocations"
+		};
+
+/*
+		// Sets and broadcasts an array of resource locations across the network.
+		// _resourceLocations (Array): An array of resource locations.
+		public static method BroadcastPlayerGroupCollection {
+			params ["_playerGroups" as PlayerGroupCollection];			
+			INT_Public_playerGroupCollection = _playerGroups;
+			publicVariable "INT_Public_playerGroupCollection";
+		};
+		
+		// Gets all resource locations from the public network synchronized variable.
+		public static method PlayerGroupCollection GetPlayerGroupCollection {
+			INT_Public_playerGroupCollection
+		};
+		
+		// Gets whether the player group collection has been set on the current machine or not.
+		public static method Boolean PlayerGroupCollectionHasValue {
+			!isNil "INT_Public_playerGroupCollection"
+		};
+*/
+	};
+};

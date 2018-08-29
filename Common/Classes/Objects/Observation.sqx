@@ -1,0 +1,40 @@
+/*
+ * Name:	Observation
+ * Date:	2018-01-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models observations made by units on the field. An observation is always mapped to a
+ * marker on the map (not necessarily visible to everyone though).
+ */
+namespace Intrusion.Common
+{
+	public class Observation
+	{
+		// Creates an Observation object.
+		// _name (String): The unique and persistent name of the observation.
+		// _position (Array): The position of the observation.
+		// _side (Side): The side that the observation applies to. civilian if it applies to all sides.
+		public constructor {
+			params ["_name" as String, "_position" as Array, "_side" as Side, "_unit" as Object];
+			
+			_self.Name = _name;
+			_self.Position = _position;
+			_self.Side = _side;
+			_self.Unit = _unit;
+		};
+		
+		// Gets the unique and persistent Name of the observation.
+		public property String Name { get; private set; };
+		
+		// Gets the position of the observation.
+		public property Array Position { get; private set; };
+		
+		// Gets the side that the observation applies to. civilian if it applies to all sides.
+		public property Side Side { get; private set; };
+		
+		// Gets the unit associated with the observation.
+		public property Object Unit { get; private set; };
+	};
+};

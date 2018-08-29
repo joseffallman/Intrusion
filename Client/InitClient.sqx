@@ -1,0 +1,40 @@
+call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientMessageHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\IntrusionMenuHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientResourceLocationHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ProfessionDialogHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientGroupHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapMarkerHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\CameraHandler.sqx";
+
+using Intrusion.Client;
+
+waitUntil { player == player };
+
+// Configs
+call TutorialConfig.Init;
+
+// Handlers
+call TutorialHandler.Init;
+call ProfessionDialogHandler.Init;
+call IntrusionMenuHandler.Init; // Adds the intrusion menu
+call ClientResourceLocationHandler.Init; // Initialize actions on all flags
+
+// Create the briefing
+call BriefingHandler.CreateBriefing;
+
+// Add invite player actions on all possible players
+call GroupActionHandler.ResetInvitePlayerActions;
+
+// Show the Welcome tutorial
+[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+
+if (didJIP) then {
+	
+};

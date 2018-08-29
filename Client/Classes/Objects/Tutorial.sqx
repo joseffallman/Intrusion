@@ -1,0 +1,39 @@
+/*
+ * Name:    Tutorial
+ * Date:    2017-02-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that models a tutorial, with a header and text.
+ */
+namespace Intrusion.Client
+{
+	public class Tutorial
+	{
+        // Creates a Tutorial object.
+        // _type (TutorialType):   The tutorial type. Applies to a value in TutorialType.
+        // _header (String): The tutorial header.
+        // _text (String):   The tutorial text.
+        public constructor {
+        	params ["_type" as TutorialType, "_header" as String, "_text" as String];
+        	
+        	_self.Type = _type;
+        	_self.Header = _header;
+        	_self.Text = _text;
+        	_self.IsTurnedOff = false;
+		};
+		
+		// Gets the tutorial type. Applies to a value in TutorialType.
+		public property TutorialType Type { get; private set; };
+		
+		// Gets the tutorial header.
+		public property String Header { get; private set; };
+		
+		// Gets the tutorial text.
+		public property String Text { get; private set; };
+		
+		// Gets whether the tutorial is turned off or not.
+		public property Boolean IsTurnedOff { get; set; };
+	};
+};

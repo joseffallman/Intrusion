@@ -1,0 +1,50 @@
+/*
+ * Name:	Remote
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all remote execution.
+ */
+using Intrusion.Client;
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Common
+{
+	public class Remote
+	{
+		public static method Invoke {
+			params ["_methodFullName" as String, ["_parameter" as Any, []]];
+        	["Remote.Invoke"] call LogHandler.Debug;
+
+			[_methodFullName, _parameter] remoteExec ["Intrusion_Common_Remote_Recieve", RemoteTargetOptions.All];
+		};
+		
+		public static method Recieve {
+			params ["_methodFullName" as String, "_parameters" as Any];
+        	[(str _this) + " Remote.Recieve"] call LogHandler.Debug;
+		
+			if (isServer) then {
+				switch (_methodFullName) do {
+					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
+					case "GroupHandler.OnPlayerAddedToGroup": { _parameters spawn GroupHandler.OnPlayerAddedToGroup; };
+					case "GroupHandler.SetGroupProfession": { _parameters spawn GroupHandler.SetGroupProfession; };
+				};
+			};
+			
+			if (!isDedicated) then {
+				switch (_methodFullName) do {
+					case "ClientResourceLocationHandler.UpdateResourceLocations": { _parameters spawn ClientResourceLocationHandler.UpdateResourceLocations; };
+					case "GroupActionHandler.ResetInvitePlayerActions": { _parameters spawn GroupActionHandler.ResetInvitePlayerActions; };
+					case "ClientGroupHandler.OnGroupProfessionChanged": { _parameters spawn ClientGroupHandler.OnGroupProfessionChanged };
+					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
+					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
+					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
+					case "CameraHandler.PlayEndMission": { _parameters spawn CameraHandler.PlayEndMission };
+				};
+			};
+		};
+	};
+};

@@ -1,0 +1,43 @@
+call compile preprocessFileLineNumbers "Server\Classes\Configs\MatchConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\MapMarkersConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkersInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroup.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroupCollection.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\GroupHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\MissionEngine.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\WeaponEngine.sqx";
+call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+#region Server Classes
+
+/* Configs */
+call MatchConfig.Init;
+call MapMarkersConfig.Init;
+call VehicleClassNamesConfig.Init;
+call ProVehiclesConfig.Init;
+call WeaponConfig.Init;
+
+/* Handlers */
+call GroupHandler.Init;
+call VehicleHandler.Init;
+call ResourceLocationHandler.Init;
+
+#endregion
+
+// Start Intrusion!
+call MissionEngine.Start;

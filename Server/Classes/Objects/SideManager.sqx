@@ -1,0 +1,39 @@
+/*
+ * Name:    SideHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Manages the resource collection for a side.
+ */
+namespace Intrusion.Server
+{
+	public class SideManager
+	{
+		private fields [
+			"_mResourceBook" as ResourceBook,
+			"_mResourceCollector" as ResourceCollector,
+			"_productionManager" as ProductionManager,
+			"_scientist" as Scientist];
+		
+        // Creates a SideHandler object.
+        // Parameter(s):
+        // _side (Side): The side to handle.
+        public constructor {
+		    params ["_side" as Side];
+            
+            _self.Side = _side;
+            
+            _mResourceBook = new ResourceBook;
+            _mResourceCollector = [_side, _mResourceBook] new ResourceCollector;
+		};
+		
+		// Gets the side of the side handler.
+		public property Side Side { get; private set; };
+		
+		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
+		public method PerformTurn {
+			call _mResourceCollector.AquireResourcesFromMap;
+		};
+	};
+};

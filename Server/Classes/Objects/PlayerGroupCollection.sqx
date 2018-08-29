@@ -1,0 +1,26 @@
+/*
+ * Name:	GroupProfessionCollection
+ * Date:	2017-11-30
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains a collection that contains all groups and their professions..
+ */
+namespace Intrusion.Server
+{
+	public class PlayerGroupCollection
+	{
+		private fields ["_playerGroups" as Array /* of GroupProfession */];
+	
+		// Creates a GroupProfessionCollection object.
+		public constructor {
+			_playerGroups = [];
+		};
+		
+		// Adds a group profession to the collection.
+		// _groupProfession (GroupProfession): Group profession to add.
+		public method Add {
+		};
+	};
+};

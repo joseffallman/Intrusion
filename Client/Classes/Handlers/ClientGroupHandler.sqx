@@ -1,0 +1,30 @@
+/*
+ * Name:	ClientGroupHandler
+ * Date:	2017-12-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all about groups on the client.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class ClientGroupHandler
+	{
+		// Notifies the members in affected group that their profession has changed.
+		// Called from server when a group's profession has changed.
+		// _group (Group): The group that has changed profession.
+		// _professionType (ProfessionType): The new profession type.
+		public static method OnGroupProfessionChanged {
+			params ["_group" as Group, "_professionType" as ProfessionType];
+			[(str _this) + " ClientGroupHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
+			
+			if (_group == group player) then {
+				call ProfessionDialogHandler.CloseDialog;
+				["Your group now belongs to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
+			};
+		};
+	};
+};

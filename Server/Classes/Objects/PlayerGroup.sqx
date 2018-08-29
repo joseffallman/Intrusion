@@ -1,0 +1,36 @@
+/*
+ * Name:	PlayerGroup
+ * Date:	2017-11-30
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains a group and its relevant information.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class PlayerGroup
+	{
+		// Creates a GroupProfession object.
+		// _group (Group): The group.
+		// _professionType (ProfessionType): The group's profession type.
+		public constructor {
+			params ["_group" as Group, "_profession" as ProfessionType];
+			
+			_self.Group = _group;
+			_self.Profession = _profession;
+			_self.Vehicles = [];
+		};
+		
+		// Gets the group.
+		public property Group Group { get; private set; };
+		
+		// Gets the group profession.
+		public property ProfessionType Profession { get; private set; };
+		
+		// Gets the vehicles associated with the group.
+		public property Array Vehicles { get; private set; };
+	};
+};

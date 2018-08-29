@@ -1,0 +1,13 @@
+enableSaving [false, false];
+
+call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
+
+sleep 1;
+
+if (isServer) then {
+	execVM "Server\InitServer.sqx";
+};
+
+if (!isDedicated) then {
+	execVM "Client\InitClient.sqx";
+};

@@ -1,0 +1,21 @@
+/*
+ * Name:	LogLevel
+ * Date:	2017-11-23
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum for different log levels.
+ */
+namespace Intrusion.Common
+{
+	public enum LogLevel
+	{
+		Off = 0,
+		Fatal = 1,
+		Error = 2,
+		Warning = 3,
+		Info = 4,
+		Debug = 5,
+	};
+};

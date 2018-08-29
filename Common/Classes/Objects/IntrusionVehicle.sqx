@@ -1,0 +1,41 @@
+/*
+ * Name:	IntrusionVehicle
+ * Date:	2017-11-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all necesserary information about a vehicle spawned by the Intrusion mission.
+ */
+namespace Intrusion.Common
+{
+	public class IntrusionVehicle
+	{
+		// Creates an IntrusionVehicle object.
+		public constructor {
+			params ["_vehicle" as Object, "_side" as Side, "_ownerProfession" as ProfessionType, "_ownerGroup" as Group, "_cost" as Scalar];
+			
+			_self.Vehicle = _vehicle;
+			_self.Side = _side;
+			_self.OwnerProfession = _ownerProfession;
+			_self.OwnerGroup = _ownerGroup;
+			_self.Cost = _cost;
+		};
+		
+		// Gets the actual vehicle object.
+		public property Object Vehicle { get; private set; };
+		
+		// Gets the side for which the vehicle was spawned.
+		public property Side Side { get; private set; };
+		
+		// Get the profession type that is authorized to manouver the vehicle.
+		public property ProfessionType OwnerProfession { get; private set; };
+		
+		// Gets the group that is authorized to manouver the vehicle.
+		public property Group OwnerGroup { get; private set; };
+		
+		// Gets the vehicle's production cost.
+		public property Scalar Cost { get; private set; };
+	};
+};
+

@@ -1,0 +1,50 @@
+/*
+ * Name:	ResourceLocation
+ * Date:	2017-11-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that models a resource location on the map.
+ */
+namespace Intrusion.Common
+{
+	public class ResourceLocation
+	{
+		// Creates a ResourceLocation object and puts a resource on the map.
+		public constructor {
+			params ["_markerName" as String, "_facilityType" as ResourceFacility];
+			[str _this + " ResourceLocation.constructor"] call LogHandler.Debug;
+			
+			_self.MarkerName = _markerName;
+			_self.Text = markerText _markerName;
+			_self.Side = civilian;
+			_self.FacilityType = _facilityType;
+			_self.IsWinnersLocation = false;
+			
+			// Create the flag pole on the map
+			private _flag = "Flag_Green_F" createVehicle getMarkerPos _markerName;
+			_flag setVariable ["MarkerName", _markerName, true];
+			_flag setVariable ["Side", civilian, true];
+			_self.Flag = _flag;
+		};
+
+		// Gets the marker name.
+		public property String MarkerName { get; private set; };
+		
+		// Gets the marker's description text.
+		public property String Text { get; private set; };
+		
+		// Gets the location's flag object.
+		public property Object Flag { get; private set; };
+		
+		// Gets or sets the location's side.
+		public property Side Side { get; set; };
+		
+		// Gets the location's facility type.
+		public property ResourceFacility FacilityType { get; private set; };
+		
+		// Gets or sets whether the resource location is the winner's location.
+		public property IsWinnersLocation { get; set; };
+	};
+};

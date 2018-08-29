@@ -1,0 +1,147 @@
+/*
+ * Name:	ResourceLocationHandler
+ * Date:	2017-11-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handler for all resource locations.
+ */
+using Sqx.Markers;
+using Intrusion.Common;
+ 
+namespace Intrusion.Server
+{
+	public class ResourceLocationHandler
+	{
+		private static fields ["_mResourceLocations" as Array];
+		
+		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
+		public static method Init {
+			_mResourceLocations = [];
+			_self.FactoryLocationsCount = 0;
+			_self.TechLabLocationsCount = 0;
+			
+			call _self.AquireAllResourceLocations;	
+		};
+		
+		// Gets the location selected as the Winner's location.
+		public static property ResourceLocation WinnersLocation { get; private set; };
+		
+		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
+		// resource locations for them all.
+		private static method AquireAllResourceLocations {
+			private ["_number" as Scalar];
+			
+			// Find all factory locations
+			_number = 1;
+			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do {
+				_mResourceLocations pushBack ["Factory" + str _number, ResourceFacility.Factory] new ResourceLocation;
+				_number = _number + 1;
+			};
+			
+			_self.FactoryLocationsCount = _number - 1;
+			
+			// Find all techlab locations
+			_number = 1;
+			while { ["TechLab" + str _number] call MarkerHelper.MarkerExists } do {
+				_mResourceLocations pushBack ["TechLab" + str _number, ResourceFacility.TechLab] new ResourceLocation;
+				_number = _number + 1;
+			};
+			
+			_self.TechLabLocationsCount = _number - 1;
+			
+			// Set winner's location
+			private _winnersIndex = floor random count _mResourceLocations;
+			_self.WinnersLocation = _mResourceLocations select _winnersIndex;
+			_self.WinnersLocation.IsWinnersLocation = true;
+			_self.WinnersLocation.MarkerName setMarkerType MapMarkersConfig.WinnersLocationMarkerType;
+			
+			call _self.BroadcastResourceLocations;
+		};
+		
+		// Broadcasts all resource locations to the clients.
+		public static method BroadcastResourceLocations {
+			[_mResourceLocations] call PublicVariableHandler.BroadcastResourceLocations;
+			
+			// Tell the clients to update them.
+			["ClientResourceLocationHandler.UpdateResourceLocations", [_mResourceLocations]] call Remote.Invoke;
+		};
+		
+		// Gets a resource location from the internal list of flag locations.
+		// _markerName (String): Name of the marker associated with the flag location.
+		// Returns (ResourceLocation): A flag location. classNull of no flag location was found.
+		private static method ResourceLocation GetResourceLocation {
+			params ["_markerName" as String];
+			scopeName "main";
+			
+			{
+				if (_x.MarkerName == _markerName) then {
+					_x breakOut "main";
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+			
+			classNull
+		};
+		
+		// Sets a new owner for a resource location and sends resource location updates to clients.
+		// _markerName (String): Name of the marker associated with the flag.
+		// _side (Side): The side of the player that captured the flag.
+		public static method SetNewFlagOwner {
+			params ["_markerName" as String, "_side" as Side];
+			private ["_resourceLocation" as ResourceLocation];
+			private ["_sideConfigInfo" as SideMarkersInfo];
+		
+			_resourceLocation = [_markerName] call _self.GetResourceLocation;
+			
+			if (!isNull _resourceLocation) then {
+				_resourceLocation.Side = _side;
+				
+				// Update the flag texture
+				_sideConfigInfo = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+				(_resourceLocation.Flag) setFlagTexture _sideConfigInfo.FlagTexture;
+					
+				call _self.BroadcastResourceLocations;
+//				["ClientResourceLocationHandler.UpdateMarkerColor", [_markerName, _side]] call Remote.Invoke;
+			};
+		};
+		
+		// Gets the number of factory locations. 
+		public static property Scalar FactoryLocationsCount { get; private set; };
+		
+		// Gets the number of tech lab locations. 
+		public static property Scalar TechLabLocationsCount { get; private set; };
+		
+		// Get the number of factories owned by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of factories owned by the side.
+		public static method Scalar GetFactoriesCountBySide {
+			params ["_side" as Side];
+			private _count = 0;
+			
+			{
+				if (_x.Side == _side) then {
+					_count = _count + 1;
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+		
+			_count
+		};
+		
+		// Get the number of tech labs ownd by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of tech labs owned by the side.
+		public static method Scalar GetTechLabsCountBySide {
+			params ["_side" as Side];
+			private _count = 0;
+			
+			{
+				if (_x.Side == _side) then {
+					_count = _count + 1;
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+		
+			_count
+		};
+	};
+};

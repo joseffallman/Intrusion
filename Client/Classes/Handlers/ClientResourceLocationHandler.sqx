@@ -1,0 +1,72 @@
+/*
+ * Name:	ClientResourceLocationHandler
+ * Date:	2017-11-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all about resource locations for the current client.
+ */
+using Intrusion.Common;
+ 
+namespace Intrusion.Client
+{
+	public class ClientResourceLocationHandler
+	{
+		// Called locally when a player captures a flag.
+		private static method OnActionCaptureFlag {
+			params ["_flag" as Object];			
+			[str _this + " ClientResourceLocationHandler.OnActionCaptureFlag"] call LogHandler.Debug;
+			
+			private _markerName = _flag getVariable ["MarkerName", ""];
+			
+			["ResourceLocationHandler.SetNewFlagOwner", [_markerName, playerSide]] call Remote.Invoke;
+		};
+	
+		// Initializes the resource location actions for the first time.
+		private static method DoInitResourceLocations {
+			["ClientResourceLocationHandler.DoInitResourceLocations"] call LogHandler.Debug;
+			waitUntil { call PublicVariableHandler.ResourceLocationsHasValue };
+			[call PublicVariableHandler.GetResourceLocations] call _self.UpdateResourceLocations;
+		};
+		
+		// Initializes the resource location actions for the first time.
+		public static method Init {
+			[] spawn _self.DoInitResourceLocations;
+		};
+		
+		// Updates the resource location actions for the player.
+		// _resourceLocations (Array): An array containing the resource locations.
+		public static method UpdateResourceLocations {
+			params ["_resourceLocations" as Array];
+			[str _this + " ClientResourceLocationHandler.UpdateResourceLocations"] call LogHandler.Debug;
+			
+			{
+				removeAllActions _x.Flag;
+				
+				if (_x.Side != playerSide) then {
+					(_x.Flag) addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }]; // TODO: addAction command lost in compilation if _x.Flag stands without parenthesis.
+				};
+				
+				[_x.MarkerName, _x.Side] call _self.UpdateMarkerColor;
+			} foreach _resourceLocations as ResourceLocation;
+		};
+		
+		// Updates the marker color with the color reflecting the current side.
+		// _markerName (String): The name of the flag marker.
+		// _ownerSide (Side): The side owning the marker.
+		private static method UpdateMarkerColor {
+			params ["_markerName" as String, "_ownerSide" as Side];
+			[str _this + " ClientResourceLocationHandler.UpdateMarkerColor"] call LogHandler.Debug;
+			
+			if (_ownerSide == playerSide) then {
+				_markerName setMarkerColorLocal "ColorWest";
+			}
+			else {
+				if (_ownerSide != civilian) then {
+					_markerName setMarkerColorLocal "ColorEast";
+				};
+			};
+		};
+	};
+};

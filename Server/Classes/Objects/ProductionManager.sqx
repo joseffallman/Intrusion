@@ -1,0 +1,42 @@
+/*
+ * Name:	ProductionManager
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class modeling a side's production manager, refining generated production (i.e. spawns new
+ * vehicles and weapons).
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class ProductionManager : IGroupChangingProfessionListener
+	{
+		private fields ["_mGroductionQueue" as ProductionQueue];
+	
+		// Creates a ProductionManager object.
+		public constructor {
+			params ["_side" as Side];
+			_self.Side = _side;
+			_mGroductionQueue = new ProductionQueue;
+			
+			// Register the class to the global group handler to recieve notifications 
+			// when groups on the side is changing its profession.
+			[_self] call GroupHandler.RegisterGroupChangingProfessionListener;
+		};
+		
+		// Gets the production manager's side.
+		public property Side Side { get; private set; };
+		
+		// Called when a group on the production manager's side changes its profession.
+		// _group (Group): The group that is changing its profession.
+		// _professionType (ProfessionType): The group's new profession type.
+		public method OnGroupChangingProfession {
+			params ["_group" as Group, "_professionType" as ProfessionType];
+			
+			
+		};
+	};
+};

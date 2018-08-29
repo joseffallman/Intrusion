@@ -1,0 +1,49 @@
+/*
+ * Name:	DefaultGameSettings
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that contains all relevant and editable settings for a game round.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class MatchConfig
+	{
+		// Creates a DefaultGameSettings object.
+		public static method Init {
+			if (DebugConfig.InDebugMode) then {
+				_self.CompetingSides = [east, west];
+				_self.MatchLengthMinutes = 8;
+				_self.TotalProduction = 10000;
+				_self.TotalTechnology = 10000;
+				_self.MaxFreeVehiclesAtBase = 3;
+			}
+			else {
+				_self.CompetingSides = [east, west];
+				_self.MatchLengthMinutes = 120;
+				_self.TotalProduction = 20000;
+				_self.TotalTechnology = 20000;
+				_self.MaxFreeVehiclesAtBase = 3;
+			};
+		};
+		
+		// Gets the competing sides in the mission.
+		public static property Array CompetingSides { get; private set; };
+		
+		// Gets the length of a game round in minutes.
+		public static property Scalar MatchLengthMinutes { get; private set; };
+		
+		// Gets the total production that will be assigned the sides during a game round.
+		public static property Scalar TotalProduction { get; private set; };
+		
+		// Gets the total technology that will be assigned the sides during a game round.
+		public static property Scalar TotalTechnology { get; private set; };
+		
+		// Get the maximun number of free vehicles at base.
+		public static property Scalar MaxFreeVehiclesAtBase { get; private set; };
+	};
+};

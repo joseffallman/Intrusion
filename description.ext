@@ -1,0 +1,30 @@
+#include "Dialogs\Defines.hpp"
+#include "Dialogs\DialogControls.hpp"
+#include "Dialogs\TutorialDialog.hpp"
+#include "Dialogs\ProfessionDialog.hpp"
+
+// Mission Header
+class Header
+{
+  gameType = SC;
+  minPlayers = 1;
+  maxPlayers = 60;
+};
+
+onLoadName = "Intrusion";
+onLoadMission = "Intrusion - let's play war!";
+//loadScreen = "loadScreen_ca.paa"; // Preview picture
+
+OnLoadMissionTime = false;
+
+overviewText = "Have your specialized group join the battle in the way Arma was meant to be played.";
+overviewTextLocked = "";
+//overviewPicture = "overviewPicture_ca.paa";
+author = "Engima";
+
+disabledAI = 1;
+
+
+//#include "Description\TutorialDialog.ext"
+
+#include "Description\RemoteExec.ext"

@@ -1,0 +1,31 @@
+/*
+ * Name:	ProVehicleInfo
+ * Date:	2017-11-24
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that contains information about profession vehicles associated with a 
+ * profession (but is not side specific).
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class ProVehicleInfo
+	{
+		// Creates a ProVehicleInfo object.
+		public constructor {
+			params ["_professionType" as ProfessionType, "_cost" as Scalar];
+			
+			_self.ProfessionType = _professionType;
+			_self.Cost = _cost;
+		};
+		
+		// Gets the profession type.
+		public property ProfessionType ProfessionType { get; private set; };
+		
+		// Gets the cost of a vehicle in the current profession type.
+		public property Scalar Cost { get; private set; };
+	};
+};

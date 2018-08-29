@@ -1,0 +1,36 @@
+/*
+ * Name:	WeaponInfo
+ * Date:	2018-01-24
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a weapon and its possible magazines and other attributes.
+ */
+namespace Intrusion.Server
+{
+	public class WeaponInfo
+	{
+		// Creates a WeaponInfo object.
+		public constructor {
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String, "_magazines" as Array];
+			
+			_self.Side = _side;
+			_self.WeaponBoxType = _weaponBoxType;
+			_self.ClassName = _className;
+			_self.Magazines = _magazines;
+		};
+		
+		// Gets the weapon's side.
+		public property Side Side { get; private set; };
+		
+		// Gets the type of box that the weapon should be in.
+		public property WeaponBoxType WeaponBoxType { get; private set; };
+		
+		// Gets the weapon's class name.
+		public property String ClassName { get; private set; };
+		
+		// Gets the weapon's possible magazine's class names as an array of String. 
+		public property Array Magazines { get; private set; };
+	};
+};

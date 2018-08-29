@@ -1,0 +1,70 @@
+/*
+ * Name:	ResourceBook
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class modeling a resource book for a side.
+ */
+namespace Intrusion.Server
+{
+	public class ResourceBook
+	{
+		// Creates a ResourceBook object.
+		public constructor {
+			_self.TotalProduction = 0;
+			_self.TotalTechnology = 0;
+		};
+		
+		// Gets the total available production.
+		public property Scalar TotalProduction { get; private set; };
+		
+		// Gets the total available technology.
+		public property Scalar TotalTechnology { get; private set; };
+		
+		// Makes a deposito into the resource account.
+		// _amount (Scalar): The amount to deposit.
+		public method DepositProduction {
+			params ["_amount" as Scalar];
+			_self.TotalProduction = _self.TotalProduction + _amount;
+		};
+		
+		// Makes a deposito into the technology account.
+		// _amount (Scalar): The amount to deposit.
+		public method DepositTechnology {
+			params ["_amount" as Scalar];
+			_self.TotalTechnology = _self.TotalTechnology + _amount;
+		};
+		
+		// Makes a withdrawal from the resource account.
+		// _amount (Scalar): The amount to withdraw.
+		// Returns (Boolean): true if the transaction was made. false if there were not enough on the account.
+		public method Boolean WithdrawProduction {
+			params ["_amount" as Scalar];
+			private _success = false;
+			
+			if (_self.TotalProduction >= _amount) then {
+				_self.TotalProduction = _self.TotalProduction - _amount;
+				_success = true;
+			};
+			
+			_success
+		};
+		
+		// Makes a withdrawal from the technology account.
+		// _amount (Scalar): The amount to withdraw.
+		// Returns (Boolean): true if the transaction was made. false if there were not enough on the account.
+		public method Boolean WithdrawTechnology {
+			params ["_amount" as Scalar];
+			private _success = false;
+			
+			if (_self.TotalTechnology >= _amount) then {
+				_self.TotalTechnology = _self.TotalTechnology - _amount;
+				_success = true;
+			};
+			
+			_success
+		};
+	};
+};

@@ -1,0 +1,26 @@
+call compile preprocessFileLineNumbers "Common\Enums\LogLevel.sqx";
+call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Remote\RemoteTargetOptions.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Remote\Remote.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\Observation.sqx";
+
+using Intrusion.Common;
+
+#region Common Objects
+
+// Configs
+call ProfessionConfig.Init;
+call DebugConfig.Init;
+
+// Handlers
+[DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;
+call RemoteTargetOptions.Init;
+
+#endregion

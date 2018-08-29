@@ -1,0 +1,107 @@
+/*
+ * Name:	LogHandler
+ * Date:	2017-11-23
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles code logging.
+ */
+namespace Intrusion.Common
+{
+	public class LogHandler
+	{
+		private static fields ["_mLogLevelFile" as LogLevel, "_mLogLevelScreen" as LogLevel];
+	
+		// Initializes the LogHandler object.
+		public static method Init {
+			params ["_logLevelFile" as LogLevel, "_logLevelScreen"];
+			_mLogLevelFile = _logLevelFile;
+			_mLogLevelScreen = _logLevelScreen;
+		};
+		
+		// Outputs the log message.
+		// _msg (String): The log message.
+		private static method OutputFile {
+			params ["_sEnumValue" as String, "_msg" as String];
+			diag_log ("[" + str serverTime + " " + _sEnumValue + "] " + _msg);
+		};
+		
+		// Outputs the log message.
+		// _msg (String): The log message.
+		private static method OutputScreen {
+			params ["_sEnumValue" as String, "_msg" as String];
+			systemChat ("[" + _sEnumValue + "] " + _msg);
+		};
+		
+		// Outputs the log message if log level is set to Debug or higher.
+		// _msg (String): The log message.
+		public static method Debug {
+			params ["_msg" as String];
+			
+			if ((_mLogLevelFile as Scalar) >= (LogLevel.Debug as Scalar)) then {
+				["DEBUG", _msg] call _self.OutputFile;
+			};
+			
+			if ((_mLogLevelScreen as Scalar) >= (LogLevel.Debug as Scalar)) then {
+				["DEBUG", _msg] call _self.OutputScreen;
+			};
+		};
+		
+		// Outputs the log message if log level is set to Info or higher.
+		// _msg (String): The log message.
+		public static method Info {
+			params ["_msg" as String];
+			
+			if ((_mLogLevelFile as Scalar) >= (LogLevel.Info as Scalar)) then {
+				["INFO", _msg] call _self.OutputFile;
+			};
+			
+			if ((_mLogLevelScreen as Scalar) >= (LogLevel.Info as Scalar)) then {
+				["INFO", _msg] call _self.OutputScreen;
+			};
+		};
+		
+		// Outputs the log message if log level is set to Warning or higher.
+		// _msg (String): The log message.
+		public static method Warning {
+			params ["_msg" as String];
+			
+			if ((_mLogLevelFile as Scalar) >= (LogLevel.Warning as Scalar)) then {
+				["WARNING", _msg] call _self.OutputFile;
+			};
+			
+			if ((_mLogLevelScreen as Scalar) >= (LogLevel.Warning as Scalar)) then {
+				["WARNING", _msg] call _self.OutputScreen;
+			};
+		};
+		
+		// Outputs the log message if log level is set to Error or higher.
+		// _msg (String): The log message.
+		public static method Error {
+			params ["_msg" as String];
+			
+			if ((_mLogLevelScreen as Scalar) >= (LogLevel.Error as Scalar)) then {
+				["ERROR", _msg] call _self.OutputScreen;
+			};
+			
+			if ((_mLogLevelFile as Scalar) >= (LogLevel.Error as Scalar)) then {
+				["ERROR", _msg] call _self.OutputFile;
+			};
+		};
+		
+		// Outputs the log message if log level is set to Fatal or higher.
+		// _msg (String): The log message.
+		public static method Fatal {
+			params ["_msg" as String];
+			
+			if ((_mLogLevelFile as Scalar) >= (LogLevel.Fatal as Scalar)) then {
+				["FATAL", _msg] call _self.OutputFile;
+			};
+			
+			if ((_mLogLevelScreen as Scalar) >= (LogLevel.Fatal as Scalar)) then {
+				["FATAL", _msg] call _self.OutputScreen;
+			};
+		};
+	};
+};

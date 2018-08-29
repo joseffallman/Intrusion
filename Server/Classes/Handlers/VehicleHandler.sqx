@@ -1,0 +1,145 @@
+/*
+ * Name:    VehicleHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all mission vehicles.
+ */
+using Intrusion.Common;
+ 
+namespace Intrusion.Server
+{
+	public class VehicleHandler
+	{
+		private static fields ["_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */];
+	
+		// Creates a VehicleHandler object.
+		public static method Init {
+			_mAllIntrusionVehicles = [];
+		};
+		
+		// Finds a free spawn position around a given position.
+		// _markPos (Array): The position where to find a free spawn position.
+		// _initialRadius (Scalar): Optional. The initial radius how far from the position that is ok. This
+		// value will expand until a position is found.
+		public static method FindSpawnPos {
+			params ["_markPos" as Array, ["_initialRadius" as Scalar, 0]];
+			private ["_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_danger", "_foundIt", "_tries"];
+			[str _this + " VehicleHandler.FindSpawnPos"] call LogHandler.Debug;
+			
+			_spawnpos = [];
+			_foundIt = false;
+			_tries = 0;
+			_extendedRadius = 0;
+			
+			while { true } do {
+				scopeName "SpawnPosGen";
+				
+				_randir = floor random 360;
+				_randis = _initialRadius + floor random _extendedRadius;
+				_spawnpos = [(_markpos select 0) + ((sin _randir) * _randis), (_markpos select 1) + ((cos _randir) * _randis), 0.1];
+				_houses = nearestObjects [_spawnpos, ["house","wall"], 50];
+				_vehicles = nearestObjects [_spawnpos, ["LandVehicle", "Land_BagBunker_01_Large_green_F", "Land_TTowerBig_2_F"], 20];
+				_isFlat = _spawnpos isFlatEmpty [2, -1, 0.5, 10, 0, false, objNull ]; 
+				_danger = false;
+				{ if (floor(_spawnpos distance getPos _x) < 10) then { _danger=true; }; } forEach _houses;
+				{ if (floor(_spawnpos distance getPos _x) < 8) then { _danger=true; }; } forEach _vehicles;
+				if (surfaceIsWater _spawnpos) then { _danger=true; };
+				if (count _isFlat < 1 ) then { _danger=true; };
+				if (!_danger) then { 
+					_foundIt = true;
+					breakOut "SpawnPosGen"
+				};
+				_tries = _tries + 1;
+				_extendedRadius = _extendedRadius + 1;
+				sleep 0.1;
+			};
+			
+			if (!_foundIt) then {
+				_spawnPos = [];
+			};
+			
+			_spawnpos		
+		};
+
+		// Spawns a vehicle on a side's car park.
+		// _vehicleClass (String): Vehicle class to spawn.
+		// _side (Side): The side's carpark on which to spawn the vehicle.
+		public static method SpawnVehicleOnCarpark {
+		    params ["_side" as Side, "_vehicleClass" as String];
+		    private ["_vehicleObj", "_spawnDir", "_spawnPos"];
+		    private ["_markerConfig" as SideMarkersInfo];
+		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
+		    
+		    _markerConfig = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+		    
+			_spawnDir = markerDir _markerConfig.CarParkMarkerName;
+		    _spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
+		    
+		    while {count _spawnPos == 0} do {
+		    	_spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
+		    };
+		    
+		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
+		    _vehicleObj setDir _spawnDir;
+		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
+		    
+		    _vehicleObj
+		};
+		
+		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
+		private static method DoStartFreeVehiclesThread {
+		    private ["_vehicle" as Object, "_vehicleClass" as String];
+		    private ["_vehiclesAtBaseCount" as Scalar, "_intrusionVehicle" as IntrusionVehicle, "_markerInfo" as SideMarkersInfo];
+		    [str _this + " VehicleHandler.DoStartFreeVehiclesThread"] call LogHandler.Debug;
+
+		    while { true } do {
+		    	{
+		    		private ["_side" as Side];
+		    		_side = _x;
+		    		
+		    		_markerInfo = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+		    		
+		    		// Count vehicles at the base
+		    		_vehiclesAtBaseCount = 0;
+		    		
+			        {
+			        	private ["_iVehicle" as IntrusionVehicle];
+			        	_iVehicle = _x;
+			        	
+			        	if (_iVehicle.Side == _side) then {
+				            if (alive _iVehicle.Vehicle && (((_iVehicle.Vehicle) distance getMarkerPos (_markerInfo.CarParkMarkerName)) < 100) && _iVehicle.OwnerProfession == ProfessionType.Undefined)  then { // TODO: Should not need parenthesis around _iVehicle.Vehicle and _markerConfig.CarParkMarkerName...
+				                _vehiclesAtBaseCount = _vehiclesAtBaseCount + 1;
+				            };
+			        	};			            
+			        } foreach _mAllIntrusionVehicles as IntrusionVehicle;		
+		    
+			        // If less than max, spawn a new one.
+			        if (_vehiclesAtBaseCount < MatchConfig.MaxFreeVehiclesAtBase) then {
+			        	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
+			        	
+			        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
+			        	_vehicle = [_side, _vehicleClass] call _self.SpawnVehicleOnCarpark;
+			        	_intrusionVehicle = [_vehicle, _side, ProfessionType.Undefined, grpNull, 0] new IntrusionVehicle;
+			        	_vehicle setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+			        	_mAllIntrusionVehicles pushBack _intrusionVehicle;
+			        };
+			        
+		    	} foreach MatchConfig.CompetingSides as Side;
+		    	
+		        if (time < 30) then {
+		            sleep 3;
+		        }
+		        else {
+		            sleep (60 * 6); // sleep in 6 minutes
+		        };
+			};
+		};
+		
+		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
+		public static method StartFreeVehiclesThread {
+			[] spawn _self.DoStartFreeVehiclesThread;
+		};
+	};
+};

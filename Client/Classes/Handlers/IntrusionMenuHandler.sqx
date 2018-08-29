@@ -1,0 +1,37 @@
+/*
+ * Name:    IntrusionMenuHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Encapsulates all logic for the Intrusion Menu.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class IntrusionMenuHandler
+	{
+        // Initializes the Intrusion Menu for the player and adds the "Open Intrusion Menu" action.
+        public static method Init {
+			INT_IntrusionMenu = 
+			[
+			  ["Intrusion Menu", true],
+			  ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"],
+			];
+			
+			player addAction ["Open Intrusion Menu", { call IntrusionMenuHandler.Open; }];
+		};
+		
+		// Opens the Intrusion menu for the current player.
+		public static method Open {
+			showCommandingMenu "#USER:INT_IntrusionMenu";
+		};
+		
+		// Called when the local player selects the "Leave Group" option.
+		private static method OnLeaveGroup {
+			[player] joinSilent grpNull;
+			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+		};
+	};
+};

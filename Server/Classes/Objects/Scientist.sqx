@@ -1,0 +1,19 @@
+/*
+ * Name:	Scientist
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class modeling a side's R&D manager refining generated technoloty (i.e. unlocks new technology).
+ */
+namespace Intrusion.Server
+{
+	public class Scientist
+	{
+		// Creates a Sceintist object.
+		public constructor {
+			
+		};
+	};
+};

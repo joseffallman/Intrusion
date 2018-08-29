@@ -1,0 +1,88 @@
+/*
+ * Name:    MissionEngine
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Executes the mission. Loops through the mission loop that will run from mission start
+ * to mission end.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class MissionEngine
+	{
+		// Gets whether the mission is running or not.
+		public static property Boolean MissionIsRunning { get; private set; };
+	
+		// Performs the mission time count down, and informs all clients about remaining time
+		// and when mission ends. Should be spawned.
+		private static method DoRunMissionCountDown {
+			private ["_endDayTime" as Scalar, "_remainingMinutes" as Scalar, "_lastReportMinute" as Scalar];
+			
+			_endDayTime = dayTime + (MatchConfig.MatchLengthMinutes / 60);
+			_lastReportMinute = MatchConfig.MatchLengthMinutes;
+
+			while { daytime < _endDayTime } do {
+				_remainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
+				
+				// If a report is not done for this minute
+				if (_lastReportMinute != _remainingMinutes) then
+				{
+					// If this minute is a reporting minute, report remaining time to players.
+					if (_remainingMinutes == 1 || 
+						_remainingMinutes == 2 || 
+						_remainingMinutes == 3 || 
+						_remainingMinutes == 4 || 
+						_remainingMinutes == 5 ||
+						_remainingMinutes == 10 ||
+						_remainingMinutes == 15 ||
+						_remainingMinutes == 20 ||
+						_remainingMinutes % 30 == 0) then
+					{
+						["ClientMessageHandler.ShowHint", ["Mission ends in " + str _remainingMinutes + " minutes."]] call Remote.Invoke;
+						_lastReportMinute = _remainingMinutes;
+					};
+				};
+				
+				sleep 5;
+			};
+			
+			_self.MissionIsRunning = false;
+			["CameraHandler.PlayEndMission", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
+		};
+		
+        // Starts the mission.
+        public static method Start {
+        	private ["_sideManagers" as Array];
+        	
+        	_self.MissionIsRunning = true;
+        	
+        	// Start the mission countdown.
+        	[] spawn _self.DoRunMissionCountDown;
+        	
+        	// Start the automatic free vehicles spawner
+        	call VehicleHandler.StartFreeVehiclesThread;
+        	
+        	// Create a side manager for each side.
+        	_sideManagers = [];
+        	{
+        		_sideManagers pushBack [_x] new SideManager;
+        	} foreach MatchConfig.CompetingSides as Side;
+        	
+			// Perform the mission digest loop
+			while { _self.MissionIsRunning } do
+			{
+				{
+					private ["_sideManager" as SideManager];
+					_sideManager = _x;
+					
+					call _sideManager.PerformTurn;
+				} foreach _sideManagers as SideManager;
+				
+				sleep 10;
+			};
+		};
+	};
+};

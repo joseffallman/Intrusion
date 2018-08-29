@@ -1,0 +1,45 @@
+/*
+ * Name:    BriefingHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the mission's briefing.
+ */
+namespace Intrusion.Client
+{
+	public class BriefingHandler
+	{
+        // Creates the briefing texts for the player.
+        public static method CreateBriefing {
+			player createDiaryRecord ["Diary", ["Mission Mechanics *IMPORTANT*", "GROUPS<br /><br />" + 
+			"Players can arrange their groups by themselves. A player who invites another player to his/her group becomes the group leader. To invite another alone player, move near him and use action command Invite.<br /><br />" + 
+			"GROUP PROFESSION<br /><br />" +
+			"When a group is created the group leader can choose a profession for the group. This is done using radio command 0-0-5 and then the action menu.<br /><br />" + 
+			"Group profession is of importance for vehicles and equipment assigned to the group. Available professions depend on group size and on how many groups of a given profession that is allowed for each side in the mission.<br /><br />" + 
+			"STRATEGIC LOCATIONS<br /><br />" +
+			"Strategic locations are marked on the map. The side that owns a strategic location recieves an income of its resources. Resources can be of two kinds: Technology or Production. All resources is accumulated during the time that the current side is in control of that location. A blue marker means that the location is controlled by NATO. A red that the location is controlled by CSAT. A green marker is neutral, i.e. not yet taken by any side.<br /><br />" +
+			"RESOURCES ASSIGNMENT<br /><br />" +
+			"The resource Technology provides your brigade with knowledge of more advanced equipment. Technology is used by the brigade commander to develop (unlock) different technologies. Every technology (e.g. Tanks) has a cost in technology points, and the more technology points aquired, the faster it gets access to more advanced vehicles and equipment.<br /><br />" +
+			"The resource Production is needed to produce vehicles and equipment. Once a technology (e.g. Tanks) is obtained, Production is needed to create the vehicles. Every tank has a cost in Production points, and the more Production points aquired, the more vehicles can be created for the brigade.<br /><br />" +
+			"VEHICLES ASSIGNMENT<br /><br />" +
+			"To create vehicles the brigade needs Production. Production points is not rewarded any individual group, but the brigade as a whole. All groups that need vehicles are therefore put in a queue. One by one they are assigned vehicles, in a rate according to the overall Production income. Vehicle type and how many vehicles assigned to the group depends on group size. A small group will only need one vehicle, while a group with many members may need more vehicles. It is more expensive and it takes longer to get several vehicles. Cost is usually also increased for more advanced vehicles. Support vehicles (like Fuel or Repair) is given priority.<br /><br />" +
+			"If all vehicles for a group is destroyed then the group will serve as an ordinary infantry group again, until the brigade can afford assigning the group new vehicles. Accordingly, take good care of your vehicles!<br /><br />" +
+			"HOW TO PLAY AS BRIGADE COMMANDER<br /><br />" +
+			"The brigade commander's task is to coordinate all fighting units. Brigade commander can order groups to attack, defend, regroup or recon different areas. This is done in the following way:<br />" +
+			"  1. Click close to a group on the map. The group closes to the click point is selected.<br />" +
+			"  2. Select an order using radio commands 0-0-1 to 0-0-4.<br />" +
+			"  3. Select a destination by clicking again on the map. The group is now given the order and recieves an in game task.<br />"]];
+			
+			player createDiaryRecord ["Diary", ["Group's orders", "Take initiative and operate according to your side's overall interest. Capture and hold strategic locations (marked on the map) so that your brigade gain needful resources.<br /><br />Follow all direct orders from your brigade commander."]];
+			
+			player createDiaryRecord ["Diary", ["Brigade Commander's orders", "Control the groups of your brigade. Capture and hold strategic locations (marked on the map) so that your side gains needful resources.<br /><br />Use the confiscated resources to develop your army brigade.<br /><br />Control the high priority location marked on the map when mission time is up and you will win!"]];
+			
+			player createDiaryRecord ["Diary", ["Briefing", "Your group is a specialized group deployed at the South European Front. The overall goal for the brigade at your location is to occupy land areas and secure natural assets and resources. But time is short. Incoming reports reveal that the enemy too is deploying their forces at the other side of the map. Thus, it is of upmost importance that our forces gets prepared, reinforced and ready to fight as quick as possible. Every effort makes difference."]];
+			
+			player createDiaryRecord ["Diary", ["Situation", "The action right now will go to history as the War of The Islands. It rages on several fronts with important land areas as its stakes. The few weeks ahead will indeed become a tense time for Highest Command, who has many difficult decisions to make in deciding how to distribute army's resources and to send the correct equipment to correct places."]];
+			
+			player createDiaryRecord ["Diary", ["Background", "The Great Economy Collapse has lead the world into several global armed conflicts. Russias many years of rearmament has again lead the country to one of the world's major military power. Thus, the old actors of The Cold War with their allies are back as two great antipoles in the World Community, and they are again fighting a tense war that every now and then spark infected battles about strategic and resource heavy land areas."]];
+		};
+	};
+};

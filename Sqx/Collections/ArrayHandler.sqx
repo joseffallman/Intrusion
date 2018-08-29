@@ -1,0 +1,36 @@
+/*
+ * Name:	ArrayHandler
+ * Date:	2017-12-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains some static good to have functions regarding arrays.
+ */
+namespace Sqx.Collections
+{
+	public class ArrayHandler
+	{
+		// Creates a ArrayHandler object.
+		// _array (Array): Any array to remove an item from.
+		// _index (Scalar): The index for the item to remove.
+		// Returns (Array): The new array.
+		public static method Array RemoveItemAtIndex {
+			params ["_array" as Array, "_index" as Scalar];
+			private ["_newArray" as Array, "_i" as Scalar];
+			
+			_newArray = [];
+			_i = 0;
+			
+			{
+				if (_i != _index) then {
+					_newArray pushBack _x;
+				};
+				
+				_i = _i + 1;
+			} foreach _array;
+			
+			_newArray
+		};
+	};
+};

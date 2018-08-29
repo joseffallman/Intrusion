@@ -1,0 +1,41 @@
+/*
+ * Name:	ProfessionDialog
+ * Date:	2017-11-29
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A dialog in which the user can change profession.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class ProfessionDialog
+	{
+		// Creates a ProfessionDialog object.
+		public constructor {
+		};
+		
+		// Gets or sets the profession type that the user has selected.
+		public property ProfessionType SelectedProfession { get; set; };
+		
+		// Shows the dialog.
+		// Returns (DialogResult): A dialog result.
+		public method DialogResult ShowDialog {
+			waitUntil { !dialog };
+			
+            createDialog "IntProfessionDialog";
+            
+			{
+				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+			
+			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+
+			waitUntil { !dialog };
+			
+			DialogResult.Ok
+		};
+	};
+};
