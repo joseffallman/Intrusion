@@ -1,0 +1,49 @@
+/*
+ * Name:    VehicleHandler
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all mission vehicles.
+ */
+using Intrusion.Common;
+ 
+namespace Intrusion.Server
+{
+	public class FreeVehiclesService
+	{
+		// Starts the thread that runs though whole of the mission and assigns free vehicles to all sides.
+		private static method Run {
+		    private ["_vehiclesAtBaseCount" as Scalar];
+		    [str _this + " VehicleHandler.DoStartFreeVehiclesThread"] call LogHandler.Debug;
+
+		    while { true } do {
+		    	{
+		    		private ["_side" as Side];
+		    		_side = _x;
+		    		
+		    		// Count vehicles at the base
+		    		_vehiclesAtBaseCount = [_side] call VehicleHandler.CountFreeVehiclesAtBase;
+		    		
+			        // If less than max, spawn a new one.
+			        if (_vehiclesAtBaseCount < MatchConfig.MaxFreeVehiclesAtBase) then {
+			        	[_side] call VehicleHandler.SpawnFreeVehicleOnCarpark;
+			        };
+			        
+		    	} foreach MatchConfig.CompetingSides as Side;
+		    	
+		        if (time < 30) then {
+		            sleep 3;
+		        }
+		        else {
+		            sleep (60 * 6); // sleep in 6 minutes
+		        };
+			};
+		};
+		
+		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
+		public static method StartAsync {
+			[] spawn _self.Run;
+		};
+	};
+};

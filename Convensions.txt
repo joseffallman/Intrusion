@@ -1,0 +1,26 @@
+===========
+Class types
+===========
+
+-------
+Configs
+-------
+Static classes containing mission configuration settings.
+Always ends with "Config".
+
+-------
+Handlers
+--------
+Static classes that performs global actions regarding the area defined by its name.
+Always ends with "Handler".
+
+-------
+Objects
+-------
+Non static classes modeling general objects that can be used as parameters and sent over the network.
+
+-------
+Services
+--------
+Static classes with a public StartAsync method and a private Run method, performing its own task concurrently.
+Always ends with "Service".
