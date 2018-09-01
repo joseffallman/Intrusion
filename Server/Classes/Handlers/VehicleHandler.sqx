@@ -66,10 +66,11 @@ namespace Intrusion.Server
 		// Spawns a vehicle on a side's car park.
 		// _vehicleClass (String): Vehicle class to spawn.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
-		public static method SpawnVehicleOnCarpark {
-		    params ["_side" as Side, "_vehicleClass" as String];
-		    private ["_vehicleObj", "_spawnDir", "_spawnPos"];
-		    private ["_markerConfig" as SideMarkersInfo];
+		// Returns (Object): The spawned Intrusioni vehicle.
+		public static method IntrusionVehicle SpawnVehicleOnCarpark {
+		    params ["_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
+		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
+		    private ["_markerConfig" as SideMarkersInfo, "_intrusionVehicle" as IntrusionVehicle];
 		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
 		    
 		    _markerConfig = [_side] call MapMarkersConfig.GetSideMarkerInfo;
@@ -85,61 +86,50 @@ namespace Intrusion.Server
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
 		    
-		    _vehicleObj
+        	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
+        	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+        	_mAllIntrusionVehicles pushBack _intrusionVehicle;
+        	
+		    _intrusionVehicle
 		};
 		
-		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
-		private static method DoStartFreeVehiclesThread {
-		    private ["_vehicle" as Object, "_vehicleClass" as String];
-		    private ["_vehiclesAtBaseCount" as Scalar, "_intrusionVehicle" as IntrusionVehicle, "_markerInfo" as SideMarkersInfo];
-		    [str _this + " VehicleHandler.DoStartFreeVehiclesThread"] call LogHandler.Debug;
+		// Spawns a free vehicle on a side's car park.
+		// _side (Side): The side's carpark on which to spawn the vehicle.
+		// Returns (Object): The spawned Intrusion vehicle.
+		public static method IntrusionVehicle SpawnFreeVehicleOnCarpark {
+		    params ["_side" as Side];
+		    private ["_vehicleClass" as String, "_intrusionVehicle" as IntrusionVehicle];
+			
+        	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
+        	
+        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
+        	_intrusionVehicle = [_side, _vehicleClass] call VehicleHandler.SpawnVehicleOnCarpark;
+        	
+        	_intrusionVehicle
+		};
+		
+		// Counts a side's free vehicles at the base.
+		// _side (Side): The side to count vehicles for.
+		// Returns (Scalar): The number of free vehicles at the side's base.
+		public static method Scalar CountFreeVehiclesAtBase {
+			params ["_side" as Side];
+			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as SideMarkersInfo];
+			
+    		_markerInfo = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+    		_vehiclesAtBaseCount = 0;
 
-		    while { true } do {
-		    	{
-		    		private ["_side" as Side];
-		    		_side = _x;
-		    		
-		    		_markerInfo = [_side] call MapMarkersConfig.GetSideMarkerInfo;
-		    		
-		    		// Count vehicles at the base
-		    		_vehiclesAtBaseCount = 0;
-		    		
-			        {
-			        	private ["_iVehicle" as IntrusionVehicle];
-			        	_iVehicle = _x;
-			        	
-			        	if (_iVehicle.Side == _side) then {
-				            if (alive _iVehicle.Vehicle && (((_iVehicle.Vehicle) distance getMarkerPos (_markerInfo.CarParkMarkerName)) < 100) && _iVehicle.OwnerProfession == ProfessionType.Undefined)  then { // TODO: Should not need parenthesis around _iVehicle.Vehicle and _markerConfig.CarParkMarkerName...
-				                _vehiclesAtBaseCount = _vehiclesAtBaseCount + 1;
-				            };
-			        	};			            
-			        } foreach _mAllIntrusionVehicles as IntrusionVehicle;		
-		    
-			        // If less than max, spawn a new one.
-			        if (_vehiclesAtBaseCount < MatchConfig.MaxFreeVehiclesAtBase) then {
-			        	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
-			        	
-			        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
-			        	_vehicle = [_side, _vehicleClass] call _self.SpawnVehicleOnCarpark;
-			        	_intrusionVehicle = [_vehicle, _side, ProfessionType.Undefined, grpNull, 0] new IntrusionVehicle;
-			        	_vehicle setVariable ["IntrusionVehicle", _intrusionVehicle, true];
-			        	_mAllIntrusionVehicles pushBack _intrusionVehicle;
-			        };
-			        
-		    	} foreach MatchConfig.CompetingSides as Side;
-		    	
-		        if (time < 30) then {
-		            sleep 3;
-		        }
-		        else {
-		            sleep (60 * 6); // sleep in 6 minutes
-		        };
-			};
-		};
-		
-		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
-		public static method StartFreeVehiclesThread {
-			[] spawn _self.DoStartFreeVehiclesThread;
+			{
+	        	private ["_iVehicle" as IntrusionVehicle];
+	        	_iVehicle = _x;
+	        	
+	        	if (_iVehicle.Side == _side) then {
+		            if (alive _iVehicle.Vehicle && (((_iVehicle.Vehicle) distance getMarkerPos (_markerInfo.CarParkMarkerName)) < 100) && _iVehicle.OwnerProfession == ProfessionType.Undefined)  then { // TODO: Should not need parenthesis around _iVehicle.Vehicle and _markerConfig.CarParkMarkerName...
+		                _vehiclesAtBaseCount = _vehiclesAtBaseCount + 1;
+		            };
+	        	};			            
+	        } foreach _mAllIntrusionVehicles as IntrusionVehicle;
+	        
+	        _vehiclesAtBaseCount
 		};
 	};
 };

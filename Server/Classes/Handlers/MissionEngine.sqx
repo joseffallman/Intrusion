@@ -63,7 +63,7 @@ namespace Intrusion.Server
         	[] spawn _self.DoRunMissionCountDown;
         	
         	// Start the automatic free vehicles spawner
-        	call VehicleHandler.StartFreeVehiclesThread;
+        	call FreeVehiclesService.StartAsync;
         	
         	// Create a side manager for each side.
         	_sideManagers = [];
