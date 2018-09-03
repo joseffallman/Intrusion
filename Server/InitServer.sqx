@@ -16,8 +16,9 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroupCollec
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\GroupHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\MissionEngine.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\WeaponEngine.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
 call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
 
 using Intrusion.Common;
@@ -40,4 +41,4 @@ call ResourceLocationHandler.Init;
 #endregion
 
 // Start Intrusion!
-call MissionEngine.Start;
+call MissionEngine.RunAsync;

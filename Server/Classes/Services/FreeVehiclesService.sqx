@@ -42,7 +42,7 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
-		public static method StartAsync {
+		public static method RunAsync {
 			[] spawn _self.Run;
 		};
 	};
