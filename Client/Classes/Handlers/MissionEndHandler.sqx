@@ -1,5 +1,5 @@
 /*
- * Name:	CameraHandler
+ * Name:	MissionEndHandler
  * Date:	2018-01-24
  * Version: 1.0
  * Author:  Engima
@@ -9,11 +9,11 @@
  */
 namespace Intrusion.Client
 {
-	public class CameraHandler
+	public class MissionEndHandler
 	{
 		// Plays the end mission scene.
 		// _winningSide (Side): The side that has won.
-		public static method PlayEndMission {
+		public static method PlayEndScene {
 			params ["_winningSide" as Side];
 			
 			["END1", _winningSide == playerSide] spawn BIS_fnc_endMission;

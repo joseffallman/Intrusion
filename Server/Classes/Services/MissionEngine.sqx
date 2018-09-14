@@ -50,7 +50,7 @@ namespace Intrusion.Server
 			};
 			
 			_self.MissionIsRunning = false;
-			["CameraHandler.PlayEndMission", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
+			["MissionEndHandler.PlayEndScene", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
 		};
 		
         // Runs the mission.

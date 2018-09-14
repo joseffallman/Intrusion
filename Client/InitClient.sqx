@@ -10,7 +10,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\IntrusionMenuHan
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientGroupHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapMarkerHandler.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Handlers\CameraHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 
 using Intrusion.Client;

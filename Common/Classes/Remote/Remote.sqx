@@ -42,7 +42,7 @@ namespace Intrusion.Common
 					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
-					case "CameraHandler.PlayEndMission": { _parameters spawn CameraHandler.PlayEndMission };
+					case "MissionEndHandler.PlayEndScene": { _parameters spawn MissionEndHandler.PlayEndScene };
 				};
 			};
 		};
