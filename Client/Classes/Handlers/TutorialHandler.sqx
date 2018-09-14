@@ -21,7 +21,7 @@ namespace Intrusion.Client
 		};
 		
 		// Shows a tutorial.
-		// _name (String): Name of the tutorial.
+		// _tutorialType (TutorialType): Type of tutorial to show.
 		private static method DoShowTutorial {
 			params ["_tutorialType" as TutorialType];
 			private ["_tutorial" as Tutorial, "_tutorialDialog" as TutorialDialog];

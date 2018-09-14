@@ -19,18 +19,6 @@ namespace Intrusion.Client
 		// Gets whether the dialog is open or not.
 		public static property Boolean IsOpen { get; private set; };
 		
-		// Shows the profession dialog.
-		public static method OnOkButtonPressed {
-			private ["_profession" as Profession];
-			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
-			
-			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
-			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
-			ProfessionDialog.SelectedProfession = _profession.Type;
-			
-			["GroupHandler.SetGroupProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
-		};
-		
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
 		public static method DialogResult ShowDialog {
@@ -62,5 +50,18 @@ namespace Intrusion.Client
 				closeDialog 0;
 			};
 		};
+		
+		// Sends the group's selected profession to the server.
+		// Called by the .hpp-dialog when the OK button is pressed.
+		public static method OnOkButtonPressed {
+			private ["_profession" as Profession];
+			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
+			
+			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
+			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
+			ProfessionDialog.SelectedProfession = _profession.Type;
+			
+			["GroupHandler.SetGroupProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
+		};		
 	};
 };
