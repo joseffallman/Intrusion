@@ -8,7 +8,7 @@ class IntProfessionDialog
 		class IntProfessionDialog_DialogSurface : IntBaseDialog_DialogSurface {};
 		
 		class IntProfessionDialog_OkButton : IntBaseDialog_OkButton {
-			action = "call Intrusion_Client_ProfessionDialogHandler_OnOkButtonPressed;";
+			action = "call Intrusion_Client_ProfessionDialog_OnOkButtonPressed;";
 		};
 		
 		class IntProfessionDialog_Header : IntBaseDialog_Header

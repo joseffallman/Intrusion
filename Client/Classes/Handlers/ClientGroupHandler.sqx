@@ -22,7 +22,21 @@ namespace Intrusion.Client
 			[(str _this) + " ClientGroupHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
-				call ProfessionDialogHandler.CloseDialog;
+				call ProfessionDialog.CloseDialog;
+				["Your group now belongs to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
+			};
+		};
+		
+		// Notifies the members in affected group that their profession could not change.
+		// Called from server when a group's profession has changed.
+		// _group (Group): The group that has changed profession.
+		// _professionType (ProfessionType): The new profession type.
+		public static method OnGroupProfessionChangeRejected {
+			params ["_group" as Group, "_professionType" as ProfessionType];
+			[(str _this) + " ClientGroupHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
+			
+			if (_group == group player) then {
+				call ProfessionDialog.CloseDialog;
 				["Your group now belongs to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
 			};
 		};

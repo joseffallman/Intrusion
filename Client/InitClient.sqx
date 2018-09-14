@@ -8,10 +8,10 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandl
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientMessageHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\IntrusionMenuHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientResourceLocationHandler.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Handlers\ProfessionDialogHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientGroupHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapMarkerHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\CameraHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 
 using Intrusion.Client;
 
@@ -22,7 +22,7 @@ call TutorialConfig.Init;
 
 // Handlers
 call TutorialHandler.Init;
-call ProfessionDialogHandler.Init;
+call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 

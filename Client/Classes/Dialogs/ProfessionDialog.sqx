@@ -13,29 +13,54 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		// Creates a ProfessionDialog object.
-		public constructor {
-		};
-		
 		// Gets or sets the profession type that the user has selected.
-		public property ProfessionType SelectedProfession { get; set; };
+		public static property ProfessionType SelectedProfession { get; set; };
+		
+		// Gets whether the dialog is open or not.
+		public static property Boolean IsOpen { get; private set; };
+		
+		// Shows the profession dialog.
+		public static method OnOkButtonPressed {
+			private ["_profession" as Profession];
+			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
+			
+			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
+			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
+			ProfessionDialog.SelectedProfession = _profession.Type;
+			
+			["GroupHandler.SetGroupProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
+		};
 		
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
-		public method DialogResult ShowDialog {
+		public static method DialogResult ShowDialog {
 			waitUntil { !dialog };
 			
+			// Create the dialog
             createDialog "IntProfessionDialog";
             
+            // Add all available professions
 			{
 				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
 			
+			// Set the selected profession
 			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 
+			_self.IsOpen = true;
+
+			// Wait until dialog is closed
 			waitUntil { !dialog };
 			
+			// Return OK.
 			DialogResult.Ok
+		};
+		
+		// Closes the dialog if it is open.
+		public static method CloseDialog {
+			if (_self.IsOpen) then {
+				closeDialog 0;
+			};
 		};
 	};
 };
