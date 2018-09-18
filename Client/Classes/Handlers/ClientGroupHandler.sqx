@@ -37,7 +37,6 @@ namespace Intrusion.Client
 			[(str _this) + " ClientGroupHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
-				call ProfessionDialog.CloseDialog;
 				["Your group profession was not changed. " + _reason + " You belong to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
 			};
 		};

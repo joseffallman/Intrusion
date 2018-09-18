@@ -26,6 +26,9 @@ call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 
+// Dialogs
+call ProfessionDialog.Init;
+
 // Create the briefing
 call BriefingHandler.CreateBriefing;
 

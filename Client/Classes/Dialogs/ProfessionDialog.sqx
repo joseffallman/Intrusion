@@ -13,12 +13,40 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
+		// Initializes the profession dialog.
+		public static method Init
+		{
+			call _self.AddAvailableProfessions;
+		
+			// Set the selected profession
+			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+		};
+		
 		// Gets or sets the profession type that the user has selected.
 		public static property ProfessionType SelectedProfession { get; set; };
 		
 		// Gets whether the dialog is open or not.
 		public static property Boolean IsOpen { get; private set; };
 		
+		// Reads the selected profession type from the combo box
+		// Returns (Profession): The selected profession. classNull if no profession is selected.
+		private static method ProfessionType GetSelectedProfessionTypeFromCombo {
+			private ["_professionType" as ProfessionType];
+			
+			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
+			_professionType = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
+			
+			_professionType
+		};
+		
+		// Adds all currently available professions to the combo box.
+		private static method AddAvailableProfessions {
+            // Add all available professions
+			{
+				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+		};
+	
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
 		public static method DialogResult ShowDialog {
@@ -26,14 +54,6 @@ namespace Intrusion.Client
 			
 			// Create the dialog
             createDialog "IntProfessionDialog";
-            
-            // Add all available professions
-			{
-				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
-			
-			// Set the selected profession
-			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 
 			_self.IsOpen = true;
 
@@ -54,12 +74,9 @@ namespace Intrusion.Client
 		// Sends the group's selected profession to the server.
 		// Called by the .hpp-dialog when the OK button is pressed.
 		public static method OnOkButtonPressed {
-			private ["_profession" as Profession];
 			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
 			
-			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
-			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
-			ProfessionDialog.SelectedProfession = _profession.Type;
+			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
 			
 			["GroupHandler.SetGroupProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
