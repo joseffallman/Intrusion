@@ -119,7 +119,6 @@ namespace Intrusion.Server
 		// _professionName (String): The name of the new profession.
 		public static method SetGroupProfession {
 			params ["_group" as Group, "_professionType" as ProfessionType];
-			//private ["_groupProfessions" as PlayerGroupCollection];
 			private ["_groupProfession" as PlayerGroup];
 			[(str _this) + " GroupHandler.SetGroupProfession"] call LogHandler.Debug;
 			
