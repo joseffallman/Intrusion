@@ -9,7 +9,6 @@ call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHa
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Objects\Observation.sqx";
 
 using Intrusion.Common;
 

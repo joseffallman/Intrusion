@@ -1,0 +1,69 @@
+/*
+ * Name:	Target
+ * Date:	2018-10-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that models a unit's target, recieved by command nearTargets.
+ */
+namespace Intrusion.Server
+{
+	public class Target
+	{
+		// Creates a Target object.
+		public constructor {
+			params ["_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_unit" as Object, "_accuracy" as Scalar];
+			
+			_self.ObservingSide = _observingSide;
+			_self.PercievedPos = _percievedPos;
+			_self.PercievedSide = _percievedSide;
+			_self.Unit = _unit;
+			_self.Accuracy = _accuracy;
+		};
+		
+		// Gets the side of the observing unit.
+		public property Side ObservingSide { get; private set; };
+		
+		// Gets the target's percieved position.
+		public property Array PercievedPos { get; private set; };
+		
+		// Gets the target's side.
+		public property Side PercievedSide { get; private set; };
+		
+		// Gets the target's target unit.
+		public property Object Unit { get; private set; };
+		
+		// Gets the target's accuracy.
+		public property Scalar Accuracy { get; private set; };
+		
+		// Gets a unit's all enemy targets
+		// _unit (Object): The unit for which to check enemy targets.
+		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
+		public static method Array GetEnemyTargets {
+			params ["_unit" as Object, ["_maxRange" as Scalar, 4000]];
+			private ["_targets" as Array, "_resultingTargets" as Array];
+			
+			_resultingTargets = [];
+			
+    		// Get all targets within range
+	        _targets = _unit nearTargets _maxRange;
+
+			{
+			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar];
+			    
+			    _percievedPos = _x select 0;
+			    _percievedSide = _x select 2;
+			    _targetUnit = _x select 4;
+			    _accuracy = _x select 5;
+				
+				if (!([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly)) then {
+					_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _targetUnit, _accuracy] new Target;
+				};
+			} foreach _targets as Array;
+			
+			_resultingTargets
+		};
+	};
+};
+

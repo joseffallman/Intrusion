@@ -1,0 +1,42 @@
+/*
+ * Name:	MapObservation
+ * Date:	2018-10-13
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models observations made by units on the field. An observation is always mapped to a
+ * marker on the map (not necessarily visible to everyone though). MapObservation is an 
+ * object that extracts the necessary content from an Observation.
+ */
+namespace Intrusion.Common
+{
+	public class MapObservation
+	{
+		// Creates an Observation object.
+		// _name (String): The unique and persistent name of the observation.
+		// _position (Array): The position of the observation.
+		// _side (Side): The side that the observation is identified to belong to. sideUnknown if the side is unknkown to the observer.
+		// _professionType (ProfessionType): The supposed profession type.
+		public constructor {
+			params ["_name" as String, "_position" as Array, "_side" as Side, "_professionType" as ProfessionType];
+			
+			_self.Name = _name;
+			_self.Position = _position;
+			_self.Side = _side;
+			_self.ProfessionType = _professionType;
+		};
+		
+		// Gets the unique and persistent Name of the observation.
+		public property String Name { get; private set; };
+		
+		// Gets the position of the observation.
+		public property Array Position { get; set; };
+		
+		// Gets the side that the observation is identified to belong to. civilian if it applies to all sides.
+		public property Side Side { get; set; };
+		
+		// Gets or sets the profession type that the observation is assumed to have.
+		public property ProfessionType ProfessionType { get; set; };
+	};
+};

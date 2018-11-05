@@ -1,0 +1,65 @@
+/*
+ * Name:	Observation
+ * Date:	2018-01-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models observations made by units on the field. An observation is always mapped to a
+ * marker on the map (not necessarily visible to everyone though).
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class Observation
+	{
+		// Creates an Observation object.
+		// _name (String): The unique and persistent ID of the observation.
+		// _position (Array): The position of the observation.
+		// _side (Side): The side that the observation is identified to belong to. sideUnknown if the side is unknkown to the observer.
+		// _unit (Object): The observed unit.
+		// _professionType (ProfessionType): The supposed profession type.
+		public constructor {
+			params ["_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_percievedSide" as Side, "_group" as Group, "_unit" as Object, "_percievedProfessionType" as ProfessionType, "_accuracy" as Scalar];
+			
+			_self.Id = _id;
+			_self.ObservingSide = _observingSide;
+			_self.PercievedPos = _percievedPos;
+			_self.PercievedSide = _percievedSide;
+			_self.Group = _group;
+			_self.Unit = _unit;
+			_self.PercievedProfessionType = _percievedProfessionType;
+			_self.Accuracy = _accuracy;
+			_self.MarkedAsDeleted = false;
+		};
+		
+		// Gets the unique and persistent Name of the observation.
+		public property Scalar Id { get; private set; };
+		
+		// Gets the side of the observing unit.
+		public property Side ObservingSide { get; private set; };
+		
+		// Gets the group associated with the observation.
+		public property Group Group { get; private set; };
+		
+		// Gets the unit associated with the observation.
+		public property Object Unit { get; set; };
+		
+		// Gets the position of the observation.
+		public property Array PercievedPos { get; set; };
+		
+		// Gets the side that the observation is identified to belong to. civilian if it applies to all sides.
+		public property Side PercievedSide { get; set; };
+		
+		// Gets or sets the profession type that the observation is assumed to have.
+		public property ProfessionType PercievedProfessionType { get; set; };
+		
+		// Gets or sets the accuracy for the observation.
+		public property Scalar Accuracy { get; set; };
+		
+		// Gets or sets whether the observation is marked for deletion or not.
+		public property Boolean MarkedAsDeleted { get; set; };
+	};
+};
