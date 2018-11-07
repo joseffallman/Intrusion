@@ -43,6 +43,18 @@ namespace Intrusion.Server
 			_mObservations = _observations;
 		};
 		
+		// Converts the service's list of observations into broadcastable and client optimized map observations.
+		// Returns (Array): An array of map observations.
+		private static method ConvertToMapObservations {
+			private _mapObservations = [];
+			
+			{
+				_mapObservations pushBack (call _x.ToMapObservation);
+			} foreach _mObservations as Observation;
+			
+			_mapObservations
+		};
+		
 		// Gets an eventual already existing observation from the list of observations.
 		// Uses different matching techniques to figure out which one it may be.
 		// _target (Target): The target used to find the observation.
@@ -105,7 +117,7 @@ namespace Intrusion.Server
 		
         // Runs the service.
         private static method Run {
-        	private ["_targets" as Array];
+        	private ["_targets" as Array, "_mapObservations" as Array];
         	
         	_mCurrentId = 0;
         	
@@ -128,8 +140,9 @@ namespace Intrusion.Server
 	        	call _self.DeleteMarkedObservations;
 
 	        	// Broadcast the list of observations
-	        	//
-	        		
+	        	_mapObservations = call _self.ConvertToMapObservations;
+	        	[_mapObservations] call PublicVariableHandler.BroadcastMapObservations;
+	        	
         		sleep 3;
 			};
 		};

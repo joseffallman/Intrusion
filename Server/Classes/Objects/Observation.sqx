@@ -18,7 +18,7 @@ namespace Intrusion.Server
 		// Creates an Observation object.
 		// _name (String): The unique and persistent ID of the observation.
 		// _position (Array): The position of the observation.
-		// _side (Side): The side that the observation is identified to belong to. sideUnknown if the side is unknkown to the observer.
+		// _percievedSide (Side): The side that the observation is identified to belong to. sideUnknown if the side is unknkown to the observer.
 		// _unit (Object): The observed unit.
 		// _professionType (ProfessionType): The supposed profession type.
 		public constructor {
@@ -61,5 +61,19 @@ namespace Intrusion.Server
 		
 		// Gets or sets whether the observation is marked for deletion or not.
 		public property Boolean MarkedAsDeleted { get; set; };
+		
+		// Converts this observation into a map observation that is optimized for broadcasting and client use.
+		public method MapObservation ToMapObservation {
+			private ["_isIdentifiedAsEnemy" as Boolean];
+			
+			if (_self.PercievedSide == sideUnknown) then {
+				_isIdentifiedAsEnemy = false;
+			}
+			else {
+				_isIdentifiedAsEnemy = [_self.ObservingSide, _self.PercievedSide] call BIS_fnc_sideIsEnemy;
+			};
+		
+			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType] new MapObservation
+		};
 	};
 };

@@ -30,6 +30,24 @@ namespace Intrusion.Common
 			!isNil "INT_Public_resourceLocations"
 		};
 
+		// Sets and broadcasts an array of map observations across the network.
+		// _mapObservations (Array): An array of map observations.
+		public static method BroadcastMapObservations {
+			params ["_mapObservations" as Array /* of MapObservation */];
+			INT_Public_mapObservations = _mapObservations;
+			publicVariable "INT_Public_mapObservations";
+		};
+		
+		// Gets all map observations from the public network synchronized variable.
+		public static method Array GetMapObservations { 
+			INT_Public_mapObservations
+		};
+		
+		// Gets whether the map observations has been set on the current machine or not.
+		public static method Boolean MapObservationsHasValue {
+			!isNil "INT_Public_mapObservations"
+		};
+
 /*
 		// Sets and broadcasts an array of resource locations across the network.
 		// _resourceLocations (Array): An array of resource locations.
