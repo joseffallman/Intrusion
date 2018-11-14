@@ -9,7 +9,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientMessageHan
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\IntrusionMenuHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientGroupHandler.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapMarkerHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapObservationsHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 
@@ -25,6 +25,7 @@ call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
+call MapObservationsHandler.Init;
 
 // Dialogs
 call ProfessionDialog.Init;

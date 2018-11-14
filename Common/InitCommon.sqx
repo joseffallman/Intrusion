@@ -22,5 +22,6 @@ call DebugConfig.Init;
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;
 call RemoteTargetOptions.Init;
+call PublicVariableHandler.Init;
 
 #endregion

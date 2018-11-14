@@ -5,13 +5,29 @@
  * Author:  Engima
  *
  * Description:
- * Encapsulates all global variable handling and keeps its global properties persistent and at sync 
+ * Encapsulates all global variable handling and keeps its global properties persistent and at sync.
  * over the network.
+ *
+ * Remarks:
+ * This is the *only* only file where the global public network variables are actually written.
  */ 
 namespace Intrusion.Common
 {
 	public class PublicVariableHandler
 	{
+		private static fields ["_mMapObservationsListeners" as Array /* of Code */];
+	
+		// Initializes the PublicVariableHandler.
+		public static method Init {
+			_mMapObservationsListeners = [];
+		};
+	
+		public static method RegisterMapObservationsListener {
+			params ["_mapObservationsListener" as Code];
+			
+			_mMapObservationsListeners pushBack _mapObservationsListener;
+		};
+	
 		// Sets and broadcasts an array of resource locations across the network.
 		// _resourceLocations (Array): An array of resource locations.
 		public static method BroadcastResourceLocations {
@@ -36,10 +52,21 @@ namespace Intrusion.Common
 			params ["_mapObservations" as Array /* of MapObservation */];
 			INT_Public_mapObservations = _mapObservations;
 			publicVariable "INT_Public_mapObservations";
+			_mapObservations call _self.OnRecievedMapObservations;
+		};
+		
+		// Triggers all listeners on the map observation public variable.
+		// _mapObservations (Array): An array with map observations.
+		public static method OnRecievedMapObservations {
+			params ["_mapObservations"];
+			
+			{
+				_mapObservations spawn _x;
+			} foreach _mMapObservationsListeners as Code;
 		};
 		
 		// Gets all map observations from the public network synchronized variable.
-		public static method Array GetMapObservations { 
+		public static method Array GetMapObservations {
 			INT_Public_mapObservations
 		};
 		
@@ -47,25 +74,10 @@ namespace Intrusion.Common
 		public static method Boolean MapObservationsHasValue {
 			!isNil "INT_Public_mapObservations"
 		};
-
-/*
-		// Sets and broadcasts an array of resource locations across the network.
-		// _resourceLocations (Array): An array of resource locations.
-		public static method BroadcastPlayerGroupCollection {
-			params ["_playerGroups" as PlayerGroupCollection];			
-			INT_Public_playerGroupCollection = _playerGroups;
-			publicVariable "INT_Public_playerGroupCollection";
-		};
-		
-		// Gets all resource locations from the public network synchronized variable.
-		public static method PlayerGroupCollection GetPlayerGroupCollection {
-			INT_Public_playerGroupCollection
-		};
-		
-		// Gets whether the player group collection has been set on the current machine or not.
-		public static method Boolean PlayerGroupCollectionHasValue {
-			!isNil "INT_Public_playerGroupCollection"
-		};
-*/
+	};
+	
+	// Forwards the map observations broadcasted over the network to OnRecivedMapObservations.
+	"INT_Public_mapObservations" addPublicVariableEventHandler {
+		INT_Public_mapObservations call PublicVariableHandler.OnRecievedMapObservations;
 	};
 };

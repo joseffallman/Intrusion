@@ -1,0 +1,98 @@
+/*
+ * Name:	MapObservationsHandler
+ * Date:	2018-01-22
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all map markers for the player on the current client.
+ */
+using Sqx.Markers;
+using Intrusion.Common;
+ 
+namespace Intrusion.Client
+{
+	public class MapObservationsHandler
+	{
+		private static fields ["_mMapObservationIds" as Array /* as Scalar */];
+	
+		// Initializes the MapObservationsHandler.
+		public static method Init {
+			_mMapObservationIds = [];
+			[MapObservationsHandler.UpdateMap] call PublicVariableHandler.RegisterMapObservationsListener;
+		};
+		
+		private static method AddMarker {
+			params ["_mapObservation" as MapObservation];
+			private ["_name" as String, "_color" as String];
+			
+			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
+			
+			createMarkerLocal [_name, _mapObservation.PercievedPos];
+			_name setMarkerTypeLocal "hd_dot";
+			
+			_color = "ColorGrey";
+			if (_mapObservation.IsIdentifiedAsEnemy) then {
+				_color = "ColorRed";
+			};
+			
+			_name setMarkerColorLocal _color;
+		};
+		
+		private static method UpdateMarker {
+			params ["_mapObservation" as MapObservation];
+			private ["_name" as String, "_color" as String];
+			
+			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
+			
+			_name setMarkerPosLocal _mapObservation.PercievedPos;
+			_name setMarkerTypeLocal "hd_dot";
+			
+			_color = "ColorGrey";
+			if (_mapObservation.IsIdentifiedAsEnemy) then {
+				_color = "ColorRed";
+			};
+			
+			_name setMarkerColorLocal _color;
+		};
+		
+		private static method DeleteMarker {
+			params ["_mapObservationId" as Scalar];
+			private ["_name" as String];
+			
+			_name = "INT_MapObservationMarker_" + str _mapObservationId;
+			
+			deleteMarker _name;
+		};
+		
+		// Updates all map observations on the map.
+		public static method UpdateMap {
+			params ["_mapObservations" as Array];
+			private ["_newMapObservationsId"];
+			
+			_newMapObservationsId = [];
+			
+			// Add markers that do not already exist on the map
+			{
+				if (!(_x.Id in _mMapObservationIds)) then {
+					[_x] call MapObservationsHandler.AddMarker;
+					_mMapObservationIds pushBack _x.Id;
+				}
+				else { // Update the others
+					[_x] call MapObservationsHandler.UpdateMarker;
+				};
+				
+				_newMapObservationsId pushBack _x.Id;
+			} foreach _mapObservations as MapObservation;
+			
+			// Remove markers that no lonoger exist as observations
+			{
+				if (!(_x in _newMapObservationsId)) then {
+					[_x] call MapObservationsHandler.DeleteMarker;
+				};
+			} foreach _mMapObservationIds as Scalar;
+			
+			_mMapObservationIds = _newMapObservationsId;
+		};
+	};
+};
