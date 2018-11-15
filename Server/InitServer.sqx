@@ -1,4 +1,4 @@
-call compile preprocessFileLineNumbers "Server\Classes\Configs\MatchConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\MapMarkersConfig.sqx";
@@ -27,7 +27,7 @@ using Intrusion.Server;
 #region Server Classes
 
 /* Configs */
-call MatchConfig.Init;
+call GameplayConfig.Init;
 call MapMarkersConfig.Init;
 call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;

@@ -21,8 +21,8 @@ namespace Intrusion.Server
 		private static method DoRunMissionCountDown {
 			private ["_endDayTime" as Scalar, "_remainingMinutes" as Scalar, "_lastReportMinute" as Scalar];
 			
-			_endDayTime = dayTime + (MatchConfig.MatchLengthMinutes / 60);
-			_lastReportMinute = MatchConfig.MatchLengthMinutes;
+			_endDayTime = dayTime + (GameplayConfig.MatchLengthMinutes / 60);
+			_lastReportMinute = GameplayConfig.MatchLengthMinutes;
 
 			while { daytime < _endDayTime } do {
 				_remainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
@@ -72,7 +72,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
         	{
         		_sideManagers pushBack [_x] new SideManager;
-        	} foreach MatchConfig.CompetingSides as Side;
+        	} foreach GameplayConfig.CompetingSides as Side;
         	
 			// Perform the mission digest loop
 			while { _self.MissionIsRunning } do

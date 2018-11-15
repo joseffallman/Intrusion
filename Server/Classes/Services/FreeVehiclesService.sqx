@@ -26,11 +26,11 @@ namespace Intrusion.Server
 		    		_vehiclesAtBaseCount = [_side] call VehicleHandler.CountFreeVehiclesAtBase;
 		    		
 			        // If less than max, spawn a new one.
-			        if (_vehiclesAtBaseCount < MatchConfig.MaxFreeVehiclesAtBase) then {
+			        if (_vehiclesAtBaseCount < GameplayConfig.MaxFreeVehiclesAtBase) then {
 			        	[_side] call VehicleHandler.SpawnFreeVehicleOnCarpark;
 			        };
 			        
-		    	} foreach MatchConfig.CompetingSides as Side;
+		    	} foreach GameplayConfig.CompetingSides as Side;
 		    	
 		        if (time < 30) then {
 		            sleep 3;

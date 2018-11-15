@@ -13,7 +13,11 @@ namespace Intrusion.Server
 	{
 		// Runs the weapons service.
 		private static method Run {
-			
+			while { true } do {
+				
+				
+				sleep 60;
+			};
 		};
 	
 		// Starts the weapons service.

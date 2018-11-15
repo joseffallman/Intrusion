@@ -1,5 +1,5 @@
 /*
- * Name:	DefaultGameSettings
+ * Name:	GameplayConfig
  * Date:	2017-11-18
  * Version: 1.0
  * Author:  Engima
@@ -11,7 +11,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class MatchConfig
+	public class GameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
 		public static method Init {
