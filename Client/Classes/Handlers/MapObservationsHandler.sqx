@@ -22,6 +22,8 @@ namespace Intrusion.Client
 			[MapObservationsHandler.UpdateMap] call PublicVariableHandler.RegisterMapObservationsListener;
 		};
 		
+		// Adds an observation marker to the map.
+		// _mapObservation (MapObservation): The map observation to draw a marker for.
 		private static method AddMarker {
 			params ["_mapObservation" as MapObservation];
 			private ["_name" as String, "_color" as String];
@@ -39,6 +41,8 @@ namespace Intrusion.Client
 			_name setMarkerColorLocal _color;
 		};
 		
+		// Updates an existing observation marker on the map.
+		// _mapObservation (MapObservation): The map observation marker to update its marker for.
 		private static method UpdateMarker {
 			params ["_mapObservation" as MapObservation];
 			private ["_name" as String, "_color" as String];
@@ -56,6 +60,8 @@ namespace Intrusion.Client
 			_name setMarkerColorLocal _color;
 		};
 		
+		// Deletes an observation marker on the map.
+		// _mapObservationId (Scalar): The ID for the map observation marker to delete.
 		private static method DeleteMarker {
 			params ["_mapObservationId" as Scalar];
 			private ["_name" as String];
