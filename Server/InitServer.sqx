@@ -34,6 +34,7 @@ call SideMarkersConfig.Init;
 call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;
 call WeaponClassNamesConfig.Init;
+call WeaponBoxClassNamesConfig.Init;
 
 /* Handlers */
 call GroupHandler.Init;

@@ -1,0 +1,25 @@
+/*
+ * Name:	WeaponBox
+ * Date:	2018-11-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a weapon box.
+ */
+namespace Intrusion.Server
+{
+	public class WeaponBox
+	{
+		// Creates a WeaponBox object and puts it on the map.
+		public constructor {
+			params ["_side" as Side, "_pos" as Array, "_weaponBoxType" as WeaponBoxType];
+			
+			private _className = [_side, _weaponBoxType] call WeaponBoxClassNamesConfig.GetWeaponClassNameBySideAndBoxType;
+			
+			_self.Object = _className createVehicle _pos;
+		};
+		
+		public property Object Object { get; private set; };
+	};
+};
