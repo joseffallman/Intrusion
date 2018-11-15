@@ -1,24 +1,23 @@
 /*
- * Name:	WeaponInfo
- * Date:	2018-01-24
+ * Name:	SideWeaponBoxInfo
+ * Date:	2018-11-15
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Models a weapon and its possible magazines and other attributes.
+ * Contains the class information for weapon boxes.
  */
 namespace Intrusion.Server
 {
-	public class WeaponInfo
+	public class SideWeaponBoxInfo
 	{
-		// Creates a WeaponInfo object.
+		// Creates a SideWeaponBoxInfo object.
 		public constructor {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String, "_magazines" as Array];
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String];
 			
 			_self.Side = _side;
 			_self.WeaponBoxType = _weaponBoxType;
 			_self.ClassName = _className;
-			_self.Magazines = _magazines;
 		};
 		
 		// Gets the weapon's side.
@@ -29,8 +28,6 @@ namespace Intrusion.Server
 		
 		// Gets the weapon's class name.
 		public property String ClassName { get; private set; };
-		
-		// Gets the weapon's possible magazine's class names as an array of String. 
-		public property Array Magazines { get; private set; };
 	};
 };
+

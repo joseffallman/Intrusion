@@ -1,0 +1,40 @@
+/*
+ * Name:	WeaponBoxClassNamesConfig
+ * Date:	2018-11-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all configuration about weapon boxes.
+ */
+namespace Intrusion.Server
+{
+	public class WeaponBoxClassNamesConfig
+	{
+		private static fields ["_mWeapons" as Array /* of WeaponBoxInfo */ ];
+	
+		// Initializes all weapon boxe's class names.
+		public static method Init {
+			_mWeapons = [
+				[west, WeaponBoxType.Basic, "Box_NATO_Wps_F"] new SideWeaponBoxInfo,
+				[east, WeaponBoxType.Basic, "Box_East_Wps_F"] new SideWeaponBoxInfo
+			];
+		};
+		
+		// Gets the weapon box class name that belongs to a defined side and a weapon box type.
+		// Returns (String): A weapon class name. Empty string if the weapon does not exist.
+		public static method String GetWeaponClassNameBySideAndBoxType {
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
+			
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side && _x.WeaponBoxType == _weaponBoxType) then {
+					_x.ClassName breakOut "main";
+				};
+			} foreach _mWeapons as SideWeaponBoxInfo;
+			
+			""
+		};
+	};
+};

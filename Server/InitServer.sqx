@@ -2,14 +2,16 @@ call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sq
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\SideMarkersConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponClassNamesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkerInfo.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponBoxInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroup.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroupCollection.sqx";
@@ -31,7 +33,7 @@ call GameplayConfig.Init;
 call SideMarkersConfig.Init;
 call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;
-call WeaponConfig.Init;
+call WeaponClassNamesConfig.Init;
 
 /* Handlers */
 call GroupHandler.Init;

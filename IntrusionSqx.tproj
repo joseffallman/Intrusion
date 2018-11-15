@@ -246,7 +246,7 @@
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="true" FileName="Server\Classes\Configs">
-                <IsSelected>true</IsSelected>
+                <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="GameplayConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\GameplayConfig.sqx">
                     <IsSelected>false</IsSelected>
@@ -260,7 +260,11 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\WeaponConfig.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBoxClassNamesConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponClassNamesConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\WeaponClassNamesConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -296,7 +300,7 @@
                 </SubNodes>
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Server\Classes\Objects">
-                <IsSelected>false</IsSelected>
+                <IsSelected>true</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Observation.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Observation.sqx">
                     <IsSelected>false</IsSelected>
@@ -346,11 +350,15 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Target.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Target.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SideWeaponBoxInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\SideWeaponBoxInfo.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\WeaponInfo.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SideWeaponInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\SideWeaponInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Target.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Target.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
