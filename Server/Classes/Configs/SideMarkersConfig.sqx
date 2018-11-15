@@ -1,25 +1,25 @@
 /*
- * Name:	MarkerConfig
+ * Name:	SideMarkersConfig
  * Date:	2017-11-25
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Contains information about all markers that need to be for each side.
+ * Contains config information about a side.
  */
 using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class MapMarkersConfig
+	public class SideMarkersConfig
 	{
 		private static fields ["_mSideInfos" as Array];
 	
-		// Initializes a MissionConfig object.
+		// Initializes a SideMarkersConfig object.
 		public static method Init {
 			_mSideInfos = [
-				[west, "respawn_west", "INT_CarParkWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa"] new SideMarkersInfo,
-				[east, "respawn_east", "INT_CarParkEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa"] new SideMarkersInfo
+				[west, "respawn_west", "INT_CarParkWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa"] new SideMarkerInfo,
+				[east, "respawn_east", "INT_CarParkEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa"] new SideMarkerInfo
 			];
 			
 			_self.WinnersLocationMarkerType = "hd_flag";
@@ -33,7 +33,7 @@ namespace Intrusion.Server
 		// Returns (MissionSideInfo): A mission side config object.
 		public static method GetSideMarkerInfo {
 			params ["_side" as Side];
-			private ["_info" as SideMarkersInfo];
+			private ["_info" as SideMarkerInfo];
 			[str _this + " MapMarkersInfo.SideMarkersInfo"] call LogHandler.Debug;
 
 			scopeName "main";
@@ -43,7 +43,7 @@ namespace Intrusion.Server
 				if (_x.Side == _side) then {
 					_x breakOut "main";
 				};
-			} foreach _mSideInfos as SideMarkersInfo;
+			} foreach _mSideInfos as SideMarkerInfo;
 			
 			_info
 		};

@@ -13,8 +13,28 @@ namespace Intrusion.Server
 	{
 		// Runs the weapons service.
 		private static method Run {
-			while { true } do {
-				
+			while { true } do
+			{
+	        	{
+					private ["_side" as Side];
+					private ["_box", "_weapon", "_magazines", "_boxAlive"];
+					
+					_side = _x;
+					
+					// Basic weapons
+					
+					_boxAlive = alive dre_loc_CC_BasicWeaponBoxWest;
+					
+					if (count dre_loc_allWeaponBoxesWest <= 0 || !_boxAlive) then {
+						dre_loc_CC_BasicWeaponBoxWest = "Box_NATO_Wps_F" createVehicle getMarkerPos "CC_WeaponDepotMarkerWest";
+						_box = dre_loc_CC_BasicWeaponBoxWest;
+						dre_loc_allWeaponBoxesWest set [0, _box];
+						clearWeaponCargoGlobal _box;
+						clearMagazineCargoGlobal _box;
+					};
+					
+			
+	        	} foreach GameplayConfig.CompetingSides as Side;
 				
 				sleep 60;
 			};

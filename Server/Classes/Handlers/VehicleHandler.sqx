@@ -70,10 +70,10 @@ namespace Intrusion.Server
 		public static method IntrusionVehicle SpawnVehicleOnCarpark {
 		    params ["_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
 		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
-		    private ["_markerConfig" as SideMarkersInfo, "_intrusionVehicle" as IntrusionVehicle];
+		    private ["_markerConfig" as SideMarkerInfo, "_intrusionVehicle" as IntrusionVehicle];
 		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
 		    
-		    _markerConfig = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+		    _markerConfig = [_side] call SideMarkersConfig.GetSideMarkerInfo;
 		    
 			_spawnDir = markerDir _markerConfig.CarParkMarkerName;
 		    _spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
@@ -113,9 +113,9 @@ namespace Intrusion.Server
 		// Returns (Scalar): The number of free vehicles at the side's base.
 		public static method Scalar CountFreeVehiclesAtBase {
 			params ["_side" as Side];
-			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as SideMarkersInfo];
+			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as SideMarkerInfo];
 			
-    		_markerInfo = [_side] call MapMarkersConfig.GetSideMarkerInfo;
+    		_markerInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
     		_vehiclesAtBaseCount = 0;
 
 			{

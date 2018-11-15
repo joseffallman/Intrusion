@@ -1,14 +1,14 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\MapMarkersConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\SideMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkersInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkerInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroup.sqx";
@@ -28,7 +28,7 @@ using Intrusion.Server;
 
 /* Configs */
 call GameplayConfig.Init;
-call MapMarkersConfig.Init;
+call SideMarkersConfig.Init;
 call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;
 call WeaponConfig.Init;

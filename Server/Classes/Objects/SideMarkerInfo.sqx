@@ -1,5 +1,5 @@
 /*
- * Name:	SideMarkersInfo
+ * Name:	SideMarkerInfo
  * Date:	2017-11-25
  * Version: 1.0
  * Author:  Engima
@@ -9,9 +9,9 @@
  */
 namespace Intrusion.Server
 {
-	public class SideMarkersInfo
+	public class SideMarkerInfo
 	{
-		// Creates a SideMarkersInfo object.
+		// Creates a SideMarkerInfo object.
 		public constructor {
 			params ["_side" as Side, "_baseMarkerName" as String, "_carParkMarkerName" as String, "_flagTexture" as String];
 			
