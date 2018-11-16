@@ -34,40 +34,62 @@ namespace Intrusion.Server
 			classNull
 		};
 		
+		private static method AddWeaponBox {
+			params ["_weaponBox" as WeaponBox];
+			private ["_existingWeaponBox" as WeaponBox];
+		
+			scopeName "main";
+			
+			for "_i" from 0 to (count _mWeaponBoxes - 1) do {
+				_existingWeaponBox = _mWeaponBoxes select _i;
+				
+				if (_existingWeaponBox.Side == _weaponBox.Side && _existingWeaponBox.Type == _weaponBox.Type) then {
+					_mWeaponBoxes set [_i, _weaponBox;];
+					breakOut "main";
+				};
+			};
+			
+			_mWeaponBoxes pushBack _weaponBox;
+		};
+		
 		// Runs the weapons service.
 		private static method Run {
-			private ["_side" as Side, "_markerInfo" as SideMarkerInfo];
-
-			// Create basic weapon boxes
-			{
-				_markerInfo = [_x] call SideMarkersConfig.GetSideMarkerInfo;
-				_mWeaponBoxes pushBack [_x, getMarkerPos _markerInfo.WeaponDepotMarkerName, WeaponBoxType.Basic] new WeaponBox;
-				["Basic weapon box spawned for " + str _x] call LogHandler.Info;
-        	} foreach GameplayConfig.CompetingSides as Side;
-
-		
 			while { true } do
 			{
 	        	{
-					private ["_box" as WeaponBox, "_weapon", "_magazines", "_boxAlive"];
-					
+					private ["_side" as Side, "_weaponBox" as WeaponBox, "_markerInfo" as SideMarkerInfo, "_weapon", "_magazines", "_boxAlive"];
 					_side = _x;
 					
-					// Basic weapons
-					_box = [_side, WeaponBoxType.Basic] call _self.GetWeaponBox;
-					if (!isNull _box) then
+					_markerInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
+						
+					// Create the box if it is not already there
+					
+					_weaponBox = [_side, WeaponBoxType.Basic] call _self.GetWeaponBox;
+					
+					if (isNull _weaponBox || { !(call _weaponBox.IsAlive) }) then
 					{
-						call _box.MakeEmpty;
-						_box.Object addWeaponCargoGlobal ["FirstAidKit", 10];
+						_weaponBox = [_side, getMarkerPos _markerInfo.WeaponDepotMarkerName, WeaponBoxType.Basic] new WeaponBox;
+						[_weaponBox] call WeaponsService.AddWeaponBox;
+						["Basic weapon box spawned for " + str _side] call LogHandler.Info;
+					};
+					
+					
+					// Add weapon boxes
+					
+					// Basic weapons
+					if (!isNull _weaponBox) then
+					{
+						call _weaponBox.MakeEmpty;
+						_weaponBox.Object addWeaponCargoGlobal ["FirstAidKit", 10];
 						
 						{
 							private ["_weaponInfo" as SideWeaponInfo];
 							_weaponInfo = _x;
 							
-							_box.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+							_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
 							
 							{
-								_box.Object addMagazineCargoGlobal [_x, 300];
+								_weaponBox.Object addMagazineCargoGlobal [_x, 300];
 							} foreach _weaponInfo.Magazines as String;
 						} foreach ([_side, WeaponBoxType.Basic] call WeaponClassNamesConfig.GetWeaponsBySideAndBoxType) as SideWeaponInfo;
 					};
