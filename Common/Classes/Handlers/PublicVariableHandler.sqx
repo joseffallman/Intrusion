@@ -81,6 +81,6 @@ namespace Intrusion.Common
 	
 	// Forwards the map observations broadcasted over the network to OnRecivedMapObservations.
 	"INT_Public_mapObservations" addPublicVariableEventHandler {
-		INT_Public_mapObservations call PublicVariableHandler.OnRecievedMapObservations;
+		[INT_Public_mapObservations] call PublicVariableHandler.OnRecievedMapObservations;
 	};
 };
