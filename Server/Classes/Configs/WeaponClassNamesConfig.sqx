@@ -57,19 +57,20 @@ namespace Intrusion.Server
 		};
 		
 		// Gets all weapons belonging to a defined side and a weapon box.
-		// Returns (WeaponInfo): A weapon. classNull if the weapon does not exist.
+		// Returns (Array): A list of side weapon infos.
 		public static method Array GetWeaponsBySideAndBoxType {
 			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
+			private ["_weapons" as Array];
 			
-			scopeName "main";
+			_weapons = [];
 			
 			{
 				if (_x.Side == _side && _x.WeaponBoxType == _weaponBoxType) then {
-					_x breakOut "main";
+					_weapons pushBack _x;
 				};
 			} foreach _mWeapons as SideWeaponInfo;
 			
-			classNull
+			_weapons
 		};
 	};
 };

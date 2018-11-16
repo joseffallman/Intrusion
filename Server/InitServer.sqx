@@ -21,6 +21,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.s
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
 
 using Intrusion.Common;
@@ -35,6 +36,7 @@ call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;
 call WeaponClassNamesConfig.Init;
 call WeaponBoxClassNamesConfig.Init;
+call WeaponsService.Init;
 
 /* Handlers */
 call GroupHandler.Init;

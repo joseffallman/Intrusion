@@ -7,6 +7,9 @@
  * Description:
  * Models a weapon box.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class WeaponBox
@@ -14,12 +17,33 @@ namespace Intrusion.Server
 		// Creates a WeaponBox object and puts it on the map.
 		public constructor {
 			params ["_side" as Side, "_pos" as Array, "_weaponBoxType" as WeaponBoxType];
+			[(str _this) + " WeaponBox.constructor"] call LogHandler.Debug;
 			
 			private _className = [_side, _weaponBoxType] call WeaponBoxClassNamesConfig.GetWeaponClassNameBySideAndBoxType;
 			
 			_self.Object = _className createVehicle _pos;
+			_self.Side = _side;
+			_self.Type = _weaponBoxType;
+			
+			call _self.MakeEmpty;
 		};
 		
+		public property Side Side { get; private set; };
+		
+		public property WeaponBoxType Type { get; private set; };
+		
 		public property Object Object { get; private set; };
+		
+		// Checks whether the box is still alive or if it is destroyed.
+		// Returns (Boolean): true if the box is still alive, otherwise false.
+		public method Boolean IsAlive {
+			alive _self.Object
+		};
+		
+		// Empties the weapon box.
+		public method MakeEmpty {
+			clearWeaponCargoGlobal _self.Object;
+			clearMagazineCargoGlobal _self.Object;
+		};
 	};
 };

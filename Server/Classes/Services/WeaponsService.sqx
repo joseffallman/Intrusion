@@ -7,33 +7,70 @@
  * Description:
  * Handles the assignment of weapons for all sides.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
+		private static fields ["_mWeaponBoxes" as Array /* of WeaponBox */];
+		
+		public static method Init {
+			_mWeaponBoxes = [];
+		};
+		
+		private static method WeaponBox GetWeaponBox {
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
+			
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side && _x.Type == _weaponBoxType) then {
+					_x breakOut "main";
+				}
+			} foreach _mWeaponBoxes as WeaponBox;
+			
+			classNull
+		};
+		
 		// Runs the weapons service.
 		private static method Run {
+			private ["_side" as Side, "_markerInfo" as SideMarkerInfo];
+
+			// Create basic weapon boxes
+			{
+				_markerInfo = [_x] call SideMarkersConfig.GetSideMarkerInfo;
+				_mWeaponBoxes pushBack [_x, getMarkerPos _markerInfo.WeaponDepotMarkerName, WeaponBoxType.Basic] new WeaponBox;
+				["Basic weapon box spawned for " + str _x] call LogHandler.Info;
+        	} foreach GameplayConfig.CompetingSides as Side;
+
+		
 			while { true } do
 			{
 	        	{
-					private ["_side" as Side];
-					private ["_box", "_weapon", "_magazines", "_boxAlive"];
+					private ["_box" as WeaponBox, "_weapon", "_magazines", "_boxAlive"];
 					
 					_side = _x;
 					
 					// Basic weapons
-					
-					_boxAlive = alive dre_loc_CC_BasicWeaponBoxWest;
-					
-					if (count dre_loc_allWeaponBoxesWest <= 0 || !_boxAlive) then {
-						dre_loc_CC_BasicWeaponBoxWest = "Box_NATO_Wps_F" createVehicle getMarkerPos "CC_WeaponDepotMarkerWest";
-						_box = dre_loc_CC_BasicWeaponBoxWest;
-						dre_loc_allWeaponBoxesWest set [0, _box];
-						clearWeaponCargoGlobal _box;
-						clearMagazineCargoGlobal _box;
+					_box = [_side, WeaponBoxType.Basic] call _self.GetWeaponBox;
+					if (!isNull _box) then
+					{
+						call _box.MakeEmpty;
+						_box.Object addWeaponCargoGlobal ["FirstAidKit", 10];
+						
+						{
+							private ["_weaponInfo" as SideWeaponInfo];
+							_weaponInfo = _x;
+							
+							_box.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+							
+							{
+								_box.Object addMagazineCargoGlobal [_x, 300];
+							} foreach _weaponInfo.Magazines as String;
+						} foreach ([_side, WeaponBoxType.Basic] call WeaponClassNamesConfig.GetWeaponsBySideAndBoxType) as SideWeaponInfo;
 					};
-					
-			
 	        	} foreach GameplayConfig.CompetingSides as Side;
 				
 				sleep 60;
