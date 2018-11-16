@@ -49,19 +49,22 @@ namespace Intrusion.Common
 		// Sets and broadcasts an array of map observations across the network.
 		// _mapObservations (Array): An array of map observations.
 		public static method BroadcastMapObservations {
-			params ["_mapObservations" as Array /* of MapObservation */];
+			params ["_mapObservations" as Array /* of MapObservation */ ];
+			[(str _this) + " PublicVariableHandler.BroadcastMapObservations"] call LogHandler.Debug;
+			
 			INT_Public_mapObservations = _mapObservations;
 			publicVariable "INT_Public_mapObservations";
-			_mapObservations call _self.OnRecievedMapObservations;
+			[_mapObservations] call _self.OnRecievedMapObservations;
 		};
 		
 		// Triggers all listeners on the map observation public variable.
 		// _mapObservations (Array): An array with map observations.
 		public static method OnRecievedMapObservations {
-			params ["_mapObservations"];
+			params ["_mapObservations" as Array /* of MapObservation */ ];
+			[(str _this) + " PublicVariableHandler.OnRecievedMapObservations"] call LogHandler.Debug;
 			
 			{
-				_mapObservations spawn _x;
+				[_mapObservations] spawn _x;
 			} foreach _mMapObservationsListeners as Code;
 		};
 		

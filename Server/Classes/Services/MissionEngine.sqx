@@ -26,6 +26,9 @@ namespace Intrusion.Server
         	// Start the weapon service
         	call WeaponsService.RunAsync;
         	
+        	// Start the observation service
+        	call ObservationService.RunAsync;
+        	
         	// Create a side manager for each side.
         	_sideManagers = [];
         	{

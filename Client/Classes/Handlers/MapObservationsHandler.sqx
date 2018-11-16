@@ -75,9 +75,10 @@ namespace Intrusion.Client
 		// Updates all map observations on the map.
 		public static method UpdateMap {
 			params ["_mapObservations" as Array];
-			private ["_newMapObservationsId"];
+			private ["_newMapObservationIds" as Array];
+			[(str _this) + " MapObservationsHandler.UpdateMap"] call LogHandler.Debug;
 			
-			_newMapObservationsId = [];
+			_newMapObservationIds = [];
 			
 			// Add markers that do not already exist on the map
 			{
@@ -89,17 +90,17 @@ namespace Intrusion.Client
 					[_x] call MapObservationsHandler.UpdateMarker;
 				};
 				
-				_newMapObservationsId pushBack _x.Id;
+				_newMapObservationIds pushBack _x.Id;
 			} foreach _mapObservations as MapObservation;
 			
 			// Remove markers that no lonoger exist as observations
 			{
-				if (!(_x in _newMapObservationsId)) then {
+				if (!(_x in _newMapObservationIds)) then {
 					[_x] call MapObservationsHandler.DeleteMarker;
 				};
 			} foreach _mMapObservationIds as Scalar;
 			
-			_mMapObservationIds = _newMapObservationsId;
+			_mMapObservationIds = _newMapObservationIds;
 		};
 	};
 };

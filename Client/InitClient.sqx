@@ -25,6 +25,8 @@ call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
+
+// Services
 call MapObservationsHandler.Init;
 
 // Dialogs
