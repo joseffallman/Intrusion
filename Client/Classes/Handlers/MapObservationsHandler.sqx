@@ -81,28 +81,34 @@ namespace Intrusion.Client
 		// Updates all map observations on the map.
 		public static method UpdateMap {
 			params ["_mapObservations" as Array];
-			private ["_newMapObservationIds" as Array];
+			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];
 			[(str _this) + " MapObservationsHandler.UpdateMap"] call LogHandler.Debug;
 			
 			_newMapObservationIds = [];
 			
 			// Add markers that do not already exist on the map
 			{
-				if (!(_x.Id in _mMapObservationIds)) then {
-					[_x] call MapObservationsHandler.AddMarker;
-					_mMapObservationIds pushBack _x.Id;
-				}
-				else { // Update the others
-					[_x] call MapObservationsHandler.UpdateMarker;
-				};
+				_mapObservation = _x;
 				
-				_newMapObservationIds pushBack _x.Id;
+				if (_mapObservation.ObservingSide == playerSide) then {
+					if (!(_mapObservation.Id in _mMapObservationIds)) then {
+						[_mapObservation] call MapObservationsHandler.AddMarker;
+						_mMapObservationIds pushBack _mapObservation.Id;
+					}
+					else { // Update the others
+						[_mapObservation] call MapObservationsHandler.UpdateMarker;
+					};
+					
+					_newMapObservationIds pushBack _mapObservation.Id;
+				};
 			} foreach _mapObservations as MapObservation;
 			
 			// Remove markers that no lonoger exist as observations
 			{
-				if (!(_x in _newMapObservationIds)) then {
-					[_x] call MapObservationsHandler.DeleteMarker;
+				_id = _x;
+				
+				if (!(_id in _newMapObservationIds)) then {
+					[_id] call MapObservationsHandler.DeleteMarker;
 				};
 			} foreach _mMapObservationIds as Scalar;
 			
