@@ -257,7 +257,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SideMarkersConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\SideMarkersConfig.sqx">
-                    <IsSelected>true</IsSelected>
+                    <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBoxClassNamesConfig.sqx" IsExpanded="true" FileName="Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx">
@@ -375,6 +375,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionCounterService.sqx" IsExpanded="false" FileName="Server\Classes\Services\MissionCounterService.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionEngine.sqx" IsExpanded="false" FileName="Server\Classes\Services\MissionEngine.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -405,7 +409,7 @@
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitServer.sqx" IsExpanded="false" FileName="Server\InitServer.sqx">
-            <IsSelected>false</IsSelected>
+            <IsSelected>true</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
         </SubNodes>

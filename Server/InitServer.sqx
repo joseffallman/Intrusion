@@ -15,13 +15,14 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponBoxInfo
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroup.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroupCollection.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\GroupHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
 
 using Intrusion.Common;

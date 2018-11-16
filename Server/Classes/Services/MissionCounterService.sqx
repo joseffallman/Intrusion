@@ -1,0 +1,63 @@
+/*
+ * Name:	MissionCounterService
+ * Date:	2018-11-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Performs the countdown of the mission time.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class MissionCounterService
+	{
+		// Gets whether the mission is running or not.
+		public static property Boolean MissionIsRunning { get; private set; };
+
+		// Performs the mission time count down, and informs all clients about remaining time
+		// and when mission ends.
+        private static method Run {
+			private ["_endDayTime" as Scalar, "_remainingMinutes" as Scalar, "_lastReportMinute" as Scalar];
+			
+			_endDayTime = dayTime + (GameplayConfig.MatchLengthMinutes / 60);
+			_lastReportMinute = GameplayConfig.MatchLengthMinutes;
+
+			while { daytime < _endDayTime } do {
+				_remainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
+				
+				// If a report is not done for this minute
+				if (_lastReportMinute != _remainingMinutes) then
+				{
+					// If this minute is a reporting minute, report remaining time to players.
+					if (_remainingMinutes == 1 || 
+						_remainingMinutes == 2 || 
+						_remainingMinutes == 3 || 
+						_remainingMinutes == 4 || 
+						_remainingMinutes == 5 ||
+						_remainingMinutes == 10 ||
+						_remainingMinutes == 15 ||
+						_remainingMinutes == 20 ||
+						_remainingMinutes % 30 == 0) then
+					{
+						["ClientMessageHandler.ShowHint", ["Mission ends in " + str _remainingMinutes + " minutes."]] call Remote.Invoke;
+						_lastReportMinute = _remainingMinutes;
+					};
+				};
+				
+				sleep 5;
+			};
+			
+			_self.MissionIsRunning = false;
+			["MissionEndHandler.PlayEndScene", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
+        };
+	
+		// Starts the mission
+		public static method RunAsync {
+        	_self.MissionIsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};
