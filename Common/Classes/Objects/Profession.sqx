@@ -17,7 +17,8 @@ namespace Intrusion.Common
         		"_name" as String,
         		"_maxGroupsCount" as Scalar,
         		"_minGroupSize" as Scalar,
-        		"_maxGroupSize" as Scalar
+        		"_maxGroupSize" as Scalar,
+        		"_markerType" as String
         	];
         	
         	_self.Type = _type;
@@ -25,6 +26,7 @@ namespace Intrusion.Common
         	_self.MaxGroupsCount = _maxGroupsCount;
         	_self.MinGroupSize = _minGroupSize;
         	_self.MaxGroupSize = _maxGroupSize;
+        	_self.MarkerType = _markerType;
 		};
 		
 		// Gets the spezialization type.
@@ -41,5 +43,8 @@ namespace Intrusion.Common
 		
 		// Gets the maximum number of players in a group with this profession.
 		public property Scalar MaxGroupSize { get; private set; };
+		
+		// Gets the marker type associated with the profession.
+		public property String MarkerType { get; private set; };
 	};
 };

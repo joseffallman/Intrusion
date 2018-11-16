@@ -27,38 +27,44 @@ namespace Intrusion.Client
 		// _mapObservation (MapObservation): The map observation to draw a marker for.
 		private static method AddMarker {
 			params ["_mapObservation" as MapObservation];
-			private ["_name" as String, "_color" as String];
+			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
 			createMarkerLocal [_name, _mapObservation.PercievedPos];
-			_name setMarkerTypeLocal "hd_dot";
 			
 			_color = "ColorGrey";
+			_markerType = "n_unknown";
 			if (_mapObservation.IsIdentifiedAsEnemy) then {
+				_profession = [_mapObservation.PercievedProfessionType] call ProfessionConfig.GetProfession;
 				_color = "ColorRed";
+				_markerType = _profession.MarkerType;
 			};
 			
 			_name setMarkerColorLocal _color;
+			_name setMarkerTypeLocal _markerType;
 		};
 		
 		// Updates an existing observation marker on the map.
 		// _mapObservation (MapObservation): The map observation marker to update its marker for.
 		private static method UpdateMarker {
 			params ["_mapObservation" as MapObservation];
-			private ["_name" as String, "_color" as String];
+			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
 			_name setMarkerPosLocal _mapObservation.PercievedPos;
-			_name setMarkerTypeLocal "hd_dot";
 			
 			_color = "ColorGrey";
+			_markerType = "n_unknown";
 			if (_mapObservation.IsIdentifiedAsEnemy) then {
+				_profession = [_mapObservation.PercievedProfessionType] call ProfessionConfig.GetProfession;
 				_color = "ColorRed";
+				_markerType = _profession.MarkerType;
 			};
 			
 			_name setMarkerColorLocal _color;
+			_name setMarkerTypeLocal _markerType;
 		};
 		
 		// Deletes an observation marker on the map.
