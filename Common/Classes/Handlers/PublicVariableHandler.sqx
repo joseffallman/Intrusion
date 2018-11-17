@@ -46,6 +46,24 @@ namespace Intrusion.Common
 			!isNil "INT_Public_resourceLocations"
 		};
 
+		// Sets and broadcasts an array of squads across the network.
+		// _squads (Array): An array of squads.
+		public static method BroadcastSquads {
+			params ["_squads" as SquadCollection];
+			INT_Public_squads = _squads;
+			publicVariable "INT_Public_squads";
+		};
+		
+		// Gets all squads from the public network synchronized variable.
+		public static method SquadCollection GetSquads { 
+			INT_Public_squads
+		};
+		
+		// Gets whether the squads has been set on the current machine or not.
+		public static method Boolean SquadsHasValue {
+			!isNil "INT_Public_squads"
+		};
+
 		// Sets and broadcasts an array of map observations across the network.
 		// _mapObservations (Array): An array of map observations.
 		public static method BroadcastMapObservations {

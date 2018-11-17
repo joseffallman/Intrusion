@@ -13,7 +13,6 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkerInfo.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponBoxInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\Squad.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
