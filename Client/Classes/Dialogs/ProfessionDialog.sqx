@@ -42,15 +42,22 @@ namespace Intrusion.Client
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
             // Add all available professions
-			{
-				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+			lbAdd [2100, "Daniel"];
+			lbAdd [2100, "Maria"];
+//			{
+//				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+//			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
 		};
 	
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
 		public static method DialogResult ShowDialog {
 			waitUntil { !dialog };
+			
+			//call _self.AddAvailableProfessions;
+		
+			// Set the selected profession
+			//lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 			
 			// Create the dialog
             createDialog "IntProfessionDialog";
@@ -78,7 +85,7 @@ namespace Intrusion.Client
 			
 			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
 			
-			["GroupHandler.SetGroupProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
+			["SquadHandler.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
 	};
 };

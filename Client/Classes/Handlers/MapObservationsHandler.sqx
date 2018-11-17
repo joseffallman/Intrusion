@@ -8,7 +8,6 @@
  * Handles all map markers for the player on the current client.
  */
 
-using Sqx.Markers;
 using Intrusion.Common;
  
 namespace Intrusion.Client

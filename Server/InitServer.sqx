@@ -13,12 +13,11 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkerInfo.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponBoxInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionQueue.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroup.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\PlayerGroupCollection.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\Squad.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\GroupHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
@@ -43,7 +42,7 @@ call WeaponBoxClassNamesConfig.Init;
 call WeaponsService.Init;
 
 /* Handlers */
-call GroupHandler.Init;
+call SquadHandler.Init;
 call VehicleHandler.Init;
 call ResourceLocationHandler.Init;
 

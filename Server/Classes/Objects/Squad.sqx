@@ -1,5 +1,5 @@
 /*
- * Name:	PlayerGroup
+ * Name:	Squad
  * Date:	2017-11-30
  * Version: 1.0
  * Author:  Engima
@@ -11,26 +11,32 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class PlayerGroup
+	public class Squad
 	{
-		// Creates a GroupProfession object.
+		// Creates a Squad object.
 		// _group (Group): The group.
 		// _professionType (ProfessionType): The group's profession type.
 		public constructor {
-			params ["_group" as Group, "_profession" as ProfessionType];
+			params ["_group" as Group, "_professionType" as ProfessionType];
 			
 			_self.Group = _group;
-			_self.Profession = _profession;
+			_self.ProfessionType = _professionType;
 			_self.Vehicles = [];
 		};
 		
 		// Gets the group.
 		public property Group Group { get; private set; };
 		
-		// Gets the group profession.
-		public property ProfessionType Profession { get; private set; };
+		// Gets the group profession type.
+		public property ProfessionType ProfessionType { get; private set; };
 		
 		// Gets the vehicles associated with the group.
 		public property Array Vehicles { get; private set; };
+		
+		// Checks if the squad contains any members or not.
+		// Returns (Boolean): true if the squad is empty.
+		public method IsEmpty {
+			count units _self.Group == 0
+		};
 	};
 };

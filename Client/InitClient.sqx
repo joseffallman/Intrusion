@@ -8,7 +8,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandl
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientMessageHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\IntrusionMenuHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientResourceLocationHandler.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientGroupHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientSquadHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapObservationsHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";

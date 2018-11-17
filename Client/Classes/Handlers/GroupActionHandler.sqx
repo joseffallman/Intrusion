@@ -44,7 +44,7 @@ namespace Intrusion.Client
 			// Add the other player to the local player's group
 			[_otherPlayer] join player;
 			
-			["GroupHandler.OnPlayerAddedToGroup", [player, _otherPlayer]] call Remote.Invoke;
+			["SquadHandler.OnPlayerAddedToGroup", [player, _otherPlayer]] call Remote.Invoke;
 			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
 		};
 		

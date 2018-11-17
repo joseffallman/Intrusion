@@ -1,17 +1,17 @@
 /*
- * Name:	ClientGroupHandler
+ * Name:	ClientSquadHandler
  * Date:	2017-12-01
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Handles all about groups on the client.
+ * Handles all about squads on the client.
  */
 using Intrusion.Common;
 
 namespace Intrusion.Client
 {
-	public class ClientGroupHandler
+	public class ClientSquadHandler
 	{
 		// Notifies the player that his/her profession has changed.
 		// Called when any group's profession has changed.
@@ -19,7 +19,7 @@ namespace Intrusion.Client
 		// _professionType (ProfessionType): The new profession type.
 		public static method OnGroupProfessionChanged {
 			params ["_group" as Group, "_professionType" as ProfessionType];
-			[(str _this) + " ClientGroupHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
+			[(str _this) + " ClientSquadHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
 				call ProfessionDialog.CloseDialog;
@@ -34,7 +34,7 @@ namespace Intrusion.Client
 		// _professionType (ProfessionType): The old profession type.
 		public static method OnGroupProfessionChangeRejected {
 			params ["_group" as Group, "_reason" as String, "_professionType" as ProfessionType];
-			[(str _this) + " ClientGroupHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
+			[(str _this) + " ClientSquadHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
 				["Your group profession was not changed. " + _reason + " You belong to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;

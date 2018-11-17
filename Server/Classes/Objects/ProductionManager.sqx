@@ -24,7 +24,7 @@ namespace Intrusion.Server
 			
 			// Register the class to the global group handler to recieve notifications 
 			// when groups on the side is changing its profession.
-			[_self] call GroupHandler.RegisterGroupChangingProfessionListener;
+			[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
 		};
 		
 		// Gets the production manager's side.
