@@ -50,11 +50,16 @@ namespace Intrusion.Common
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
 		public static method Profession GetProfession {
 			params ["_professionType" as ProfessionType];
+			[(str _this) + " ProfessionConfig.GetProfession"] call LogHandler.Debug;
+
 			scopeName "main";
 			
 			{
-				if (_x.Type == _professionType) then {
-					_x breakOut "main";
+				private ["_profession" as Profession];
+				_profession = _x;
+				
+				if (_profession.Type == _professionType) then {
+					_profession breakOut "main";
 				};
 			} foreach _mProfessions as Profession;
 			

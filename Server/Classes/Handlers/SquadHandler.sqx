@@ -23,6 +23,7 @@ namespace Intrusion.Server
 		public static method Init {
 			_mLockedById = 0;
 			_mSquads = [];
+			_mProfessionChangeListeners = [];
 		};
 		
 		// Gets a group by its leader.
@@ -70,7 +71,7 @@ namespace Intrusion.Server
 			
 			scopeName "main";
 
-			for "_i" from 0 to count _mSquads do 
+			for "_i" from 0 to (count _mSquads - 1) do 
 			{
 				private ["_existingSquad" as Squad];
 				

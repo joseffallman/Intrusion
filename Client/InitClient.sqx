@@ -30,7 +30,7 @@ call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 call MapObservationsHandler.Init;
 
 // Dialogs
-call ProfessionDialog.Init;
+//call ProfessionDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;

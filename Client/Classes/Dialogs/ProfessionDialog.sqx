@@ -31,22 +31,20 @@ namespace Intrusion.Client
 		// Reads the selected profession type from the combo box
 		// Returns (Profession): The selected profession. classNull if no profession is selected.
 		private static method ProfessionType GetSelectedProfessionTypeFromCombo {
-			private ["_professionType" as ProfessionType];
+			private ["_profession" as Profession];
 			
 			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
-			_professionType = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
+			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
 			
-			_professionType
+			_profession.Type
 		};
 		
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
             // Add all available professions
-			lbAdd [2100, "Daniel"];
-			lbAdd [2100, "Maria"];
-//			{
-//				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-//			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+			{
+				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
 		};
 	
 		// Shows the dialog.
@@ -54,14 +52,12 @@ namespace Intrusion.Client
 		public static method DialogResult ShowDialog {
 			waitUntil { !dialog };
 			
-			//call _self.AddAvailableProfessions;
-		
-			// Set the selected profession
-			//lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
-			
 			// Create the dialog
             createDialog "IntProfessionDialog";
-
+			
+			call _self.AddAvailableProfessions;
+			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+			
 			_self.IsOpen = true;
 
 			// Wait until dialog is closed
