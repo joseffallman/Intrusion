@@ -14,15 +14,12 @@ namespace Intrusion.Server
 {
 	public class SquadHandler
 	{
-		//private static fields ["_mGroupProfessionCollection" as PlayerGroupCollection];
-		private static fields ["_mSquads" as Array /* of Squad */];
+		private static fields ["_mSquads" as SquadCollection];
 		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
-		private static fields ["_mLockedById" as Scalar];
 		
 		// Initializes the SquadHandler object.
 		public static method Init {
-			_mLockedById = 0;
-			_mSquads = [];
+			_mSquads = new SquadCollection;
 			_mProfessionChangeListeners = [];
 		};
 		
@@ -64,55 +61,6 @@ namespace Intrusion.Server
 			_mProfessionChangeListeners pushBack _listener;
 		};
 		
-		// Adds a new or updates an existing squad.
-		// _squad (Squad): The squad to add or update.
-		private static method AddOrUpdateSquad {
-			params ["_squad" as Squad];
-			
-			scopeName "main";
-
-			for "_i" from 0 to (count _mSquads - 1) do 
-			{
-				private ["_existingSquad" as Squad];
-				
-				_existingSquad = _mSquads select _i;
-				
-				if (_existingSquad.Group == _squad.Group) then {
-					_mSquads set [_i, _squad];
-					breakOut "main";
-				};
-			};
-			
-			_mSquads pushBack _squad;
-		};
-		
-		// Removes all empty squads.
-		private static method RemoveEmptySquads {
-			private ["_squadsToKeep" as Array];
-			
-			_squadsToKeep = [];
-		
-			{
-				if (!(call _x.IsEmpty)) then {
-					_squadsToKeep pushBack _x;
-				};
-			} foreach _mSquads as Squad;
-			
-			_mSquads = _squadsToKeep;
-		};
-		
-		// Aquires a lock that prevents other threads to change the squads simultaneously.
-		public static method AquireLock {
-			// Check that no other thread is currently making changes to the squads.
-			while { _mLockedById != 0 } do { sleep 0.01; };
-			_mLockedById = 1;
-		};
-		
-		// Releases the lock set by AquireLock so that other threads can make changes to squads.
-		public static method ReleaseLock {
-			_mLockedById = 0;
-		};
-		
 		// Sets a group's profession to the public variable property.
 		// This function aquires a lock during runtime.
 		// _group (Group): The group to change profession.
@@ -122,23 +70,25 @@ namespace Intrusion.Server
 			private ["_squad" as Squad];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
-			call SquadHandler.AquireLock;
+			call SquadCollection.AquireLock;
 			
 			// Create a new squad and add (or update) it to the list of squads.
 			_squad = [_group, _professionType] new Squad;
-			[_squad] call SquadHandler.AddOrUpdateSquad;
+			[_squad] call SquadCollection.AddOrUpdateSquad;
 			
-			call SquadHandler.RemoveEmptySquads;
+			call SquadCollection.RemoveEmptySquads;
 			
 			// Notify all local group change profession listeners.
 			{
 				[_group, _professionType] call _x.OnGroupChangingProfession;
 			} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
 			
+			[_mSquads] call PublicVariableHandler.BroadcastSquads;
+			
 			// Tell the clients about the change
 			["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
 			
-			call SquadHandler.ReleaseLock;
+			call SquadCollection.ReleaseLock;
 		};
 	};
 };

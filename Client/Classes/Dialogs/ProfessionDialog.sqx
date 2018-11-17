@@ -13,13 +13,16 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
+		private static fields ["_mOptions" as Array /* of ProfessionType */];
+	
 		// Initializes the profession dialog.
 		public static method Init
 		{
-			call _self.AddAvailableProfessions;
+			_mOptions = [];
+//			call _self.AddAvailableProfessions;
 		
 			// Set the selected profession
-			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+//			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 		};
 		
 		// Gets or sets the profession type that the user has selected.
@@ -31,20 +34,39 @@ namespace Intrusion.Client
 		// Reads the selected profession type from the combo box
 		// Returns (Profession): The selected profession. classNull if no profession is selected.
 		private static method ProfessionType GetSelectedProfessionTypeFromCombo {
-			private ["_profession" as Profession];
-			
 			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
-			_profession = (call ProfessionConfig.GetAllProfessions) select _selectedIndex;
 			
-			_profession.Type
+			_mOptions select _selectedIndex
 		};
 		
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
+			private ["_count" as Scalar, "_profession" as Profession, "_squads" as SquadCollection, "_options" as Array];
+			
             // Add all available professions
-			{
-				lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-			} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+            _options = [];
+            
+            if (call PublicVariableHandler.SquadsHasValue) then {
+				_squads = call PublicVariableHandler.GetSquads;
+		
+				{
+					_profession = _x;
+					
+					_count = [_profession.Type] call _squads.CountByProfessionType;
+					if (_count < _profession.MaxGroupsCount) then {
+						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+						_options pushBack _profession.Type;
+					};
+				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+            }
+            else {
+				{
+					lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+					_options pushBack _x.Type;
+				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+            };
+            
+            _mOptions = _options;
 		};
 	
 		// Shows the dialog.

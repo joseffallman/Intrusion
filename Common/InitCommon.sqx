@@ -10,6 +10,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\MapObservation.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\Squad.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\SquadCollection.sqx";
 
 using Intrusion.Common;
 
