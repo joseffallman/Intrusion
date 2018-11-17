@@ -19,6 +19,8 @@ namespace Intrusion.Client
 		public static method Init
 		{
 			_mOptions = [];
+			_self.IsOpen = false;
+			_self.SelectedProfession = ProfessionType.Undefined;
 //			call _self.AddAvailableProfessions;
 		
 			// Set the selected profession
