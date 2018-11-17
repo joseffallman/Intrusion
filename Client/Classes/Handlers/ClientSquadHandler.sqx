@@ -31,13 +31,12 @@ namespace Intrusion.Client
 		// Called when any group's profession did not change as desired.
 		// _group (Group): The group that tried to change profession.
 		// _reason (String): The reason that the group profession was now changed.
-		// _professionType (ProfessionType): The old profession type.
 		public static method OnGroupProfessionChangeRejected {
-			params ["_group" as Group, "_reason" as String, "_professionType" as ProfessionType];
+			params ["_group" as Group, "_reason" as String];
 			[(str _this) + " ClientSquadHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
-				["Your group profession was not changed. " + _reason + " You belong to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
+				[_reason] call ClientMessageHandler.ShowMessage;
 			};
 		};
 	};

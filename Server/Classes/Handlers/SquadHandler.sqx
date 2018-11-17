@@ -70,25 +70,31 @@ namespace Intrusion.Server
 			private ["_squad" as Squad];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
-			call SquadCollection.AquireLock;
-			
 			// Create a new squad and add (or update) it to the list of squads.
-			_squad = [_group, _professionType] new Squad;
-			[_squad] call SquadCollection.AddOrUpdateSquad;
-			
-			call SquadCollection.RemoveEmptySquads;
-			
-			// Notify all local group change profession listeners.
-			{
-				[_group, _professionType] call _x.OnGroupChangingProfession;
-			} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
-			
-			[_mSquads] call PublicVariableHandler.BroadcastSquads;
-			
-			// Tell the clients about the change
-			["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
-			
-			call SquadCollection.ReleaseLock;
+			if ([_professionType] call _mSquads.ProfessionTypeAvailable) then {
+				call SquadCollection.AquireLock;
+				
+				_squad = [_group, _professionType] new Squad;
+				[_squad] call SquadCollection.AddOrUpdateSquad;
+				
+				call SquadCollection.RemoveEmptySquads;
+				
+				// Notify all local group change profession listeners.
+				{
+					[_group, _professionType] call _x.OnGroupChangingProfession;
+				} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
+				
+				[_mSquads] call PublicVariableHandler.BroadcastSquads;
+				
+				// Tell the clients about the change
+				["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
+				
+				call SquadCollection.ReleaseLock;
+			}
+			else {
+				// Tell the clients that the change was rejected
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is not available."]] call Remote.Invoke;
+			};
 		};
 	};
 };

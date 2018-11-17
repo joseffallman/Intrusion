@@ -39,6 +39,7 @@ namespace Intrusion.Common
 					case "ClientResourceLocationHandler.UpdateResourceLocations": { _parameters spawn ClientResourceLocationHandler.UpdateResourceLocations; };
 					case "GroupActionHandler.ResetInvitePlayerActions": { _parameters spawn GroupActionHandler.ResetInvitePlayerActions; };
 					case "ClientSquadHandler.OnGroupProfessionChanged": { _parameters spawn ClientSquadHandler.OnGroupProfessionChanged };
+					case "ClientSquadHandler.OnGroupProfessionChangeRejected": { _parameters spawn ClientSquadHandler.OnGroupProfessionChangeRejected };
 					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
