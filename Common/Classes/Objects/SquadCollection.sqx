@@ -1,0 +1,82 @@
+/*
+ * Name:	SquadCollection
+ * Date:	2018-11-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Collection of squads.
+ */
+namespace Intrusion.Common
+{
+	public class SquadCollection
+	{
+		private static fields ["_mSquads" as Array /* of Squad */];
+		private static fields ["_mLockedById" as Scalar];
+		
+		// Creates a SquadCollection object.
+		public constructor {
+			_mSquads = [];
+			_mLockedById = 0;
+		};
+		
+		// Adds a new or updates an existing squad.
+		// _squad (Squad): The squad to add or update.
+		public static method AddOrUpdateSquad {
+			params ["_squad" as Squad];
+			
+			scopeName "main";
+
+			for "_i" from 0 to (count _mSquads - 1) do 
+			{
+				private ["_existingSquad" as Squad];
+				
+				_existingSquad = _mSquads select _i;
+				
+				if (_existingSquad.Group == _squad.Group) then {
+					_mSquads set [_i, _squad];
+					breakOut "main";
+				};
+			};
+			
+			_mSquads pushBack _squad;
+		};
+		
+		// Removes all empty squads.
+		public static method RemoveEmptySquads {
+			private ["_squadsToKeep" as Array];
+			
+			_squadsToKeep = [];
+		
+			{
+				if (!(call _x.IsEmpty)) then {
+					_squadsToKeep pushBack _x;
+				};
+			} foreach _mSquads as Squad;
+			
+			_mSquads = _squadsToKeep;
+		};
+		
+		// Gets the number of squads with a profession type.
+		// _professionType (ProfessionType): The profession type to count.
+		public static method CountByProfessionType {
+			params ["_professionType" as ProfessionType];
+			[(str _this) + " SquadCollection.CountByProfessionType"] call LogHandler.Debug;
+			
+			{ _x.ProfessionType == _professionType } count _mSquads as Squad;
+		};
+		
+		// Aquires a lock that prevents other threads to change the squads simultaneously.
+		public static method AquireLock {
+			// Check that no other thread is currently making changes to the squads.
+			while { _mLockedById != 0 } do { sleep 0.01; };
+			_mLockedById = 1;
+		};
+		
+		// Releases the lock set by AquireLock so that other threads can make changes to squads.
+		public static method ReleaseLock {
+			_mLockedById = 0;
+		};
+	};
+};
+
