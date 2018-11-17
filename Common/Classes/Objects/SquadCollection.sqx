@@ -66,6 +66,19 @@ namespace Intrusion.Common
 			{ _x.ProfessionType == _professionType } count _mSquads as Squad;
 		};
 		
+		// Checks whether a profession type is available for a squad to select.
+		// Returns (Boolean): true if squads can select the profession, false if no mor squads of the 
+		// current profession can be assigned.
+		public static method Boolean ProfessionTypeAvailable {
+			params ["_professionType" as ProfessionType];
+			private ["_assignedSquadsCount" as Scalar, "_profession" as Profession];
+			
+			_assignedSquadsCount = [_professionType] call _self.CountByProfessionType;
+			_profession = [_professionType] call ProfessionConfig.GetProfession;
+			
+			_assignedSquadsCount < _profession.MaxGroupsCount
+		};
+		
 		// Aquires a lock that prevents other threads to change the squads simultaneously.
 		public static method AquireLock {
 			// Check that no other thread is currently making changes to the squads.

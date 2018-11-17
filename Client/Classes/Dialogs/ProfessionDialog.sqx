@@ -41,7 +41,7 @@ namespace Intrusion.Client
 		
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
-			private ["_count" as Scalar, "_profession" as Profession, "_squads" as SquadCollection, "_options" as Array];
+			private ["_profession" as Profession, "_squads" as SquadCollection, "_options" as Array];
 			
             // Add all available professions
             _options = [];
@@ -52,8 +52,7 @@ namespace Intrusion.Client
 				{
 					_profession = _x;
 					
-					_count = [_profession.Type] call _squads.CountByProfessionType;
-					if (_count < _profession.MaxGroupsCount) then {
+					if ([_profession.Type] call _squads.ProfessionTypeAvailable) then {
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
