@@ -71,3 +71,14 @@ class IntBaseDialog_OkButton : IntBaseDialog_Button
 	h = 2 * GUI_GRID_H;
 	action = " closeDialog 0; ";
 };
+
+class IntBaseDialog_CancelButton : IntBaseDialog_Button
+{
+	idc = -1;
+	text = "Cancel"; //--- ToDo: Localize;
+	x = 30.5 * GUI_GRID_W + GUI_GRID_X;
+	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
+	w = 4 * GUI_GRID_W;
+	h = 2 * GUI_GRID_H;
+	action = " closeDialog 0; ";
+};

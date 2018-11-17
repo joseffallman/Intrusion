@@ -104,5 +104,10 @@ namespace Intrusion.Client
 			
 			["SquadHandler.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
+		
+		// Called by the .hpp-dialog when the Cancel button is pressed.
+		public static method OnCancelButtonPressed {
+			call _self.CloseDialog;
+		};		
 	};
 };
