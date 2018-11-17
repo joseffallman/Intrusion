@@ -76,7 +76,7 @@ namespace Intrusion.Common
 			_assignedSquadsCount = [_professionType] call _self.CountByProfessionType;
 			_profession = [_professionType] call ProfessionConfig.GetProfession;
 			
-			_assignedSquadsCount < _profession.MaxGroupsCount
+			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
 		};
 		
 		// Aquires a lock that prevents other threads to change the squads simultaneously.
@@ -92,4 +92,3 @@ namespace Intrusion.Common
 		};
 	};
 };
-

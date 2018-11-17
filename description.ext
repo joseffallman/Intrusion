@@ -22,7 +22,7 @@ overviewTextLocked = "";
 //overviewPicture = "overviewPicture_ca.paa";
 author = "Engima";
 
-disabledAI = 0;
+disabledAI = 1;
 
 
 //#include "Description\TutorialDialog.ext"

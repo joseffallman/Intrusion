@@ -35,7 +35,7 @@ namespace Intrusion.Common
 		// Gets the name of the profession.
 		public property String Name { get; private set; };
 
-		// Gets the maximum number of group that can have this profession on a side.
+		// Gets the maximum number of group that can have this profession on a side. -1 means unlimited.
 		public property Scalar MaxGroupsCount { get; private set; };
 		
 		// Gets the minimum number of players in a group with this profession.
