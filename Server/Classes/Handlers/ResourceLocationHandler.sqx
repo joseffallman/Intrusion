@@ -102,7 +102,7 @@ namespace Intrusion.Server
 				(_resourceLocation.Flag) setFlagTexture _sideConfigInfo.FlagTexture;
 					
 				call _self.BroadcastResourceLocations;
-//				["ClientResourceLocationHandler.UpdateMarkerColor", [_markerName, _side]] call Remote.Invoke;
+				["ClientMessageHandler.ShowHint", [_resourceLocation.Text + " was captured by " + str _side]] call Remote.Invoke;
 			};
 		};
 		
