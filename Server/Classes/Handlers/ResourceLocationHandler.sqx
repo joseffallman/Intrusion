@@ -117,10 +117,14 @@ namespace Intrusion.Server
 		// Returns (Scalar): The number of factories owned by the side.
 		public static method Scalar GetFactoriesCountBySide {
 			params ["_side" as Side];
-			private _count = 0;
+			private ["_count" as Scalar, "_location" as ResourceLocation];
+
+			_count = 0;
 			
 			{
-				if (_x.Side == _side) then {
+				_location = _x;
+
+				if (_location.Side == _side && _location.FacilityType == ResourceFacility.Factory) then {
 					_count = _count + 1;
 				};
 			} foreach _mResourceLocations as ResourceLocation;
@@ -133,10 +137,14 @@ namespace Intrusion.Server
 		// Returns (Scalar): The number of tech labs owned by the side.
 		public static method Scalar GetTechLabsCountBySide {
 			params ["_side" as Side];
-			private _count = 0;
+			private ["_count" as Scalar, "_location" as ResourceLocation];
+
+			_count = 0;
 			
 			{
-				if (_x.Side == _side) then {
+				_location = _x;
+
+				if (_location.Side == _side && _location.FacilityType == ResourceFacility.TechLab) then {
 					_count = _count + 1;
 				};
 			} foreach _mResourceLocations as ResourceLocation;

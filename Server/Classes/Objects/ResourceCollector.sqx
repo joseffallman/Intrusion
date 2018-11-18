@@ -42,7 +42,7 @@ namespace Intrusion.Server
 		// Calculates how much technology has been generated since last aquire.
 		// Returns (Scalar): Amount of technology.
 		private method Scalar AquireTechnology {
-			private _pointsPerFacility = (GameplayConfig.TotalProduction / ResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (GameplayConfig.MatchLengthMinutes * 60));
+			private _pointsPerFacility = (GameplayConfig.TotalTechnology / ResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (GameplayConfig.MatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call ResourceLocationHandler.GetTechLabsCountBySide;
 			private _ourCount = [_self.Side] call ResourceLocationHandler.GetTechLabsCountBySide;
 			
@@ -55,14 +55,15 @@ namespace Intrusion.Server
 		public method AquireResourcesFromMap {
 			private ["_production" as Scalar, "_technology" as Scalar];
 			
-			_mLastAquireTime = time;
-			_mSecondsSinceLastAquire = _mSecondsSinceLastAquire - _mLastAquireTime;
+			_mSecondsSinceLastAquire = time - _mLastAquireTime;
 			
 			_production = call _self.AquireProduction;
 			_technology = call _self.AquireTechnology;
 			
 			[_production] call _mResourceBook.DepositProduction;
 			[_technology] call _mResourceBook.DepositTechnology;
+			
+			_mLastAquireTime = time;
 		};
 	};
 };
