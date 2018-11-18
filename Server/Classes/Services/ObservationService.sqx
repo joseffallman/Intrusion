@@ -32,17 +32,17 @@ namespace Intrusion.Server
 		
 		// Deletes all observations that are marked as deleted.
 		private static method DeleteMarkedObservations {
-			private ["_observations" as Array];
+			private ["_observationsToKeep" as Array];
 			
-			_observations = [];
+			_observationsToKeep = [];
 			
 			{
 				if (!_x.MarkedAsDeleted) then {
-					_observations pushBack _x;
+					_observationsToKeep pushBack _x;
 				};
 			} foreach _mObservations as Observation;
 			
-			_mObservations = _observations;
+			_mObservations = _observationsToKeep;
 		};
 		
 		// Converts the service's list of observations into broadcastable and client optimized map observations.
@@ -132,11 +132,13 @@ namespace Intrusion.Server
 	        		private ["_unit" as Object];
 	        		_unit = _x;
 	        	
-	        		_targets = [_unit] call Target.GetEnemyTargets;
-	        		
-	        		{
-	        			[_x] call _self.AddTargetToObservations;
-	        		} foreach _targets as Target;
+	        		if (alive _unit) then {
+		        		_targets = [_unit] call Target.GetEnemyTargets;
+		        		
+		        		{
+		        			[_x] call _self.AddTargetToObservations;
+		        		} foreach _targets as Target;
+	        		};
 	        	} foreach allUnits as Object;
 	        	
 	        	call _self.DeleteMarkedObservations;
@@ -145,7 +147,7 @@ namespace Intrusion.Server
 	        	_mapObservations = call _self.ConvertToMapObservations;
 				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 3;
+        		sleep 2;
 			};
 		};
 		

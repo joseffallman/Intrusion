@@ -46,6 +46,15 @@ namespace Intrusion.Server
 			
 			_resultingTargets = [];
 			
+			// Reveal all units to the unit
+			{
+				if (alive _x && !([side _unit, side _x] call BIS_fnc_sideIsFriendly)) then {
+					if ([objNull, "VIEW"] checkVisibility [eyePos vehicle _unit, eyePos vehicle _x] > 0.1) then {
+						_unit reveal _x;
+					};
+				};
+			} foreach allUnits;
+			
     		// Get all targets within range
 	        _targets = _unit nearTargets _maxRange;
 
@@ -56,9 +65,11 @@ namespace Intrusion.Server
 			    _percievedSide = _x select 2;
 			    _targetUnit = _x select 4;
 			    _accuracy = _x select 5;
-				
-				if (!([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly)) then {
-					_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _targetUnit, _accuracy] new Target;
+			    
+				if (alive _targetUnit && { !([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly) && _accuracy < 25 }) then {
+					if (_unit knowsAbout _targetUnit > 1) then {
+						_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _targetUnit, _accuracy] new Target;
+					};
 				};
 			} foreach _targets as Array;
 			
