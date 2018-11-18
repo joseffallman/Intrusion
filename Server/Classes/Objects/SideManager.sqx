@@ -13,8 +13,8 @@ namespace Intrusion.Server
 		private fields [
 			"_mResourceBook" as ResourceBook,
 			"_mResourceCollector" as ResourceCollector,
-			"_productionManager" as ProductionManager,
-			"_scientist" as Scientist];
+			"_mProductionManager" as ProductionManager,
+			"_mScientist" as Scientist];
 		
         // Creates a SideHandler object.
         // Parameter(s):
@@ -34,6 +34,7 @@ namespace Intrusion.Server
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
 		public method PerformTurn {
 			call _mResourceCollector.AquireResourcesFromMap;
+			call _mProductionManager.Produce;
 			
 			player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
 		};

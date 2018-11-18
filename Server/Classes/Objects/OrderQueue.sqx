@@ -1,0 +1,73 @@
+/*
+ * Name:	ProductionQueue
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A queue for the groups on the side to get needed materiels as soon as the side can afford it.
+ */
+
+using Sqx.Collections;
+
+namespace Intrusion.Server
+{
+	public class OrderQueue
+	{
+		private fields ["_mOrders" as Array /* of Group */, "_mCurrentIndex" as Scalar];
+		
+		// Creates a ProductionQueue object.
+		public constructor {
+			_mOrders = [];
+			_mCurrentIndex = -1;
+			_self.CurrentOrder = grpNull;
+		};
+		
+		// Gets the group currently being built for.
+		public property Group CurrentOrder { get; private set; };
+		
+		// Adds a group to the queue if it is not already in it.
+		// _group (Group): The group to add.
+		public method PutOrder {
+			params ["_group" as Group];
+			
+			_mGroups pushBack _group;
+			
+			if (_mCurrentIndex < 0) then {
+				_mCurrentIndex = 0;
+			};
+		};
+		
+		private method RemoveAtIndex {
+			params ["_index" as Scalar];
+			_mOrders = [_mOrders, _index] call ArrayHandler.RemoveItemAtIndex;
+		};
+		
+		// Removes the current order and moves the queue pointer to the next group in the queue.
+		// Returns (Group): The group that is the current group after the pointer has moved.
+		public method Group RemoveCurrentOrder {
+			private _currentIndex = _mCurrentIndex;
+			private _currentOrder = grpNull;
+			
+			while { _currentIndex >= 0 && (isNull _currentOrder || { count units _group == 0 }) } do
+			{
+				if (count _mGroups == 1) then {
+					_mOrders = [];
+					_currentIndex = -1;
+				}
+				else {
+					_mOrders = [_mOrders, _currentIndex] call ArrayHandler.RemoveItemAtIndex;
+					
+					if (_currentIndex > count _mOrders - 1) then {
+						_currentIndex = 0;
+					};
+					
+					_currentOrder = _mOrders select _currentIndex;
+				};
+			};
+			
+			_self.CurrentOrder = _currentOrder;
+			_currentOrder
+		};
+	};
+};

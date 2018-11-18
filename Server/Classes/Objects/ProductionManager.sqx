@@ -14,13 +14,13 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mGroductionQueue" as ProductionQueue];
+		private fields ["_mOrderQueue" as OrderQueue];
 	
 		// Creates a ProductionManager object.
 		public constructor {
 			params ["_side" as Side];
 			_self.Side = _side;
-			_mGroductionQueue = new ProductionQueue;
+			_mOrderQueue = new OrderQueue;
 			
 			// Register the class to the global group handler to recieve notifications 
 			// when groups on the side is changing its profession.
@@ -36,6 +36,10 @@ namespace Intrusion.Server
 		public method OnGroupChangingProfession {
 			params ["_group" as Group, "_professionType" as ProfessionType];
 			
+			
+		};
+		
+		public method Produce {
 			
 		};
 	};
