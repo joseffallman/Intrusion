@@ -72,13 +72,14 @@ namespace Intrusion.Server
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
 			// Create a new squad and add (or update) it to the list of squads.
-			if ([_professionType] call _mSquads.ProfessionTypeAvailable) then {
-				call SquadCollection.AquireLock;
+			if ([side _group, _professionType] call _mSquads.ProfessionTypeAvailable) then {
+				//call SquadCollection.AquireLock; // TODO SQX: Should not be permitted, since SquadCollection is not static. Important!
+				call _mSquads.AquireLock;
 				
 				_squad = [_group, _professionType] new Squad;
-				[_squad] call SquadCollection.AddOrUpdateSquad;
+				[_squad] call _mSquads.AddOrUpdateSquad;
 				
-				call SquadCollection.RemoveEmptySquads;
+				call _mSquads.RemoveEmptySquads;
 				
 				// Notify all local group change profession listeners.
 				{
@@ -90,7 +91,7 @@ namespace Intrusion.Server
 				// Tell the clients about the change
 				["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
 				
-				call SquadCollection.ReleaseLock;
+				call _mSquads.ReleaseLock;
 			}
 			else {
 				// Tell the clients that the change was rejected

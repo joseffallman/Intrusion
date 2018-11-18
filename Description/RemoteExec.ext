@@ -11,7 +11,7 @@ class CfgRemoteExec
     {
         mode = 1; // Only whitelisted functions may be executed
         
-        class Intrusion_Common_Remote_Recieve { allowedTargets = 0; jip = 0; };
+        class Intrusion_Communication_Remote_Recieve { allowedTargets = 0; jip = 0; };
     };
 };
 

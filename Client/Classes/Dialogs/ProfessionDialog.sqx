@@ -56,7 +56,7 @@ namespace Intrusion.Client
 				{
 					_profession = _x;
 					
-					if ([_profession.Type] call _squads.ProfessionTypeAvailable) then {
+					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable) then {
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
@@ -102,10 +102,10 @@ namespace Intrusion.Client
 		// Sends the group's selected profession to the server.
 		// Called by the .hpp-dialog when the OK button is pressed.
 		public static method OnOkButtonPressed {
+			[(str _this) + " ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
+			
 			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
-			
 			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
-			
 			["SquadHandler.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
 		

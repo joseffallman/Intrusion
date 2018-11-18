@@ -20,7 +20,7 @@ namespace Intrusion.Communication
 			params ["_methodFullName" as String, ["_parameter" as Any, []]];
         	["Remote.Invoke"] call LogHandler.Debug;
 
-			[_methodFullName, _parameter] remoteExec ["Intrusion_Common_Remote_Recieve", RemoteTargetOptions.All];
+			[_methodFullName, _parameter] remoteExec ["Intrusion_Communication_Remote_Recieve", RemoteTargetOptions.All];
 		};
 		
 		public static method Recieve {

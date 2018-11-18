@@ -40,6 +40,8 @@ namespace Intrusion.Communication
 		// _squads (Array): An array of squads.
 		public static method BroadcastSquads {
 			params ["_squads" as SquadCollection];
+			[(str _this) + " PublicVariableHandler.BroadcastSquads"] call LogHandler.Debug;
+			
 			INT_Public_squads = _squads;
 			publicVariable "INT_Public_squads";
 		};

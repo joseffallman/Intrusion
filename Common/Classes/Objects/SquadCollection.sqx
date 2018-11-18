@@ -11,8 +11,8 @@ namespace Intrusion.Common
 {
 	public class SquadCollection
 	{
-		private static fields ["_mSquads" as Array /* of Squad */];
-		private static fields ["_mLockedById" as Scalar];
+		private fields ["_mSquads" as Array /* of Squad */];
+		private fields ["_mLockedById" as Scalar];
 		
 		// Creates a SquadCollection object.
 		public constructor {
@@ -22,7 +22,7 @@ namespace Intrusion.Common
 		
 		// Adds a new or updates an existing squad.
 		// _squad (Squad): The squad to add or update.
-		public static method AddOrUpdateSquad {
+		public method AddOrUpdateSquad {
 			params ["_squad" as Squad];
 			
 			scopeName "main";
@@ -43,7 +43,7 @@ namespace Intrusion.Common
 		};
 		
 		// Removes all empty squads.
-		public static method RemoveEmptySquads {
+		public method RemoveEmptySquads {
 			private ["_squadsToKeep" as Array];
 			
 			_squadsToKeep = [];
@@ -57,37 +57,41 @@ namespace Intrusion.Common
 			_mSquads = _squadsToKeep;
 		};
 		
-		// Gets the number of squads with a profession type.
+		// Gets the number of squads with a profession type of a certain side.
+		// _side (Side): The side to count.
 		// _professionType (ProfessionType): The profession type to count.
-		public static method CountByProfessionType {
-			params ["_professionType" as ProfessionType];
+		public method CountByProfessionType {
+			params ["_side" as Side, "_professionType" as ProfessionType];
 			[(str _this) + " SquadCollection.CountByProfessionType"] call LogHandler.Debug;
 			
-			{ _x.ProfessionType == _professionType } count _mSquads as Squad;
+			{ side _x.Group == _side && _x.ProfessionType == _professionType } count _mSquads as Squad;
 		};
 		
 		// Checks whether a profession type is available for a squad to select.
+		// _side (Side): The side to check.
+		// _professionType (ProfessionType): The profession type to check.
 		// Returns (Boolean): true if squads can select the profession, false if no mor squads of the 
 		// current profession can be assigned.
-		public static method Boolean ProfessionTypeAvailable {
-			params ["_professionType" as ProfessionType];
+		public method Boolean ProfessionTypeAvailable {
+			params ["_side" as Side, "_professionType" as ProfessionType];
 			private ["_assignedSquadsCount" as Scalar, "_profession" as Profession];
+			[(str _this) + " SquadCollection.ProfessionTypeAvailable"] call LogHandler.Debug;
 			
-			_assignedSquadsCount = [_professionType] call _self.CountByProfessionType;
+			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
 			_profession = [_professionType] call ProfessionConfig.GetProfession;
 			
 			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
 		};
 		
 		// Aquires a lock that prevents other threads to change the squads simultaneously.
-		public static method AquireLock {
+		public method AquireLock {
 			// Check that no other thread is currently making changes to the squads.
 			while { _mLockedById != 0 } do { sleep 0.01; };
 			_mLockedById = 1;
 		};
 		
 		// Releases the lock set by AquireLock so that other threads can make changes to squads.
-		public static method ReleaseLock {
+		public method ReleaseLock {
 			_mLockedById = 0;
 		};
 	};
