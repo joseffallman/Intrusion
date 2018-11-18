@@ -17,6 +17,8 @@ namespace Intrusion.Server
         private static method Run {
         	private ["_sideManagers" as Array];
         	
+        	call ResourceLocationHandler.AquireAllResourceLocations;
+        	
         	// Start the mission counter.
         	call MissionCounterService.RunAsync;
         	

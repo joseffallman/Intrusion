@@ -7,7 +7,9 @@
  * Description:
  * A service that reads and broadcasts player's observations.
  */
+
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
@@ -141,7 +143,7 @@ namespace Intrusion.Server
 
 	        	// Broadcast the list of observations
 	        	_mapObservations = call _self.ConvertToMapObservations;
-	        	[_mapObservations] call PublicVariableHandler.BroadcastMapObservations;
+				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
 	        	
         		sleep 3;
 			};

@@ -49,6 +49,3 @@ call ResourceLocationHandler.Init;
 call ObservationService.Init;
 
 #endregion
-
-// Start Intrusion!
-call MissionEngine.RunAsync;

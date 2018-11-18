@@ -3,7 +3,7 @@
   <ProjectRootNode Name="IntrusionSqx" IsExpanded="true" FileName="">
     <IsSelected>false</IsSelected>
     <SubNodes>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Client" IsExpanded="false" FileName="Client">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Client" IsExpanded="true" FileName="Client">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Client\Classes">
@@ -114,7 +114,7 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="true" FileName="Common">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="false" FileName="Common">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Common\Classes">
@@ -137,10 +137,6 @@
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="LogHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\LogHandler.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PublicVariableHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\PublicVariableHandler.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -177,16 +173,7 @@
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Remote" IsExpanded="true" FileName="Common\Classes\Remote">
                 <IsSelected>false</IsSelected>
-                <SubNodes>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Remote.sqx" IsExpanded="true" FileName="Common\Classes\Remote\Remote.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RemoteTargetOptions.sqx" IsExpanded="false" FileName="Common\Classes\Remote\RemoteTargetOptions.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                </SubNodes>
+                <SubNodes />
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
@@ -208,6 +195,27 @@
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommon.sqx" IsExpanded="false" FileName="Common\InitCommon.sqx">
+            <IsSelected>false</IsSelected>
+            <SubNodes />
+          </ProjectNodeViewModel>
+        </SubNodes>
+      </ProjectNodeViewModel>
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" IsExpanded="true" FileName="Communication">
+        <IsSelected>false</IsSelected>
+        <SubNodes>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommunication.sqx" IsExpanded="false" FileName="Communication\InitCommunication.sqx">
+            <IsSelected>false</IsSelected>
+            <SubNodes />
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PublicVariableHandler.sqx" IsExpanded="false" FileName="Communication\PublicVariableHandler.sqx">
+            <IsSelected>false</IsSelected>
+            <SubNodes />
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Remote.sqx" IsExpanded="false" FileName="Communication\Remote.sqx">
+            <IsSelected>false</IsSelected>
+            <SubNodes />
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RemoteTargetOptions.sqx" IsExpanded="false" FileName="Communication\RemoteTargetOptions.sqx">
             <IsSelected>false</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
@@ -307,7 +315,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Server\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Server\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Observation.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Observation.sqx">
@@ -368,7 +376,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Server\Classes\Services">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="true" FileName="Server\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="FreeVehiclesService.sqx" IsExpanded="false" FileName="Server\Classes\Services\FreeVehiclesService.sqx">
@@ -458,7 +466,7 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="description.ext" IsExpanded="false" FileName="description.ext">
-        <IsSelected>true</IsSelected>
+        <IsSelected>false</IsSelected>
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="init.sqf" IsExpanded="false" FileName="init.sqf">
@@ -466,7 +474,7 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="init.sqx" IsExpanded="false" FileName="init.sqx">
-        <IsSelected>false</IsSelected>
+        <IsSelected>true</IsSelected>
         <SubNodes />
       </ProjectNodeViewModel>
     </SubNodes>

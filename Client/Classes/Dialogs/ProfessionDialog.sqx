@@ -7,7 +7,9 @@
  * Description:
  * A dialog in which the user can change profession.
  */
+
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Client
 {

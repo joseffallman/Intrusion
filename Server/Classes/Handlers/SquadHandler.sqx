@@ -8,7 +8,8 @@
  * Handles all about groups on the server.
  */
 
-using Intrusion.Common; 
+using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {

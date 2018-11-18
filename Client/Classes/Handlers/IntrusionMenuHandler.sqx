@@ -6,7 +6,9 @@
  * Description:
  * Encapsulates all logic for the Intrusion Menu.
  */
+
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Client
 {

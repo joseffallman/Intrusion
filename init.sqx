@@ -1,13 +1,24 @@
+using Intrusion.Server;
+
 enableSaving [false, false];
 
+// First common
 call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
 
-sleep 1;
-
+// Then server
 if (isServer) then {
-	execVM "Server\InitServer.sqx";
+	call compile preprocessFileLineNumbers "Server\InitServer.sqx";
 };
 
+// Then clients
 if (!isDedicated) then {
-	execVM "Client\InitClient.sqx";
+	call compile preprocessFileLineNumbers "Client\InitClient.sqx";
+};
+
+// And finally Remote
+call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
+
+// And then start the mission
+if (isServer) then {
+	call MissionEngine.RunAsync;
 };

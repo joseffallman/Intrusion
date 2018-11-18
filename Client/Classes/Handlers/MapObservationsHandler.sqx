@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Communication;
  
 namespace Intrusion.Client
 {
@@ -19,7 +20,7 @@ namespace Intrusion.Client
 		// Initializes the MapObservationsHandler.
 		public static method Init {
 			_mMapObservationIds = [];
-			[MapObservationsHandler.UpdateMap] call PublicVariableHandler.RegisterMapObservationsListener;
+			//[MapObservationsHandler.UpdateMap] call PublicVariableHandler.RegisterMapObservationsListener;
 		};
 		
 		// Adds an observation marker to the map.
@@ -78,6 +79,7 @@ namespace Intrusion.Client
 		};
 		
 		// Updates all map observations on the map.
+		// _mapObservations (Array): All current mapobservations.
 		public static method UpdateMap {
 			params ["_mapObservations" as Array];
 			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];

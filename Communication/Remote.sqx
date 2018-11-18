@@ -5,13 +5,14 @@
  * Author:  Engima
  *
  * Description:
- * Handles all remote execution.
+ * Handles all remote execution. All calls that need to be done across the network must be registered here.
  */
+
 using Intrusion.Client;
 using Intrusion.Common;
 using Intrusion.Server;
 
-namespace Intrusion.Common
+namespace Intrusion.Communication
 {
 	public class Remote
 	{
@@ -44,6 +45,7 @@ namespace Intrusion.Common
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
 					case "MissionEndHandler.PlayEndScene": { _parameters spawn MissionEndHandler.PlayEndScene };
+					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
 				};
 			};
 		};

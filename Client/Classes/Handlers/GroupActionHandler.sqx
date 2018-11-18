@@ -6,7 +6,9 @@
  * Description:
  * Handles everything about grouping action for the current client.
  */
+
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Client
 {

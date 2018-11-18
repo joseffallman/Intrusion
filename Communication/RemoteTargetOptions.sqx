@@ -1,12 +1,12 @@
 /*
- * Name:    RemoteTargetEnum
+ * Name:    RemoteTargetOptions
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
  * An enum with all possible target types for the remoteExec command.
  */
-namespace Intrusion.Common
+namespace Intrusion.Communication
 {
 	public class RemoteTargetOptions
 	{

@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {

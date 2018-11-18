@@ -7,8 +7,10 @@
  * Description:
  * Handler for all resource locations.
  */
+
 using Sqx.Markers;
 using Intrusion.Common;
+using Intrusion.Communication;
  
 namespace Intrusion.Server
 {
@@ -21,8 +23,6 @@ namespace Intrusion.Server
 			_mResourceLocations = [];
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
-			
-			call _self.AquireAllResourceLocations;	
 		};
 		
 		// Gets the location selected as the Winner's location.
@@ -30,7 +30,7 @@ namespace Intrusion.Server
 		
 		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
 		// resource locations for them all.
-		private static method AquireAllResourceLocations {
+		public static method AquireAllResourceLocations {
 			private ["_number" as Scalar];
 			
 			// Find all factory locations
