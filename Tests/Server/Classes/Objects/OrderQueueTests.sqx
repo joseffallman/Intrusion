@@ -1,0 +1,39 @@
+/*
+ * Name:	OrderQueueTests
+ * Date:	2018-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the OrderQueue object.
+ */
+
+using Sqx.Tests;
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Server
+{
+	public class OrderQueueTests
+	{
+		// Creates a OrderQueueTests object.
+		public static method Init {
+			["Intrusion.Tests.Server", "OrderQueueTests",
+			["OrderQueueEmpty_OrderAdded_SetAsCurrent"]
+			] call TestEngine.Register;
+		};
+		
+		private static method OrderQueueEmpty_OrderAdded_SetAsCurrent {
+			private ["_orderQueue" as OrderQueue, "_group" as Group];
+		
+			// Arrange
+			_orderQueue = new OrderQueue;
+			_group = createGroup west;
+			
+			// Act
+			[_group] call _orderQueue.PutOrder;
+			
+			// Assert
+			[_group, _orderQueue.CurrentOrder, "Added order does not match current order."] call Assert.AreEqual;
+		};
+	};
+};

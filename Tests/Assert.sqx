@@ -1,0 +1,22 @@
+/*
+ * Name:	Assert
+ * Date:	2018-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Asserts different kinds of checks.
+ */
+namespace Sqx.Tests
+{
+	public class Assert
+	{
+		public static method AreEqual {
+			params ["_var1" as Any, "_var2" as Any, "_message" as String];
+			
+			if (!(_var1 == _var2)) then {
+				[_message] call TestEngine.WriteFailed;
+			};
+		};
+	};
+};

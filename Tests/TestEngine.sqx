@@ -1,0 +1,101 @@
+/*
+ * Name:	TestEngine
+ * Date:	2018-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that runs all the registered tests.
+ */
+namespace Sqx.Tests
+{
+	public class TestEngine
+	{
+		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodFailed" as Boolean];
+		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String];
+		
+		public static method Init {
+			_mTestUnits = [];
+		};
+		
+		public static method Register {
+			params ["_namespaceName" as String, "_className" as String, "_methodNames" as Array];
+			
+			_mTestUnits pushBack [_namespaceName, _className, _methodNames] new TestUnit;
+		};
+		
+		public static method WriteFailed {
+			params ["_message" as String];
+			
+			player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
+			_mMethodFailed = true;
+		};
+		
+		public static method StringReplace {
+			params["_str", "_find", "_replace"];
+			
+			private _return = "";
+			private _len = count _find;	
+			private _pos = _str find _find;
+			
+			while {(_pos != -1) && (count _str > 0)} do {
+				_return = _return + (_str select [0, _pos]) + _replace;
+				
+				_str = (_str select [_pos+_len]);
+				_pos = _str find _find;
+			};
+			
+			_return + _str;
+		};
+		
+		public static method Run {
+			private ["_methodCall" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit];
+			
+			_successCount = 0;
+			_failedCount = 0;
+
+			player sideChat "RUNNING TESTS...";
+			
+			{
+				_testUnit = _x;
+				
+				_mCurrentNamespaceName = _testUnit.NamespaceName;
+				_mCurrentClassName = _testUnit.ClassName;
+				
+				{
+					_mCurrentMethodName = _x;
+					_mMethodFailed = false;
+					
+					_methodCall = "call " + ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_" + _mCurrentMethodName + ";";
+					call compile _methodCall;
+					
+					if (_mMethodFailed) then {
+						_failedCount = _failedCount + 1;
+					}
+					else {
+						_successCount = _successCount + 1;
+					};
+				} foreach _testUnit.MethodNames as String;
+			} foreach _mTestUnits as TestUnit;
+			
+			player sideChat "TOTAL: " + str (_successCount + _failedCount) + ". SUCCEEDED: " + str _successCount + ". FAILED: " + str _failedCount;
+			
+			
+			
+			
+// TODO SQX: Compiles erroneously. The ; after _self.ClassName is lost. And the line number gets messed up.
+//			try {
+//				_currentClassName = _self.ClassName;
+//			
+//				player sideChat "Testing " + _currentClassName + "...";
+//			}
+//			catch {
+//				player sideChat "Test failed: " + _currentClassName + " - " + _exception;
+//			};
+
+			
+		};
+	};
+	
+	call TestEngine.Init;
+};

@@ -1,0 +1,12 @@
+call compile preprocessFileLineNumbers "Tests\Assert.sqx";
+call compile preprocessFileLineNumbers "Tests\TestUnit.sqx";
+call compile preprocessFileLineNumbers "Tests\TestEngine.sqx";
+
+// Include your test class files here
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OrderQueueTests.sqx";
+
+// Add your namespaces here
+using Intrusion.Tests.Server;
+
+// Initialize your test classes here
+call OrderQueueTests.Init;
