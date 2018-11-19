@@ -323,7 +323,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="OrderQueue.sqx" IsExpanded="false" FileName="Server\Classes\Objects\OrderQueue.sqx">
-                    <IsSelected>true</IsSelected>
+                    <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProductionManager.sqx" IsExpanded="true" FileName="Server\Classes\Objects\ProductionManager.sqx">
@@ -496,7 +496,7 @@
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestEngine.sqx" IsExpanded="false" FileName="Tests\TestEngine.sqx">
-            <IsSelected>false</IsSelected>
+            <IsSelected>true</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestUnit.sqx" IsExpanded="false" FileName="Tests\TestUnit.sqx">

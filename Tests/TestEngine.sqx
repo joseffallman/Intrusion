@@ -11,7 +11,7 @@ namespace Sqx.Tests
 {
 	public class TestEngine
 	{
-		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodFailed" as Boolean];
+		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean];
 		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String];
 		
 		public static method Init {
@@ -28,7 +28,7 @@ namespace Sqx.Tests
 			params ["_message" as String];
 			
 			player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
-			_mMethodFailed = true;
+			_mMethodSucceeded = false;
 		};
 		
 		public static method StringReplace {
@@ -64,16 +64,23 @@ namespace Sqx.Tests
 				
 				{
 					_mCurrentMethodName = _x;
-					_mMethodFailed = false;
+					_mMethodSucceeded = true;
 					
-					_methodCall = "call " + ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_" + _mCurrentMethodName + ";";
-					call compile _methodCall;
+					_methodCall = ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_" + _mCurrentMethodName + ";";
 					
-					if (_mMethodFailed) then {
-						_failedCount = _failedCount + 1;
+					if (isNil compile _methodCall) then {
+						_mMethodSucceeded = false;
+						player sideChat ("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.");
 					}
 					else {
+						call compile ("call " + _methodCall);
+					};
+					
+					if (_mMethodSucceeded) then {
 						_successCount = _successCount + 1;
+					}
+					else {
+						_failedCount = _failedCount + 1;
 					};
 				} foreach _testUnit.MethodNames as String;
 			} foreach _mTestUnits as TestUnit;

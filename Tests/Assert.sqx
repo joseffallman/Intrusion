@@ -12,9 +12,17 @@ namespace Sqx.Tests
 	public class Assert
 	{
 		public static method AreEqual {
-			params ["_var1" as Any, "_var2" as Any, "_message" as String];
+			params ["_value1" as Any, "_value2" as Any, "_message" as String];
 			
-			if (!(_var1 == _var2)) then {
+			if (!(_value1 == _value2)) then {
+				[_message] call TestEngine.WriteFailed;
+			};
+		};
+		
+		public static method IsNull {
+			params ["_value" as Any, "_message" as String];
+			
+			if (!(isNull _value)) then {
 				[_message] call TestEngine.WriteFailed;
 			};
 		};

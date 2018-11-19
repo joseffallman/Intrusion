@@ -17,9 +17,22 @@ namespace Intrusion.Tests.Server
 	{
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Intrusion.Tests.Server", "OrderQueueTests",
-			["OrderQueueEmpty_OrderAdded_SetAsCurrent"]
-			] call TestEngine.Register;
+			["Intrusion.Tests.Server", "OrderQueueTests", [
+				"OrderQueueEmpty_NothingChanged_CurrentIsNull",
+				"OrderQueueEmpty_OrderAdded_SetAsCurrent"
+			]] call TestEngine.Register;
+		};
+		
+		private static method OrderQueueEmpty_NothingChanged_CurrentIsNull {
+			private ["_orderQueue" as OrderQueue];
+		
+			// Arrange
+			_orderQueue = new OrderQueue;
+			
+			// Act
+			
+			// Assert
+			[_orderQueue.CurrentOrder, "Current order should be null."] call Assert.IsNull;
 		};
 		
 		private static method OrderQueueEmpty_OrderAdded_SetAsCurrent {
