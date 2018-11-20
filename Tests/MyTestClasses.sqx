@@ -1,0 +1,7 @@
+/* In this file all custom test classes are to be included and initialized. */
+
+/* Include test classes */
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OrderQueueTests.sqx";
+
+/* Initialize test classes */
+call Tests.Server.OrderQueueTests.Init;

@@ -7,7 +7,7 @@
  * Description:
  * Asserts different kinds of checks.
  */
-namespace Sqx.Tests
+namespace Sqx.UnitTest
 {
 	public class Assert
 	{
@@ -19,10 +19,26 @@ namespace Sqx.Tests
 			};
 		};
 		
+		public static method AreNotEqual {
+			params ["_value1" as Any, "_value2" as Any, "_message" as String];
+			
+			if (_value1 == _value2) then {
+				[_message] call TestEngine.WriteFailed;
+			};
+		};
+		
 		public static method IsNull {
 			params ["_value" as Any, "_message" as String];
 			
 			if (!(isNull _value)) then {
+				[_message] call TestEngine.WriteFailed;
+			};
+		};
+		
+		public static method IsNotNull {
+			params ["_value" as Any, "_message" as String];
+			
+			if (isNull _value) then {
 				[_message] call TestEngine.WriteFailed;
 			};
 		};

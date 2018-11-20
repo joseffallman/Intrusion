@@ -7,23 +7,31 @@
  * Description:
  * A class that runs all the registered tests.
  */
-namespace Sqx.Tests
+namespace Sqx.UnitTest
 {
 	public class TestEngine
 	{
 		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean];
 		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String];
 		
+		// Initializes the test engine.
 		public static method Init {
 			_mTestUnits = [];
 		};
 		
+		// Registeres a test unit (a custom testclass with its test methods) so the testclass' tests can be executed.
+		// _namespaceName (String): The dot-separated namespace name for the test class.
+		// _className (String): The testclass' name.
+		// _methodNames (Array): A list of names reflecting the test methods.
 		public static method Register {
 			params ["_namespaceName" as String, "_className" as String, "_methodNames" as Array];
 			
 			_mTestUnits pushBack [_namespaceName, _className, _methodNames] new TestUnit;
 		};
 		
+		// Asserting a test and registeres it as failed.
+		// Only used by the test framework, and should never be called explicitly.
+		// _message (String): The test's error message to be shown for the test user.
 		public static method WriteFailed {
 			params ["_message" as String];
 			
@@ -31,8 +39,13 @@ namespace Sqx.Tests
 			_mMethodSucceeded = false;
 		};
 		
-		public static method StringReplace {
-			params["_str", "_find", "_replace"];
+		// Replaces a sub string within a string with another string.
+		// _str (String): The string to be edited.
+		// _find (String): The string to fine.
+		// _replace (String): The string to replace the found strings.
+		// Returns (String): The replaced string.
+		private static method String StringReplace {
+			params["_str" as String, "_find" as String, "_replace" as String];
 			
 			private _return = "";
 			private _len = count _find;	
@@ -48,8 +61,9 @@ namespace Sqx.Tests
 			_return + _str;
 		};
 		
-		public static method Run {
-			private ["_methodCall" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit];
+		// Runs all the tests.
+		private static method Run {
+			private ["_methodCall" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sConstructorFunction"];
 			
 			_successCount = 0;
 			_failedCount = 0;
@@ -58,6 +72,9 @@ namespace Sqx.Tests
 			
 			{
 				_testUnit = _x;
+				
+				_sConstructorFunction = ([_testUnit.NamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_constructor";
+				waitUntil { !isNil compile _sConstructorFunction };
 				
 				_mCurrentNamespaceName = _testUnit.NamespaceName;
 				_mCurrentClassName = _testUnit.ClassName;
@@ -87,22 +104,20 @@ namespace Sqx.Tests
 			
 			player sideChat "TOTAL: " + str (_successCount + _failedCount) + ". SUCCEEDED: " + str _successCount + ". FAILED: " + str _failedCount;
 			
-			
-			
-			
-// TODO SQX: Compiles erroneously. The ; after _self.ClassName is lost. And the line number gets messed up.
-//			try {
-//				_currentClassName = _self.ClassName;
-//			
-//				player sideChat "Testing " + _currentClassName + "...";
-//			}
-//			catch {
-//				player sideChat "Test failed: " + _currentClassName + " - " + _exception;
-//			};
-
-			
+			// TODO SQX: Compiles erroneously. The ; after _self.ClassName is lost. And the line number gets messed up.
+			//			try {
+			//				_currentClassName = _self.ClassName;
+			//			
+			//				player sideChat "Testing " + _currentClassName + "...";
+			//			}
+			//			catch {
+			//				player sideChat "Test failed: " + _currentClassName + " - " + _exception;
+			//			};
+		};
+		
+		// Starts a parallell task that runs all the tests.
+		public static method RunAsync {
+			[] spawn _self.Run;
 		};
 	};
-	
-	call TestEngine.Init;
 };

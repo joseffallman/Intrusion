@@ -8,10 +8,10 @@
  * Tests for the OrderQueue object.
  */
 
-using Sqx.Tests;
+using Sqx.UnitTest;
 using Intrusion.Server;
 
-namespace Intrusion.Tests.Server
+namespace Tests.Server
 {
 	public class OrderQueueTests
 	{
@@ -24,6 +24,15 @@ namespace Intrusion.Tests.Server
 				"TwoOrders_NextOrderSelected_SecondIsCurrent",
 				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull"
 			]] call TestEngine.Register;
+		};
+		
+		private static fields ["_mOrderQueue" as OrderQueue];
+		
+		private static method BeforeEach {
+			_mOrderQueue = new OrderQueue;
+		};
+		
+		private static method AfterEach {
 		};
 		
 		private static method OrderQueueEmpty_NothingChanged_CurrentIsNull {
@@ -39,71 +48,77 @@ namespace Intrusion.Tests.Server
 		};
 		
 		private static method OrderQueueEmpty_OrderAdded_SetAsCurrent {
-			private ["_orderQueue" as OrderQueue, "_group" as Group];
+			private ["_group" as Group];
 		
 			// Arrange
-			_orderQueue = new OrderQueue;
 			_group = createGroup west;
 			
 			// Act
-			[_group] call _orderQueue.PutOrder;
+			[_group] call _mOrderQueue.PutOrder;
 			
 			// Assert
-			[_group, _orderQueue.CurrentOrder, "Added order does not match current order."] call Assert.AreEqual;
+			[_group, _mOrderQueue.CurrentOrder, "Added order does not match current order."] call Assert.AreEqual;
 		};
 		
 		private static method OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent {
-			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+			private ["_group1" as Group, "_group2" as Group];
 		
 			// Arrange
-			_orderQueue = new OrderQueue;
 			_group1 = createGroup west;
 			_group2 = createGroup east;
 			
 			// Act
-			[_group1] call _orderQueue.PutOrder;
-			[_group2] call _orderQueue.PutOrder;
+			[_group1] call _mOrderQueue.PutOrder;
+			[_group2] call _mOrderQueue.PutOrder;
 			
 			// Assert
-			[_group1, _orderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_group1, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
 		};
 		
 		private static method TwoOrders_NextOrderSelected_SecondIsCurrent {
-			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+			private ["_group1" as Group, "_group2" as Group];
 		
 			// Arrange
-			_orderQueue = new OrderQueue;
 			_group1 = createGroup west;
 			_group2 = createGroup west;
 			"B_Soldier_F" createUnit [[0,0,100], _group1];
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			
-			[_group1] call _orderQueue.PutOrder;
-			[_group2] call _orderQueue.PutOrder;
+			[_group1] call _mOrderQueue.PutOrder;
+			[_group2] call _mOrderQueue.PutOrder;
 			
 			// Act
-			call _orderQueue.RemoveCurrentOrder;
+			call _mOrderQueue.RemoveCurrentOrder;
 			
 			// Assert
-			[_group2, _orderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_group2, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _group1 select 1);
+			deleteVehicle (units _group2 select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
 		};
 		
 		private static method TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull {
-			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+			private ["_group1" as Group, "_group2" as Group];
 		
 			// Arrange
-			_orderQueue = new OrderQueue;
 			_group1 = createGroup west;
 			_group2 = createGroup west;
 			
-			[_group1] call _orderQueue.PutOrder;
-			[_group2] call _orderQueue.PutOrder;
+			[_group1] call _mOrderQueue.PutOrder;
+			[_group2] call _mOrderQueue.PutOrder;
 			
 			// Act
-			call _orderQueue.RemoveCurrentOrder;
+			call _mOrderQueue.RemoveCurrentOrder;
 			
 			// Assert
-			[_orderQueue.CurrentOrder, "All orders should be gone."] call Assert.IsNull;
+			[_mOrderQueue.CurrentOrder, "All orders should be gone."] call Assert.IsNull;
+			
+			// Cleanup
+			deleteGroup _group1;
+			deleteGroup _group2;
 		};
 	};
 };

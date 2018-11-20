@@ -26,6 +26,6 @@ if (isServer) then {
 	
 	// Run the tests (during development)
 	sleep 3;
-	call compile preprocessFileLineNumbers "Tests\InitTests.sqx";
-	call Sqx.Tests.TestEngine.Run;
+	call compile preprocessFileLineNumbers "Sqx\UnitTest\Init.sqx";
+	call Sqx.UnitTest.TestEngine.RunAsync;
 };

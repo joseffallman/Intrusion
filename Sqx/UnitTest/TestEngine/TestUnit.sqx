@@ -7,7 +7,7 @@
  * Description:
  * A class that contains information about a test class and its test methods.
  */
-namespace Sqx.Tests
+namespace Sqx.UnitTest
 {
 	public class TestUnit
 	{
