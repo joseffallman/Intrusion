@@ -29,13 +29,26 @@ namespace Sqx.UnitTest
 			_mTestUnits pushBack [_namespaceName, _className, _methodNames] new TestUnit;
 		};
 		
+		// Outputs a text to the screen and the Arma 3 RPT file.
+		// _text (String): The text to be written.
+		private static method Output {
+			params ["_text" as String, ["_onlyToRpt" as Boolean, false]];
+			
+			if (!_onlyToRpt) then {
+				player sideChat _text;
+			};
+			
+			diag_log _text;
+		};
+		
 		// Asserting a test and registeres it as failed.
 		// Only used by the test framework, and should never be called explicitly.
 		// _message (String): The test's error message to be shown for the test user.
 		public static method WriteFailed {
 			params ["_message" as String];
 			
-			player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
+			//player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
+			[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message)] call _self.Output;
 			_mMethodSucceeded = false;
 		};
 		
@@ -63,61 +76,73 @@ namespace Sqx.UnitTest
 		
 		// Runs all the tests.
 		private static method Run {
-			private ["_methodCall" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sConstructorFunction"];
+			params ["_delayed" as Boolean];
+			private ["_sqfTestMethod" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sqfClassName" as String, "_sConstructorFunction" as String, "_sqfBeforeEach" as String, "_sqfAfterEach" as String];
 			
 			_successCount = 0;
 			_failedCount = 0;
+			
+			if (_delayed) then {
+				sleep 3;
+			};
 
-			player sideChat "RUNNING TESTS...";
+			["RUNNING TESTS..."] call _self.Output;
 			
 			{
 				_testUnit = _x;
 				
-				_sConstructorFunction = ([_testUnit.NamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_constructor";
-				waitUntil { !isNil compile _sConstructorFunction };
-				
 				_mCurrentNamespaceName = _testUnit.NamespaceName;
 				_mCurrentClassName = _testUnit.ClassName;
+				_sqfClassName = ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName;
+				
+				_sConstructorFunction = "cl_" + _sqfClassName + "_constructor";
+				waitUntil { !(isNil compile _sConstructorFunction) };
 				
 				{
 					_mCurrentMethodName = _x;
 					_mMethodSucceeded = true;
 					
-					_methodCall = ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName + "_" + _mCurrentMethodName + ";";
+					_sqfBeforeEach = _sqfClassName + "_BeforeEach";
+					if (!isNil _sqfBeforeEach) then {
+						call compile ("call " + _sqfBeforeEach);
+					};
 					
-					if (isNil compile _methodCall) then {
+					_sqfTestMethod = _sqfClassName + "_" + _mCurrentMethodName + ";";
+					
+					if (isNil compile _sqfTestMethod) then {
 						_mMethodSucceeded = false;
-						player sideChat ("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.");
+						[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
 					}
 					else {
-						call compile ("call " + _methodCall);
+						call compile ("call " + _sqfTestMethod);
 					};
 					
 					if (_mMethodSucceeded) then {
 						_successCount = _successCount + 1;
+						[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
 					}
 					else {
 						_failedCount = _failedCount + 1;
 					};
+					
+					_sqfAfterEach = _sqfClassName + "_AfterEach";
+					if (!(isNil compile _sqfAfterEach)) then {
+						call compile ("call " + _sqfAfterEach);
+					};
 				} foreach _testUnit.MethodNames as String;
 			} foreach _mTestUnits as TestUnit;
 			
-			player sideChat "TOTAL: " + str (_successCount + _failedCount) + ". SUCCEEDED: " + str _successCount + ". FAILED: " + str _failedCount;
-			
-			// TODO SQX: Compiles erroneously. The ; after _self.ClassName is lost. And the line number gets messed up.
-			//			try {
-			//				_currentClassName = _self.ClassName;
-			//			
-			//				player sideChat "Testing " + _currentClassName + "...";
-			//			}
-			//			catch {
-			//				player sideChat "Test failed: " + _currentClassName + " - " + _exception;
-			//			};
+			["TOTAL: " + str (_successCount + _failedCount) + ". PASSED: " + str _successCount + ". FAILED: " + str _failedCount] call _self.Output;
 		};
 		
 		// Starts a parallell task that runs all the tests.
 		public static method RunAsync {
-			[] spawn _self.Run;
+			[false] spawn _self.Run;
+		};
+		
+		// Starts a parallell task that runs all the tests, but starts after 3 seconds.
+		public static method RunDelayedAsync {
+			[true] spawn _self.Run;
 		};
 	};
 };

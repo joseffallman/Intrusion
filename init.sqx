@@ -1,3 +1,4 @@
+call compile preprocessFileLineNumbers "Sqx\UnitTest\Init.sqx"; call Sqx.UnitTest.TestEngine.RunDelayedAsync;
 call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
 
 using Intrusion.Server;
@@ -26,6 +27,4 @@ if (isServer) then {
 	
 	// Run the tests (during development)
 	sleep 3;
-	call compile preprocessFileLineNumbers "Sqx\UnitTest\Init.sqx";
-	call Sqx.UnitTest.TestEngine.RunAsync;
 };

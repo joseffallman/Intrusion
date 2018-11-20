@@ -14,7 +14,7 @@
 
 using Intrusion.Common;
 
-namespace Intrusion.Communication
+namespace Intrusion.Common
 {
 	public class PublicVariableHandler
 	{

@@ -1,4 +1,3 @@
-call compile preprocessFileLineNumbers "Communication\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Communication\RemoteTargetOptions.sqx";
 call compile preprocessFileLineNumbers "Communication\Remote.sqx";
 

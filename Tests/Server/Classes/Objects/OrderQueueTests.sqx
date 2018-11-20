@@ -17,7 +17,7 @@ namespace Tests.Server
 	{
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Intrusion.Tests.Server", "OrderQueueTests", [
+			["Tests.Server", "OrderQueueTests", [
 				"OrderQueueEmpty_NothingChanged_CurrentIsNull",
 				"OrderQueueEmpty_OrderAdded_SetAsCurrent",
 				"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",
@@ -30,9 +30,6 @@ namespace Tests.Server
 		
 		private static method BeforeEach {
 			_mOrderQueue = new OrderQueue;
-		};
-		
-		private static method AfterEach {
 		};
 		
 		private static method OrderQueueEmpty_NothingChanged_CurrentIsNull {
@@ -58,6 +55,10 @@ namespace Tests.Server
 			
 			// Assert
 			[_group, _mOrderQueue.CurrentOrder, "Added order does not match current order."] call Assert.AreEqual;
+			
+						
+			// Cleanup
+			deleteGroup _group;
 		};
 		
 		private static method OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent {
@@ -73,6 +74,10 @@ namespace Tests.Server
 			
 			// Assert
 			[_group1, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteGroup _group1;
+			deleteGroup _group2;
 		};
 		
 		private static method TwoOrders_NextOrderSelected_SecondIsCurrent {

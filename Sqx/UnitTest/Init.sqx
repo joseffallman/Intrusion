@@ -6,4 +6,4 @@ call compile preprocessFileLineNumbers "Sqx\UnitTest\TestEngine\TestEngine.sqx";
 call Sqx.UnitTest.TestEngine.Init;
 
 /* Register the user's test classes */
-call compile preprocessFileLineNumbers "Tests\MyTestClasses.sqx";
+call compile preprocessFileLineNumbers "Tests\InitMyTestClasses.sqx";
