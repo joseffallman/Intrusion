@@ -18,7 +18,7 @@ namespace Sqx.Collections
 		public static method Array RemoveItemAtIndex {
 			params ["_array" as Array, "_index" as Scalar];
 			private ["_newArray" as Array, "_i" as Scalar];
-			
+
 			_newArray = [];
 			_i = 0;
 			

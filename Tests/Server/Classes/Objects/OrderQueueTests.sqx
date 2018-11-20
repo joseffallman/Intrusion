@@ -19,7 +19,10 @@ namespace Intrusion.Tests.Server
 		public static method Init {
 			["Intrusion.Tests.Server", "OrderQueueTests", [
 				"OrderQueueEmpty_NothingChanged_CurrentIsNull",
-				"OrderQueueEmpty_OrderAdded_SetAsCurrent"
+				"OrderQueueEmpty_OrderAdded_SetAsCurrent",
+				"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",
+				"TwoOrders_NextOrderSelected_SecondIsCurrent",
+				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull"
 			]] call TestEngine.Register;
 		};
 		
@@ -47,6 +50,60 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[_group, _orderQueue.CurrentOrder, "Added order does not match current order."] call Assert.AreEqual;
+		};
+		
+		private static method OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent {
+			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_orderQueue = new OrderQueue;
+			_group1 = createGroup west;
+			_group2 = createGroup east;
+			
+			// Act
+			[_group1] call _orderQueue.PutOrder;
+			[_group2] call _orderQueue.PutOrder;
+			
+			// Assert
+			[_group1, _orderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+		};
+		
+		private static method TwoOrders_NextOrderSelected_SecondIsCurrent {
+			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_orderQueue = new OrderQueue;
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group2];
+			
+			[_group1] call _orderQueue.PutOrder;
+			[_group2] call _orderQueue.PutOrder;
+			
+			// Act
+			call _orderQueue.RemoveCurrentOrder;
+			
+			// Assert
+			[_group2, _orderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+		};
+		
+		private static method TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull {
+			private ["_orderQueue" as OrderQueue, "_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_orderQueue = new OrderQueue;
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			
+			[_group1] call _orderQueue.PutOrder;
+			[_group2] call _orderQueue.PutOrder;
+			
+			// Act
+			call _orderQueue.RemoveCurrentOrder;
+			
+			// Assert
+			[_orderQueue.CurrentOrder, "All orders should be gone."] call Assert.IsNull;
 		};
 	};
 };

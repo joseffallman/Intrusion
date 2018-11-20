@@ -39,14 +39,9 @@ namespace Intrusion.Server
 			};
 		};
 		
-		private method RemoveAtIndex {
-			params ["_index" as Scalar];
-			_mGroups = [_mGroups, _index] call ArrayHandler.RemoveItemAtIndex;
-		};
-		
 		// Removes the current order and moves the queue pointer to the next group in the queue.
 		// Returns (Group): The group that is the current group after the pointer has moved.
-		public method Group RemoveCurrentOrder {
+		public method RemoveCurrentOrder {
 			private ["_currentIndex" as Scalar, "_currentGroup" as Group];
 			
 			_currentIndex = _mCurrentIndex;
@@ -59,7 +54,9 @@ namespace Intrusion.Server
 					_currentIndex = -1;
 				}
 				else {
+					//player sideChat str _mGroups;
 					_mGroups = [_mGroups, _currentIndex] call ArrayHandler.RemoveItemAtIndex;
+					//player sideChat str _mGroups;
 					
 					if (_currentIndex > count _mGroups - 1) then {
 						_currentIndex = 0;
@@ -70,7 +67,6 @@ namespace Intrusion.Server
 			};
 			
 			_self.CurrentOrder = _currentGroup;
-			_currentGroup
 		};
 	};
 };

@@ -1,3 +1,5 @@
+call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
+
 using Intrusion.Server;
 
 enableSaving [false, false];
@@ -20,6 +22,10 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {
+	call MissionEngine.RunAsync;
+	
+	// Run the tests (during development)
+	sleep 3;
 	call compile preprocessFileLineNumbers "Tests\InitTests.sqx";
-	//call MissionEngine.RunAsync;
+	call Sqx.Tests.TestEngine.Run;
 };
