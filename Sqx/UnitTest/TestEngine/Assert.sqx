@@ -12,34 +12,76 @@ namespace Sqx.UnitTest
 	public class Assert
 	{
 		public static method AreEqual {
-			params ["_value1" as Any, "_value2" as Any, "_message" as String];
+			params ["_expected" as Any, "_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if (!(_expected == _actual)) then {
+				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
 			
-			if (!(_value1 == _value2)) then {
-				[_message] call TestEngine.WriteFailed;
+				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 		
 		public static method AreNotEqual {
-			params ["_value1" as Any, "_value2" as Any, "_message" as String];
+			params ["_expected" as Any, "_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if (_expected == _actual) then {
+				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
 			
-			if (_value1 == _value2) then {
-				[_message] call TestEngine.WriteFailed;
+				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 		
-		public static method IsNull {
-			params ["_value" as Any, "_message" as String];
+		private static method ValueIsNull {
+			params ["_value" as Any];
+			private ["_valueSqxClass" as Assert, "_isNull" as Boolean];
+
+			_valueSqxClass = _value as Assert;
+			_isNull = false;
 			
-			if (!(isNull _value)) then {
-				[_message] call TestEngine.WriteFailed;
+			if (isNull _value || { isNull _valueSqxClass }) then {
+				_isNull = true;
+			};
+			
+			_isNull
+		};
+		
+		public static method IsNull {
+			params ["_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if (!([_actual] call _self.ValueIsNull)) then {
+				_fullMsg = "Expected NULL but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
+			
+				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 		
 		public static method IsNotNull {
-			params ["_value" as Any, "_message" as String];
+			params ["_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if ([_actual] call _self.ValueIsNull) then {
+				_fullMsg = "Expected NOT NULL but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
 			
-			if (isNull _value) then {
-				[_message] call TestEngine.WriteFailed;
+				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 	};

@@ -47,9 +47,12 @@ namespace Sqx.UnitTest
 		public static method WriteFailed {
 			params ["_message" as String];
 			
-			//player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
-			[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message)] call _self.Output;
-			_mMethodSucceeded = false;
+			if (_mMethodSucceeded) then // Just report one failed assert per test method.
+			{
+				//player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
+				[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message)] call _self.Output;
+				_mMethodSucceeded = false;
+			};
 		};
 		
 		// Replaces a sub string within a string with another string.

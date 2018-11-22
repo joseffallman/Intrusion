@@ -45,13 +45,29 @@ namespace Intrusion.Server
 			private ["_currentIndex" as Scalar, "_currentGroup" as Group];
 			
 			_currentIndex = _mCurrentIndex;
-			_currentGroup = grpNull;
+			_currentGroup = _self.CurrentOrder;
 			
-			while { _currentIndex >= 0 && (isNull _currentGroup || { count units _currentGroup == 0 }) } do
+			// Delete the group
+			_mGroups = _mGroups - [_currentGroup];
+			
+			if (_currentIndex > count _mGroups - 1) then {
+				_currentIndex = 0;
+			};
+					
+			if (count _mGroups == 0) then {
+				_currentGroup = grpNull;
+				_currentIndex = -1;
+			}
+			else {
+				_currentGroup = _mGroups select _currentIndex;
+			};
+			
+			while { count _mGroups > 0 && { isNull _currentGroup || { count units _currentGroup == 0 }}} do
 			{
 				if (count _mGroups == 1) then {
 					_mGroups = [];
 					_currentIndex = -1;
+					_currentGroup = grpNull;
 				}
 				else {
 					//player sideChat str _mGroups;
@@ -61,12 +77,17 @@ namespace Intrusion.Server
 					if (_currentIndex > count _mGroups - 1) then {
 						_currentIndex = 0;
 					};
-					
-					_currentGroup = _mGroups select _currentIndex;
 				};
 			};
 			
 			_self.CurrentOrder = _currentGroup;
+			_mCurrentIndex = _currentIndex;
+		};
+		
+		// Gets the number of orders currently in the queue.
+		// Returns (Scalar): Number of orders in the queue.
+		public method Scalar Count {
+			count _mGroups
 		};
 	};
 };

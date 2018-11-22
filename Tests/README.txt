@@ -36,5 +36,15 @@ Instead you can start the tests yourself from anywhere you want with the followi
 SQX>call Sqx.UnitTest.TestEngine.RunAsync;
 SQF>call Sqx_UnitTest_TestEngine_RunAsync;
 
+-----------------
+ Version History
+-----------------
+
+1.0 First version.
+1.1 Message to Assert is now optional.
+    Assert.IsNull and Assert.IsNotNull improved to handle Sqx classes.
+    Only one assert per test is now reported.
+
+
 Good luck unit testing!
 Engima
