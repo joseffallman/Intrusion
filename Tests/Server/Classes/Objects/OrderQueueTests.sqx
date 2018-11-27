@@ -129,5 +129,67 @@ namespace Tests.Server
 			deleteGroup _group1;
 			deleteGroup _group2;
 		};
+		
+		private static method ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent {
+			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			_group3 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group2];
+			"B_Soldier_F" createUnit [[0,0,100], _group3];
+			
+			[_group1] call _mOrderQueue.PutOrder;
+			[_group2] call _mOrderQueue.PutOrder;
+			[_group3] call _mOrderQueue.PutOrder;
+			
+			// Act
+			call _mOrderQueue.RemoveCurrentOrder;
+			call _mOrderQueue.RemoveCurrentOrder;
+			
+			// Assert
+			[_group3, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _group1 select 1);
+			deleteVehicle (units _group2 select 1);
+			deleteVehicle (units _group3 select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
+			deleteGroup _group3;
+		};
+		
+		private static method ThreeOrders_SecondIsEmpty_SecondIsRemoved {
+			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			_group3 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group3];
+			
+			[_group1] call _mOrderQueue.PutOrder;
+			[_group2] call _mOrderQueue.PutOrder;
+			[_group3] call _mOrderQueue.PutOrder;
+			
+			// Act
+			call _mOrderQueue.RemoveCurrentOrder;
+			
+			// Assert
+			[_group3, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _group1 select 1);
+			deleteVehicle (units _group2 select 1);
+			deleteVehicle (units _group3 select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
+			deleteGroup _group3;
+		};
 	};
 };
