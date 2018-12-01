@@ -48,7 +48,9 @@ namespace Sqx.UnitTest
 			_valueSqxClass = _value as Assert;
 			_isNull = false;
 			
-			if (isNull _value || { isNull _valueSqxClass }) then {
+			player sideChat str _value;
+
+			if (isNull _valueSqxClass || { isNull _value }) then {
 				_isNull = true;
 			};
 			
@@ -58,7 +60,7 @@ namespace Sqx.UnitTest
 		public static method IsNull {
 			params ["_actual" as Any, ["_message" as String, ""]];
 			private ["_fullMsg" as String];
-
+			
 			if (!([_actual] call _self.ValueIsNull)) then {
 				_fullMsg = "Expected NULL but got '" + str _actual + "'. ";
 				

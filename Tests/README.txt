@@ -44,6 +44,7 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
 1.1 Message to Assert is now optional.
     Assert.IsNull and Assert.IsNotNull improved to handle Sqx classes.
     Only one assert per test is now reported.
+X.Y Fixed: Bug in Assert.IsNull when testing an SqxClass.
 
 
 Good luck unit testing!

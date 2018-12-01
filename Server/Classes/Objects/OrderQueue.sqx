@@ -14,80 +14,80 @@ namespace Intrusion.Server
 {
 	public class OrderQueue
 	{
-		private fields ["_mGroups" as Array /* of Group */, "_mCurrentIndex" as Scalar];
+		private fields ["_mOrders" as Array /* of Order */, "_mCurrentIndex" as Scalar];
 		
 		// Creates a ProductionQueue object.
 		public constructor {
-			_mGroups = [];
+			_mOrders = [];
 			_mCurrentIndex = -1;
-			_self.CurrentOrder = grpNull;
+			_self.CurrentOrder = classNull;
 		};
 		
 		// Gets the group currently being built for.
-		public property Group CurrentOrder { get; private set; };
+		public property Order CurrentOrder { get; private set; };
 		
 		// Adds a group to the queue if it is not already in it.
 		// _group (Group): The group to add.
 		public method PutOrder {
-			params ["_group" as Group];
+			params ["_order" as Order];
 			
-			_mGroups pushBack _group;
+			_mOrders pushBack _order;
 			
 			if (_mCurrentIndex < 0) then {
 				_mCurrentIndex = 0;
-				_self.CurrentOrder = _group;
+				_self.CurrentOrder = _order;
 			};
 		};
 		
 		// Removes the current order and moves the queue pointer to the next group in the queue.
 		// Returns (Group): The group that is the current group after the pointer has moved.
 		public method RemoveCurrentOrder {
-			private ["_currentIndex" as Scalar, "_currentGroup" as Group];
+			private ["_currentIndex" as Scalar, "_currentOrder" as Order];
 			
 			_currentIndex = _mCurrentIndex;
-			_currentGroup = _self.CurrentOrder;
+			_currentOrder = _self.CurrentOrder;
 			
 			// Delete the group
-			_mGroups = _mGroups - [_currentGroup];
+			_mOrders = _mOrders - [_currentOrder];
 			
-			if (_currentIndex > count _mGroups - 1) then {
+			if (_currentIndex > count _mOrders - 1) then {
 				_currentIndex = 0;
 			};
 					
-			if (count _mGroups == 0) then {
-				_currentGroup = grpNull;
+			if (count _mOrders == 0) then {
+				_currentOrder = classNull;
 				_currentIndex = -1;
 			}
 			else {
-				_currentGroup = _mGroups select _currentIndex;
+				_currentOrder = _mOrders select _currentIndex;
 			};
 			
-			while { count _mGroups > 0 && { isNull _currentGroup || { count units _currentGroup == 0 }}} do
+			while { count _mOrders > 0 && { isNull _currentOrder || { count units _currentOrder.Group == 0 }}} do
 			{
-				if (count _mGroups == 1) then {
-					_mGroups = [];
+				if (count _mOrders == 1) then {
+					_mOrders = [];
 					_currentIndex = -1;
-					_currentGroup = grpNull;
+					_currentOrder = classNull;
 				}
 				else {
-					//player sideChat str _mGroups;
-					_mGroups = [_mGroups, _currentIndex] call ArrayHandler.RemoveItemAtIndex;
-					//player sideChat str _mGroups;
+					//player sideChat str _mOrders;
+					_mOrders = [_mOrders, _currentIndex] call ArrayHandler.RemoveItemAtIndex;
+					//player sideChat str _mOrders;
 					
-					if (_currentIndex > count _mGroups - 1) then {
+					if (_currentIndex > count _mOrders - 1) then {
 						_currentIndex = 0;
 					};
 				};
 			};
 			
-			_self.CurrentOrder = _currentGroup;
+			_self.CurrentOrder = _currentOrder;
 			_mCurrentIndex = _currentIndex;
 		};
 		
 		// Gets the number of orders currently in the queue.
 		// Returns (Scalar): Number of orders in the queue.
 		public method Scalar Count {
-			count _mGroups
+			count _mOrders
 		};
 	};
 };

@@ -1,0 +1,29 @@
+/*
+ * Name:	Order
+ * Date:	2018-12-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a group's order.
+ */
+namespace Intrusion.Server
+{
+	public class Order
+	{
+		// Creates a Order object.
+		public constructor {
+			params ["_group" as Group, "_vehicleClassName" as String, "_productionCost" as Scalar];
+			
+			_self.Group = _group;
+			_self.VehicleClassName = _vehicleClassName;
+			_self.ProductionCost = _productionCost;
+		};
+		
+		public property Group Group { get; private set; };
+		
+		public property VehicleClassName { get; private set; };
+		
+		public property ProductionCost { get; private set; };
+	};
+};

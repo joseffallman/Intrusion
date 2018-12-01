@@ -26,14 +26,17 @@ namespace Tests.Server
 		private static fields ["_mVehicleSpawner" as TestVehicleSpawner, "_mOrderQueue" as OrderQueue, "_mGroup" as Group, "_mResourceBook" as ResourceBook, "_mProductionManager" as ProductionManager];
 		
 		private static method BeforeEach {
+			private ["_order" as Order];
+		
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
 			_mResourceBook = new ResourceBook;
 			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook] new ProductionManager;
 			
 			_mGroup = createGroup west;
+			_order = [_mGroup, "", 0] new Order;
 			
-			[_mGroup] call _mOrderQueue.PutOrder;
+			[_order] call _mOrderQueue.PutOrder;
 		};
 		
 		private static method AfterEach {
