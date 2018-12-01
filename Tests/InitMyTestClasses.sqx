@@ -1,9 +1,14 @@
 /* In this file all custom test classes are to be included and initialized. */
 
+/* Include diagnostics classes */
+call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleSpawner.sqx";
+
 /* Include test classes */
 //call compile preprocessFileLineNumbers "Tests\Example\ExampleTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OrderQueueTests.sqx";
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
 
 /* Initialize test classes */
 //call Tests.Example.ExampleTests.Init;
 call Tests.Server.OrderQueueTests.Init;
+call Tests.Server.ProductionManagerTests.Init;

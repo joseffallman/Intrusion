@@ -20,12 +20,13 @@ namespace Intrusion.Server
         // Parameter(s):
         // _side (Side): The side to handle.
         public constructor {
-		    params ["_side" as Side];
+		    params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner];
             
             _self.Side = _side;
             
             _mResourceBook = new ResourceBook;
             _mResourceCollector = [_side, _mResourceBook] new ResourceCollector;
+            _mProductionManager = [_side, _vehicleSpawner, _mResourceBook] new ProductionManager;
 		};
 		
 		// Gets the side of the side handler.
@@ -33,7 +34,7 @@ namespace Intrusion.Server
 		
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
 		public method PerformTurn {
-			call _mResourceCollector.AquireResourcesFromMap;
+			call _mResourceCollector.CollectResources;
 			call _mProductionManager.Produce;
 			
 			player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);

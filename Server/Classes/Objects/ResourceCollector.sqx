@@ -52,7 +52,7 @@ namespace Intrusion.Server
 		};
 		
 		// Aquires map resources and makes deposits to the resource book.
-		public method AquireResourcesFromMap {
+		public method CollectResources {
 			private ["_production" as Scalar, "_technology" as Scalar];
 			
 			_mSecondsSinceLastAquire = time - _mLastAquireTime;

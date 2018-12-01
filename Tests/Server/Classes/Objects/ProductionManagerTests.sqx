@@ -1,0 +1,52 @@
+/*
+ * Name:	OrderQueueTests
+ * Date:	2018-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the OrderQueue object.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Server;
+
+namespace Tests.Server
+{
+	public class ProductionManagerTests
+	{
+		// Creates a OrderQueueTests object.
+		public static method Init {
+			["Tests.Server", "ProductionManagerTests", [
+				"OrderQueueEmpty_NothingChanged_CurrentIsNull"
+			]] call TestEngine.Register;
+		};
+		
+		private static fields ["_mVehicleSpawner" as TestVehicleSpawner, "_mOrderQueue" as OrderQueue, "_mGroup" as Group, "_mResourceBook" as ResourceBook, "_mProductionManager" as ProductionManager];
+		
+		private static method BeforeEach {
+			_mVehicleSpawner = new TestVehicleSpawner;
+			_mOrderQueue = new OrderQueue;
+			_mResourceBook = new ResourceBook;
+			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook] new ProductionManager;
+			
+			_mGroup = createGroup west;
+			
+			[_mGroup] call _mOrderQueue.PutOrder;
+		};
+		
+		private static method AfterEach {
+			deleteGroup _mGroup;
+		};
+		
+		private static method OrderQueueEmpty_NothingChanged_CurrentIsNull {
+			// Arrange
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[true, _mVehicleSpawner.SpawnVehicleOnCarparkCalled, "No vehicle spawned."] call Assert.AreEqual;
+		};		
+	};
+};

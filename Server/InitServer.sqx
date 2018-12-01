@@ -17,9 +17,9 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -43,7 +43,6 @@ call WeaponsService.Init;
 
 /* Handlers */
 call SquadHandler.Init;
-call VehicleHandler.Init;
 call ResourceLocationHandler.Init;
 
 /* Services */

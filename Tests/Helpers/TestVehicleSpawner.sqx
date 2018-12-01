@@ -1,0 +1,35 @@
+/*
+ * Name:	TestVehicleSpawner
+ * Date:	2018-12-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A test vehicle spawner.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Tests.Server
+{
+	public class TestVehicleSpawner : IVehicleSpawner
+	{
+		// Creates a TestVehicleSpawner object.
+		public constructor {
+			_self.SpawnVehicleOnCarparkCalled = false;
+		};
+		
+		public property Boolean SpawnVehicleOnCarparkCalled { get; private set; };
+		
+		public method IntrusionVehicle SpawnVehicleOnCarpark {
+		    params ["_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
+			
+			_self.SpawnVehicleOnCarparkCalled = true;
+		};
+		
+		public method IntrusionVehicle SpawnFreeVehicleOnCarpark {};
+		
+		public method Scalar CountFreeVehiclesAtBase {};
+	};
+};
