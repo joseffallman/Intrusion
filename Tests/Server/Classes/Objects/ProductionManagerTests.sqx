@@ -9,6 +9,7 @@
  */
 
 using Sqx.UnitTest;
+using Tests.Helpers.Server;
 using Intrusion.Server;
 
 namespace Tests.Server
@@ -18,7 +19,7 @@ namespace Tests.Server
 		// Creates a OrderQueueTests object.
 		public static method Init {
 			["Tests.Server", "ProductionManagerTests", [
-				"OrderQueueEmpty_NothingChanged_CurrentIsNull"
+				"ItemToProduce_CroupCanAfford_ItemProduced"
 			]] call TestEngine.Register;
 		};
 		
@@ -39,7 +40,7 @@ namespace Tests.Server
 			deleteGroup _mGroup;
 		};
 		
-		private static method OrderQueueEmpty_NothingChanged_CurrentIsNull {
+		private static method ItemToProduce_CroupCanAfford_ItemProduced {
 			// Arrange
 			
 			// Act

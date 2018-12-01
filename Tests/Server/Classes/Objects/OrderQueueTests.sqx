@@ -22,7 +22,9 @@ namespace Tests.Server
 				"OrderQueueEmpty_OrderAdded_SetAsCurrent",
 				"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",
 				"TwoOrders_NextOrderSelected_SecondIsCurrent",
-				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull"
+				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull",
+				"ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent",
+				"ThreeOrders_SecondIsEmpty_SecondIsRemoved"
 			]] call TestEngine.Register;
 		};
 		
@@ -185,7 +187,6 @@ namespace Tests.Server
 			
 			// Cleanup
 			deleteVehicle (units _group1 select 1);
-			deleteVehicle (units _group2 select 1);
 			deleteVehicle (units _group3 select 1);
 			deleteGroup _group1;
 			deleteGroup _group2;

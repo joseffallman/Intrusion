@@ -37,7 +37,7 @@ namespace Intrusion.Server
 			call _mResourceCollector.CollectResources;
 			call _mProductionManager.Produce;
 			
-			player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
+			//player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
 		};
 	};
 };

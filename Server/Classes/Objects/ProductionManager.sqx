@@ -44,7 +44,7 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method Produce {
-			
+			player sideChat "Producing...";
 		};
 	};
 };
