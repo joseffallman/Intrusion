@@ -20,11 +20,11 @@ namespace Tests.Server
 			["Tests.Server", "OrderQueueTests", [
 				"OrderQueueEmpty_NothingChanged_CurrentIsNull",
 				"OrderQueueEmpty_OrderAdded_SetAsCurrent",
-				//"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",
-				//"TwoOrders_NextOrderSelected_SecondIsCurrent",
-				//"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull",
-				//"ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent",
-				//"ThreeOrders_SecondIsEmpty_SecondIsRemoved"
+				"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",
+				"TwoOrders_NextOrderSelected_SecondIsCurrent",
+				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull",
+				"ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent",
+				"ThreeOrders_SecondIsEmpty_SecondIsRemoved"
 			]] call TestEngine.Register;
 		};
 		
@@ -61,28 +61,29 @@ namespace Tests.Server
 			// Cleanup
 			deleteGroup _group;
 		};
-		/*		
+
 		private static method OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent {
-			private ["_group1" as Group, "_group2" as Group];
+			private ["_order1" as Order, "_order2" as Order];
 		
 			// Arrange
-			_group1 = createGroup west;
-			_group2 = createGroup east;
+			_order1 = [createGroup west, "", 0] new Order;
+			_order2 = [createGroup west, "", 0] new Order;
 			
 			// Act
-			[_group1] call _mOrderQueue.PutOrder;
-			[_group2] call _mOrderQueue.PutOrder;
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
 			
 			// Assert
-			[_group1, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_order1.Group, _mOrderQueue.CurrentOrder.Group, "Wrong order is the current."] call Assert.AreEqual;
 			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 			
 			// Cleanup
-			deleteGroup _group1;
-			deleteGroup _group2;
+			deleteGroup _order1.Group;
+			deleteGroup _order2.Group;
 		};
-		
+
 		private static method TwoOrders_NextOrderSelected_SecondIsCurrent {
+			private ["_order1" as Order, "_order2" as Order];
 			private ["_group1" as Group, "_group2" as Group];
 		
 			// Arrange
@@ -91,32 +92,39 @@ namespace Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group1];
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			
-			[_group1] call _mOrderQueue.PutOrder;
-			[_group2] call _mOrderQueue.PutOrder;
+			_order1 = [_group1, "", 0] new Order;
+			_order2 = [_group2, "", 0] new Order;
+			
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
 			
 			// Act
 			call _mOrderQueue.RemoveCurrentOrder;
 			
 			// Assert
-			[_group2, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_order2.Group, _mOrderQueue.CurrentOrder.Group, "Wrong order is the current."] call Assert.AreEqual;
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 			
 			// Cleanup
-			deleteVehicle (units _group1 select 1);
-			deleteVehicle (units _group2 select 1);
+			deleteVehicle (units _order1.Group select 1);
+			deleteVehicle (units _order2.Group select 1);
 			deleteGroup _group1;
 			deleteGroup _group2;
 		};
 		
 		private static method TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull {
+			private ["_order1" as Order, "_order2" as Order];
 			private ["_group1" as Group, "_group2" as Group];
 		
 			// Arrange
 			_group1 = createGroup west;
 			_group2 = createGroup west;
 			
-			[_group1] call _mOrderQueue.PutOrder;
-			[_group2] call _mOrderQueue.PutOrder;
+			_order1 = [_group1, "", 0] new Order;
+			_order2 = [_group2, "", 0] new Order;
+			
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
 			
 			// Act
 			call _mOrderQueue.RemoveCurrentOrder;
@@ -131,6 +139,7 @@ namespace Tests.Server
 		};
 		
 		private static method ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent {
+			private ["_order1" as Order, "_order2" as Order, "_order3" as Order];
 			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
 		
 			// Arrange
@@ -141,16 +150,20 @@ namespace Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			"B_Soldier_F" createUnit [[0,0,100], _group3];
 			
-			[_group1] call _mOrderQueue.PutOrder;
-			[_group2] call _mOrderQueue.PutOrder;
-			[_group3] call _mOrderQueue.PutOrder;
+			_order1 = [_group1, "", 0] new Order;
+			_order2 = [_group2, "", 0] new Order;
+			_order3 = [_group3, "", 0] new Order;
+			
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
+			[_order3] call _mOrderQueue.PutOrder;
 			
 			// Act
 			call _mOrderQueue.RemoveCurrentOrder;
 			call _mOrderQueue.RemoveCurrentOrder;
 			
 			// Assert
-			[_group3, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_order3.Group, _mOrderQueue.CurrentOrder.Group, "Wrong order is the current."] call Assert.AreEqual;
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 			
 			// Cleanup
@@ -163,6 +176,7 @@ namespace Tests.Server
 		};
 		
 		private static method ThreeOrders_SecondIsEmpty_SecondIsRemoved {
+			private ["_order1" as Order, "_order2" as Order, "_order3" as Order];
 			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
 		
 			// Arrange
@@ -172,15 +186,19 @@ namespace Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group1];
 			"B_Soldier_F" createUnit [[0,0,100], _group3];
 			
-			[_group1] call _mOrderQueue.PutOrder;
-			[_group2] call _mOrderQueue.PutOrder;
-			[_group3] call _mOrderQueue.PutOrder;
+			_order1 = [_group1, "", 0] new Order;
+			_order2 = [_group2, "", 0] new Order;
+			_order3 = [_group3, "", 0] new Order;
+			
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
+			[_order3] call _mOrderQueue.PutOrder;
 			
 			// Act
 			call _mOrderQueue.RemoveCurrentOrder;
 			
 			// Assert
-			[_group3, _mOrderQueue.CurrentOrder, "Wrong order is the current."] call Assert.AreEqual;
+			[_order3.Group, _mOrderQueue.CurrentOrder.Group, "Wrong order is the current."] call Assert.AreEqual;
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 			
 			// Cleanup
@@ -190,6 +208,5 @@ namespace Tests.Server
 			deleteGroup _group2;
 			deleteGroup _group3;
 		};
-		*/
 	};
 };
