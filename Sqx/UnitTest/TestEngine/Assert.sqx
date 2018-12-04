@@ -48,8 +48,6 @@ namespace Sqx.UnitTest
 			_valueSqxClass = _value as Assert;
 			_isNull = false;
 			
-			player sideChat str _value;
-
 			if (isNull _valueSqxClass || { isNull _value }) then {
 				_isNull = true;
 			};

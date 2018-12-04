@@ -17,14 +17,6 @@ namespace Tests.Server
 {
 	public class ProductionManagerTests
 	{
-		// Creates a OrderQueueTests object.
-		public static method Init {
-			["Tests.Server", "ProductionManagerTests", [
-				"ItemToProduce_CroupCanAfford_ItemProduced",
-				"ItemToProduce_CroupCanNotAfford_ItemNotProduced"
-			]] call TestEngine.Register;
-		};
-		
 		#region Fields
 		
 		private static fields [
@@ -35,6 +27,14 @@ namespace Tests.Server
 			"_mProductionManager" as ProductionManager];
 		
 		#endregion
+		
+		// Creates a OrderQueueTests object.
+		public static method Init {
+			["Tests.Server", "ProductionManagerTests", [
+				"ItemToProduce_CroupCanAfford_ItemProduced",
+				"ItemToProduce_CroupCanNotAfford_ItemNotProduced"
+			]] call TestEngine.Register;
+		};
 		
 		// Creates a production manager, and gives it a resource book with 1000 productions.
 		private static method BeforeEach {
