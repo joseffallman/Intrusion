@@ -1,6 +1,7 @@
 /* In this file all custom test classes are to be included and initialized. */
 
 /* Include helper classes */
+call compile preprocessFileLineNumbers "Tests\TestActions.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleSpawner.sqx";
 
 /* Include test classes */

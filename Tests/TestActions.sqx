@@ -1,0 +1,33 @@
+/*
+ * Name:	TestActions
+ * Date:	2018-12-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class with static general helper methods for tests.
+ */
+namespace Tests
+{
+	public class TestActions
+	{
+		public method Group CreatePopulatedGroup {
+			private ["_group" as Group];
+			
+			_group = createGroup west;
+			"B_Soldier_F" createUnit [[0, 0, 100], _group];
+			
+			_group;
+		};
+		
+		public method DeletePopulatedGroup {
+			params ["_group" as Group];
+			
+			{
+				deleteVehicle _x;
+			} foreach units _group as Object;
+			
+			deleteGroup _group;
+		};
+	};
+};

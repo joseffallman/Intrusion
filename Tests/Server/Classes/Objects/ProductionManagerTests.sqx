@@ -9,6 +9,7 @@
  */
 
 using Sqx.UnitTest;
+using Tests;
 using Tests.Helpers.Server;
 using Intrusion.Server;
 
@@ -19,7 +20,8 @@ namespace Tests.Server
 		// Creates a OrderQueueTests object.
 		public static method Init {
 			["Tests.Server", "ProductionManagerTests", [
-				"ItemToProduce_CroupCanAfford_ItemProduced"
+				"ItemToProduce_CroupCanAfford_ItemProduced",
+				"ItemToProduce_CroupCanNotAfford_ItemNotProduced"
 			]] call TestEngine.Register;
 		};
 		
@@ -34,26 +36,26 @@ namespace Tests.Server
 		
 		#endregion
 		
+		// Creates a production manager, and gives it a resource book with 1000 productions.
 		private static method BeforeEach {
-			private ["_order" as Order];
-		
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
 			_mResourceBook = new ResourceBook;
 			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook] new ProductionManager;
 			
-			_mGroup = createGroup west;
-			_order = [_mGroup, "", 1000] new Order;
-			
-			[_order] call _mOrderQueue.PutOrder;
+			_mGroup = call TestActions.CreatePopulatedGroup;
 		};
 		
 		private static method AfterEach {
-			deleteGroup _mGroup;
+			[_mGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
 		private static method ItemToProduce_CroupCanAfford_ItemProduced {
+			private ["_order" as Order];
+		
 			// Arrange
+			_order = [_mGroup, "", 1000] new Order;
+			[_order] call _mOrderQueue.PutOrder;
 			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
@@ -64,7 +66,11 @@ namespace Tests.Server
 		};		
 		
 		private static method ItemToProduce_CroupCanNotAfford_ItemNotProduced {
+			private ["_order" as Order];
+		
 			// Arrange
+			_order = [_mGroup, "", 1000] new Order;
+			[_order] call _mOrderQueue.PutOrder;
 			[100] call _mResourceBook.DepositProduction;
 			
 			// Act
