@@ -17,19 +17,23 @@ namespace Tests.Helpers.Server
 	{
 		// Creates a TestVehicleSpawner object.
 		public constructor {
-			_self.SpawnVehicleOnCarparkCalled = false;
+			_self.SpawnedVehicles = [];
 		};
 		
-		public property Boolean SpawnVehicleOnCarparkCalled { get; private set; };
+		public property Array SpawnedVehicles { get; private set; };
 		
 		public method IntrusionVehicle SpawnVehicleOnCarpark {
 		    params ["_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
+		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
-			_self.SpawnVehicleOnCarparkCalled = true;
+			_intrusionVehicle = [objNull, west, _professionType, _group, _cost] new IntrusionVehicle;
+			_self.SpawnedVehicles pushBack _intrusionVehicle;
+			
+			_intrusionVehicle
 		};
 		
 		public method IntrusionVehicle SpawnFreeVehicleOnCarpark {};
 		
-		public method Scalar CountFreeVehiclesAtBase {};
+		public method Scalar CountFreeVehiclesAtBase { 0 };
 	};
 };

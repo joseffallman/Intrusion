@@ -23,7 +23,16 @@ namespace Tests.Server
 			]] call TestEngine.Register;
 		};
 		
-		private static fields ["_mVehicleSpawner" as TestVehicleSpawner, "_mOrderQueue" as OrderQueue, "_mGroup" as Group, "_mResourceBook" as ResourceBook, "_mProductionManager" as ProductionManager];
+		#region Fields
+		
+		private static fields [
+			"_mVehicleSpawner" as TestVehicleSpawner, 
+			"_mOrderQueue" as OrderQueue, 
+			"_mGroup" as Group, 
+			"_mResourceBook" as ResourceBook, 
+			"_mProductionManager" as ProductionManager];
+		
+		#endregion
 		
 		private static method BeforeEach {
 			private ["_order" as Order];
@@ -34,7 +43,7 @@ namespace Tests.Server
 			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook] new ProductionManager;
 			
 			_mGroup = createGroup west;
-			_order = [_mGroup, "", 0] new Order;
+			_order = [_mGroup, "", 1000] new Order;
 			
 			[_order] call _mOrderQueue.PutOrder;
 		};
@@ -45,12 +54,24 @@ namespace Tests.Server
 		
 		private static method ItemToProduce_CroupCanAfford_ItemProduced {
 			// Arrange
+			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
 			call _mProductionManager.Produce;
 			
 			// Assert
-			[true, _mVehicleSpawner.SpawnVehicleOnCarparkCalled, "No vehicle spawned."] call Assert.AreEqual;
+			[1, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
+		};		
+		
+		private static method ItemToProduce_CroupCanNotAfford_ItemNotProduced {
+			// Arrange
+			[100] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
 		};		
 	};
 };
