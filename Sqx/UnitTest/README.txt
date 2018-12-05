@@ -46,6 +46,7 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
     Only one assert per test is now reported.
 X.Y Fixed: Bug in Assert.IsNull when testing an SqxClass.
     README changed location from Tests to Sqx\UnitTest.
+    Added methods Assert.IsTrue and Assert.IsFalse.
 
 
 Good luck unit testing!

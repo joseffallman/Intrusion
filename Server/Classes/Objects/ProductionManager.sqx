@@ -14,16 +14,19 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook];
-		private fields ["_mOrderQueue" as OrderQueue];
+		private fields ["_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mOrderQueue" as OrderQueue];
 	
 		// Creates a ProductionManager object.
 		public constructor {
-			params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook];
+			params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, ["_orderQueue" as OrderQueue, classNull]];
 			_self.Side = _side;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mResourceBook = _resourceBook;
-			_mOrderQueue = new OrderQueue;
+			
+			_mOrderQueue = _orderQueue;
+			if (isNull _mOrderQueue) then {
+				_mOrderQueue = new OrderQueue;
+			};
 			
 			// Register the class to the global group handler to recieve notifications 
 			// when groups on the side is changing its profession.
@@ -44,7 +47,23 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method Produce {
-			player sideChat "Producing...";
+			private ["_tryOneMore" as Boolean];
+			
+			_tryOneMore = true;
+		
+			while { _tryOneMore && {!isNull _mOrderQueue.CurrentOrder} } do {
+				private _totalProduction = _mResourceBook.TotalProduction;
+				private _cost = _mOrderQueue.CurrentOrder.ProductionCost;
+				
+				if (_totalProduction >= _cost) then {
+					[_mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnVehicleOnCarpark;
+					call _mOrderQueue.RemoveCurrentOrder;
+					[_cost] call _mResourceBook.WithdrawProduction;
+				}
+				else {
+					_tryOneMore = false;
+				};
+			};
 		};
 	};
 };

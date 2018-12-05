@@ -81,7 +81,7 @@ namespace Sqx.UnitTest
 		private static method Run {
 			params ["_delayed" as Boolean];
 			private ["_sqfTestMethod" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sqfClassName" as String, "_sConstructorFunction" as String, "_sqfBeforeEach" as String, "_sqfAfterEach" as String];
-			
+
 			_successCount = 0;
 			_failedCount = 0;
 			

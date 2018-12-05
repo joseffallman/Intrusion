@@ -11,7 +11,7 @@ namespace Tests
 {
 	public class TestActions
 	{
-		public method Group CreatePopulatedGroup {
+		public static method Group CreatePopulatedGroup {
 			private ["_group" as Group];
 			
 			_group = createGroup west;
@@ -20,7 +20,7 @@ namespace Tests
 			_group;
 		};
 		
-		public method DeletePopulatedGroup {
+		public static method DeletePopulatedGroup {
 			params ["_group" as Group];
 			
 			{

@@ -27,7 +27,7 @@ namespace Tests.Helpers.Server
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
 			_intrusionVehicle = [objNull, west, _professionType, _group, _cost] new IntrusionVehicle;
-			_self.SpawnedVehicles pushBack _intrusionVehicle;
+			_self.SpawnedVehicles pushBack _vehicleClass;
 			
 			_intrusionVehicle
 		};

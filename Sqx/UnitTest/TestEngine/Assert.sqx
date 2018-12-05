@@ -41,6 +41,36 @@ namespace Sqx.UnitTest
 			};
 		};
 		
+		public static method IsTrue {
+			params ["_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if (!_actual) then {
+				_fullMsg = "Expected 'true' but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
+			
+				[_fullMsg] call TestEngine.WriteFailed;
+			};
+		};
+		
+		public static method IsFalse {
+			params ["_actual" as Any, ["_message" as String, ""]];
+			private ["_fullMsg" as String];
+
+			if (_actual) then {
+				_fullMsg = "Expected 'false' but got '" + str _actual + "'. ";
+				
+				if (_message != "") then {
+					_fullMsg = _fullMsg + _message;
+				};
+			
+				[_fullMsg] call TestEngine.WriteFailed;
+			};
+		};
+		
 		private static method ValueIsNull {
 			params ["_value" as Any];
 			private ["_valueSqxClass" as Assert, "_isNull" as Boolean];
