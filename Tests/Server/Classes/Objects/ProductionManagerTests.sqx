@@ -31,6 +31,7 @@ namespace Tests.Server
 		// Creates a OrderQueueTests object.
 		public static method Init {
 			["Tests.Server", "ProductionManagerTests", [
+				"NoItemToProduce_Production_NoItemProduced",
 				"ItemToProduce_GroupCanAfford_ItemProduced",
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
@@ -43,7 +44,7 @@ namespace Tests.Server
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
 			_mResourceBook = new ResourceBook;
-			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook] new ProductionManager;
+			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook, _mOrderQueue] new ProductionManager;
 			
 			_mGroup = call TestActions.CreatePopulatedGroup;
 		};
@@ -52,9 +53,21 @@ namespace Tests.Server
 			[_mGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method ItemToProduce_GroupCanAfford_ItemProduced {
+		private static method NoItemToProduce_Production_NoItemProduced {
 			private ["_order" as Order];
 		
+			// Arrange
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but no order exists."] call Assert.AreEqual;
+		};
+		
+		private static method ItemToProduce_GroupCanAfford_ItemProduced {
+			private ["_order" as Order];
+
 			// Arrange
 			_order = [_mGroup, "", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
@@ -65,6 +78,8 @@ namespace Tests.Server
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
+			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced {
@@ -80,6 +95,8 @@ namespace Tests.Server
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but group cannot afford."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order is removed."] call Assert.AreEqual;
+			[100, _mResourceBook.TotalProduction, "Production should not be lost."] call Assert.AreEqual;
 		};
 		
 		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced {
@@ -93,13 +110,15 @@ namespace Tests.Server
 			_order = [_group2, "", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			
-			[100] call _mResourceBook.DepositProduction;
+			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
 			call _mProductionManager.Produce;
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 			
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;
@@ -116,13 +135,15 @@ namespace Tests.Server
 			_order = [_group2, "", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			
-			[100] call _mResourceBook.DepositProduction;
+			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
 			call _mProductionManager.Produce;
 			
 			// Assert
 			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[200, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 			
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;
