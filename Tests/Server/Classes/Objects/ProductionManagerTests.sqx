@@ -31,8 +31,10 @@ namespace Tests.Server
 		// Creates a OrderQueueTests object.
 		public static method Init {
 			["Tests.Server", "ProductionManagerTests", [
-				"ItemToProduce_CroupCanAfford_ItemProduced",
-				"ItemToProduce_CroupCanNotAfford_ItemNotProduced"
+				"ItemToProduce_GroupCanAfford_ItemProduced",
+				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
+				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
+				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced"
 			]] call TestEngine.Register;
 		};
 		
@@ -50,7 +52,7 @@ namespace Tests.Server
 			[_mGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method ItemToProduce_CroupCanAfford_ItemProduced {
+		private static method ItemToProduce_GroupCanAfford_ItemProduced {
 			private ["_order" as Order];
 		
 			// Arrange
@@ -65,7 +67,7 @@ namespace Tests.Server
 			[1, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
 		};		
 		
-		private static method ItemToProduce_CroupCanNotAfford_ItemNotProduced {
+		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced {
 			private ["_order" as Order];
 		
 			// Arrange
@@ -77,7 +79,53 @@ namespace Tests.Server
 			call _mProductionManager.Produce;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
-		};		
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but group cannot afford."] call Assert.AreEqual;
+		};
+		
+		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced {
+			private ["_order" as Order, "_group2" as Group];
+		
+			// Arrange
+			_order = [_mGroup, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			_group2 = call TestActions.CreatePopulatedGroup;
+			_order = [_group2, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[100] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced {
+			private ["_order" as Order, "_group2" as Group];
+		
+			// Arrange
+			_order = [_mGroup, "", 400] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			_group2 = call TestActions.CreatePopulatedGroup;
+			_order = [_group2, "", 400] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[100] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
 	};
 };
