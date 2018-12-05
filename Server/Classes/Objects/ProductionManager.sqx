@@ -24,13 +24,15 @@ namespace Intrusion.Server
 			_mResourceBook = _resourceBook;
 			
 			_mOrderQueue = _orderQueue;
+			
+			// If orderQueue is null, then we are in production mode (not in unit testing)
 			if (isNull _mOrderQueue) then {
 				_mOrderQueue = new OrderQueue;
-			};
 			
-			// Register the class to the global group handler to recieve notifications 
-			// when groups on the side is changing its profession.
-			[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
+				// Register the class to the global group handler to recieve notifications 
+				// when groups on the side is changing its profession.
+				[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
+			};
 		};
 		
 		// Gets the production manager's side.
@@ -42,7 +44,7 @@ namespace Intrusion.Server
 		public method OnGroupChangingProfession {
 			params ["_group" as Group, "_professionType" as ProfessionType];
 			
-			
+			player sideChat "Group " + str _group + " changed profession!";
 		};
 		
 		// Produces vehicles from the production queue.
@@ -57,7 +59,6 @@ namespace Intrusion.Server
 				
 				if (_totalProduction >= _cost) then {
 					[_mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnVehicleOnCarpark;
-					["CAR"] call _mVehicleSpawner.SpawnVehicleOnCarpark;
 					call _mOrderQueue.RemoveCurrentOrder;
 					[_cost] call _mResourceBook.WithdrawProduction;
 				}

@@ -77,7 +77,7 @@ namespace Tests.Server
 			call _mProductionManager.Produce;
 			
 			// Assert
-			[1, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
 			["TANK", _mVehicleSpawner.SpawnedVehicles select 0, "Wrong vehicle spawned."] call Assert.AreEqual;
 			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
 			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
