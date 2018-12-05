@@ -57,6 +57,7 @@ namespace Intrusion.Server
 				
 				if (_totalProduction >= _cost) then {
 					[_mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnVehicleOnCarpark;
+					["CAR"] call _mVehicleSpawner.SpawnVehicleOnCarpark;
 					call _mOrderQueue.RemoveCurrentOrder;
 					[_cost] call _mResourceBook.WithdrawProduction;
 				}
