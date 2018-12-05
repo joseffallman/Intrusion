@@ -65,7 +65,7 @@ namespace Tests.Server
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "No vehicle spawned."] call Assert.AreEqual;
-		};		
+		};
 		
 		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced {
 			private ["_order" as Order];
