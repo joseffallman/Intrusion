@@ -35,7 +35,7 @@ namespace Intrusion.Server
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
 		public method PerformTurn {
 			call _mResourceCollector.CollectResources;
-			//call _mProductionManager.Produce;
+			call _mProductionManager.Produce;
 			
 			//player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
 		};

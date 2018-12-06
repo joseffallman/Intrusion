@@ -514,8 +514,12 @@
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Helpers" IsExpanded="true" FileName="Tests\Helpers">
             <IsSelected>false</IsSelected>
             <SubNodes>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActions.sqx" IsExpanded="false" FileName="Tests\Helpers\TestActions.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestVehicleSpawner.sqx" IsExpanded="false" FileName="Tests\Helpers\TestVehicleSpawner.sqx">
-                <IsSelected>true</IsSelected>
+                <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
             </SubNodes>
@@ -544,11 +548,7 @@
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitMyTestClasses.sqx" IsExpanded="false" FileName="Tests\InitMyTestClasses.sqx">
-            <IsSelected>false</IsSelected>
-            <SubNodes />
-          </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActions.sqx" IsExpanded="false" FileName="Tests\TestActions.sqx">
-            <IsSelected>false</IsSelected>
+            <IsSelected>true</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
         </SubNodes>

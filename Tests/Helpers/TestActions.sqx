@@ -7,7 +7,7 @@
  * Description:
  * Class with static general helper methods for tests.
  */
-namespace Tests
+namespace Tests.Helpers
 {
 	public class TestActions
 	{

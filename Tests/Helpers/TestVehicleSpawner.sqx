@@ -11,7 +11,7 @@
 using Intrusion.Common;
 using Intrusion.Server;
 
-namespace Tests.Helpers.Server
+namespace Tests.Helpers
 {
 	public class TestVehicleSpawner : IVehicleSpawner
 	{
