@@ -10,6 +10,7 @@
 
 using Sqx.UnitTest;
 using Tests.Helpers;
+using Intrusion.Common;
 using Intrusion.Server;
 
 namespace Tests.Server
@@ -34,11 +35,12 @@ namespace Tests.Server
 				"ItemToProduce_GroupCanAfford_ItemProduced",
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
-				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced"
+				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
+				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue"
 			]] call TestEngine.Register;
 		};
 		
-		// Creates a production manager, and gives it a resource book with 1000 productions.
+		// Creates a production manager and a group.
 		private static method BeforeEach {
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
@@ -53,8 +55,6 @@ namespace Tests.Server
 		};
 		
 		private static method NoItemToProduce_Production_NoItemProduced {
-			private ["_order" as Order];
-		
 			// Arrange
 			
 			// Act
@@ -147,6 +147,19 @@ namespace Tests.Server
 			
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue {
+			// Arrange
+			
+			// Act
+			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "No vehicles ware expected to spawn."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "There should be an order."] call Assert.AreEqual;
+			["FUELTRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle spawned."] call Assert.AreEqual;
+			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 	};
 };

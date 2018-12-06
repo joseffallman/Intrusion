@@ -81,9 +81,11 @@ namespace Intrusion.Server
 				
 				call _mSquads.RemoveEmptySquads;
 				
-				// Notify all local group change profession listeners.
+				// Notify all local group change profession listeners of the current side.
 				{
-					[_group, _professionType] call _x.OnGroupChangingProfession;
+					if (_x.Side == side _group) then {
+						[_group, _professionType] call _x.OnGroupChangingProfession;
+					};
 				} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
 				
 				[_mSquads] call PublicVariableHandler.BroadcastSquads;
