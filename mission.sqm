@@ -2524,12 +2524,12 @@ class Mission
 				angles[]={0,2.016573,6.2823396};
 			};
 			side="Empty";
-			flags=4;
 			class Attributes
 			{
 			};
 			id=198;
 			type="Land_WoodenBed_01_F";
+			atlOffset=0.53226471;
 		};
 		class Item76
 		{
@@ -2546,6 +2546,7 @@ class Mission
 			};
 			id=199;
 			type="Land_TableBig_01_F";
+			atlOffset=0.088623047;
 		};
 		class Item77
 		{
@@ -2562,6 +2563,7 @@ class Mission
 			};
 			id=200;
 			type="Land_Bench_F";
+			atlOffset=0.11297607;
 		};
 		class Item78
 		{
@@ -2595,7 +2597,7 @@ class Mission
 			};
 			id=202;
 			type="Land_ChairWood_F";
-			atlOffset=8.392334e-005;
+			atlOffset=7.6293945e-005;
 		};
 		class Item80
 		{
@@ -2623,12 +2625,12 @@ class Mission
 				angles[]={0,4.2747035,6.2823396};
 			};
 			side="Empty";
-			flags=4;
 			class Attributes
 			{
 			};
 			id=204;
 			type="Land_ArmChair_01_F";
+			atlOffset=0.87091827;
 		};
 		class Item82
 		{
