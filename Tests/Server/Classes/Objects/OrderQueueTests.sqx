@@ -55,7 +55,7 @@ namespace Tests.Server
 			[_order] call _mOrderQueue.PutOrder;
 			
 			// Assert
-			[_order.Group, _mOrderQueue.CurrentOrder.Group, "Added order does not match current order."] call Assert.AreEqual;
+			[_group, _mOrderQueue.CurrentOrder.Group, "Added order does not match current order."] call Assert.AreEqual;
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 						
 			// Cleanup
