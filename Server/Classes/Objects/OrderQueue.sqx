@@ -22,6 +22,27 @@ namespace Intrusion.Server
 			_self.CurrentOrder = classNull;
 		};
 		
+		public method Array GetOrders {
+			+_mOrders
+		};
+		
+		// Removes all orders that belong to a certain group
+		// _group (Group): The group's orders that will be removed.
+		public method Boolean RemoveOrdersByGroup {
+			params ["_group" as Group];
+			private ["_ordersToKeep" as Array];
+			
+			_ordersToKeep = [];
+			
+			{
+				if (_x.Group != _group) then {
+					_ordersToKeep pushBack _x;
+				};
+			} foreach _mOrders as Order;
+			
+			_mOrders = _ordersToKeep;
+		};
+		
 		// Gets the group currently being built for.
 		public property Order CurrentOrder { get; private set; };
 		

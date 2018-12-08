@@ -36,7 +36,10 @@ namespace Tests.Server
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
 				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
-				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue"
+				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue",
+				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
+				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
+				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast"
 			]] call TestEngine.Register;
 		};
 		
@@ -156,10 +159,73 @@ namespace Tests.Server
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "No vehicles ware expected to spawn."] call Assert.AreEqual;
 			[1, call _mOrderQueue.Count, "There should be an order."] call Assert.AreEqual;
-			["FUELTRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle spawned."] call Assert.AreEqual;
+			["B_Truck_01_Fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
+		};
+		
+		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced {
+			private ["_order" as Order];
+			
+			// Arrange
+			_order = [_mGroup, "CAR", 400] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			// Act
+			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			["B_Truck_01_Fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
+		};
+		
+		private static method AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast {
+			private ["_anotherGroup" as Group, "_order" as Order];
+		
+			// Arrange
+			_anotherGroup = call TestActions.CreatePopulatedGroup;
+			_order = [_anotherGroup, "CAR", 400] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			// Act
+			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			["CAR", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_anotherGroup, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_anotherGroup] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast {
+			private ["_anotherGroup" as Group, "_order" as Order, "_orders" as Array];
+		
+			// Arrange
+			_anotherGroup = call TestActions.CreatePopulatedGroup;
+			_order = [_anotherGroup, "BUS", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			_order = [_mGroup, "CAR", 400] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			// Act
+			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			["BUS", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_anotherGroup, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
+
+			_orders = call _mOrderQueue.GetOrders;
+			_order = _orders select 1;
+			["B_Truck_01_Fuel_F", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_mGroup, _order.Group, "The existing order was changed."] call Assert.AreEqual;
+
+			// Cleanup
+			[_anotherGroup] call TestActions.DeletePopulatedGroup;
 		};
 	};
 };

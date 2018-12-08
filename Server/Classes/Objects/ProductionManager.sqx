@@ -43,8 +43,16 @@ namespace Intrusion.Server
 		// _professionType (ProfessionType): The group's new profession type.
 		public method OnGroupChangingProfession {
 			params ["_group" as Group, "_professionType" as ProfessionType];
+			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProVehicleInfo];
 			
-			player sideChat "Group " + str _group + " changed profession!";
+			[_group] call _mOrderQueue.RemoveOrdersByGroup;
+			
+			_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames;
+			_vehicleClassName = selectRandom _vehicleClassNames;
+			_professionVehicle = [_professionType] call ProVehiclesConfig.GetVehicle;
+			
+			_order = [_group, _vehicleClassName, _professionVehicle.Cost] new Order;
+			[_order] call _mOrderQueue.PutOrder;
 		};
 		
 		// Produces vehicles from the production queue.
