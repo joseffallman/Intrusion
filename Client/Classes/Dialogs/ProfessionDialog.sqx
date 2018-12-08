@@ -45,10 +45,11 @@ namespace Intrusion.Client
 		
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
-			private ["_profession" as Profession, "_squads" as SquadCollection, "_options" as Array];
+			private ["_profession" as Profession, "_squads" as SquadCollection, "_options" as Array, "_playersInGroup" as Scalar];
 			
             // Add all available professions
             _options = [];
+			_playersInGroup = count units group player;
             
             if (call PublicVariableHandler.SquadsHasValue) then {
 				_squads = call PublicVariableHandler.GetSquads;
@@ -56,7 +57,9 @@ namespace Intrusion.Client
 				{
 					_profession = _x;
 					
-					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable) then {
+					// If profession is available, and if the group has a good size
+					player sideChat (str _playersInGroup);
+					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
@@ -64,8 +67,10 @@ namespace Intrusion.Client
             }
             else {
 				{
-					lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-					_options pushBack _x.Type;
+					if (_playersInGroup >= _x.MinGroupSize && _playersInGroup <= _x.MaxGroupSize) then {
+						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+						_options pushBack _x.Type;
+					};
 				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
             };
             
