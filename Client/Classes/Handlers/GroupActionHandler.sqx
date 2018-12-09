@@ -36,6 +36,13 @@ namespace Intrusion.Client
 	            	};
 	            };
             } foreach _playableUnits;
+            
+            if (player == leader group player) then {
+            	call RadioTriggerHandler.ShowProfessionDialog;
+            }
+            else {
+            	call RadioTriggerHandler.HideProfessionDialog;
+            };
 		};
 		
 		// Invites another player to the local player's group.
@@ -46,7 +53,7 @@ namespace Intrusion.Client
 			// Add the other player to the local player's group
 			[_otherPlayer] join player;
 			
-			["SquadHandler.OnPlayerAddedToGroup", [player, _otherPlayer]] call Remote.Invoke;
+			//["SquadHandler.OnPlayerAddedToGroup", [player, _otherPlayer]] call Remote.Invoke;
 			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
 		};
 		

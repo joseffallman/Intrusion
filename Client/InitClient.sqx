@@ -12,6 +12,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientSquadHandl
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapObservationsHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientVehicleHandler.sqx";
 
 using Intrusion.Client;
 

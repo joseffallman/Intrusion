@@ -1,0 +1,47 @@
+/*
+ * Name:	ClientVehicleHandler
+ * Date:	2018-12-09
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles some vehicle actions for the client.
+ */
+namespace Intrusion.Client
+{
+	public class ClientVehicleHandler
+	{
+		// Adds the GetIn event handler to all vehicles in an array.
+		// _vehicleArray: Array of vehicles to add the event handler to.
+		public static method SetVehicleGroupConstraints {
+		    params ["_vehicleArray"];
+
+		    {
+		        _x addEventHandler ["GetIn", { 
+		            private ["_vehicle", "_player", "_ownerGroup", "_specialization"];
+		            
+		            _vehicle = _this select 0;
+		            _player = _this select 2;
+		            
+		            if (_player == player) then {
+		                _ownerGroup = _vehicle getVariable "dre_vehicleOwner";
+		                _specialization = _vehicle getVariable "dre_specialization";
+		                
+		                if (_specialization == "TRANSPORT") then {
+		                    if (group player != _ownerGroup && player == driver _vehicle) then {
+		                        moveOut player;
+		                        ["You are not licensed to drive this vehicle.", true] call dre_fnc_CL_ShowTitleTextLocal;
+		                    };
+		                }
+		                else {
+		                    if (group player != _ownerGroup) then {
+		                        moveOut player;
+		                        ["You are not licensed to use this vehicle.", true] call dre_fnc_CL_ShowTitleTextLocal;
+		                    };
+		                };
+		            };
+		        }];
+		    } foreach _vehicleArray;
+		};
+	};
+};
