@@ -39,7 +39,8 @@ namespace Tests.Server
 				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue",
 				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
 				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
-				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast"
+				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
+				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated"
 			]] call TestEngine.Register;
 		};
 		
@@ -226,6 +227,16 @@ namespace Tests.Server
 
 			// Cleanup
 			[_anotherGroup] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated {
+			// Arrange
+			
+			// Act
+			[_mGroup, ProfessionType.Infantry] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[0, call _mOrderQueue.Count, "There should be no order."] call Assert.AreEqual;
 		};
 	};
 };
