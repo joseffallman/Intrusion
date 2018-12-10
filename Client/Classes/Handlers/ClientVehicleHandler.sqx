@@ -7,41 +7,40 @@
  * Description:
  * Handles some vehicle actions for the client.
  */
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class ClientVehicleHandler
 	{
 		// Adds the GetIn event handler to all vehicles in an array.
-		// _vehicleArray: Array of vehicles to add the event handler to.
-		public static method SetVehicleGroupConstraints {
-		    params ["_vehicleArray"];
+		// _vehicleArray (Array): Array of vehicles to add the event handler to.
+		public static method GroupLockVehicles {
+		    params ["_vehicleArray" as Array /* of Object */];
 
 		    {
-		        _x addEventHandler ["GetIn", { 
-		            private ["_vehicle", "_player", "_ownerGroup", "_specialization"];
+		        _x addEventHandler ["GetIn", {
+		        	params ["_vehicle" as Object, "_bla" as Any, "_player" as Object];
+				    private ["_intrusionVehicle" as IntrusionVehicle];
 		            
-		            _vehicle = _this select 0;
-		            _player = _this select 2;
-		            
-		            if (_player == player) then {
-		                _ownerGroup = _vehicle getVariable "dre_vehicleOwner";
-		                _specialization = _vehicle getVariable "dre_specialization";
-		                
-		                if (_specialization == "TRANSPORT") then {
-		                    if (group player != _ownerGroup && player == driver _vehicle) then {
-		                        moveOut player;
-		                        ["You are not licensed to drive this vehicle.", true] call dre_fnc_CL_ShowTitleTextLocal;
-		                    };
-		                }
-		                else {
-		                    if (group player != _ownerGroup) then {
-		                        moveOut player;
-		                        ["You are not licensed to use this vehicle.", true] call dre_fnc_CL_ShowTitleTextLocal;
-		                    };
-		                };
-		            };
+                	_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+
+					if (!isNull _intrusionVehicle) then {
+						if (!(_player in units _intrusionVehicle.OwnerGroup)) then {
+							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport) then {
+								if (_player == driver _intrusionVehicle.Vehicle) then {
+									moveOut _player;
+			                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
+								};
+							}
+							else {
+								moveOut _player;
+		                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
+							};
+						};
+					};
 		        }];
-		    } foreach _vehicleArray;
+		    } foreach _vehicleArray as Object;
 		};
 	};
 };

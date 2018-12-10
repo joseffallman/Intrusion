@@ -7,6 +7,7 @@
  * Handles all mission vehicle spawns.
  */
 using Intrusion.Common;
+using Intrusion.Communication;
  
 namespace Intrusion.Server
 {
@@ -92,6 +93,8 @@ namespace Intrusion.Server
         	_intrusionVehicle = [_vehicleObj, _mSide, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
+        	
+			["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
         	
 		    _intrusionVehicle
 		};
