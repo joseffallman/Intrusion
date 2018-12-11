@@ -7,6 +7,9 @@
  * Description:
  * An interface implemented by objects that wants to react each time when groups are changing their profession.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public interface IGroupChangingProfessionListener
@@ -17,6 +20,6 @@ namespace Intrusion.Server
 		// Called when a group is changing its profession.
 		// _group (Group): The group changing its profession.
 		// _professionType (ProfessionType): The group's new profession type.
-		method OnGroupChangingProfession;
+		method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType);
 	};
 };

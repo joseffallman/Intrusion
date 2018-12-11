@@ -15,6 +15,6 @@ namespace Sqx.Collections
 		// compareItem (ISortable) - The other item to compare with.
 		// Returns (Scalar): -1 if this object is "less than" the compareItem. 1 if this
 		//   object is "greater than" the compareItem. 0 if they are regarded as equal.
-		method Scalar Compare;
+		method Scalar Compare("_compareItem" as IComparer);
 	};
 };

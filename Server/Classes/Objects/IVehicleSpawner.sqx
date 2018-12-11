@@ -14,11 +14,10 @@ namespace Intrusion.Server
 {
 	public interface IVehicleSpawner
 	{
-		method IntrusionVehicle SpawnVehicleOnCarpark;
+		method IntrusionVehicle SpawnVehicleOnCarpark("_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]);
 		
-		method IntrusionVehicle SpawnFreeVehicleOnCarpark;
+		method IntrusionVehicle SpawnFreeVehicleOnCarpark();
 		
-		method Scalar CountFreeVehiclesAtBase;
+		method Scalar CountFreeVehiclesAtBase();
 	};
 };
-
