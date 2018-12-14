@@ -22,8 +22,8 @@ namespace Intrusion.Client
 		
 		// Shows a tutorial.
 		// _tutorialType (TutorialType): Type of tutorial to show.
-		private static method DoShowTutorial {
-			params ["_tutorialType" as TutorialType];
+		private static method DoShowTutorial("_tutorialType" as TutorialType)
+		{
 			private ["_tutorial" as Tutorial, "_tutorialDialog" as TutorialDialog];
 			
 			if (DebugConfig.ShowTutorials && !_mTutorialsTurnedOff) then {
@@ -45,8 +45,8 @@ namespace Intrusion.Client
 		
 		// Shows a tutorial.
 		// _name (String): Name of the tutorial.
-		public static method ShowTutorial {
-			params ["_tutorialType" as TutorialType];
+		public static method ShowTutorial("_tutorialType" as TutorialType)
+		{
 			[_tutorialType] spawn _self.DoShowTutorial;
 		};
 	};

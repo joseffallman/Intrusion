@@ -6,13 +6,13 @@
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Client" IsExpanded="false" FileName="Client">
         <IsSelected>false</IsSelected>
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Client\Classes">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="false" FileName="Client\Classes">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="false" FileName="Client\Classes\Configs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TutorialConfig.sqx" IsExpanded="false" FileName="Client\Classes\Configs\TutorialConfig.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TutorialConfig.sqx" IsExpanded="true" FileName="Client\Classes\Configs\TutorialConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -118,7 +118,7 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="false" FileName="Common">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="true" FileName="Common">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Common\Classes">
@@ -174,7 +174,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SquadCollection.sqx" IsExpanded="false" FileName="Common\Classes\Objects\SquadCollection.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>
@@ -578,7 +578,7 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Test.sqx" IsExpanded="false" FileName="Test.sqx">
-        <IsSelected>true</IsSelected>
+        <IsSelected>false</IsSelected>
         <SubNodes />
       </ProjectNodeViewModel>
     </SubNodes>

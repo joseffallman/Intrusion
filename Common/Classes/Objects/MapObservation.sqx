@@ -19,9 +19,8 @@ namespace Intrusion.Common
 		// _observingSide (Side): The observing side.
 		// _isIdentifiedAsEnemy (Boolean): Whether the target is identified as an enemy or not.
 		// _professionType (ProfessionType): The supposed profession type.
-		public constructor {
-			params ["_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType];
-			
+		public constructor("_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType)
+		{
 			_self.Id = _id;
 			_self.ObservingSide = _observingSide;
 			_self.PercievedPos = _percievedPos;

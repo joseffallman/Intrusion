@@ -32,8 +32,7 @@ namespace Intrusion.Common
 		// Gets a profession by profession type.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Profession): The sought profession. null if the profession type was invalid.
-		public static method Array GetVehicleClassNames {
-			params ["_professionType" as ProfessionType];
+		public static method Array GetVehicleClassNames("_professionType" as ProfessionType) {
 			scopeName "main";
 			
 			{
@@ -48,8 +47,7 @@ namespace Intrusion.Common
 		// Gets a profession.
 		// _professionType (ProfessionType): The profession type.
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
-		public static method Profession GetProfession {
-			params ["_professionType" as ProfessionType];
+		public static method Profession GetProfession("_professionType" as ProfessionType) {
 			[(str _this) + " ProfessionConfig.GetProfession"] call LogHandler.Debug;
 
 			scopeName "main";

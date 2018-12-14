@@ -13,9 +13,8 @@ namespace Intrusion.Client
 	{
 		// Plays the end mission scene.
 		// _winningSide (Side): The side that has won.
-		public static method PlayEndScene {
-			params ["_winningSide" as Side];
-			
+		public static method PlayEndScene("_winningSide" as Side)
+		{
 			["END1", _winningSide == playerSide] spawn BIS_fnc_endMission;
 		};
 	};

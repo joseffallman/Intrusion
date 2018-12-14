@@ -14,9 +14,8 @@ namespace Intrusion.Common
 		// Creates a Squad object.
 		// _group (Group): The group.
 		// _professionType (ProfessionType): The group's profession type.
-		public constructor {
-			params ["_group" as Group, "_professionType" as ProfessionType];
-			
+		public constructor("_group" as Group, "_professionType" as ProfessionType)
+		{
 			_self.Group = _group;
 			_self.ProfessionType = _professionType;
 			_self.Vehicles = [];

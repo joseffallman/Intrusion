@@ -22,9 +22,8 @@ namespace Intrusion.Common
 		
 		// Adds a new or updates an existing squad.
 		// _squad (Squad): The squad to add or update.
-		public method AddOrUpdateSquad {
-			params ["_squad" as Squad];
-			
+		public method AddOrUpdateSquad("_squad" as Squad)
+		{
 			scopeName "main";
 
 			for "_i" from 0 to (count _mSquads - 1) do 
@@ -60,10 +59,9 @@ namespace Intrusion.Common
 		// Gets the number of squads with a profession type of a certain side.
 		// _side (Side): The side to count.
 		// _professionType (ProfessionType): The profession type to count.
-		public method CountByProfessionType {
-			params ["_side" as Side, "_professionType" as ProfessionType];
+		public method CountByProfessionType("_side" as Side, "_professionType" as ProfessionType)
+		{
 			[(str _this) + " SquadCollection.CountByProfessionType"] call LogHandler.Debug;
-			
 			{ side _x.Group == _side && _x.ProfessionType == _professionType } count _mSquads as Squad;
 		};
 		
@@ -72,8 +70,8 @@ namespace Intrusion.Common
 		// _professionType (ProfessionType): The profession type to check.
 		// Returns (Boolean): true if squads can select the profession, false if no mor squads of the 
 		// current profession can be assigned.
-		public method Boolean ProfessionTypeAvailable {
-			params ["_side" as Side, "_professionType" as ProfessionType];
+		public method Boolean ProfessionTypeAvailable("_side" as Side, "_professionType" as ProfessionType)
+		{
 			private ["_assignedSquadsCount" as Scalar, "_profession" as Profession];
 			[(str _this) + " SquadCollection.ProfessionTypeAvailable"] call LogHandler.Debug;
 			

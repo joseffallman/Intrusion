@@ -17,8 +17,8 @@ namespace Intrusion.Client
 		// Called when any group's profession has changed.
 		// _group (Group): The group that has changed profession.
 		// _professionType (ProfessionType): The new profession type.
-		public static method OnGroupProfessionChanged {
-			params ["_group" as Group, "_professionType" as ProfessionType];
+		public static method OnGroupProfessionChanged("_group" as Group, "_professionType" as ProfessionType)
+		{
 			[(str _this) + " ClientSquadHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
 			
 			if (_group == group player) then {
@@ -31,8 +31,8 @@ namespace Intrusion.Client
 		// Called when any group's profession did not change as desired.
 		// _group (Group): The group that tried to change profession.
 		// _reason (String): The reason that the group profession was now changed.
-		public static method OnGroupProfessionChangeRejected {
-			params ["_group" as Group, "_reason" as String];
+		public static method OnGroupProfessionChangeRejected("_group" as Group, "_reason" as String)
+		{
 			[(str _this) + " ClientSquadHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
 			
 			if (_group == group player) then {

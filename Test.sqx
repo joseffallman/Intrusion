@@ -1,9 +1,12 @@
 namespace Testing {
-	public interface IDoable {
-		method DoIt("_number" as Scalar);
-	};
+	public class Doer {
+		public method DoIt()
+		{
+			[10] call _self.DoSomethingElse;
+		};
 	
-	private ["_doable" as IDoable];
-	_doable = _this as IDoable;
-	[] call _doable.DoIt;
+		public method DoSomethingElse("_value" as Scalar)
+		{
+		};
+	};
 };

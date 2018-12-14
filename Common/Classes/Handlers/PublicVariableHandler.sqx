@@ -20,8 +20,8 @@ namespace Intrusion.Common
 	{
 		// Sets and broadcasts an array of resource locations across the network.
 		// _resourceLocations (Array): An array of resource locations.
-		public static method BroadcastResourceLocations {
-			params ["_resourceLocations" as Array /* of ResourceLocation */];
+		public static method BroadcastResourceLocations("_resourceLocations" as Array /* of ResourceLocation */)
+		{
 			INT_Public_resourceLocations = _resourceLocations;
 			publicVariable "INT_Public_resourceLocations";
 		};
@@ -38,8 +38,8 @@ namespace Intrusion.Common
 
 		// Sets and broadcasts an array of squads across the network.
 		// _squads (Array): An array of squads.
-		public static method BroadcastSquads {
-			params ["_squads" as SquadCollection];
+		public static method BroadcastSquads("_squads" as SquadCollection)
+		{
 			[(str _this) + " PublicVariableHandler.BroadcastSquads"] call LogHandler.Debug;
 			
 			INT_Public_squads = _squads;

@@ -32,9 +32,8 @@ namespace Intrusion.Client
 	
 		// Gets a tutorial.
 		// _type (TutorialType): Tutorial type. Applies to a value in TutorialType.
-		// Returns: The found tutorial. null if no tutorial was found.
-		public static method Tutorial GetTutorial {
-			params ["_type" as TutorialType];
+		// Returns (Tutorial): The found tutorial. null if no tutorial was found.
+		public static method Tutorial GetTutorial("_type" as TutorialType) {
 			scopeName "main";
 			
 			{

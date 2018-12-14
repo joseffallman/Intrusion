@@ -12,9 +12,8 @@ namespace Intrusion.Common
 	public class IntrusionVehicle
 	{
 		// Creates an IntrusionVehicle object.
-		public constructor {
-			params ["_vehicle" as Object, "_side" as Side, "_ownerProfession" as ProfessionType, "_ownerGroup" as Group, "_cost" as Scalar];
-			
+		public constructor("_vehicle" as Object, "_side" as Side, "_ownerProfession" as ProfessionType, "_ownerGroup" as Group, "_cost" as Scalar)
+		{
 			_self.Vehicle = _vehicle;
 			_self.Side = _side;
 			_self.OwnerProfession = _ownerProfession;

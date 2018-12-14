@@ -15,9 +15,8 @@ namespace Intrusion.Client
 	{
 		// Adds the GetIn event handler to all vehicles in an array.
 		// _vehicleArray (Array): Array of vehicles to add the event handler to.
-		public static method GroupLockVehicles {
-		    params ["_vehicleArray" as Array /* of Object */];
-
+		public static method GroupLockVehicles("_vehicleArray" as Array /* of Object */)
+		{
 		    {
 		        _x addEventHandler ["GetIn", {
 		        	params ["_vehicle" as Object, "_bla" as Any, "_player" as Object];

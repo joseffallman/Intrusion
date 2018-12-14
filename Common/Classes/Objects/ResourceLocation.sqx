@@ -12,8 +12,8 @@ namespace Intrusion.Common
 	public class ResourceLocation
 	{
 		// Creates a ResourceLocation object and puts a resource on the map.
-		public constructor {
-			params ["_markerName" as String, "_facilityType" as ResourceFacility];
+		public constructor("_markerName" as String, "_facilityType" as ResourceFacility)
+		{
 			[str _this + " ResourceLocation.constructor"] call LogHandler.Debug;
 			
 			_self.MarkerName = _markerName;

@@ -15,9 +15,7 @@ namespace Intrusion.Client
         // _type (TutorialType):   The tutorial type. Applies to a value in TutorialType.
         // _header (String): The tutorial header.
         // _text (String):   The tutorial text.
-        public constructor {
-        	params ["_type" as TutorialType, "_header" as String, "_text" as String];
-        	
+        public constructor("_type" as TutorialType, "_header" as String, "_text" as String) {
         	_self.Type = _type;
         	_self.Header = _header;
         	_self.Text = _text;

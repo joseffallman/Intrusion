@@ -25,8 +25,8 @@ namespace Intrusion.Client
 		
 		// Adds an observation marker to the map.
 		// _mapObservation (MapObservation): The map observation to draw a marker for.
-		private static method AddMarker {
-			params ["_mapObservation" as MapObservation];
+		private static method AddMarker("_mapObservation" as MapObservation)
+		{
 			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
@@ -47,8 +47,8 @@ namespace Intrusion.Client
 		
 		// Updates an existing observation marker on the map.
 		// _mapObservation (MapObservation): The map observation marker to update its marker for.
-		private static method UpdateMarker {
-			params ["_mapObservation" as MapObservation];
+		private static method UpdateMarker("_mapObservation" as MapObservation)
+		{
 			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
@@ -69,8 +69,8 @@ namespace Intrusion.Client
 		
 		// Deletes an observation marker on the map.
 		// _mapObservationId (Scalar): The ID for the map observation marker to delete.
-		private static method DeleteMarker {
-			params ["_mapObservationId" as Scalar];
+		private static method DeleteMarker("_mapObservationId" as Scalar)
+		{
 			private ["_name" as String];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservationId;
@@ -80,8 +80,8 @@ namespace Intrusion.Client
 		
 		// Updates all map observations on the map.
 		// _mapObservations (Array): All current mapobservations.
-		public static method UpdateMap {
-			params ["_mapObservations" as Array];
+		public static method UpdateMap("_mapObservations" as Array)
+		{
 			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];
 			[(str _this) + " MapObservationsHandler.UpdateMap"] call LogHandler.Debug;
 			

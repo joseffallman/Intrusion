@@ -12,9 +12,8 @@ namespace Intrusion.Client
 	{
         // Shows a message as a hint.
         // _message (String): The message to be shown.
-        public static method ShowHint {
-		    params ["_message" as String, ["_address" as Any, objNull]];
-		    
+        public static method ShowHint("_message" as String, ["_address" as Any, objNull])
+        {
 		    if (isNull _address) then {
 	            hint _message;
 		    }
@@ -33,9 +32,8 @@ namespace Intrusion.Client
 
         // Shows a message to the user.
         // _message (String): The message to be shown.
-        public static method ShowMessage {
-		    params ["_message" as String, ["_address" as Any, objNull]];
-		    
+        public static method ShowMessage("_message" as String, ["_address" as Any, objNull])
+        {
 		    if (isNull _address) then {
 	            titleText [_message, "PLAIN"];
 		    }
@@ -55,9 +53,8 @@ namespace Intrusion.Client
 
         // Shows a sub title to the user.
         // _message (String): The message to be shown.
-        public static method ShowSubTitle {
-		    params ["_message" as String, ["_address" as Any, objNull]];
-		    
+        public static method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
+        {
 		    if (isNull _address) then {
 	            titleText [_message, "PLAIN DOWN"];
 		    }

@@ -46,8 +46,8 @@ namespace Intrusion.Client
 		};
 		
 		// Invites another player to the local player's group.
-		private static method InviteOtherPlayerToGroup {
-			params ["_otherPlayer" as Object];
+		private static method InviteOtherPlayerToGroup("_otherPlayer" as Object)
+		{
         	[str _this + "GroupActionHandler.InviteOtherPlayerToGroup"] call LogHandler.Debug;
 			
 			// Add the other player to the local player's group

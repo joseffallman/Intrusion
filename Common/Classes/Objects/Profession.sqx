@@ -11,16 +11,14 @@ namespace Intrusion.Common
 	public class Profession
 	{
         // Creates a Profession object.
-        public constructor {
-        	params [
-        		"_type" as ProfessionType,
-        		"_name" as String,
-        		"_maxGroupsCount" as Scalar,
-        		"_minGroupSize" as Scalar,
-        		"_maxGroupSize" as Scalar,
-        		"_markerType" as String
-        	];
-        	
+        public constructor(
+    		"_type" as ProfessionType,
+    		"_name" as String,
+    		"_maxGroupsCount" as Scalar,
+    		"_minGroupSize" as Scalar,
+    		"_maxGroupSize" as Scalar,
+    		"_markerType" as String)
+        {
         	_self.Type = _type;
         	_self.Name = _name;
         	_self.MaxGroupsCount = _maxGroupsCount;
