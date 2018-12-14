@@ -12,9 +12,8 @@ namespace Sqx.UnitTest
 	public class TestUnit
 	{
 		// Creates a TestUnit object.
-		public constructor {
-			params ["_namespaceName" as String, "_className" as String, "_methodNames" as Array];
-			
+		public constructor("_namespaceName" as String, "_className" as String, "_methodNames" as Array)
+		{
 			_self.NamespaceName = _namespaceName;
 			_self.ClassName = _className; // TODO SQX: Seems that you cannot write TestEngine.ClassName, since it's interpreted as being an outsider accessing the private setter. Both for static and non static. How can that be???
 			_self.MethodNames = _methodNames;

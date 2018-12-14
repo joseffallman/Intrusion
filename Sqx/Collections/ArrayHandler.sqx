@@ -15,8 +15,8 @@ namespace Sqx.Collections
 		// _array (Array): Any array to remove an item from.
 		// _index (Scalar): The index for the item to remove.
 		// Returns (Array): The new array.
-		public static method Array RemoveItemAtIndex {
-			params ["_array" as Array, "_index" as Scalar];
+		public static method Array RemoveItemAtIndex("_array" as Array, "_index" as Scalar)
+		{
 			private ["_newArray" as Array, "_i" as Scalar];
 
 			_newArray = [];

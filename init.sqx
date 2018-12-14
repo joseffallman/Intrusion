@@ -22,6 +22,6 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {
-	call MissionEngine.RunAsync;
-	//call Sqx.UnitTest.TestEngine.RunDelayedAsync;
+	//call MissionEngine.RunAsync;
+	call Sqx.UnitTest.TestEngine.RunDelayedAsync;
 };

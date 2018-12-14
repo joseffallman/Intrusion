@@ -11,8 +11,8 @@ namespace Sqx.UnitTest
 {
 	public class Assert
 	{
-		public static method AreEqual {
-			params ["_expected" as Any, "_actual" as Any, ["_message" as String, ""]];
+		public static method AreEqual("_expected" as Any, "_actual" as Any, ["_message" as String, ""])
+		{
 			private ["_fullMsg" as String];
 
 			if (!(_expected == _actual)) then {
@@ -26,8 +26,8 @@ namespace Sqx.UnitTest
 			};
 		};
 		
-		public static method AreNotEqual {
-			params ["_expected" as Any, "_actual" as Any, ["_message" as String, ""]];
+		public static method AreNotEqual("_expected" as Any, "_actual" as Any, ["_message" as String, ""])
+		{
 			private ["_fullMsg" as String];
 
 			if (_expected == _actual) then {
@@ -41,8 +41,8 @@ namespace Sqx.UnitTest
 			};
 		};
 		
-		public static method IsTrue {
-			params ["_actual" as Any, ["_message" as String, ""]];
+		public static method IsTrue("_actual" as Any, ["_message" as String, ""])
+		{
 			private ["_fullMsg" as String];
 
 			if (!_actual) then {
@@ -56,8 +56,8 @@ namespace Sqx.UnitTest
 			};
 		};
 		
-		public static method IsFalse {
-			params ["_actual" as Any, ["_message" as String, ""]];
+		public static method IsFalse("_actual" as Any, ["_message" as String, ""])
+		{
 			private ["_fullMsg" as String];
 
 			if (_actual) then {
@@ -71,8 +71,8 @@ namespace Sqx.UnitTest
 			};
 		};
 		
-		private static method ValueIsNull {
-			params ["_value" as Any];
+		private static method ValueIsNull("_value" as Any)
+		{
 			private ["_valueSqxClass" as Assert, "_isNull" as Boolean];
 
 			_valueSqxClass = _value as Assert;
@@ -85,8 +85,8 @@ namespace Sqx.UnitTest
 			_isNull
 		};
 		
-		public static method IsNull {
-			params ["_actual" as Any, ["_message" as String, ""]];
+		public static method IsNull("_actual" as Any, ["_message" as String, ""])
+		{
 			private ["_fullMsg" as String];
 			
 			if (!([_actual] call _self.ValueIsNull)) then {
@@ -100,8 +100,7 @@ namespace Sqx.UnitTest
 			};
 		};
 		
-		public static method IsNotNull {
-			params ["_actual" as Any, ["_message" as String, ""]];
+		public static method IsNotNull("_actual" as Any, ["_message" as String, ""]) {
 			private ["_fullMsg" as String];
 
 			if ([_actual] call _self.ValueIsNull) then {

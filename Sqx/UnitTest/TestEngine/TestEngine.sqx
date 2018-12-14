@@ -23,17 +23,15 @@ namespace Sqx.UnitTest
 		// _namespaceName (String): The dot-separated namespace name for the test class.
 		// _className (String): The testclass' name.
 		// _methodNames (Array): A list of names reflecting the test methods.
-		public static method Register {
-			params ["_namespaceName" as String, "_className" as String, "_methodNames" as Array];
-			
+		public static method Register("_namespaceName" as String, "_className" as String, "_methodNames" as Array)
+		{
 			_mTestUnits pushBack [_namespaceName, _className, _methodNames] new TestUnit;
 		};
 		
 		// Outputs a text to the screen and the Arma 3 RPT file.
 		// _text (String): The text to be written.
-		private static method Output {
-			params ["_text" as String, ["_onlyToRpt" as Boolean, false]];
-			
+		private static method Output("_text" as String, ["_onlyToRpt" as Boolean, false])
+		{
 			if (!_onlyToRpt) then {
 				player sideChat _text;
 			};
@@ -44,9 +42,8 @@ namespace Sqx.UnitTest
 		// Asserting a test and registeres it as failed.
 		// Only used by the test framework, and should never be called explicitly.
 		// _message (String): The test's error message to be shown for the test user.
-		public static method WriteFailed {
-			params ["_message" as String];
-			
+		public static method WriteFailed("_message" as String)
+		{
 			if (_mMethodSucceeded) then // Just report one failed assert per test method.
 			{
 				//player sideChat ("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message); // TODO SQX: Should work without parenthesis - ; disappears...
@@ -60,9 +57,8 @@ namespace Sqx.UnitTest
 		// _find (String): The string to fine.
 		// _replace (String): The string to replace the found strings.
 		// Returns (String): The replaced string.
-		private static method String StringReplace {
-			params["_str" as String, "_find" as String, "_replace" as String];
-			
+		private static method String StringReplace("_str" as String, "_find" as String, "_replace" as String)
+		{
 			private _return = "";
 			private _len = count _find;	
 			private _pos = _str find _find;
@@ -78,8 +74,8 @@ namespace Sqx.UnitTest
 		};
 		
 		// Runs all the tests.
-		private static method Run {
-			params ["_delayed" as Boolean];
+		private static method Run("_delayed" as Boolean)
+		{
 			private ["_sqfTestMethod" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sqfClassName" as String, "_sConstructorFunction" as String, "_sqfBeforeEach" as String, "_sqfAfterEach" as String];
 
 			_successCount = 0;
