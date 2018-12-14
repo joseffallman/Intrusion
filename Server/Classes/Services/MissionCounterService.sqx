@@ -58,7 +58,7 @@ namespace Intrusion.Server
 		// Starts the mission
 		public static method RunAsync {
         	_self.MissionIsRunning = true;
-			[] spawn _self.Run;
+			spawn _self.Run;
 		};
 	};
 };

@@ -48,7 +48,7 @@ namespace Intrusion.Server
 			params ["_vehicleSpawners" as Array /* of VehicleSpawner */];
 			
 			_mVehicleSpawners = _vehicleSpawners;
-			[] spawn _self.Run;
+			spawn _self.Run;
 		};
 	};
 };

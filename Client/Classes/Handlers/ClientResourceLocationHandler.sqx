@@ -26,7 +26,7 @@ namespace Intrusion.Client
 	
 		// Initializes the resource location actions for the first time.
 		public static method Init {
-			[] spawn _self.DoInitResourceLocations;
+			spawn _self.DoInitResourceLocations;
 		};
 		
 		// Updates the resource location actions for the player.

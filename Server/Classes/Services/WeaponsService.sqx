@@ -101,7 +101,7 @@ namespace Intrusion.Server
 	
 		// Starts the weapons service.
 		public static method RunAsync {
-			[] spawn _self.Run;
+			spawn _self.Run;
 		};
 	};
 };
