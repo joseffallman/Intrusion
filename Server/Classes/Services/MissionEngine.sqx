@@ -15,7 +15,7 @@ namespace Intrusion.Server
 	{
         // Runs the mission.
         private static method Run {
-        	private ["_sideManagers" as Array, "_vehicleSpawners" as Array /* of VehicleSpawner */, "_vehicleSpawner" as VehicleSpawner];
+        	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
         	
         	call ResourceLocationHandler.AquireAllResourceLocations;
         	
@@ -30,15 +30,13 @@ namespace Intrusion.Server
         	
         	// Create a side manager for each side.
         	_sideManagers = [];
-        	_vehicleSpawners = [];
+    		_vehicleSpawner = new VehicleSpawner;
         	{
-        		_vehicleSpawner = [_x] new VehicleSpawner;
-        		_vehicleSpawners pushBack _vehicleSpawner;
         		_sideManagers pushBack [_x, _vehicleSpawner] new SideManager;
         	} foreach GameplayConfig.CompetingSides as Side;
         	
         	// Start the free vehicles service
-        	[_vehicleSpawners] call FreeVehiclesService.RunAsync;
+        	[_vehicleSpawner] call FreeVehiclesService.RunAsync;
         	
 			// Perform the mission digest loop
 			while { MissionCounterService.MissionIsRunning } do

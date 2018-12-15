@@ -70,8 +70,10 @@ namespace Intrusion.Server
 				private _totalProduction = _mResourceBook.TotalProduction;
 				private _cost = _mOrderQueue.CurrentOrder.ProductionCost;
 				
+				//_squad = [_mOrderQueue.CurrentOrder.Group] call SquadHandler.GetSquadByGroup;
+				
 				if (_totalProduction >= _cost) then {
-					[_mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnVehicleOnCarpark;
+					[side _mOrderQueue.CurrentOrder.Group, _mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnProfessionVehicle;
 					
 					// Tell the group
 					["ClientMessageHandler.ShowMessage", ["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group]] call Remote.Invoke;

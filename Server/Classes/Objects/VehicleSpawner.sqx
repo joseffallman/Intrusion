@@ -13,13 +13,10 @@ namespace Intrusion.Server
 {
 	public class VehicleSpawner : IVehicleSpawner
 	{
-		private fields ["_mSide" as Side, "_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */];
+		private fields ["_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */];
 	
 		// Creates a VehicleHandler object.
 		public constructor {
-			params ["_side" as Side];
-			
-			_mSide = _side;
 			_mAllIntrusionVehicles = [];
 		};
 		
@@ -66,18 +63,22 @@ namespace Intrusion.Server
 			
 			_spawnpos		
 		};
-
-		// Spawns a vehicle on a side's car park.
-		// _vehicleClass (String): Vehicle class to spawn.
-		// _side (Side): The side's carpark on which to spawn the vehicle.
-		// Returns (Object): The spawned Intrusioni vehicle.
-		public method IntrusionVehicle SpawnVehicleOnCarpark {
-		    params ["_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
+		
+		// Performs the actual spawn and puts the vehicle on a free spot on the ground around the base.
+		// _side (Side): The side that the vehicle belongs to.
+		// _vehicleClass (String): The class name of the vehicle to spawn.
+		// _professionType (ProfesstionType): Optional. The profession type that the vehicle belongs to 
+		// (default: ProfessionType.Undefined).
+		// _group (Group): Optional. The group that the vehicle belongs to (default: grpNull).
+		// _cost (Scalar): Optional. The vehicle's cost in production (default: 0).
+		// Returns (IntrusionVehicle): The intrusion vehicle that was spawned.
+		private method IntrusionVehicle SpawnVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
+		{
 		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
-		    private ["_markerConfig" as SideMarkerInfo, "_intrusionVehicle" as IntrusionVehicle];
-		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
+		    private ["_intrusionVehicle" as IntrusionVehicle];
+		    private ["_markerConfig" as SideMarkerInfo];
 		    
-		    _markerConfig = [_mSide] call SideMarkersConfig.GetSideMarkerInfo;
+		    _markerConfig = [_side] call SideMarkersConfig.GetSideMarkerInfo;
 		    
 			_spawnDir = markerDir _markerConfig.CarParkMarkerName;
 		    _spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
@@ -90,25 +91,38 @@ namespace Intrusion.Server
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
 		    
-        	_intrusionVehicle = [_vehicleObj, _mSide, _professionType, _group, _cost] new IntrusionVehicle;
+        	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
         	
 			["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+			
+		    _intrusionVehicle
+		};
+
+		// Spawns a vehicle on a side's car park.
+		// _vehicleClass (String): Vehicle class to spawn.
+		// _side (Side): The side's carpark on which to spawn the vehicle.
+		// Returns (IntrusionVehicle): The spawned Intrusioni vehicle.
+		public method IntrusionVehicle SpawnProfessionVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]) {
+		    private ["_intrusionVehicle" as IntrusionVehicle];
+		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
+		    
+		    _intrusionVehicle = [_side, _vehicleClass, _professionType, _group, _cost] call _self.SpawnVehicle;
         	
 		    _intrusionVehicle
 		};
 		
 		// Spawns a free vehicle on a side's car park.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
-		// Returns (Object): The spawned Intrusion vehicle.
-		public method IntrusionVehicle SpawnFreeVehicleOnCarpark {
+		// Returns (IntrusionVehicle): The spawned Intrusion vehicle.
+		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {
 		    private ["_vehicleClass" as String, "_intrusionVehicle" as IntrusionVehicle];
 			
-        	["Spawning free vehicle at side " + str _mSide] call LogHandler.Info;
+        	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
         	
-        	_vehicleClass = selectRandom ([_mSide, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
-        	_intrusionVehicle = [_vehicleClass] call _self.SpawnVehicleOnCarpark;
+        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
+        	_intrusionVehicle = [_side, _vehicleClass] call _self.SpawnVehicle;
         	
         	_intrusionVehicle
 		};
@@ -116,10 +130,10 @@ namespace Intrusion.Server
 		// Counts a side's free vehicles at the base.
 		// _side (Side): The side to count vehicles for.
 		// Returns (Scalar): The number of free vehicles at the side's base.
-		public method Scalar CountFreeVehiclesAtBase {
+		public method Scalar CountFreeVehiclesAtBase("_side" as Side) {
 			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as SideMarkerInfo];
 			
-    		_markerInfo = [_mSide] call SideMarkersConfig.GetSideMarkerInfo;
+    		_markerInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
     		_vehiclesAtBaseCount = 0;
 
 			{

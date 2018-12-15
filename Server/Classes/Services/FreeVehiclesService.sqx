@@ -12,27 +12,27 @@ namespace Intrusion.Server
 {
 	public class FreeVehiclesService
 	{
-		private static fields ["_mVehicleSpawners" as Array /* of VehicleSpawner */];
+		private static fields ["_mVehicleSpawner" as VehicleSpawner];
 	
 		// Starts the thread that runs though whole of the mission and assigns free vehicles to all sides.
 		private static method Run {
 		    private ["_vehiclesAtBaseCount" as Scalar];
-		    [str _this + " VehicleHandler.DoStartFreeVehiclesThread"] call LogHandler.Debug;
+		    [str _this + " FreeVehiclesService.Run"] call LogHandler.Debug;
 
 		    while { true } do {
 		    	{
-		    		private ["_spawner" as VehicleSpawner];
-		    		_spawner = _x;
+		    		private ["_side" as Side];
+		    		_side = _x as Side;
 		    		
 		    		// Count vehicles at the base
-		    		_vehiclesAtBaseCount = call _spawner.CountFreeVehiclesAtBase;
+		    		_vehiclesAtBaseCount = [_side] call _mVehicleSpawner.CountFreeVehiclesAtBase;
 		    		
 			        // If less than max, spawn a new one.
 			        if (_vehiclesAtBaseCount < GameplayConfig.MaxFreeVehiclesAtBase) then {
-			        	call _spawner.SpawnFreeVehicleOnCarpark;
+			        	[_side] call _mVehicleSpawner.SpawnFreeVehicle;
 			        };
 			        
-		    	} foreach _mVehicleSpawners as VehicleSpawner;
+		    	} foreach GameplayConfig.CompetingSides as Side;
 		    	
 		        if (time < 30) then {
 		            sleep 3;
@@ -45,9 +45,9 @@ namespace Intrusion.Server
 		
 		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
 		public static method RunAsync {
-			params ["_vehicleSpawners" as Array /* of VehicleSpawner */];
+			params ["_vehicleSpawner" as VehicleSpawner];
 			
-			_mVehicleSpawners = _vehicleSpawners;
+			_mVehicleSpawner = _vehicleSpawner;
 			[] spawn _self.Run;
 		};
 	};

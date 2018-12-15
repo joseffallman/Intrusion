@@ -58,7 +58,6 @@ namespace Intrusion.Client
 					_profession = _x;
 					
 					// If profession is available, and if the group has a good size
-					player sideChat (str _playersInGroup);
 					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
