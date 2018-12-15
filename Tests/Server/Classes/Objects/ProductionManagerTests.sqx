@@ -42,7 +42,8 @@ namespace Tests.Server
 				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
 				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
 				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
-				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated"
+				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
+				"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited"
 			]] call TestEngine.Register;
 		};
 		
@@ -243,6 +244,17 @@ namespace Tests.Server
 			
 			// Assert
 			[0, call _mOrderQueue.Count, "There should be no order."] call Assert.AreEqual;
+		};
+		
+		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited {
+			// Arrange
+			[1000] call _mResourceBook.DepositProduction;
+			
+			// Act
+			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
+			
+			// Assert
+			[1100, _mResourceBook.TotalProduction, "Returned profession vehicle did not return production."] call Assert.AreEqual;
 		};
 	};
 };

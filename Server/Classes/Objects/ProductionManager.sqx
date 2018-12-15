@@ -46,7 +46,13 @@ namespace Intrusion.Server
 		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
 			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProVehicleInfo];
+			private ["_cost" as Scalar];
 			
+			// Delete the group's eventual existing vehicle and return its production value.
+			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
+			[_cost] call _mResourceBook.DepositProduction;
+			
+			// Remove the group's eventual existing orders.
 			[_group] call _mOrderQueue.RemoveOrdersByGroup;
 			
 			_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames;

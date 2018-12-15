@@ -148,5 +148,47 @@ namespace Intrusion.Server
 	        
 	        _vehiclesAtBaseCount
 		};
+
+		private method DeleteVehicleWhenEmpty("_vehicle" as Object)
+		{
+			waitUntil { sleep 5; count units _vehicle == 0 };
+			deleteVehicle _vehicle;
+		};
+
+		// Deletes a profession vehicle belonging to a group from the map and returns the cost relative to the vehicle's damage.
+		// _group (Group): The group whose vehicle will be deleted.
+		// Returns (Scalar): The production cost of the vehicle.
+		public method Scalar DeleteProfessionVehicles("_group" as Group)
+		{
+			private ["_intrusionVehiclesToKeep" as Array, "_totalCost" as Scalar, "_vehicleCount" as Scalar, "_totalVehicleDamage" as Scalar];
+			private ["_returnedCost" as Scalar];
+			
+			_returnedCost = 0;
+			_intrusionVehiclesToKeep = [];
+			_totalCost = 0;
+			_vehicleCount = 0;
+			_totalVehicleDamage = 0;
+			
+			{
+				if (_x.OwnerGroup == _group) then {
+					_vehicleCount = _vehicleCount + 1;
+					_totalCost = _x.Cost;
+					_totalVehicleDamage = damage _x.Vehicle;
+					
+					[_x.Vehicle] spawn _self.DeleteVehicleWhenEmpty;
+				}
+				else {
+					_intrusionVehiclesToKeep pushBack _x;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			_mAllIntrusionVehicles = _intrusionVehiclesToKeep;
+			
+			if (_vehicleCount > 0) then {
+				_returnedCost = floor (_totalCost * (1 - (_totalVehicleDamage / _vehicleCount)))
+			};
+			
+			_returnedCost
+		};
 	};
 };

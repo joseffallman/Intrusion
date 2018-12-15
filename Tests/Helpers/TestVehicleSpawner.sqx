@@ -35,5 +35,10 @@ namespace Tests.Helpers
 		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {};
 		
 		public method Scalar CountFreeVehiclesAtBase("_side" as Side) { 0 };
+		
+		// Deletes a profession vehicle belonging to a group from the map.
+		// _group (Group): The group whose vehicle will be deleted.
+		// Returns (Scalar): The production cost of the vehicle.
+		public method Scalar DeleteProfessionVehicles("_group" as Group) { 100 };
 	};
 };

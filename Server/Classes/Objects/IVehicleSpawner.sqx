@@ -23,5 +23,10 @@ namespace Intrusion.Server
 		method IntrusionVehicle SpawnFreeVehicle("_side" as Side);
 		
 		method Scalar CountFreeVehiclesAtBase("_side" as Side);
+		
+		// Deletes a profession vehicle belonging to a group from the map.
+		// _group (Group): The group whose vehicle will be deleted.
+		// Returns (Scalar): The production cost of the vehicle.
+		method Scalar DeleteProfessionVehicles("_group" as Group);
 	};
 };
