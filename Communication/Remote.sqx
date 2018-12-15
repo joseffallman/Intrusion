@@ -30,7 +30,7 @@ namespace Intrusion.Communication
 			if (isServer) then {
 				switch (_methodFullName) do {
 					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
-					case "SquadHandler.SetSquadProfession": { _parameters spawn SquadHandler.SetSquadProfession; };
+					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
 				};
 			};
 			

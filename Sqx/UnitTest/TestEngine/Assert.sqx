@@ -15,7 +15,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
-			if (!(_expected == _actual)) then {
+			if (!(_expected isEqualTo _actual)) then {
 				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
 				
 				if (_message != "") then {
@@ -30,7 +30,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
-			if (_expected == _actual) then {
+			if (_expected isEqualTo _actual) then {
 				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
 				
 				if (_message != "") then {

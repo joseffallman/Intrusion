@@ -47,6 +47,7 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
 1.2 Fixed: Bug in Assert.IsNull when testing an SqxClass.
     Added methods Assert.IsTrue and Assert.IsFalse.
     README changed location from Tests to Sqx\UnitTest.
+X.X Fixed: Change == to "isEqualTo" in Assert.AreEqual.
 
 
 Good luck unit testing!

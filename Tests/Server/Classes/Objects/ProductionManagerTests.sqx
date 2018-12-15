@@ -22,7 +22,9 @@ namespace Tests.Server
 		private static fields [
 			"_mVehicleSpawner" as TestVehicleSpawner, 
 			"_mOrderQueue" as OrderQueue, 
-			"_mGroup" as Group, 
+			"_mGroup" as Group,
+			"_mSquad" as Squad,
+			"_mSquadHandler" as TestSquadHandler,
 			"_mResourceBook" as ResourceBook, 
 			"_mProductionManager" as ProductionManager];
 		
@@ -48,10 +50,14 @@ namespace Tests.Server
 		private static method BeforeEach {
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
+			_mSquadHandler = new TestSquadHandler;
 			_mResourceBook = new ResourceBook;
-			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook, _mOrderQueue] new ProductionManager;
 			
 			_mGroup = call TestActions.CreatePopulatedGroup;
+			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
+			[_mSquad] call _mSquadHandler.SetSquadToReturn;
+			
+			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mOrderQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
@@ -161,7 +167,7 @@ namespace Tests.Server
 			
 			// Assert
 			[1, call _mOrderQueue.Count, "There should be an order."] call Assert.AreEqual;
-			["B_Truck_01_Fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["B_Truck_01_fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
@@ -177,7 +183,7 @@ namespace Tests.Server
 			
 			// Assert
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["B_Truck_01_Fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["B_Truck_01_fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
@@ -222,7 +228,7 @@ namespace Tests.Server
 
 			_orders = call _mOrderQueue.GetOrders;
 			_order = _orders select 1;
-			["B_Truck_01_Fuel_F", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["B_Truck_01_fuel_F", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _order.Group, "The existing order was changed."] call Assert.AreEqual;
 
 			// Cleanup

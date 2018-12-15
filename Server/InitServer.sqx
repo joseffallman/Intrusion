@@ -26,6 +26,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sq
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
 
 using Intrusion.Common;
@@ -43,7 +44,6 @@ call WeaponBoxClassNamesConfig.Init;
 call WeaponsService.Init;
 
 /* Handlers */
-call SquadHandler.Init;
 call ResourceLocationHandler.Init;
 
 /* Services */

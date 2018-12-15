@@ -110,7 +110,7 @@ namespace Intrusion.Client
 			
 			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
 			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
-			["SquadHandler.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
+			["SquadHandlerReciever.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.

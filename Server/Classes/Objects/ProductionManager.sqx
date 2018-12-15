@@ -15,13 +15,14 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mOrderQueue" as OrderQueue];
+		private fields ["_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mOrderQueue" as OrderQueue, "_mSquadHandler" as ISquadHandler];
 	
 		// Creates a ProductionManager object.
-		public constructor {
-			params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, ["_orderQueue" as OrderQueue, classNull]];
+		public constructor("_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, ["_orderQueue" as OrderQueue, classNull])
+		{
 			_self.Side = _side;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mSquadHandler = _squadHandler;
 			_mResourceBook = _resourceBook;
 			
 			_mOrderQueue = _orderQueue;
@@ -32,7 +33,7 @@ namespace Intrusion.Server
 			
 				// Register the class to the global group handler to recieve notifications 
 				// when groups on the side is changing its profession.
-				[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
+				[_self] call _squadHandler.RegisterGroupChangingProfessionListener;
 			};
 		};
 		
@@ -42,8 +43,8 @@ namespace Intrusion.Server
 		// Called when a group on the production manager's side changes its profession.
 		// _group (Group): The group that is changing its profession.
 		// _professionType (ProfessionType): The group's new profession type.
-		public method OnGroupChangingProfession {
-			params ["_group" as Group, "_professionType" as ProfessionType];
+		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
 			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProVehicleInfo];
 			
 			[_group] call _mOrderQueue.RemoveOrdersByGroup;

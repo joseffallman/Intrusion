@@ -3,6 +3,7 @@
 /* Include helper classes */
 call compile preprocessFileLineNumbers "Tests\Helpers\TestActions.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleSpawner.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestSquadHandler.sqx";
 
 /* Include test classes */
 //call compile preprocessFileLineNumbers "Tests\Example\ExampleTests.sqx";

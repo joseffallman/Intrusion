@@ -13,9 +13,19 @@ namespace Intrusion.Server
 {
 	public class MissionEngine
 	{
+		#region Handlers
+		
+		// Gets the mission's squad handler.
+		public static property SquadHandler SquadHandler { get; private set; };
+		
+		#endregion
+	
         // Runs the mission.
         private static method Run {
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
+        	
+        	// Create handlers
+        	_self.SquadHandler = new SquadHandler;
         	
         	call ResourceLocationHandler.AquireAllResourceLocations;
         	
@@ -32,7 +42,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		_vehicleSpawner = new VehicleSpawner;
         	{
-        		_sideManagers pushBack [_x, _vehicleSpawner] new SideManager;
+        		_sideManagers pushBack [_x, _vehicleSpawner, _self.SquadHandler] new SideManager;
         	} foreach GameplayConfig.CompetingSides as Side;
         	
         	// Start the free vehicles service

@@ -13,13 +13,13 @@ using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
-	public class SquadHandler
+	public class SquadHandler : ISquadHandler
 	{
-		private static fields ["_mSquads" as SquadCollection];
-		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
+		private fields ["_mSquads" as SquadCollection];
+		private fields ["_mProfessionChangeListeners" as Array /* of Code */];
 		
-		// Initializes the SquadHandler object.
-		public static method Init {
+		// Creates a SquadHandler object.
+		public constructor {
 			_mSquads = new SquadCollection;
 			_mProfessionChangeListeners = [];
 		};
@@ -27,8 +27,8 @@ namespace Intrusion.Server
 		// Gets a group by its leader.
 		// _leader: The player object whose group to find.
 		// Returns: A player group. classNull if no group was found.
-		public static method Squad GetGroupByLeader {
-			params ["_leader" as Object];
+		public method Squad GetGroupByLeader("_leader" as Object)
+		{
 			private "_foundSquad" as Squad;
 			
 			scopeName "main";
@@ -47,8 +47,8 @@ namespace Intrusion.Server
 		
 		// Registers a group change profession listener to the list of listeners.
 		// _listener (IGroupChangingProfessionListener): The object that will listen.
-		public static method RegisterGroupChangingProfessionListener {
-			params ["_listener" as IGroupChangingProfessionListener];
+		public method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener)
+		{
 			_mProfessionChangeListeners pushBack _listener;
 		};
 		
@@ -56,8 +56,8 @@ namespace Intrusion.Server
 		// This function aquires a lock during runtime.
 		// _group (Group): The group to change profession.
 		// _professionName (String): The name of the new profession.
-		public static method SetSquadProfession {
-			params ["_group" as Group, "_professionType" as ProfessionType];
+		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
 			private ["_squad" as Squad];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
@@ -94,7 +94,7 @@ namespace Intrusion.Server
 		// Gets a squad by group.
 		// _group (Group): The group to get the squad for.
 		// Returns (Squad): The squad if it is found. Otherwise classNull.
-		public static method Squad GetSquadByGroup("_group" as Group)
+		public method Squad GetSquadByGroup("_group" as Group)
 		{
 			scopeName "main";
 			
