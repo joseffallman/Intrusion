@@ -21,11 +21,11 @@ namespace Intrusion.Client
 		        _x addEventHandler ["GetIn", {
 		        	params ["_vehicle" as Object, "_bla" as Any, "_player" as Object];
 				    private ["_intrusionVehicle" as IntrusionVehicle];
-		            
+				    
                 	_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
 
 					if (!isNull _intrusionVehicle) then {
-						if (!(_player in units _intrusionVehicle.OwnerGroup)) then {
+						if (!(group _player isEqualTo _intrusionVehicle.OwnerGroup)) then {
 							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport) then {
 								if (_player == driver _intrusionVehicle.Vehicle) then {
 									moveOut _player;

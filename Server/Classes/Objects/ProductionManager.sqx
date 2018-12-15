@@ -33,7 +33,7 @@ namespace Intrusion.Server
 			
 				// Register the class to the global group handler to recieve notifications 
 				// when groups on the side is changing its profession.
-				[_self] call _squadHandler.RegisterGroupChangingProfessionListener;
+				[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
 			};
 		};
 		
@@ -63,7 +63,7 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method Produce {
-			private ["_tryOneMore" as Boolean];
+			private ["_tryOneMore" as Boolean, "_squad" as Squad];
 			
 			_tryOneMore = true;
 		
@@ -71,10 +71,11 @@ namespace Intrusion.Server
 				private _totalProduction = _mResourceBook.TotalProduction;
 				private _cost = _mOrderQueue.CurrentOrder.ProductionCost;
 				
-				//_squad = [_mOrderQueue.CurrentOrder.Group] call SquadHandler.GetSquadByGroup;
+				_squad = [_mOrderQueue.CurrentOrder.Group] call _mSquadHandler.GetSquadByGroup;
+
+				if (!isNull _squad && _totalProduction >= _cost) then {
 				
-				if (_totalProduction >= _cost) then {
-					[side _mOrderQueue.CurrentOrder.Group, _mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnProfessionVehicle;
+					[_squad.Group, _mOrderQueue.CurrentOrder.VehicleClassName, _squad.ProfessionType, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
 					
 					// Tell the group
 					["ClientMessageHandler.ShowMessage", ["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group]] call Remote.Invoke;

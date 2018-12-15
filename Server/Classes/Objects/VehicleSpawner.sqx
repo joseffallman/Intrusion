@@ -104,11 +104,12 @@ namespace Intrusion.Server
 		// _vehicleClass (String): Vehicle class to spawn.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
 		// Returns (IntrusionVehicle): The spawned Intrusioni vehicle.
-		public method IntrusionVehicle SpawnProfessionVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]) {
+		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_vehicleClass" as String, "_professionType" as ProfessionType, "_cost" as Scalar)
+		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
 		    
-		    _intrusionVehicle = [_side, _vehicleClass, _professionType, _group, _cost] call _self.SpawnVehicle;
+		    _intrusionVehicle = [side _group, _vehicleClass, _professionType, _group, _cost] call _self.SpawnVehicle;
         	
 		    _intrusionVehicle
 		};

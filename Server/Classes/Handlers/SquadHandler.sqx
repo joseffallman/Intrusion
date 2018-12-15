@@ -16,7 +16,7 @@ namespace Intrusion.Server
 	public class SquadHandler : ISquadHandler
 	{
 		private fields ["_mSquads" as SquadCollection];
-		private fields ["_mProfessionChangeListeners" as Array /* of Code */];
+		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
 		
 		// Creates a SquadHandler object.
 		public constructor {
@@ -47,7 +47,7 @@ namespace Intrusion.Server
 		
 		// Registers a group change profession listener to the list of listeners.
 		// _listener (IGroupChangingProfessionListener): The object that will listen.
-		public method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener)
+		public static method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener)
 		{
 			_mProfessionChangeListeners pushBack _listener;
 		};
@@ -103,9 +103,9 @@ namespace Intrusion.Server
 				_squad = _x as Squad;
 				
 				if (_squad.Group == _group) then {
-					_group breakOut "main";
+					_squad breakOut "main";
 				};
-			} foreach _mSquads as Squad;
+			} foreach (_mSquads.Squads) as Squad;
 			
 			classNull
 		};

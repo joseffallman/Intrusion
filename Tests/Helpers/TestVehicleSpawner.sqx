@@ -22,7 +22,8 @@ namespace Tests.Helpers
 		
 		public property Array SpawnedVehicles { get; private set; };
 		
-		public method IntrusionVehicle SpawnProfessionVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]) {
+		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_vehicleClass" as String, "_professionType" as ProfessionType, "_cost" as Scalar)
+		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
 			_intrusionVehicle = [objNull, west, _professionType, _group, _cost] new IntrusionVehicle;
