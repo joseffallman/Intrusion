@@ -17,15 +17,15 @@ namespace Intrusion.Common
         // Initializes the profession config. Initializes all professions.
         public static method Init {
         	_mProfessions = [
-        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, "o_inf"] new Profession,
-			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, "o_inf"] new Profession,
-			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, "o_inf"] new Profession,
-			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, "o_inf"] new Profession,
-			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, "o_inf"] new Profession
+        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, "b_inf", "o_inf"] new Profession,
+			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, "", "o_inf"] new Profession,
+			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, "b_maint", "o_maint"] new Profession,
+			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, "b_motor_inf", "o_motor_inf"] new Profession,
+			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, "b_support", "o_support"] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, "b_mech_inf", "o_mech_inf"] new Profession,
+			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, "b_armor", "o_armor"] new Profession
         	];
 		};
 		

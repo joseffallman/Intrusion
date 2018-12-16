@@ -1,0 +1,49 @@
+/*
+ * Name:	MapMarkerService
+ * Date:	2018-12-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Updates the player's map with map markers (observations not included).
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class MapMarkerService
+	{
+		private static fields ["_mMapMarkers" as Array /* of String */, "_mCurrentId" as Scalar];
+		
+		// Initializes the observation service.
+		public static method Init {
+			_mCurrentId = 0;
+			_mMapMarkers = [];
+		};
+		
+        // Runs the service.
+        private static method Run {
+        	private ["_squadCollection" as SquadCollection, "_squad" as Squad];
+        
+        	waitUntil { call PublicVariableHandler.SquadsHasValue };
+        	
+        	while { true } do {
+    			_squadCollection = call PublicVariableHandler.GetSquads;
+    			
+        		{
+        			_x params ["_group" as Group];
+        			
+        			
+        		} foreach allGroups as Object;
+        		
+        		sleep 1;
+        	};
+		};
+		
+		// Starts the service
+		public static method RunAsync {
+			[] spawn _self.Run;
+		};
+	};
+};
