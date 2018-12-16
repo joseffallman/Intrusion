@@ -9,12 +9,13 @@
  */
 
 using Intrusion.Common;
+using Sqx.Markers;
 
 namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
-		private static fields ["_mMapMarkers" as Array /* of String */, "_mCurrentId" as Scalar];
+		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mCurrentId" as Scalar];
 		
 		// Initializes the observation service.
 		public static method Init {
@@ -24,7 +25,7 @@ namespace Intrusion.Client
 		
         // Runs the service.
         private static method Run {
-        	private ["_squadCollection" as SquadCollection, "_squad" as Squad];
+        	private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_leader" as Object, "_profession" as Profession, "_marker" as Marker];
         
         	waitUntil { call PublicVariableHandler.SquadsHasValue };
         	
@@ -34,8 +35,19 @@ namespace Intrusion.Client
         		{
         			_x params ["_group" as Group];
         			
+        			_squad = [_group] call _squadCollection.GetSquadByGroup;
         			
-        		} foreach allGroups as Object;
+        			if (!isNull _squad) then {
+        				_leader = leader _squad.Group;
+        				
+        				if (!isNull _leader) then {
+        					_profession = [_squad.ProfessionType] call ProfessionConfig.GetProfession;
+        					_marker = [getPos _leader, _profession.MarkerTypeFriendly] call Marker.CreateIconMarkerLocal;
+        					_marker.Tag = _squad.Group;
+        				};
+        			};
+        			
+        		} foreach allGroups as Group;
         		
         		sleep 1;
         	};

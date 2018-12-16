@@ -167,6 +167,8 @@ namespace Sqx.Markers
 			_mAlpha = _alpha;
 			_mIsLocal = _isLocal;
 			
+			_self.Tag = objNull;
+			
 			/// str (_self); // TODO: Mission space between str and _class_fields in compiled.
 			if (_self.IsVisible) then {
 				call _self.Draw;
@@ -299,5 +301,8 @@ namespace Sqx.Markers
 				};
 			};
 		};
+		
+		// Gets or sets a tag. The tag kan be any value or object that is associated with the marker.
+		public property Any Tag { get; set; };
 	};
 };
