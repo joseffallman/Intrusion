@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={5256.7134,228.07175,5065.3647};
-		dir[]={0.90330178,-0.39286947,0.17240858};
-		up[]={0.38598633,0.91956156,0.073671609};
-		aside[]={0.18748367,6.7196379e-007,-0.98228222};
+		pos[]={5255.0293,226.43326,5059.3647};
+		dir[]={0.87105763,-0.32373413,0.36959594};
+		up[]={0.29812351,0.94610935,0.12649751};
+		aside[]={0.39063284,1.8904393e-007,-0.92062581};
 	};
 };
 binarizationWanted=0;
@@ -648,11 +648,11 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={5270.3638,219.02168,5068.4067};
-						angles[]={0,0.72706926,0};
+						position[]={5266.5747,219.00775,5066.2139};
+						angles[]={0.03748076,0.72706926,6.1662216};
 					};
 					side="West";
-					flags=2;
+					flags=6;
 					class Attributes
 					{
 						skill=0.60000002;
@@ -663,7 +663,6 @@ class Mission
 					};
 					id=30;
 					type="B_Soldier_F";
-					atlOffset=0.30499268;
 					class CustomAttributes
 					{
 						class Attribute0
@@ -712,7 +711,6 @@ class Mission
 			{
 			};
 			id=29;
-			atlOffset=0.30499268;
 		};
 		class Item19
 		{
@@ -2092,8 +2090,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={5330.2847,218.12865,5233.2432};
-						angles[]={0.082314201,4.4802265,0.054944519};
+						position[]={5270.54,218.95244,5061.0215};
+						angles[]={0.10214423,4.4802265,6.1736255};
 					};
 					side="West";
 					flags=6;

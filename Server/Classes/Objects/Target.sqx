@@ -75,7 +75,8 @@ namespace Intrusion.Server
 			
 			// Add vehicles manually
 			{
-				_x params ["_targetUnit" as Object];
+				private ["_targetUnit" as Object];
+				_targetUnit = _x as Object;
 				
 				if (vehicle _targetUnit != _targetUnit) then { // If unit is in a vehicle
 					_visibility = [objNull, "VIEW"] checkVisibility [eyePos _unit, [getPosASL _targetUnit select 0, getPosASL _targetUnit select 1, (getPosASL _targetUnit select 2) + 2]];

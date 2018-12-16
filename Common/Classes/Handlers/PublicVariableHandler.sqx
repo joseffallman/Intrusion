@@ -55,5 +55,25 @@ namespace Intrusion.Common
 		public static method Boolean SquadsHasValue {
 			!isNil "INT_Public_squads"
 		};
+
+		// Sets and broadcasts an array of intrusion vehicles across the network.
+		// _squads (Array): An array of all intrusion vehicles.
+		public static method BroadcastIntrusionVehicles("_intrusionVehicles" as Array)
+		{
+			[(str _this) + " PublicVariableHandler.BroadcastIntrusionVehicles"] call LogHandler.Debug;
+			
+			INT_Public_intrusionVehicles = _intrusionVehicles;
+			publicVariable "INT_Public_intrusionVehicles";
+		};
+		
+		// Gets all intrusion vehicles from the public network synchronized variable.
+		public static method Array GetIntrusionVehicles { 
+			INT_Public_intrusionVehicles
+		};
+		
+		// Gets whether the intrusion vehicles has been set on the current machine or not.
+		public static method Boolean IntrusionVehiclesHasValue {
+			!isNil "INT_Public_intrusionVehicles"
+		};
 	};
 };

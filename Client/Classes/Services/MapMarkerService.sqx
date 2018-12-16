@@ -15,38 +15,107 @@ namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
-		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mCurrentId" as Scalar];
+		private static fields ["_mMapMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
 		public static method Init {
-			_mCurrentId = 0;
 			_mMapMarkers = [];
+		};
+		
+		// Gets a marker tagged with a certain group.
+		// _group (Group): The group whose marker to get.
+		// Returns (Marker): The marker associated with the group. classNull if such a marker was not found.
+		private static method Marker GetMarkerByGroup("_group" as Group)
+		{
+			scopeName "main";
+			
+			{
+				private ["_marker" as Marker];
+				_marker = _x as Marker;
+
+				if (_marker.Tag == _group) then {
+					_marker breakOut "main";
+				};
+			} foreach _mMapMarkers as Marker;
+			
+			classNull
 		};
 		
         // Runs the service.
         private static method Run {
-        	private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_leader" as Object, "_profession" as Profession, "_marker" as Marker];
-        
+        	private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_leader" as Object, "_profession" as Profession, "_marker" as Marker, "_professionType" as ProfessionType];
+        	private ["_squadIsNearVehicle" as Boolean, "_group" as Group, "_mapMarkersToKeep" as Array];
+
         	waitUntil { call PublicVariableHandler.SquadsHasValue };
-        	
+			waitUntil { call PublicVariableHandler.IntrusionVehiclesHasValue };
+
         	while { true } do {
     			_squadCollection = call PublicVariableHandler.GetSquads;
     			
+    			// Remove all groups that no longer exist or is empty
+    			_mapMarkersToKeep = [];
+    			{
+    				private ["_marker" as Marker];
+    				_marker = _x as Marker;
+    				
+    				_group = _marker.Tag as Group;
+    				
+    				if (isNull _group || { count units _group == 0 }) then {
+    					call _marker.Hide;
+    				}
+    				else {
+    					_mapMarkersToKeep pushBack _marker;
+    				};
+    			} foreach _mMapMarkers as Marker;
+    			
+    			_mMapMarkers = _mapMarkersToKeep;
+    			
+    			
+    			// Update all groups
         		{
-        			_x params ["_group" as Group];
-        			
-        			_squad = [_group] call _squadCollection.GetSquadByGroup;
-        			
-        			if (!isNull _squad) then {
-        				_leader = leader _squad.Group;
-        				
-        				if (!isNull _leader) then {
-        					_profession = [_squad.ProfessionType] call ProfessionConfig.GetProfession;
-        					_marker = [getPos _leader, _profession.MarkerTypeFriendly] call Marker.CreateIconMarkerLocal;
-        					_marker.Tag = _squad.Group;
-        				};
-        			};
-        			
+        			private ["_group" as Group];
+        			_group = _x as Group;
+    				_leader = leader _group;
+
+					if (!isNull _leader && side _group == playerSide) then {
+	        			_squad = [_group] call _squadCollection.GetSquadByGroup;
+	        			
+	        			_professionType = ProfessionType.Infantry;
+	        			_squadIsNearVehicle = false;
+	        			
+	        			if (!isNull _squad) then {
+	        				_professionType = _squad.ProfessionType;
+		    				
+	        				// If squad units are more than 50 meters from all of their vehicles, they are not near it.
+	        				{
+	        					private ["_vehicle" as IntrusionVehicle];
+	        					_vehicle = _x as IntrusionVehicle;
+	        					
+	        					if (_vehicle.OwnerGroup == _group) then {
+		        					if ( { _x distance _vehicle.Vehicle < 50 } count units _squad.Group > 0 ) then {
+		        						_squadIsNearVehicle = true;
+		        					};
+	        					};
+	        				} foreach (call PublicVariableHandler.GetIntrusionVehicles) as Object;
+	    				};
+	    				
+	    				if (!_squadIsNearVehicle) then {
+		        			_professionType = ProfessionType.Infantry;
+	    				};
+	        			
+	        			_marker = [_group] call _self.GetMarkerByGroup;
+						_profession = [_professionType] call ProfessionConfig.GetProfession;
+	        			
+	        			if (isNull _marker) then {
+							_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor"] call Marker.CreateIconMarkerLocal;
+							_marker.Tag = _group;
+							_mMapMarkers pushBack _marker;
+	        			}
+	        			else {
+	        				[getPos _leader] call _marker.SetPosition;
+	        				[_profession.MarkerTypeFriendly] call _marker.SetMarkerType;
+	        			};
+					};
         		} foreach allGroups as Group;
         		
         		sleep 1;

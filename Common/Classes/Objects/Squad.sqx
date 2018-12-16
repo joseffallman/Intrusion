@@ -18,7 +18,6 @@ namespace Intrusion.Common
 		{
 			_self.Group = _group;
 			_self.ProfessionType = _professionType;
-			_self.Vehicles = [];
 		};
 		
 		// Gets the group.
@@ -26,9 +25,6 @@ namespace Intrusion.Common
 		
 		// Gets the group profession type.
 		public property ProfessionType ProfessionType { get; private set; };
-		
-		// Gets the vehicles associated with the group.
-		public property Array Vehicles { get; private set; };
 		
 		// Checks if the squad contains any members or not.
 		// Returns (Boolean): true if the squad is empty.

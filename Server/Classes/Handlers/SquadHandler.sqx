@@ -22,6 +22,8 @@ namespace Intrusion.Server
 		public constructor {
 			_mSquads = new SquadCollection;
 			_mProfessionChangeListeners = [];
+			
+			[_mSquads] call PublicVariableHandler.BroadcastSquads;
 		};
 		
 		// Gets a group by its leader.

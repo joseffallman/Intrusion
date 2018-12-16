@@ -212,6 +212,9 @@ namespace Sqx.Markers
 		// Gets whether the marker is visible or invisible.
 		public property Boolean IsVisible { get; private set; };
 		
+		// Gets or sets a tag. The tag kan be any value or object that is associated with the marker.
+		public property Any Tag { get; set; };
+		
 		// Gets whether the marker is blinking or not.
 		public property Boolean IsBlinking { get; private set; };
 
@@ -302,7 +305,20 @@ namespace Sqx.Markers
 			};
 		};
 		
-		// Gets or sets a tag. The tag kan be any value or object that is associated with the marker.
-		public property Any Tag { get; set; };
+		public method SetMarkerType("_markerType" as String)
+		{
+			if (!(_markerType isEqualTo _mType)) then {
+				_mType = _markerType;
+				
+				if (_self.IsVisible) then {
+					if (_mIsLocal) then {
+						(_self.Name) setMarkerTypeLocal _markerType;
+					}
+					else {
+						(_self.Name) setMarkerType _markerType;
+					};
+				};
+			};
+		};
 	};
 };

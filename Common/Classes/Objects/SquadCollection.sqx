@@ -103,7 +103,8 @@ namespace Intrusion.Common
 			scopeName "main";
 		
 			{
-				_x params ["_squad" as Squad];
+				private ["_squad" as Squad];
+				_squad = _x as Squad;
 				
 				if (_squad.Group == _group) then {
 					_squad breakOut "main";

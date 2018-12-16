@@ -18,6 +18,7 @@ namespace Intrusion.Server
 		// Creates a VehicleHandler object.
 		public constructor {
 			_mAllIntrusionVehicles = [];
+			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 		};
 		
 		// Finds a free spawn position around a given position.
@@ -94,6 +95,7 @@ namespace Intrusion.Server
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
+			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	
 			["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
 			
@@ -154,7 +156,7 @@ namespace Intrusion.Server
 			waitUntil { sleep 5; count units _vehicle == 0 };
 			deleteVehicle _vehicle;
 		};
-
+		
 		// Deletes a profession vehicle belonging to a group from the map and returns the cost relative to the vehicle's damage.
 		// _group (Group): The group whose vehicle will be deleted.
 		// Returns (Scalar): The production cost of the vehicle.
@@ -183,6 +185,7 @@ namespace Intrusion.Server
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
 			
 			_mAllIntrusionVehicles = _intrusionVehiclesToKeep;
+			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 			
 			if (_vehicleCount > 0) then {
 				_returnedCost = floor (_totalCost * (1 - (_totalVehicleDamage / _vehicleCount)))

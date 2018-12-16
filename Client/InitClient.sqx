@@ -27,9 +27,10 @@ call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
+call MapObservationsHandler.Init;
 
 // Services
-call MapObservationsHandler.Init;
+call MapMarkerService.Init;
 
 // Dialogs
 //call ProfessionDialog.Init;
@@ -42,6 +43,8 @@ call GroupActionHandler.ResetInvitePlayerActions;
 
 // Show the Welcome tutorial
 [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+
+call MapMarkerService.RunAsync;
 
 if (didJIP) then {
 	
