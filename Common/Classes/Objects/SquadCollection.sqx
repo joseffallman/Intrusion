@@ -94,5 +94,23 @@ namespace Intrusion.Common
 		public method ReleaseLock {
 			_mLockedById = 0;
 		};
+		
+		// Gets a squad by a group.
+		// _group (Group): The group to get squad for.
+		// Returns (Squad): The group's squad. classNull if the squad was not found.
+		public method Squad GetSquadByGroup("_group" as Group)
+		{
+			scopeName "main";
+		
+			{
+				_x params ["_squad" as Squad];
+				
+				if (_squad.Group == _group) then {
+					_squad breakOut "main";
+				};
+			} foreach _self.Squads as Squad;
+			
+			classNull
+		};
 	};
 };
