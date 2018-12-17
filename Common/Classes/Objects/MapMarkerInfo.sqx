@@ -12,14 +12,13 @@ namespace Intrusion.Common
 	public class MapMarkerInfo
 	{
 		// Creates a MapMarkerInfo object.
-		public constructor {
-			params ["_side" as Side, "_baseMarkerName" as String, "_carParkMarkerName" as String, "_weaponDepotMarkerName" as String, "_flagTexture" as String];
-			
+		public constructor("_side" as Side, "_baseMarkerName" as String, "_carParkMarkerName" as String, "_weaponDepotMarkerName" as String, "_flagTexture" as String, "_baseMarkerIconType" as String) {
 			_self.Side = _side;
 			_self.BaseMarkerName = _baseMarkerName;
 			_self.CarParkMarkerName = _carParkMarkerName;
 			_self.WeaponDepotMarkerName = _weaponDepotMarkerName;
 			_self.FlagTexture = _flagTexture;
+			_self.BaseMarkerIconType = _baseMarkerIconType;
 		};
 		
 		// Gets the side.
@@ -36,5 +35,8 @@ namespace Intrusion.Common
 		
 		// Gets the side's flag texture path.
 		public property String FlagTexture { get; private set; };
+		
+		// Gets the base marker's icon type.
+		public property String BaseMarkerIconType { get; private set; };
 	};
 };

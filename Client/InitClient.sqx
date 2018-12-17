@@ -30,7 +30,7 @@ call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 call MapObservationsHandler.Init;
 
 // Services
-call MapMarkerService.Init;
+[gMapMarkerConfig] call MapMarkerService.Init;
 
 // Dialogs
 //call ProfessionDialog.Init;

@@ -18,8 +18,8 @@ namespace Intrusion.Common
 		// Initializes a SideMarkersConfig object.
 		public method Init {
 			_mSideInfos = [
-				[west, "respawn_west", "INT_CarParkWest", "INT_WeaponDepotMarkerWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa"] new MapMarkerInfo,
-				[east, "respawn_east", "INT_CarParkEast", "INT_WeaponDepotMarkerEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa"] new MapMarkerInfo
+				[west, "respawn_west", "INT_CarParkWest", "INT_WeaponDepotMarkerWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa", "b_hq"] new MapMarkerInfo,
+				[east, "respawn_east", "INT_CarParkEast", "INT_WeaponDepotMarkerEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa", "b_hq"] new MapMarkerInfo
 			];
 			
 			_self.WinnersLocationMarkerType = "hd_flag";

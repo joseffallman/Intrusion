@@ -118,7 +118,7 @@
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitClient.sqx" IsExpanded="false" FileName="Client\InitClient.sqx">
-            <IsSelected>false</IsSelected>
+            <IsSelected>true</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MarkerUpdater.sqf" IsExpanded="false" FileName="Client\MarkerUpdater.sqf">
@@ -451,7 +451,7 @@
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitServer.sqx" IsExpanded="false" FileName="Server\InitServer.sqx">
-            <IsSelected>true</IsSelected>
+            <IsSelected>false</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
         </SubNodes>

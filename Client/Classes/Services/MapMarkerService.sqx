@@ -15,10 +15,13 @@ namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
 		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker];
 		
 		// Initializes the observation service.
-		public static method Init {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
+		
 			_mMapMarkers = [];
 			_mBaseMarker = classNull;
 		};
@@ -120,7 +123,15 @@ namespace Intrusion.Client
 		// Updates the base marker.
 		private static method UpdateAlliedBaseMarker()
 		{
+			private ["_markerInfo" as MapMarkerInfo];
 			
+			_markerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo
+			
+			if (isNull _mBaseMarker) then {
+				_mBaseMarker = [getMarkerPos _markerInfo.BaseMarkerName, _markerInfo.BaseMarkerIconType, "ColorBlufor"] call Marker.CreateIconMarker;
+			};
+			
+			[getMarkerPos _markerInfo.BaseMarkerName] call _mBaseMarker.SetPosition;
 		};
 		
         // Runs the service.
