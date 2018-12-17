@@ -31,9 +31,7 @@ namespace Intrusion.Server
 		
 		// Gets a profession vehicle from the list.
 		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
-		public static method ProVehicleInfo GetVehicle {
-			params ["_professionType" as ProfessionType];
-			
+		public static method ProVehicleInfo GetVehicle("_professionType" as ProfessionType) {
 			scopeName "main";
 			
 			{

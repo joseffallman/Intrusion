@@ -7,6 +7,7 @@
  * Executes the mission. Loops through the mission loop that will run from mission start
  * to mission end.
  */
+
 using Intrusion.Common;
 
 namespace Intrusion.Server
@@ -23,8 +24,13 @@ namespace Intrusion.Server
         // Runs the mission.
         private static method Run {
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
+			private ["_technologyConfig" as TechnologyConfig, "_messageHandler" as MessageHandler];
+        	
+        	// Create configs
+        	_technologyConfig = new TechnologyConfig;
         	
         	// Create handlers
+        	_messageHandler = new MessageHandler;
         	_self.SquadHandler = new SquadHandler;
         	
         	call ResourceLocationHandler.AquireAllResourceLocations;
@@ -42,7 +48,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		_vehicleSpawner = new VehicleSpawner;
         	{
-        		_sideManagers pushBack [_x, _vehicleSpawner, _self.SquadHandler] new SideManager;
+        		_sideManagers pushBack [_x, _vehicleSpawner, _self.SquadHandler, _technologyConfig, _messageHandler] new SideManager;
         	} foreach GameplayConfig.CompetingSides as Side;
         	
         	// Start the free vehicles service

@@ -1,0 +1,23 @@
+/*
+ * Name:	Technology
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum for technologies.
+ */
+namespace Intrusion.Server
+{
+	public enum Technology
+	{
+		Transport,
+		Services,
+		Maintenance,
+		Launchers,
+		Motorized,
+		AntiArmor,
+		Mechanized,
+		Armored
+	};
+};

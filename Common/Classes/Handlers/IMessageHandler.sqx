@@ -1,0 +1,27 @@
+/*
+ * Name:	IMessageHandler
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Hansles all messages that can be shown on screen for players.
+ */
+namespace Intrusion.Common
+{
+	public interface IMessageHandler
+	{
+        // Shows a message as a hint.
+        // _message (String): The message to be shown.
+        method ShowHint("_message" as String, ["_address" as Any, objNull]);
+
+        // Shows a message to the user.
+        // _message (String): The message to be shown.
+        method ShowMessage("_message" as String, ["_address" as Any, objNull]);
+
+        // Shows a sub title to the user.
+        // _message (String): The message to be shown.
+        method ShowSubTitle("_message" as String, ["_address" as Any, objNull]);
+	};
+};
+

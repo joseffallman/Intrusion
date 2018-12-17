@@ -6,6 +6,9 @@
  * Description:
  * Manages the resource collection for a side.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class SideManager
@@ -20,12 +23,13 @@ namespace Intrusion.Server
         // Parameter(s):
         // _side (Side): The side to handle.
         public constructor {
-		    params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler];
+		    params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler];
             
             _self.Side = _side;
             
             _mResourceBook = new ResourceBook;
             _mResourceCollector = [_side, _mResourceBook] new ResourceCollector;
+            _mScientist = [_mResourceBook, _technologyConfig, _messageHandler] new Scientist;
             _mProductionManager = [_side, _vehicleSpawner, _mResourceBook, _squadHandler] new ProductionManager;
 		};
 		
@@ -34,6 +38,7 @@ namespace Intrusion.Server
 		
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
 		public method PerformTurn {
+			call _mScientist.PerformResearch;
 			call _mResourceCollector.CollectResources;
 			call _mProductionManager.Produce;
 			

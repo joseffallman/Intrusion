@@ -7,13 +7,25 @@
  * Description:
  * A class modeling a side's R&D manager refining generated technoloty (i.e. unlocks new technology).
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class Scientist
 	{
+		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
+	
 		// Creates a Sceintist object.
-		public constructor {
-			
+		public constructor("_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler) {
+			_mResourceBook = _resourceBook;
+			_mTechnologyConfig = _technologyConfig;
+			_mMessageHandler = _messageHandler;
+		};
+		
+		// Performs research and development, and notifies players when different technology progress steps are achieved.
+		public method PerformResearch()
+		{
 		};
 	};
 };
