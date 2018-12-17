@@ -1,8 +1,9 @@
-call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\LogLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
@@ -18,6 +19,8 @@ using Intrusion.Common;
 // Configs
 call ProfessionConfig.Init;
 call DebugConfig.Init;
+
+gMapMarkerConfig = new MapMarkersConfig;
 
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;

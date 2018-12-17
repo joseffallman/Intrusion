@@ -1,17 +1,17 @@
 /*
- * Name:	SideMarkerInfo
+ * Name:	MapMarkerInfo
  * Date:	2017-11-25
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Class modeling config information for a side.
+ * Class modeling config information for the map's initial map markers.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
-	public class SideMarkerInfo
+	public class MapMarkerInfo
 	{
-		// Creates a SideMarkerInfo object.
+		// Creates a MapMarkerInfo object.
 		public constructor {
 			params ["_side" as Side, "_baseMarkerName" as String, "_carParkMarkerName" as String, "_weaponDepotMarkerName" as String, "_flagTexture" as String];
 			

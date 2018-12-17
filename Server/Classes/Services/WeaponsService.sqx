@@ -14,9 +14,10 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mWeaponBoxes" as Array /* of WeaponBox */];
+		private static fields ["_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig];
 		
-		public static method Init {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
 			_mWeaponBoxes = [];
 		};
 		
@@ -57,10 +58,10 @@ namespace Intrusion.Server
 			while { true } do
 			{
 	        	{
-					private ["_side" as Side, "_weaponBox" as WeaponBox, "_markerInfo" as SideMarkerInfo, "_weapon", "_magazines", "_boxAlive"];
+					private ["_side" as Side, "_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo, "_weapon", "_magazines", "_boxAlive"];
 					_side = _x;
 					
-					_markerInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
+					_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 						
 					// Create the box if it is not already there
 					

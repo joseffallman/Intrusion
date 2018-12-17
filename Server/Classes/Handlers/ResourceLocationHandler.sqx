@@ -16,10 +16,13 @@ namespace Intrusion.Server
 {
 	public class ResourceLocationHandler
 	{
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
 		private static fields ["_mResourceLocations" as Array];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
+			
 			_mResourceLocations = [];
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
@@ -55,7 +58,7 @@ namespace Intrusion.Server
 			private _winnersIndex = floor random count _mResourceLocations;
 			_self.WinnersLocation = _mResourceLocations select _winnersIndex;
 			_self.WinnersLocation.IsWinnersLocation = true;
-			_self.WinnersLocation.MarkerName setMarkerType SideMarkersConfig.WinnersLocationMarkerType;
+			_self.WinnersLocation.MarkerName setMarkerType _mMapMarkersConfig.WinnersLocationMarkerType;
 			
 			call _self.BroadcastResourceLocations;
 		};
@@ -90,7 +93,7 @@ namespace Intrusion.Server
 		public static method SetNewFlagOwner {
 			params ["_markerName" as String, "_side" as Side];
 			private ["_resourceLocation" as ResourceLocation];
-			private ["_sideConfigInfo" as SideMarkerInfo];
+			private ["_markerInfo" as MapMarkerInfo];
 		
 			_resourceLocation = [_markerName] call _self.GetResourceLocation;
 			
@@ -98,8 +101,8 @@ namespace Intrusion.Server
 				_resourceLocation.Side = _side;
 				
 				// Update the flag texture
-				_sideConfigInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
-				(_resourceLocation.Flag) setFlagTexture _sideConfigInfo.FlagTexture;
+				_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
+				(_resourceLocation.Flag) setFlagTexture _markerInfo.FlagTexture;
 					
 				call _self.BroadcastResourceLocations;
 				["ClientMessageHandler.ShowHint", [_resourceLocation.Text + " was captured by " + str _side]] call Remote.Invoke;

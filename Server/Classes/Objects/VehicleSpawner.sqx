@@ -13,7 +13,7 @@ namespace Intrusion.Server
 {
 	public class VehicleSpawner : IVehicleSpawner
 	{
-		private fields ["_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */];
+		private fields ["_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */, "_mMapMarkersConfig" as IMapMarkersConfig];
 	
 		// Creates a VehicleHandler object.
 		public constructor {
@@ -77,15 +77,15 @@ namespace Intrusion.Server
 		{
 		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle];
-		    private ["_markerConfig" as SideMarkerInfo];
+		    private ["_markerInfo" as MapMarkerInfo];
 		    
-		    _markerConfig = [_side] call SideMarkersConfig.GetSideMarkerInfo;
+		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 		    
-			_spawnDir = markerDir _markerConfig.CarParkMarkerName;
-		    _spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
+			_spawnDir = markerDir _markerInfo.CarParkMarkerName;
+		    _spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
 		    
 		    while {count _spawnPos == 0} do {
-		    	_spawnPos = [getMarkerPos _markerConfig.CarParkMarkerName, 10] call _self.FindSpawnPos;
+		    	_spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
 		    };
 		    
 		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
@@ -134,9 +134,9 @@ namespace Intrusion.Server
 		// _side (Side): The side to count vehicles for.
 		// Returns (Scalar): The number of free vehicles at the side's base.
 		public method Scalar CountFreeVehiclesAtBase("_side" as Side) {
-			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as SideMarkerInfo];
+			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as MapMarkerInfo];
 			
-    		_markerInfo = [_side] call SideMarkersConfig.GetSideMarkerInfo;
+    		_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
     		_vehiclesAtBaseCount = 0;
 
 			{
