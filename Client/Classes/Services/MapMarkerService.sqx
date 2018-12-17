@@ -113,7 +113,7 @@ namespace Intrusion.Client
 	        			}
 	        			else {
 	        				[getPos _leader] call _marker.SetPosition;
-	        				[_profession.MarkerTypeFriendly] call _marker.SetMarkerType;
+	        				[_profession.MarkerTypeFriendly] call _marker.SetType;
 	        			};
 					};
         		} foreach allGroups as Group;
