@@ -1,0 +1,20 @@
+/*
+ * Name:	IProfessionVehiclesConfig
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all relevant and editable settings for a game round.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public interface IProfessionVehiclesConfig
+	{
+		// Gets a profession vehicle from the list.
+		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
+		method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType);
+	};
+};

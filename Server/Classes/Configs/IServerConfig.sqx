@@ -11,10 +11,16 @@ namespace Intrusion.Server
 {
 	public interface IServerConfig
 	{
-		// Gets the technology configs.
+		// Gets the gameplay configs.
 		property IGameplayConfig Gameplay { get; };
 		
 		// Gets the technology configs.
 		property ITechnologyConfig Technology { get; };
+		
+		// Gets the profession vehicles config.
+		property IProfessionVehiclesConfig ProfessionVehicles { get; };
+		
+		// Gets the vehicle class names config.
+		property IVehicleClassNamesConfig VehicleClassNames { get; };
 	};
 };

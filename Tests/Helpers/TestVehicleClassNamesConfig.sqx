@@ -1,17 +1,19 @@
 /*
- * Name:	VehicleClassNamesConfig
- * Date:	2017-11-20
+ * Name:	TestVehicleClassNamesConfig
+ * Date:	2018-12-18
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * A configuration class that handles all vehicle types (class names) in the mission.
+ * Class that can substitute the vehicle class names configurations.
  */
+
+using Intrusion.Server;
 using Intrusion.Common;
 
-namespace Intrusion.Server
+namespace Tests.Helpers
 {
-	public class VehicleClassNamesConfig : IVehicleClassNamesConfig
+	public class TestVehicleClassNamesConfig : IVehicleClassNamesConfig
 	{
 		private fields ["_mClassNamesInfos" as Array];
 	
@@ -81,3 +83,4 @@ namespace Intrusion.Server
 		};
 	};
 };
+

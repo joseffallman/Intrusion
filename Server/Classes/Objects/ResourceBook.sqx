@@ -52,21 +52,6 @@ namespace Intrusion.Server
 			_success
 		};
 		
-		// Makes a withdrawal from the technology account.
-		// _amount (Scalar): The amount to withdraw.
-		// Returns (Boolean): true if the transaction was made. false if there were not enough on the account.
-		public method Boolean WithdrawTechnology {
-			params ["_amount" as Scalar];
-			private _success = false;
-			
-			if (_self.TotalTechnology >= _amount) then {
-				_self.TotalTechnology = _self.TotalTechnology - _amount;
-				_success = true;
-			};
-			
-			_success
-		};
-		
 		// Prints the resource book to a readable text.
 		// Retursn (String): A text string.
 		public method String ToString {

@@ -1,0 +1,22 @@
+/*
+ * Name:	IVehicleClassNamesConfig
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all relevant and editable settings for a game round.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public interface IVehicleClassNamesConfig
+	{
+		// Gets the vehicle class names by side and profession type.
+		// _side (Side): Side.
+		// _professionType (ProfessionType): Profession type.
+		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
+		method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType);
+	};
+};

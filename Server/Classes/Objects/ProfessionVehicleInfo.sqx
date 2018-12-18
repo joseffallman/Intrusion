@@ -12,14 +12,15 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class ProVehicleInfo
+	public class ProfessionVehicleInfo
 	{
 		// Creates a ProVehicleInfo object.
 		public constructor {
-			params ["_professionType" as ProfessionType, "_cost" as Scalar];
+			params ["_professionType" as ProfessionType, "_cost" as Scalar, "_requiredTechnology" as Technology];
 			
 			_self.ProfessionType = _professionType;
 			_self.Cost = _cost;
+			_self.RequiredTechnology = _requiredTechnology;
 		};
 		
 		// Gets the profession type.
@@ -27,5 +28,8 @@ namespace Intrusion.Server
 		
 		// Gets the cost of a vehicle in the current profession type.
 		public property Scalar Cost { get; private set; };
+		
+		// Gets the required technology for this profession vehicle.
+		public property Technology RequiredTechnology { get; private set; };
 	};
 };

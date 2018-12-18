@@ -20,6 +20,8 @@ namespace Tests.Server
 		#region Fields
 		
 		private static fields [
+			"_mProfessionVehiclesConfig" as TestProfessionVehiclesConfig,
+			"_mVehicleClassNamesConfig" as TestVehicleClassNamesConfig,
 			"_mVehicleSpawner" as TestVehicleSpawner, 
 			"_mOrderQueue" as OrderQueue, 
 			"_mGroup" as Group,
@@ -49,6 +51,8 @@ namespace Tests.Server
 		
 		// Creates a production manager and a group.
 		private static method BeforeEach {
+			_mProfessionVehiclesConfig = new TestProfessionVehiclesConfig;
+			_mVehicleClassNamesConfig = new TestVehicleClassNamesConfig;
 			_mVehicleSpawner = new TestVehicleSpawner;
 			_mOrderQueue = new OrderQueue;
 			_mSquadHandler = new TestSquadHandler;
@@ -58,7 +62,7 @@ namespace Tests.Server
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mOrderQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mOrderQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {

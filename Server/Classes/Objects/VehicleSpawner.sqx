@@ -13,10 +13,12 @@ namespace Intrusion.Server
 {
 	public class VehicleSpawner : IVehicleSpawner
 	{
-		private fields ["_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */, "_mMapMarkersConfig" as IMapMarkersConfig];
+		private fields ["_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */, "_mMapMarkersConfig" as IMapMarkersConfig];
 	
 		// Creates a VehicleHandler object.
-		public constructor {
+		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig) {
+			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
+		
 			_mAllIntrusionVehicles = [];
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 		};
@@ -124,7 +126,7 @@ namespace Intrusion.Server
 			
         	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
         	
-        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call VehicleClassNamesConfig.GetProVehiclesClassNames);
+        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call _mVehicleClassNamesConfig.GetProVehiclesClassNames);
         	_intrusionVehicle = [_side, _vehicleClass] call _self.SpawnVehicle;
         	
         	_intrusionVehicle

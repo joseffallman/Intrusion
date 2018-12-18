@@ -1,10 +1,10 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
@@ -36,12 +36,10 @@ using Intrusion.Server;
 #region Server Classes
 
 /* Configs */
-call VehicleClassNamesConfig.Init;
-call ProVehiclesConfig.Init;
 call WeaponClassNamesConfig.Init;
 call WeaponBoxClassNamesConfig.Init;
 
-gServerConfig = [new GameplayConfig, new TechnologyConfig] new ServerConfig;
+gServerConfig = [new GameplayConfig, new TechnologyConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
 
 /* Handlers */
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
