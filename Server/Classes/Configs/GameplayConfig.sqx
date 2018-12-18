@@ -20,14 +20,14 @@ namespace Intrusion.Server
 				_self.CompetingSides = [east, west];
 				_self.MatchLengthMinutes = 8;
 				_self.TotalProduction = 10000;
-				_self.TotalTechnology = 10000;
+				_self.TotalResearch = 10000;
 				_self.MaxFreeVehiclesAtBase = 3;
 			}
 			else {
 				_self.CompetingSides = [east, west];
 				_self.MatchLengthMinutes = 120;
 				_self.TotalProduction = 20000;
-				_self.TotalTechnology = 20000;
+				_self.TotalResearch = 20000;
 				_self.MaxFreeVehiclesAtBase = 3;
 			};
 		};
@@ -42,7 +42,7 @@ namespace Intrusion.Server
 		public property Scalar TotalProduction { get; private set; };
 		
 		// Gets the total technology that will be assigned the sides during a game round.
-		public property Scalar TotalTechnology { get; private set; };
+		public property Scalar TotalResearch { get; private set; };
 		
 		// Get the maximun number of free vehicles at base.
 		public property Scalar MaxFreeVehiclesAtBase { get; private set; };

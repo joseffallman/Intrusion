@@ -25,6 +25,15 @@ namespace Tests.Helpers
 		
 		public method TechnologyInfo GetTechnology("_technology" as Technology)
 		{
+			scopeName "main";
+			
+			{
+				if (_x.Technology == _technology) then {
+					_x breakOut "main";	
+				};
+			} foreach _self.Technologies as TechnologyInfo;
+			
+			classNull
 		};
 		
 		public property Array Technologies { get; private set; };
