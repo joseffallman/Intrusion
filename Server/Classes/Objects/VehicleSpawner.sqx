@@ -16,9 +16,10 @@ namespace Intrusion.Server
 		private fields ["_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */, "_mMapMarkersConfig" as IMapMarkersConfig];
 	
 		// Creates a VehicleHandler object.
-		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig) {
+		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig) {
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
-		
+			_mMapMarkersConfig = _mapMarkersConfig;
+			
 			_mAllIntrusionVehicles = [];
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 		};
@@ -27,8 +28,7 @@ namespace Intrusion.Server
 		// _markPos (Array): The position where to find a free spawn position.
 		// _initialRadius (Scalar): Optional. The initial radius how far from the position that is ok. This
 		// value will expand until a position is found.
-		private static method FindSpawnPos {
-			params ["_markPos" as Array, ["_initialRadius" as Scalar, 0]];
+		private static method FindSpawnPos("_markPos" as Array, ["_initialRadius" as Scalar, 0]) {
 			private ["_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_danger", "_foundIt", "_tries"];
 			[str _this + " VehicleHandler.FindSpawnPos"] call LogHandler.Debug;
 			
@@ -77,6 +77,7 @@ namespace Intrusion.Server
 		// Returns (IntrusionVehicle): The intrusion vehicle that was spawned.
 		private method IntrusionVehicle SpawnVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
 		{
+			[str _this + " VehicleHandler.SpawnVehicle"] call LogHandler.Debug;
 		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 		    private ["_markerInfo" as MapMarkerInfo];

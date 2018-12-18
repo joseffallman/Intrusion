@@ -1,5 +1,6 @@
 call compile preprocessFileLineNumbers "Common\Enums\LogLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
@@ -11,6 +12,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\MapObservation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Squad.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\SquadCollection.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\MapMarkerInfo.sqx";
 
 using Intrusion.Common;
 

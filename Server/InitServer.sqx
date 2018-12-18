@@ -1,4 +1,5 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponClassNamesConfig.sqx";
@@ -17,6 +18,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\TechnologyInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";

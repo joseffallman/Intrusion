@@ -45,7 +45,7 @@ namespace Intrusion.Server
         	
         	// Create a side manager for each side.
         	_sideManagers = [];
-    		_vehicleSpawner = [_mServerConfig.VehicleClassNames] new VehicleSpawner;
+    		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
         	{
         		_sideManagers pushBack [_mServerConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;

@@ -1,10 +1,9 @@
-call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
-
 using Intrusion.Server;
 
 enableSaving [false, false];
 
 // First common
+call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
 call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
 
 // Then server

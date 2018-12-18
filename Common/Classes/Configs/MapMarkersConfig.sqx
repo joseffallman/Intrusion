@@ -17,7 +17,7 @@ namespace Intrusion.Common
 		private fields ["_mSideInfos" as Array];
 	
 		// Initializes a SideMarkersConfig object.
-		public method Init {
+		public constructor {
 			_mSideInfos = [
 				[west, "respawn_west", "INT_CarParkWest", "INT_WeaponDepotMarkerWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa", "b_hq"] new MapMarkerInfo,
 				[east, "respawn_east", "INT_CarParkEast", "INT_WeaponDepotMarkerEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa", "b_hq"] new MapMarkerInfo
@@ -34,7 +34,7 @@ namespace Intrusion.Common
 		// Returns (MissionSideInfo): A mission side config object.
 		public method GetMapMarkerInfo("_side" as Side) {
 			private ["_info" as MapMarkerInfo];
-			[str _this + " MapMarkersInfo.SideMarkersInfo"] call LogHandler.Debug;
+			[str _this + " MapMarkersInfo.GetMapMarkerInfo"] call LogHandler.Debug;
 
 			scopeName "main";
 			_info = classNull;
