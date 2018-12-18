@@ -7,14 +7,15 @@
  * Description:
  * A class that contains all relevant and editable settings for a game round.
  */
+
 using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class GameplayConfig
+	public class GameplayConfig : IGameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
-		public static method Init {
+		public constructor {
 			if (DebugConfig.InDebugMode) then {
 				_self.CompetingSides = [east, west];
 				_self.MatchLengthMinutes = 8;
@@ -32,18 +33,18 @@ namespace Intrusion.Server
 		};
 		
 		// Gets the competing sides in the mission.
-		public static property Array CompetingSides { get; private set; };
+		public property Array CompetingSides { get; private set; };
 		
 		// Gets the length of a game round in minutes.
-		public static property Scalar MatchLengthMinutes { get; private set; };
+		public property Scalar MatchLengthMinutes { get; private set; };
 		
 		// Gets the total production that will be assigned the sides during a game round.
-		public static property Scalar TotalProduction { get; private set; };
+		public property Scalar TotalProduction { get; private set; };
 		
 		// Gets the total technology that will be assigned the sides during a game round.
-		public static property Scalar TotalTechnology { get; private set; };
+		public property Scalar TotalTechnology { get; private set; };
 		
 		// Get the maximun number of free vehicles at base.
-		public static property Scalar MaxFreeVehiclesAtBase { get; private set; };
+		public property Scalar MaxFreeVehiclesAtBase { get; private set; };
 	};
 };

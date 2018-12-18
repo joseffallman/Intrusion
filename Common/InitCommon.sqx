@@ -20,7 +20,7 @@ using Intrusion.Common;
 call ProfessionConfig.Init;
 call DebugConfig.Init;
 
-gMapMarkerConfig = new MapMarkersConfig;
+gCommonConfig = [new MapMarkersConfig] new CommonConfig;
 
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;

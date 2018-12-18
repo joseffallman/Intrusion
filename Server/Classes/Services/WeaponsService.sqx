@@ -14,12 +14,7 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig];
-		
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
-			_mMapMarkersConfig = _mapMarkersConfig;
-			_mWeaponBoxes = [];
-		};
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig];
 		
 		private static method WeaponBox GetWeaponBox {
 			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
@@ -94,14 +89,19 @@ namespace Intrusion.Server
 							} foreach _weaponInfo.Magazines as String;
 						} foreach ([_side, WeaponBoxType.Basic] call WeaponClassNamesConfig.GetWeaponsBySideAndBoxType) as SideWeaponInfo;
 					};
-	        	} foreach GameplayConfig.CompetingSides as Side;
+	        	} foreach _mGameplayConfig.CompetingSides as Side;
 				
 				sleep 60;
 			};
 		};
-	
+		
 		// Starts the weapons service.
-		public static method RunAsync {
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig)
+		{
+			_mGameplayConfig = _gameplayConfig;
+			_mMapMarkersConfig = _mapMarkersConfig;
+			_mWeaponBoxes = [];
+			
 			[] spawn _self.Run;
 		};
 	};

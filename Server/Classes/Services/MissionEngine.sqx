@@ -14,6 +14,8 @@ namespace Intrusion.Server
 {
 	public class MissionEngine
 	{
+		private static fields ["_mServerConfig" as IServerConfig, "_mCommonConfig" as ICommonConfig];
+	
 		#region Handlers
 		
 		// Gets the mission's squad handler.
@@ -22,12 +24,9 @@ namespace Intrusion.Server
 		#endregion
 	
         // Runs the mission.
-        private static method Run {
+        private static method Run() {
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
-			private ["_technologyConfig" as TechnologyConfig, "_messageHandler" as MessageHandler];
-        	
-        	// Create configs
-        	_technologyConfig = new TechnologyConfig;
+			private ["_messageHandler" as MessageHandler];
         	
         	// Create handlers
         	_messageHandler = new MessageHandler;
@@ -36,10 +35,10 @@ namespace Intrusion.Server
         	call ResourceLocationHandler.AquireAllResourceLocations;
         	
         	// Start the mission counter.
-        	call MissionCounterService.RunAsync;
+        	[_mServerConfig.Gameplay] call MissionCounterService.RunAsync;
         	
         	// Start the weapon service
-        	call WeaponsService.RunAsync;
+        	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers] call WeaponsService.RunAsync;
         	
         	// Start the observation service
         	call ObservationService.RunAsync;
@@ -48,11 +47,11 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		_vehicleSpawner = new VehicleSpawner;
         	{
-        		_sideManagers pushBack [_x, _vehicleSpawner, _self.SquadHandler, _technologyConfig, _messageHandler] new SideManager;
-        	} foreach GameplayConfig.CompetingSides as Side;
+        		_sideManagers pushBack [_mServerConfig.Gameplay, _x, _vehicleSpawner, _self.SquadHandler, _mServerConfig.Technology, _messageHandler] new SideManager;
+        	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service
-        	[_vehicleSpawner] call FreeVehiclesService.RunAsync;
+        	[_mServerConfig.Gameplay, _vehicleSpawner] call FreeVehiclesService.RunAsync;
         	
 			// Perform the mission digest loop
 			while { MissionCounterService.MissionIsRunning } do
@@ -69,8 +68,12 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the mission
-		public static method RunAsync {
-			[] spawn _self.Run;
+		public static method RunAsync("_serverConfig" as IServerConfig, "_commonConfig" as ICommonConfig)
+		{
+			_mServerConfig = _serverConfig;
+			_mCommonConfig = _commonConfig;
+			
+			[] spawn _self.Run; // TODO SQX: Why do we suddenly need a preargument?
 		};
 	};
 };

@@ -1,0 +1,21 @@
+/*
+ * Name:	CommonConfig
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Bundles all server configs together.
+ */
+namespace Intrusion.Common
+{
+	public class CommonConfig : ICommonConfig
+	{
+		// Creates a CommonConfig object.
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+			_self.MapMarkers = _mapMarkersConfig;
+		};
+		
+		public property IMapMarkersConfig MapMarkers { get; private set; };
+	};
+};

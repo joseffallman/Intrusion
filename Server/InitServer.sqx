@@ -36,15 +36,15 @@ using Intrusion.Server;
 #region Server Classes
 
 /* Configs */
-call GameplayConfig.Init;
 call VehicleClassNamesConfig.Init;
 call ProVehiclesConfig.Init;
 call WeaponClassNamesConfig.Init;
 call WeaponBoxClassNamesConfig.Init;
-[gMapMarkerConfig] call WeaponsService.Init;
+
+gServerConfig = [new GameplayConfig, new TechnologyConfig] new ServerConfig;
 
 /* Handlers */
-[gMapMarkerConfig] call ResourceLocationHandler.Init;
+[gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
 
 /* Services */
 call ObservationService.Init;

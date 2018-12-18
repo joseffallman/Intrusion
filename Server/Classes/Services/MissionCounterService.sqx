@@ -15,6 +15,8 @@ namespace Intrusion.Server
 {
 	public class MissionCounterService
 	{
+		private static fields ["_mGameplayConfig" as IGameplayConfig];
+	
 		// Gets whether the mission is running or not.
 		public static property Boolean MissionIsRunning { get; private set; };
 
@@ -23,8 +25,8 @@ namespace Intrusion.Server
         private static method Run {
 			private ["_endDayTime" as Scalar, "_remainingMinutes" as Scalar, "_lastReportMinute" as Scalar];
 			
-			_endDayTime = dayTime + (GameplayConfig.MatchLengthMinutes / 60);
-			_lastReportMinute = GameplayConfig.MatchLengthMinutes;
+			_endDayTime = dayTime + (_mGameplayConfig.MatchLengthMinutes / 60);
+			_lastReportMinute = _mGameplayConfig.MatchLengthMinutes;
 
 			while { daytime < _endDayTime } do {
 				_remainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
@@ -56,8 +58,10 @@ namespace Intrusion.Server
         };
 	
 		// Starts the mission
-		public static method RunAsync {
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig) {
+			_mGameplayConfig = _gameplayConfig;
         	_self.MissionIsRunning = true;
+        	
 			[] spawn _self.Run;
 		};
 	};

@@ -1,0 +1,31 @@
+/*
+ * Name:	IGameplayConfig
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all relevant and editable settings for a game round.
+ */
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public interface IGameplayConfig
+	{
+		// Gets the competing sides in the mission.
+		property Array CompetingSides { get; private set; };
+		
+		// Gets the length of a game round in minutes.
+		property Scalar MatchLengthMinutes { get; private set; };
+		
+		// Gets the total production that will be assigned the sides during a game round.
+		property Scalar TotalProduction { get; private set; };
+		
+		// Gets the total technology that will be assigned the sides during a game round.
+		property Scalar TotalTechnology { get; private set; };
+		
+		// Get the maximun number of free vehicles at base.
+		property Scalar MaxFreeVehiclesAtBase { get; private set; };
+	};
+};

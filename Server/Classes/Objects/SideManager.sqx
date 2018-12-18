@@ -23,12 +23,12 @@ namespace Intrusion.Server
         // Parameter(s):
         // _side (Side): The side to handle.
         public constructor {
-		    params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler];
+		    params ["_gameplayConfig" as IGameplayConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler];
             
             _self.Side = _side;
             
             _mResourceBook = new ResourceBook;
-            _mResourceCollector = [_side, _mResourceBook] new ResourceCollector;
+            _mResourceCollector = [_gameplayConfig, _side, _mResourceBook] new ResourceCollector;
             _mScientist = [_mResourceBook, _technologyConfig, _messageHandler] new Scientist;
             _mProductionManager = [_side, _vehicleSpawner, _mResourceBook, _squadHandler] new ProductionManager;
 		};
