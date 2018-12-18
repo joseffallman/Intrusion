@@ -25,7 +25,7 @@ namespace Intrusion.Server
 		// Gets the total technology that will be assigned the sides during a game round.
 		property Scalar TotalTechnology { get; private set; };
 		
-		// Get the maximun number of free vehicles at base.
+		// Gets the maximun number of free vehicles at base.
 		property Scalar MaxFreeVehiclesAtBase { get; private set; };
 	};
 };

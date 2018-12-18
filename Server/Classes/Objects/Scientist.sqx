@@ -15,17 +15,28 @@ namespace Intrusion.Server
 	public class Scientist
 	{
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
+		private fields ["_mInventedTechnologies" as Array /* of (enum) Technology */];
 	
 		// Creates a Sceintist object.
-		public constructor("_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler) {
+		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler)
+		{
 			_mResourceBook = _resourceBook;
 			_mTechnologyConfig = _technologyConfig;
 			_mMessageHandler = _messageHandler;
+			
+			_mInventedTechnologies = [];
 		};
 		
 		// Performs research and development, and notifies players when different technology progress steps are achieved.
 		public method PerformResearch()
 		{
+			
+		};
+		
+		// Gets whether a technology is invented yet or not.
+		public method Boolean TechnologyIsInvented("_technology" as Technology)
+		{
+			_technology in _mInventedTechnologies
 		};
 	};
 };

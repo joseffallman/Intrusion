@@ -29,7 +29,7 @@ namespace Intrusion.Server
             
             _mResourceBook = new ResourceBook;
             _mResourceCollector = [_gameplayConfig, _side, _mResourceBook] new ResourceCollector;
-            _mScientist = [_mResourceBook, _technologyConfig, _messageHandler] new Scientist;
+            _mScientist = [_side, _mResourceBook, _technologyConfig, _messageHandler] new Scientist;
             _mProductionManager = [_side, _vehicleSpawner, _mResourceBook, _squadHandler] new ProductionManager;
 		};
 		

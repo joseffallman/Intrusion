@@ -1,0 +1,32 @@
+/*
+ * Name:	TestTechnologyConfig
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class containing test values for technology configs.
+ */
+
+using Intrusion.Server;
+
+namespace Tests.Helpers
+{
+	public class TestTechnologyConfig : ITechnologyConfig
+	{
+		// Creates a TestTechnologyConfig object.
+		public constructor {
+			_self.Technologies = [
+				[Technology.Transport, "Transport", 1000] new TechnologyInfo,
+				[Technology.Motorized, "Motorized", 2000] new TechnologyInfo,
+				[Technology.Mechanized, "Mechanized", 3000] new TechnologyInfo
+			];
+		};
+		
+		public method TechnologyInfo GetTechnology("_technology" as Technology)
+		{
+		};
+		
+		public property Array Technologies { get; private set; };
+	};
+};

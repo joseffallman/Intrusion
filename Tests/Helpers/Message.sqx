@@ -1,0 +1,28 @@
+/*
+ * Name:	Messages
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test helper class for the message handler.
+ */
+namespace Tests.Helpers
+{
+	public class Message
+	{
+		// Creates a Messages object.
+		public constructor("_messageType" as MessageType, "_address" as Any, "_text" as String)
+		{
+			_self.MessageType = _messageType;
+			_self.Address = _address;
+			_self.Text = _text;
+		};
+		
+		public property MessageType MessageType { get; private set; };
+		
+		public property Any Address { get; private set; };
+		
+		public property String Text { get; private set; };
+	};
+};

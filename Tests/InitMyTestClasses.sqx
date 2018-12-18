@@ -4,13 +4,19 @@
 call compile preprocessFileLineNumbers "Tests\Helpers\TestActions.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestSquadHandler.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestTechnologyConfig.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestMessageHandler.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\Message.sqx";
 
 /* Include test classes */
 //call compile preprocessFileLineNumbers "Tests\Example\ExampleTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OrderQueueTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ScientistTests.sqx";
 
 /* Initialize test classes */
 //call Tests.Example.ExampleTests.Init;
+
+call Tests.Server.ScientistTests.Init;
 call Tests.Server.OrderQueueTests.Init;
 call Tests.Server.ProductionManagerTests.Init;

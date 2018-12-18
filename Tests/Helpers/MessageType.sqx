@@ -1,0 +1,5 @@
+public enum MessageType {
+	Hint,
+	Title,
+	Subtitle
+};
