@@ -7,9 +7,12 @@
  * Description:
  * Models a technology step in the research and development progress.
  */
+
+using Sqx.Collections;
+
 namespace Intrusion.Server
 {
-	public class TechnologyInfo
+	public class TechnologyInfo : IComparer
 	{
 		// Creates a TechnologyInfo object.
 		public constructor("_technology" as Technology, "_name" as String, "_requiredResearch" as Scalar) {
@@ -26,5 +29,23 @@ namespace Intrusion.Server
 		
 		// Gets the required R&D to aquire this technology.
 		public property Scalar RequiredResearch { get; private set; };
+		
+		// Compares this technology to another technology.
+		public method Scalar Compare("_otherComparer" as IComparer)
+		{
+			private ["_compareResult" as Scalar, "_otherTechnology" as TechnologyInfo];
+			
+			_otherTechnology = _otherComparer as TechnologyInfo;
+			_compareResult = 0;
+			
+			if (_self.RequiredResearch < _otherTechnology.RequiredResearch) then {
+				_compareResult = -1;
+			};
+			if (_self.RequiredResearch > _otherTechnology.RequiredResearch) then {
+				_compareResult = 1;
+			};
+			
+			_compareResult
+		};
 	};
 };

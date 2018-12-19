@@ -8,6 +8,7 @@
  * A class modeling a side's R&D manager refining generated technoloty (i.e. unlocks new technology).
  */
 
+using Sqx.Collections;
 using Intrusion.Common;
 
 namespace Intrusion.Server
@@ -15,7 +16,8 @@ namespace Intrusion.Server
 	public class Scientist
 	{
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
-		private fields ["_mInventedTechnologies" as Array /* of (enum) Technology */, "_mSide" as Side, "_mPreviousResearch" as Scalar];
+		private fields ["_mInventedTechnologies" as Array /* of Technology (enum) */, "_mSide" as Side];
+		private fields ["_mCurrentTechnology" as TechnologyInfo, "_mAllTechnologiesInvented" as Boolean];
 	
 		// Creates a Sceintist object.
 		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler)
@@ -25,25 +27,39 @@ namespace Intrusion.Server
 			_mTechnologyConfig = _technologyConfig;
 			_mMessageHandler = _messageHandler;
 			
-			_previousResearch = 0;
+			_mCurrentTechnology = [1 as Technology] call _mTechnologyConfig.GetTechnology;
 			_mInventedTechnologies = [];
+			_mAllTechnologiesInvented = false;
+		};
+		
+		private method SetTechnologyAsInvented()
+		{
+			private ["_technology" as Technology];
+			
+			_mInventedTechnologies pushBack _mCurrentTechnology.Technology;
+			["Your side has invented '" + _mCurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
+			
+			// Get next technology to research
+			_technology = (_mCurrentTechnology.Technology as Scalar) + 1 as Technology;
+
+			if (_technology == Technology.EndOfTechnologies) then {
+				_mAllTechnologiesInvented = true;
+			}
+			else {
+				_mCurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
+			};
 		};
 		
 		// Performs research and development, and notifies players when different technology progress steps are achieved.
 		public method PerformResearch()
 		{
-			params ["_technology" as TechnologyInfo];
-			
-			_technology = [Technology.Transport] call _mTechnologyConfig.GetTechnology;
-
-			if (_mResourceBook.TotalResearch >= _technology.RequiredResearch) then {
-				_mInventedTechnologies pushBack Technology.Transport;
-				["Your side has invented 'Transport'", _mSide] call _mMessageHandler.ShowHint;
+			if (!_mAllTechnologiesInvented) then {
+				if (_mResourceBook.TotalResearch >= _mCurrentTechnology.RequiredResearch) then {
+					call _self.SetTechnologyAsInvented;
+				};
 			};
-			
-			_mPreviousResearch = _technology.RequiredResearch;
 		};
-		
+
 		// Gets whether a technology is invented yet or not.
 		public method Boolean TechnologyIsInvented("_technology" as Technology)
 		{

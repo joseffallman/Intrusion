@@ -485,11 +485,11 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Enums" IsExpanded="false" FileName="Server\Enums">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Enums" IsExpanded="true" FileName="Server\Enums">
             <IsSelected>false</IsSelected>
             <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Technology.sqx" IsExpanded="false" FileName="Server\Enums\Technology.sqx">
-                <IsSelected>false</IsSelected>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Technology.sqx" IsExpanded="true" FileName="Server\Enums\Technology.sqx">
+                <IsSelected>true</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBoxType.sqx" IsExpanded="false" FileName="Server\Enums\WeaponBoxType.sqx">
@@ -593,7 +593,7 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Helpers" IsExpanded="true" FileName="Tests\Helpers">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Helpers" IsExpanded="false" FileName="Tests\Helpers">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Message.sqx" IsExpanded="false" FileName="Tests\Helpers\Message.sqx">
@@ -621,7 +621,7 @@
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestTechnologyConfig.sqx" IsExpanded="false" FileName="Tests\Helpers\TestTechnologyConfig.sqx">
-                <IsSelected>true</IsSelected>
+                <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestVehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Tests\Helpers\TestVehicleClassNamesConfig.sqx">

@@ -11,13 +11,14 @@ namespace Intrusion.Server
 {
 	public enum Technology
 	{
-		Transport,
-		Services,
-		Maintenance,
-		Launchers,
-		Motorized,
-		AntiArmor,
-		Mechanized,
-		Armored
+		Transport = 1,
+		Services = 2,
+		Maintenance = 3,
+		Launchers = 4,
+		Motorized = 5,
+		AntiArmor = 6,
+		Mechanized = 7,
+		Armored = 8,
+		EndOfTechnologies = 9
 	};
 };
