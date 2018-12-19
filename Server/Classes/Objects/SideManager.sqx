@@ -30,7 +30,7 @@ namespace Intrusion.Server
             _mResourceBook = new ResourceBook;
             _mResourceCollector = [_serverConfig.Gameplay, _side, _mResourceBook] new ResourceCollector;
             _mScientist = [_side, _mResourceBook, _serverConfig.Technology, _messageHandler] new Scientist;
-            _mProductionManager = [_serverConfig.ProfessionVehicles, _serverConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist] new ProductionManager;
+            _mProductionManager = [_serverConfig.ProfessionVehicles, _serverConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler] new ProductionManager;
 		};
 		
 		// Gets the side of the side handler.

@@ -29,6 +29,7 @@ namespace Tests.Server
 			"_mSquadHandler" as TestSquadHandler,
 			"_mResourceBook" as ResourceBook,
 			"_mScientist" as TestScientist,
+			"_mMessageHandler" as TestMessageHandler,
 			"_mProductionManager" as ProductionManager];
 		
 		#endregion
@@ -60,19 +61,21 @@ namespace Tests.Server
 			_mSquadHandler = new TestSquadHandler;
 			_mResourceBook = new ResourceBook;
 			_mScientist = new TestScientist;
+			_mMessageHandler = new TestMessageHandler;
 			
 			_mGroup = call TestActions.CreatePopulatedGroup;
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mOrderQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mOrderQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
 			[_mGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method NoItemToProduce_Production_NoItemProduced {
+		private static method NoItemToProduce_Production_NoItemProduced
+		{
 			// Arrange
 			
 			// Act
@@ -82,7 +85,8 @@ namespace Tests.Server
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but no order exists."] call Assert.AreEqual;
 		};
 		
-		private static method ItemToProduce_GroupCanAfford_ItemProduced {
+		private static method ItemToProduce_GroupCanAfford_ItemProduced
+		{
 			private ["_order" as Order];
 
 			// Arrange
@@ -101,7 +105,8 @@ namespace Tests.Server
 			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
 		};
 		
-		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced {
+		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
+		{
 			private ["_order" as Order];
 
 			// Arrange
@@ -117,7 +122,8 @@ namespace Tests.Server
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
 		};
 		
-		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced {
+		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced
+		{
 			private ["_order" as Order];
 		
 			// Arrange
@@ -135,7 +141,8 @@ namespace Tests.Server
 			[100, _mResourceBook.TotalProduction, "Production should not be lost."] call Assert.AreEqual;
 		};
 		
-		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced {
+		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced
+		{
 			private ["_order" as Order, "_group2" as Group];
 		
 			// Arrange
@@ -161,7 +168,8 @@ namespace Tests.Server
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced {
+		private static method TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced
+		{
 			private ["_order" as Order, "_group2" as Group];
 		
 			// Arrange
@@ -187,7 +195,8 @@ namespace Tests.Server
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue {
+		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue
+		{
 			// Arrange
 			
 			// Act
@@ -199,7 +208,8 @@ namespace Tests.Server
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
-		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced {
+		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced
+		{
 			private ["_order" as Order];
 			
 			// Arrange
@@ -215,7 +225,8 @@ namespace Tests.Server
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
-		private static method AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast {
+		private static method AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast
+		{
 			private ["_anotherGroup" as Group, "_order" as Order];
 		
 			// Arrange
@@ -235,7 +246,8 @@ namespace Tests.Server
 			[_anotherGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast {
+		private static method GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast
+		{
 			private ["_anotherGroup" as Group, "_order" as Order, "_orders" as Array];
 		
 			// Arrange
@@ -263,7 +275,8 @@ namespace Tests.Server
 			[_anotherGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated {
+		private static method EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated
+		{
 			// Arrange
 			
 			// Act
@@ -273,7 +286,8 @@ namespace Tests.Server
 			[0, call _mOrderQueue.Count, "There should be no order."] call Assert.AreEqual;
 		};
 		
-		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited {
+		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited
+		{
 			// Arrange
 			[1000] call _mResourceBook.DepositProduction;
 			
