@@ -46,9 +46,9 @@ namespace Tests.Server
 				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue",
 				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
 				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
-				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
-				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
-				"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited"
+				//"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
+				//"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
+				//"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited"
 			]] call TestEngine.Register;
 		};
 		
@@ -103,23 +103,6 @@ namespace Tests.Server
 			["TANK", _mVehicleSpawner.SpawnedVehicles select 0, "Wrong vehicle spawned."] call Assert.AreEqual;
 			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
 			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
-		};
-		
-		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
-		{
-			private ["_order" as Order];
-
-			// Arrange
-			_order = [_mGroup, "TANK", 1000] new Order;
-			[_order] call _mOrderQueue.PutOrder;
-			[1000] call _mResourceBook.DepositProduction;
-			[false] call _mScientist.SetTechnologyInvented;
-			
-			// Act
-			call _mProductionManager.PerformProduction;
-			
-			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced
@@ -195,16 +178,40 @@ namespace Tests.Server
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
+		{
+			private ["_order" as Order];
+		
+			// Arrange
+			_order = [_mGroup, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[true] call _mScientist.SetTechnologyInvented;
+			[1000] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
 		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue
 		{
 			// Arrange
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
 			[1, call _mOrderQueue.Count, "There should be an order."] call Assert.AreEqual;
-			["B_Truck_01_fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
@@ -215,13 +222,14 @@ namespace Tests.Server
 			// Arrange
 			_order = [_mGroup, "CAR", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
 			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["B_Truck_01_fuel_F", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
@@ -257,7 +265,9 @@ namespace Tests.Server
 			
 			_order = [_mGroup, "CAR", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
-			
+
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames; // Need to be fixed. Called twice?
+
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
@@ -297,5 +307,87 @@ namespace Tests.Server
 			// Assert
 			[1100, _mResourceBook.TotalProduction, "Returned profession vehicle did not return production."] call Assert.AreEqual;
 		};
+		
+		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
+		{
+			private ["_order" as Order];
+
+			// Arrange
+			_order = [_mGroup, "TANK", 1000] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			[1000] call _mResourceBook.DepositProduction;
+			[false] call _mScientist.SetTechnologyInvented;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
+		};
+		
+		private static method TwoOrdersInQueue_TechNotInventedForFirst_SecondOrdersItemProduced
+		{
+			private ["_order1" as Order, "_order2" as Order, "_group2" as Group];
+
+			// Arrange
+			_order1 = [_mGroup, "TANK", 1000] new Order;
+			[_order1] call _mOrderQueue.PutOrder;
+			[1000] call _mResourceBook.DepositProduction;
+			[false] call _mScientist.SetTechnologyInvented;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
+		};
+		
+		/*
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
+		{
+			private ["_order" as Order];
+		
+			// Arrange
+			_order = [_mGroup, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[true] call _mScientist.SetTechnologyInvented;
+			[1000] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordBoth_TwoItemsProduced
+		{
+			private ["_order" as Order];
+		
+			// Arrange
+			_order = [_mGroup, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[true] call _mScientist.SetTechnologyInvented;
+			[1000] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		*/
 	};
 };

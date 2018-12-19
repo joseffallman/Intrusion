@@ -16,21 +16,21 @@ namespace Intrusion.Server
 	{
         // Shows a message as a hint.
         // _message (String): The message to be shown.
-        public static method ShowHint("_message" as String, ["_address" as Any, objNull])
+        public method ShowHint("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowHint", _this] call Remote.Invoke;
 		};
 
         // Shows a message to the user.
         // _message (String): The message to be shown.
-        public static method ShowMessage("_message" as String, ["_address" as Any, objNull])
+        public method ShowMessage("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowMessage", _this] call Remote.Invoke;
 		};
 
         // Shows a sub title to the user.
         // _message (String): The message to be shown.
-        public static method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
+        public method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowSubTitle", _this] call Remote.Invoke;
 		};

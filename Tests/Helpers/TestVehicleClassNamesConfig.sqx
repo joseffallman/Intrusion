@@ -15,72 +15,37 @@ namespace Tests.Helpers
 {
 	public class TestVehicleClassNamesConfig : IVehicleClassNamesConfig
 	{
-		private fields ["_mClassNamesInfos" as Array];
+		private fields ["_mReturnedClassNames" as Array, "_mExpectedParamSide" as Side, "_mExpectedParamProfessionType" as ProfessionType];
 	
-		// Creates a VehicleClassNamesConfig object.
+		// Creates a TestVehicleClassNamesConfig object.
 		public constructor {
-			private _westFreeVehicleCarTypes = ["B_MRAP_01_F", "B_Quadbike_01_F"];
-			private _westTransportCarTypes = ["B_Truck_01_transport_F", "B_Truck_01_covered_F"];
-			private _westFuelCarTypes = ["B_Truck_01_fuel_F"];
-			private _westAmmoCarTypes = ["B_Truck_01_ammo_F"];
-			private _westRepairCarTypes = ["B_Truck_01_Repair_F"];
-			private _westMotorizedVehicleTypes = ["B_MRAP_01_gmg_F", "B_MRAP_01_hmg_F"];
-			private _westAntiArmorVehicleTypes = ["B_MRAP_01_F"];
-			private _westMechanizedVehicleTypes = ["B_APC_Wheeled_01_cannon_F", "B_APC_Tracked_01_rcws_F", "B_APC_Tracked_01_CRV_F"];
-			private _westArmorVehicleTypes = ["B_APC_Tracked_01_AA_F", "B_MBT_01_cannon_F"];
-
-			private _eastFreeVehicleCarTypes = ["O_MRAP_02_F", "O_Quadbike_01_F"];
-			private _eastTransportCarTypes = ["O_Truck_02_transport_F", "O_Truck_02_covered_F"];
-			private _eastFuelCarTypes = ["O_Truck_02_fuel_F"];
-			private _eastAmmoCarTypes = ["O_Truck_03_ammo_F"];
-			private _eastRepairCarTypes = ["O_Truck_02_box_F"];
-			private _eastMotorizedVehicleTypes = ["O_MRAP_02_gmg_F", "O_MRAP_02_hmg_F"];
-			private _eastAntiArmorVehicleTypes = ["O_MRAP_02_F"];
-			private _eastMechanizedVehicleTypes = ["O_APC_Tracked_02_cannon_F", "O_APC_Wheeled_02_rcws_F"];
-			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
-			
-			_mClassNamesInfos = [
-				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Transport, _westTransportCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Fuel, _westFuelCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Ammo, _westAmmoCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Repair, _westRepairCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Armored, _westArmorVehicleTypes] new ProVehicleSideInfo,
-				
-				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Transport, _eastTransportCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Fuel, _eastFuelCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Ammo, _eastAmmoCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Repair, _eastRepairCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Armored, _eastArmorVehicleTypes] new ProVehicleSideInfo,
-			];
+			_mReturnedClassNames = [];
+			_mExpectedParamSide = sideUnknown;
+			_mExpectedParamProfessionType = ProfessionType.Undefined;
+		};
+		
+		public method SetExpectationsForGetProVehicleClassNames("_paramSide" as Side, "_paramProfessionType" as ProfessionType, "_returnedClassNames" as Array)
+		{
+			_mExpectedParamSide = _paramSide;
+			_mExpectedParamProfessionType = _paramProfessionType;
+			_mReturnedClassNames = _returnedClassNames;
 		};
 		
 		// Gets the vehicle class names by side and profession type.
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType) {
-			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNames"] call LogHandler.Debug;
+		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType)
+		{
+			private ["_returnedClassNames" as Array];
 			
-			scopeName "main";
+			_returnedClassNames = _mReturnedClassNames;
 			
-			diag_log (str _mClassNamesInfos);
-				
-			{
-				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
-					_x.ClassNames breakOut "main";
-				};
-			} foreach _mClassNamesInfos as ProVehicleSideInfo;
+			if (_side != _mExpectedParamSide || _professionType != _mExpectedParamProfessionType) then {
+				_returnedClassNames = ["CRAP", "SHIT"];
+			};
 			
-			[]
+			_returnedClassNames
 		};
 	};
 };
-
