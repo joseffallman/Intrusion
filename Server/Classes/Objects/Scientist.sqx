@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * A class modeling a side's R&D manager refining generated technoloty (i.e. unlocks new technology).
+ * A class modeling a side's R&D manager refining generated technology (i.e. unlocks new technology).
  */
 
 using Sqx.Collections;
@@ -13,25 +13,26 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class Scientist
+	public class Scientist : IScientist
 	{
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
 		private fields ["_mInventedTechnologies" as Array /* of Technology (enum) */, "_mSide" as Side];
 		private fields ["_mCurrentTechnology" as TechnologyInfo, "_mAllTechnologiesInvented" as Boolean];
 	
 		// Creates a Sceintist object.
-		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler)
+		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, ["_firstTechToResearch" as Technology, 1 as Technology])
 		{
 			_mSide = _side;
 			_mResourceBook = _resourceBook;
 			_mTechnologyConfig = _technologyConfig;
 			_mMessageHandler = _messageHandler;
 			
-			_mCurrentTechnology = [1 as Technology] call _mTechnologyConfig.GetTechnology;
+			_mCurrentTechnology = [_firstTechToResearch] call _mTechnologyConfig.GetTechnology;
 			_mInventedTechnologies = [];
 			_mAllTechnologiesInvented = false;
 		};
 		
+		// Sets the current technology as invented, notifies players, and starts research on next.
 		private method SetTechnologyAsInvented()
 		{
 			private ["_technology" as Technology];

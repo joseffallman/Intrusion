@@ -27,7 +27,8 @@ namespace Tests.Server
 			"_mGroup" as Group,
 			"_mSquad" as Squad,
 			"_mSquadHandler" as TestSquadHandler,
-			"_mResourceBook" as ResourceBook, 
+			"_mResourceBook" as ResourceBook,
+			"_mScientist" as TestScientist,
 			"_mProductionManager" as ProductionManager];
 		
 		#endregion
@@ -57,12 +58,13 @@ namespace Tests.Server
 			_mOrderQueue = new OrderQueue;
 			_mSquadHandler = new TestSquadHandler;
 			_mResourceBook = new ResourceBook;
+			_mScientist = new TestScientist;
 			
 			_mGroup = call TestActions.CreatePopulatedGroup;
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mOrderQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mOrderQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
@@ -86,6 +88,7 @@ namespace Tests.Server
 			_order = [_mGroup, "TANK", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			[1000] call _mResourceBook.DepositProduction;
+			[true] call _mScientist.SetTechnologyInvented;
 			
 			// Act
 			call _mProductionManager.Produce;
@@ -95,6 +98,22 @@ namespace Tests.Server
 			["TANK", _mVehicleSpawner.SpawnedVehicles select 0, "Wrong vehicle spawned."] call Assert.AreEqual;
 			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
 			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
+		};
+		
+		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced {
+			private ["_order" as Order];
+
+			// Arrange
+			_order = [_mGroup, "TANK", 1000] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			[1000] call _mResourceBook.DepositProduction;
+			[false] call _mScientist.SetTechnologyInvented;
+			
+			// Act
+			call _mProductionManager.Produce;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced {

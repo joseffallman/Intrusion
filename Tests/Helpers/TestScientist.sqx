@@ -1,0 +1,40 @@
+/*
+ * Name:	TestScientist
+ * Date:	2018-12-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test class that represents the scientist.
+ */
+
+using Intrusion.Server;
+
+namespace Tests.Helpers
+{
+	public class TestScientist : IScientist
+	{
+		private fields ["_mTechnologyInvented" as Boolean];
+	
+		// Creates a TestScientist object.
+		public constructor() {
+			_mTechnologyInvented = false;
+		};
+		
+		// Performs research and development, and notifies players when different technology progress steps are achieved.
+		public method PerformResearch()
+		{
+		};
+
+		// Gets whether a technology is invented yet or not.
+		public method Boolean TechnologyIsInvented("_technology" as Technology)
+		{
+			_mTechnologyInvented
+		};
+		
+		public method SetTechnologyInvented("_technologyInvented" as Boolean)
+		{
+			_mTechnologyInvented = _technologyInvented;
+		};
+	};
+};
