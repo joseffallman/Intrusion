@@ -61,7 +61,7 @@ namespace Intrusion.Server
 			_technology = call _self.AquireTechnology;
 			
 			[_production] call _mResourceBook.DepositProduction;
-			[_technology] call _mResourceBook.DepositTechnology;
+			[_technology] call _mResourceBook.DepositResearch;
 			
 			_mLastAquireTime = time;
 		};

@@ -30,9 +30,9 @@ namespace Intrusion.Server
 			_self.TotalProduction = _self.TotalProduction + _amount;
 		};
 		
-		// Makes a deposito into the technology account.
+		// Makes a deposit into the technology account.
 		// _amount (Scalar): The amount to deposit.
-		public method DepositTechnology {
+		public method DepositResearch {
 			params ["_amount" as Scalar];
 			_self.TotalResearch = _self.TotalResearch + _amount;
 		};

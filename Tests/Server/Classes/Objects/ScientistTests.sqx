@@ -48,7 +48,8 @@ namespace Tests.Server
 			private ["_message" as Message];
 		
 			// Arrange
-			[1500] call _mResourceBook.DepositProduction;
+			call _mScientist.PerformResearch;
+			[1500] call _mResourceBook.DepositResearch;
 			
 			// Act
 			call _mScientist.PerformResearch;
@@ -67,6 +68,7 @@ namespace Tests.Server
 		
 		private static method NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented {
 			// Arrange
+			call _mScientist.PerformResearch;
 			[300] call _mResourceBook.DepositProduction;
 			
 			// Act

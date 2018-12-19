@@ -38,6 +38,7 @@ namespace Tests.Server
 			["Tests.Server", "ProductionManagerTests", [
 				"NoItemToProduce_Production_NoItemProduced",
 				"ItemToProduce_GroupCanAfford_ItemProduced",
+				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
 				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
@@ -75,7 +76,7 @@ namespace Tests.Server
 			// Arrange
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but no order exists."] call Assert.AreEqual;
@@ -91,7 +92,7 @@ namespace Tests.Server
 			[true] call _mScientist.SetTechnologyInvented;
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
@@ -110,7 +111,7 @@ namespace Tests.Server
 			[false] call _mScientist.SetTechnologyInvented;
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
@@ -123,9 +124,10 @@ namespace Tests.Server
 			_order = [_mGroup, "", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			[100] call _mResourceBook.DepositProduction;
+			[true] call _mScientist.SetTechnologyInvented;
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but group cannot afford."] call Assert.AreEqual;
@@ -143,11 +145,12 @@ namespace Tests.Server
 			_group2 = call TestActions.CreatePopulatedGroup;
 			_order = [_group2, "", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
+			[true] call _mScientist.SetTechnologyInvented;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
@@ -168,11 +171,12 @@ namespace Tests.Server
 			_group2 = call TestActions.CreatePopulatedGroup;
 			_order = [_group2, "", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
+			[true] call _mScientist.SetTechnologyInvented;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
-			call _mProductionManager.Produce;
+			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
