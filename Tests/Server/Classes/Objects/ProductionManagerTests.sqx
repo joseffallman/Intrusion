@@ -312,7 +312,7 @@ namespace Tests.Server
 			[1000, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_AllItemsProduced
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced
 		{
 			private ["_order" as Order];
 		
@@ -371,53 +371,5 @@ namespace Tests.Server
 			
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
-		
-		/*
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
-		{
-			private ["_order" as Order];
-		
-			// Arrange
-			_order = [_mGroup, "", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
-			
-			[true] call _mScientist.SetTechnologyInvented;
-			[1000] call _mResourceBook.DepositProduction;
-			
-			// Act
-			call _mProductionManager.PerformProduction;
-			
-			// Assert
-			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
-			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
-			
-			// Cleanup
-			[_group2] call TestActions.DeletePopulatedGroup;
-		};
-		
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordBoth_TwoItemsProduced
-		{
-			private ["_order" as Order];
-		
-			// Arrange
-			_order = [_mGroup, "", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
-			
-			[true] call _mScientist.SetTechnologyInvented;
-			[1000] call _mResourceBook.DepositProduction;
-			
-			// Act
-			call _mProductionManager.PerformProduction;
-			
-			// Assert
-			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
-			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
-			
-			// Cleanup
-			[_group2] call TestActions.DeletePopulatedGroup;
-		};
-		*/
 	};
 };
