@@ -349,26 +349,33 @@ namespace Tests.Server
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
 		};
 		
-		private static method TwoOrdersInQueue_TechNotInventedForFirst_SecondOrdersItemProduced
+		private static method TwoOrdersInQueue_TechNotInventedForFirst_OrderMovedLast
 		{
-			private ["_order1" as Order, "_order2" as Order, "_group2" as Group];
+			private ["_order1" as Order, "_order2" as Order, "_group2" as Group, "_orders" as Array, "_order" as Order];
 
 			// Arrange
-			_order1 = [_mGroup, "MECH", 500] new Order;
+			_order1 = [_mGroup, "TANK", 800] new Order;
 			[_order1] call _mOrderQueue.PutOrder;
 			
 			_group2 = call TestActions.CreatePopulatedGroup;
-			_order2 = [_group2, "TANK", 800] new Order;
+			_order2 = [_group2, "MECH", 500] new Order;
 			[_order2] call _mOrderQueue.PutOrder;
 			
 			[1000] call _mResourceBook.DepositProduction;
+			[Technology.Mechanized] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
-			
+			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			["MECH", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+
+			_orders = call _mOrderQueue.GetOrders;
+			_order = _orders select 1;
+			["TANK", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+
+			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 	};
