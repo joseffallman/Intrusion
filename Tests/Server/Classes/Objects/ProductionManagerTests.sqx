@@ -48,7 +48,9 @@ namespace Tests.Server
 				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
 				//"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
 				//"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
-				//"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited"
+				//"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited",
+				//"OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced",
+				//"OneGroupTwoItemsToProduce_GroupsCanAffordOne_AllItemsProduced"
 			]] call TestEngine.Register;
 		};
 		
@@ -93,7 +95,7 @@ namespace Tests.Server
 			_order = [_mGroup, "TANK", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			[1000] call _mResourceBook.DepositProduction;
-			[true] call _mScientist.SetTechnologyInvented;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -110,10 +112,10 @@ namespace Tests.Server
 			private ["_order" as Order];
 		
 			// Arrange
-			_order = [_mGroup, "", 1000] new Order;
+			_order = [_mGroup, "TANK", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			[100] call _mResourceBook.DepositProduction;
-			[true] call _mScientist.SetTechnologyInvented;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -126,7 +128,7 @@ namespace Tests.Server
 		
 		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced
 		{
-			private ["_order" as Order, "_group2" as Group];
+			private ["_order" as Order, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
 			_order = [_mGroup, "", 600] new Order;
@@ -135,7 +137,9 @@ namespace Tests.Server
 			_group2 = call TestActions.CreatePopulatedGroup;
 			_order = [_group2, "", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
-			[true] call _mScientist.SetTechnologyInvented;
+			_squad2 = [_group2, ProfessionType.Armored] new Squad;
+			[_squad2] call _mSquadHandler.SetSquadToReturn;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -153,16 +157,18 @@ namespace Tests.Server
 		
 		private static method TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced
 		{
-			private ["_order" as Order, "_group2" as Group];
+			private ["_order1" as Order, "_order2" as Order, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
-			_order = [_mGroup, "", 400] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_order1 = [_mGroup, "", 400] new Order;
+			[_order1] call _mOrderQueue.PutOrder;
 			
 			_group2 = call TestActions.CreatePopulatedGroup;
-			_order = [_group2, "", 400] new Order;
-			[_order] call _mOrderQueue.PutOrder;
-			[true] call _mScientist.SetTechnologyInvented;
+			_order2 = [_group2, "", 400] new Order;
+			[_order2] call _mOrderQueue.PutOrder;
+			_squad2 = [_group2, ProfessionType.Armored] new Squad;
+			[_squad2] call _mSquadHandler.SetSquadToReturn;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -178,33 +184,10 @@ namespace Tests.Server
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
-		{
-			private ["_order" as Order];
-		
-			// Arrange
-			_order = [_mGroup, "", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
-			
-			[true] call _mScientist.SetTechnologyInvented;
-			[1000] call _mResourceBook.DepositProduction;
-			
-			// Act
-			call _mProductionManager.PerformProduction;
-			
-			// Assert
-			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
-			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
-			
-			// Cleanup
-			[_group2] call TestActions.DeletePopulatedGroup;
-		};
-		
 		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue
 		{
 			// Arrange
-			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames;
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
@@ -222,7 +205,7 @@ namespace Tests.Server
 			// Arrange
 			_order = [_mGroup, "CAR", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
-			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames;
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
@@ -256,17 +239,17 @@ namespace Tests.Server
 		
 		private static method GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast
 		{
-			private ["_anotherGroup" as Group, "_order" as Order, "_orders" as Array];
+			private ["_group1" as Group, "_order1" as Order, "_order2" as Order, "_order" as Order, "_orders" as Array];
 		
 			// Arrange
-			_anotherGroup = call TestActions.CreatePopulatedGroup;
-			_order = [_anotherGroup, "BUS", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_group1 = call TestActions.CreatePopulatedGroup;
+			_order1 = [_group1, "BUS", 600] new Order;
+			[_order1] call _mOrderQueue.PutOrder;
 			
-			_order = [_mGroup, "CAR", 400] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_order2 = [_mGroup, "CAR", 400] new Order;
+			[_order2] call _mOrderQueue.PutOrder;
 
-			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.SetExpectationsForGetProVehicleClassNames; // Need to be fixed. Called twice?
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
@@ -274,15 +257,15 @@ namespace Tests.Server
 			// Assert
 			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
 			["BUS", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_anotherGroup, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
+			[_group1, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
 
 			_orders = call _mOrderQueue.GetOrders;
 			_order = _orders select 1;
-			["B_Truck_01_fuel_F", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_mGroup, _order.Group, "The existing order was changed."] call Assert.AreEqual;
 
 			// Cleanup
-			[_anotherGroup] call TestActions.DeletePopulatedGroup;
+			[_group1] call TestActions.DeletePopulatedGroup;
 		};
 		
 		private static method EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated
@@ -308,6 +291,48 @@ namespace Tests.Server
 			[1100, _mResourceBook.TotalProduction, "Returned profession vehicle did not return production."] call Assert.AreEqual;
 		};
 		
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
+		{
+			private ["_order" as Order];
+		
+			// Arrange
+			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
+			_order = [_mGroup, "", 600] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[1000] call _mResourceBook.DepositProduction;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[1, call _mOrderQueue.Count, "Order should still be active."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+		};
+		
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_AllItemsProduced
+		{
+			private ["_order" as Order];
+		
+			// Arrange
+			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
+			_order = [_mGroup, "", 500] new Order;
+			[_order] call _mOrderQueue.PutOrder;
+			
+			[1000] call _mResourceBook.DepositProduction;
+			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[0, call _mOrderQueue.Count, "Order should still be active."] call Assert.AreEqual;
+			[0, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+		};
+		
 		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
 		{
 			private ["_order" as Order];
@@ -316,7 +341,6 @@ namespace Tests.Server
 			_order = [_mGroup, "TANK", 1000] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			[1000] call _mResourceBook.DepositProduction;
-			[false] call _mScientist.SetTechnologyInvented;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -330,16 +354,22 @@ namespace Tests.Server
 			private ["_order1" as Order, "_order2" as Order, "_group2" as Group];
 
 			// Arrange
-			_order1 = [_mGroup, "TANK", 1000] new Order;
+			_order1 = [_mGroup, "MECH", 500] new Order;
 			[_order1] call _mOrderQueue.PutOrder;
+			
+			_group2 = call TestActions.CreatePopulatedGroup;
+			_order2 = [_group2, "TANK", 800] new Order;
+			[_order2] call _mOrderQueue.PutOrder;
+			
 			[1000] call _mResourceBook.DepositProduction;
-			[false] call _mScientist.SetTechnologyInvented;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
+			
+			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
 		/*

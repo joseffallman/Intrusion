@@ -15,37 +15,36 @@ namespace Tests.Helpers
 {
 	public class TestVehicleClassNamesConfig : IVehicleClassNamesConfig
 	{
-		private fields ["_mReturnedClassNames" as Array, "_mExpectedParamSide" as Side, "_mExpectedParamProfessionType" as ProfessionType];
+		private fields ["_mClassNamesInfos" as Array /* of ProVehicleClassName */];
 	
 		// Creates a TestVehicleClassNamesConfig object.
 		public constructor {
-			_mReturnedClassNames = [];
-			_mExpectedParamSide = sideUnknown;
-			_mExpectedParamProfessionType = ProfessionType.Undefined;
+			_mClassNamesInfos = [];
 		};
 		
-		public method SetExpectationsForGetProVehicleClassNames("_paramSide" as Side, "_paramProfessionType" as ProfessionType, "_returnedClassNames" as Array)
+		public method AddVehicleClassName("_side" as Side, "_professionType" as ProfessionType, "_vehicleClassNames" as Array /* of String */)
 		{
-			_mExpectedParamSide = _paramSide;
-			_mExpectedParamProfessionType = _paramProfessionType;
-			_mReturnedClassNames = _returnedClassNames;
+			_mClassNamesInfos pushBack [_side, _professionType, _vehicleClassNames] new ProVehicleSideInfo;
 		};
 		
 		// Gets the vehicle class names by side and profession type.
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType)
-		{
-			private ["_returnedClassNames" as Array];
+		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType) {
+			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNames"] call LogHandler.Debug;
 			
-			_returnedClassNames = _mReturnedClassNames;
+			scopeName "main";
 			
-			if (_side != _mExpectedParamSide || _professionType != _mExpectedParamProfessionType) then {
-				_returnedClassNames = ["CRAP", "SHIT"];
-			};
+			diag_log (str _mClassNamesInfos);
+				
+			{
+				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
+					_x.ClassNames breakOut "main";
+				};
+			} foreach _mClassNamesInfos as ProVehicleSideInfo;
 			
-			_returnedClassNames
+			[]
 		};
 	};
 };

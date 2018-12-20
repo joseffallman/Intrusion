@@ -11,11 +11,14 @@ namespace Tests.Helpers
 {
 	public class TestActions
 	{
-		public static method Group CreatePopulatedGroup {
+		public static method Group CreatePopulatedGroup(["_unitsInGroup" as Scalar, 1]) {
 			private ["_group" as Group];
 			
 			_group = createGroup west;
-			"B_Soldier_F" createUnit [[0, 0, 100], _group];
+			
+			for "_i" from 1 to _unitsInGroup do {
+				"B_Soldier_F" createUnit [[0, 0, 100], _group];
+			};
 			
 			_group;
 		};

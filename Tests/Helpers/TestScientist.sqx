@@ -14,11 +14,11 @@ namespace Tests.Helpers
 {
 	public class TestScientist : IScientist
 	{
-		private fields ["_mTechnologyInvented" as Boolean];
+		private fields ["_mInventedTechnologies" as Array /* of Technology */];
 	
 		// Creates a TestScientist object.
 		public constructor() {
-			_mTechnologyInvented = false;
+			_mInventedTechnologies = [];
 		};
 		
 		// Performs research and development, and notifies players when different technology progress steps are achieved.
@@ -26,15 +26,16 @@ namespace Tests.Helpers
 		{
 		};
 
+		// Adds a technology to invented technologies
+		public method AddInventedTechnology("_technology" as Technology)
+		{
+			_mInventedTechnologies pushBack _technology as Scalar;
+		};
+		
 		// Gets whether a technology is invented yet or not.
 		public method Boolean TechnologyIsInvented("_technology" as Technology)
 		{
-			_mTechnologyInvented
-		};
-		
-		public method SetTechnologyInvented("_technologyInvented" as Boolean)
-		{
-			_mTechnologyInvented = _technologyInvented;
+			_technology in _mInventedTechnologies
 		};
 	};
 };
