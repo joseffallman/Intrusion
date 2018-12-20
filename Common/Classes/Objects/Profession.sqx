@@ -17,6 +17,7 @@ namespace Intrusion.Common
     		"_maxGroupsCount" as Scalar,
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
+    		"_maxUnitsPerVehicle" as Scalar,
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
         {
@@ -49,5 +50,8 @@ namespace Intrusion.Common
 		
 		// Gets the enemy marker type associated with the profession.
 		public property String MarkerTypeEnemy { get; private set; };
+		
+		// Gets the maximum units that fits into one vehicle. Then one more will be spawned. 0 = infinite.
+		public property Scalar MaxUnitsPerVehicle { get; private set; };
 	};
 };

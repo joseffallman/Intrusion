@@ -15,18 +15,15 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		private static fields ["_mOptions" as Array /* of ProfessionType */];
+		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig];
 	
 		// Initializes the profession dialog.
-		public static method Init
+		public static method Init("_professionConfig" as IProfessionConfig)
 		{
+			_mProfessionConfig = _professionConfig;
 			_mOptions = [];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
-//			call _self.AddAvailableProfessions;
-		
-			// Set the selected profession
-//			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 		};
 		
 		// Gets or sets the profession type that the user has selected.
@@ -62,7 +59,7 @@ namespace Intrusion.Client
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
-				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+				} foreach _mProfessionConfig.AllProfessions as Profession;
             }
             else {
 				{
@@ -70,7 +67,7 @@ namespace Intrusion.Client
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _x.Type;
 					};
-				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+				} foreach _mProfessionConfig.AllProfessions as Profession;
             };
             
             _mOptions = _options;

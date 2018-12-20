@@ -27,10 +27,11 @@ call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
-call MapObservationsHandler.Init;
+[gCommonConfig.Professions] call MapObservationsHandler.Init;
+[gCommonConfig.Professions] call ClientSquadHandler.Init;
 
 // Services
-[gCommonConfig.MapMarkers] call MapMarkerService.Init;
+[gCommonConfig.MapMarkers, gCommonConfig.Professions] call MapMarkerService.Init;
 
 // Dialogs
 //call ProfessionDialog.Init;

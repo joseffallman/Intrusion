@@ -14,7 +14,8 @@ namespace Intrusion.Common
 		private fields ["_mLockedById" as Scalar];
 		
 		// Creates a SquadCollection object.
-		public constructor {
+		public constructor()
+		{
 			_self.Squads = [];
 			_mLockedById = 0;
 		};
@@ -78,7 +79,7 @@ namespace Intrusion.Common
 			[(str _this) + " SquadCollection.ProfessionTypeAvailable"] call LogHandler.Debug;
 			
 			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
-			_profession = [_professionType] call ProfessionConfig.GetProfession;
+			_profession = [_professionType] call gCommonConfig.Professions.GetProfession;
 			
 			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
 		};

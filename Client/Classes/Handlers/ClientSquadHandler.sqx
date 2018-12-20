@@ -13,6 +13,13 @@ namespace Intrusion.Client
 {
 	public class ClientSquadHandler
 	{
+		private static fields ["_mProfessionConfig" as IProfessionConfig];
+	
+		public static method Init("_professionConfig" as IProfessionConfig)
+		{
+			_mProfessionConfig = _professionConfig;
+		};
+	
 		// Notifies the player that his/her profession has changed.
 		// Called when any group's profession has changed.
 		// _group (Group): The group that has changed profession.
@@ -23,7 +30,7 @@ namespace Intrusion.Client
 			
 			if (_group == group player) then {
 				call ProfessionDialog.CloseDialog;
-				["Your group now belongs to the brigade's " + ([_professionType] call ProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
+				["Your group now belongs to the brigade's " + ([_professionType] call _mProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
 			};
 		};
 		

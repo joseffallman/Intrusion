@@ -13,5 +13,8 @@ namespace Intrusion.Common
 	{
 		// Gets the technology configs.
 		property IMapMarkersConfig MapMarkers { get; };
+		
+		// Gets the profession configs.
+		property IProfessionConfig Professions { get; };
 	};
 };

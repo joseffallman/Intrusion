@@ -1,0 +1,27 @@
+/*
+ * Name:	IProfessionConfig
+ * Date:	2018-12-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Object that describes all profession configurations.
+ */
+namespace Intrusion.Common
+{
+	public interface IProfessionConfig
+	{
+		// Gets a profession by profession type.
+		// _professionType (ProfessionType): Profession type.
+		// Returns (Profession): The sought profession. null if the profession type was invalid.
+		method Array GetVehicleClassNames("_professionType" as ProfessionType);
+		
+		// Gets a profession.
+		// _professionType (ProfessionType): The profession type.
+		// Returns (Profession): The sought profession. classNull if the profession was not found.
+		method Profession GetProfession("_professionType" as ProfessionType);
+		
+		// Gets all professions.
+		property Array AllProfessions { get; };
+	};
+};

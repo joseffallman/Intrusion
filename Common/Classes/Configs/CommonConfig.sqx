@@ -12,10 +12,14 @@ namespace Intrusion.Common
 	public class CommonConfig : ICommonConfig
 	{
 		// Creates a CommonConfig object.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig) {
 			_self.MapMarkers = _mapMarkersConfig;
+			_self.Professions = _professionConfig;
 		};
 		
 		public property IMapMarkersConfig MapMarkers { get; private set; };
+		
+		// Gets the profession configs.
+		public property IProfessionConfig Professions { get; private set; };
 	};
 };

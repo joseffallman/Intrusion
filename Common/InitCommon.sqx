@@ -19,10 +19,9 @@ using Intrusion.Common;
 #region Common Objects
 
 // Configs
-call ProfessionConfig.Init;
 call DebugConfig.Init;
 
-gCommonConfig = [new MapMarkersConfig] new CommonConfig;
+gCommonConfig = [new MapMarkersConfig, new ProfessionConfig] new CommonConfig;
 
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;
