@@ -59,7 +59,7 @@ namespace Intrusion.Client
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
-				} foreach _mProfessionConfig.AllProfessions as Profession;
+				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             }
             else {
 				{
@@ -67,7 +67,7 @@ namespace Intrusion.Client
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _x.Type;
 					};
-				} foreach _mProfessionConfig.AllProfessions as Profession;
+				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             };
             
             _mOptions = _options;

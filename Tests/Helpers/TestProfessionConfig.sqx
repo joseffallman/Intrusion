@@ -1,15 +1,18 @@
 /*
- * Name:	DefaultGameSettings
- * Date:	2017-11-18
+ * Name:	TestProfessionConfig
+ * Date:	2018-12-20
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * A class that contains all relevant settings for professions.
+ * Test class to substitute profession configurations.
  */
-namespace Intrusion.Common
+
+using Intrusion.Common;
+
+namespace Tests.Helpers
 {
-	public class ProfessionConfig : IProfessionConfig
+	public class TestProfessionConfig : IProfessionConfig
 	{
         // Field(s):
 		// _mProfessions (Array): All professions as an array of Profession objects.
@@ -17,22 +20,11 @@ namespace Intrusion.Common
 
         // Initializes all professions.
         public constructor {
-        	_mProfessions = [
-        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, 0, "b_inf", "o_inf"] new Profession,
-			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, 2, "b_inf", "o_inf"] new Profession,
-			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
-			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
-			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, 2, "b_maint", "o_maint"] new Profession,
-			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, 5, "b_motor_inf", "o_motor_inf"] new Profession,
-			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, 4, "b_support", "o_support"] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, 10, "b_mech_inf", "o_mech_inf"] new Profession,
-			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, 3, "b_armor", "o_armor"] new Profession
-        	];
+        	_mProfessions = [];
 		};
 		
 		// Gets a profession by profession type.
 		// _professionType (ProfessionType): Profession type.
-		// Returns (Profession): The sought profession. null if the profession type was invalid.
 		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
 			scopeName "main";
 			
@@ -70,5 +62,19 @@ namespace Intrusion.Common
 		{
 			+_mProfessions
 		};
+		
+		public method AddProfession(
+    		"_type" as ProfessionType,
+    		"_name" as String,
+    		"_maxGroupsCount" as Scalar,
+    		"_minGroupSize" as Scalar,
+    		"_maxGroupSize" as Scalar,
+    		"_maxUnitsPerVehicle" as Scalar,
+    		"_markerTypeFriendly" as String,
+    		"_markerTypeEnemy" as String)
+    	{
+    		_mProfessions pushBack [_type, _name, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _markerTypeFriendly, _markerTypeEnemy] new Profession;
+    	};
 	};
 };
+

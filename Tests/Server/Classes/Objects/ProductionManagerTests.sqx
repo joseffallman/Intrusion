@@ -30,6 +30,7 @@ namespace Tests.Server
 			"_mResourceBook" as ResourceBook,
 			"_mScientist" as TestScientist,
 			"_mMessageHandler" as TestMessageHandler,
+			"_mProfessionConfig" as TestProfessionConfig,
 			"_mProductionManager" as ProductionManager];
 		
 		#endregion
@@ -39,18 +40,19 @@ namespace Tests.Server
 			["Tests.Server", "ProductionManagerTests", [
 				"NoItemToProduce_Production_NoItemProduced",
 				"ItemToProduce_GroupCanAfford_ItemProduced",
-				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
 				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
 				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue",
 				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
 				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
-				//"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
-				//"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
-				//"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited",
-				//"OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced",
-				//"OneGroupTwoItemsToProduce_GroupsCanAffordOne_AllItemsProduced"
+				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
+				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
+				"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited",
+				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced",
+				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced",
+				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
+				"TwoOrdersInQueue_TechNotInventedForFirst_OrderMovedLast"
 			]] call TestEngine.Register;
 		};
 		
@@ -64,12 +66,14 @@ namespace Tests.Server
 			_mResourceBook = new ResourceBook;
 			_mScientist = new TestScientist;
 			_mMessageHandler = new TestMessageHandler;
+			_mProfessionConfig = new TestProfessionConfig;
+			[Professiontype.Armored, "Armored Forces", 1, 1, 9, 3, "", ""] call _mProfessionConfig.AddProfession;
 			
-			_mGroup = call TestActions.CreatePopulatedGroup;
+			_mGroup = [1] call TestActions.CreatePopulatedGroup;
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mOrderQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mProfessionConfig, _mOrderQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
@@ -134,7 +138,7 @@ namespace Tests.Server
 			_order = [_mGroup, "", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			
-			_group2 = call TestActions.CreatePopulatedGroup;
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
 			_order = [_group2, "", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
@@ -163,7 +167,7 @@ namespace Tests.Server
 			_order1 = [_mGroup, "", 400] new Order;
 			[_order1] call _mOrderQueue.PutOrder;
 			
-			_group2 = call TestActions.CreatePopulatedGroup;
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
 			_order2 = [_group2, "", 400] new Order;
 			[_order2] call _mOrderQueue.PutOrder;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
@@ -221,16 +225,17 @@ namespace Tests.Server
 			private ["_anotherGroup" as Group, "_order" as Order];
 		
 			// Arrange
-			_anotherGroup = call TestActions.CreatePopulatedGroup;
-			_order = [_anotherGroup, "CAR", 400] new Order;
+			_anotherGroup = [1] call TestActions.CreatePopulatedGroup;
+			_order = [_anotherGroup, "FUEL_TRUCK", 400] new Order;
 			[_order] call _mOrderQueue.PutOrder;
+			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
 			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["CAR", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 			[_anotherGroup, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
 			
 			// Cleanup
@@ -242,7 +247,7 @@ namespace Tests.Server
 			private ["_group1" as Group, "_order1" as Order, "_order2" as Order, "_order" as Order, "_orders" as Array];
 		
 			// Arrange
-			_group1 = call TestActions.CreatePopulatedGroup;
+			_group1 = [1] call TestActions.CreatePopulatedGroup;
 			_order1 = [_group1, "BUS", 600] new Order;
 			[_order1] call _mOrderQueue.PutOrder;
 			
@@ -297,7 +302,9 @@ namespace Tests.Server
 		
 			// Arrange
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
-			_order = [_mGroup, "", 600] new Order;
+			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
+			[_mSquad] call _mSquadHandler.SetSquadToReturn;
+			_order = [_mGroup, "TANK", 600] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			
 			[1000] call _mResourceBook.DepositProduction;
@@ -318,6 +325,8 @@ namespace Tests.Server
 		
 			// Arrange
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
+			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
+			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			_order = [_mGroup, "", 500] new Order;
 			[_order] call _mOrderQueue.PutOrder;
 			
@@ -357,7 +366,7 @@ namespace Tests.Server
 			_order1 = [_mGroup, "TANK", 800] new Order;
 			[_order1] call _mOrderQueue.PutOrder;
 			
-			_group2 = call TestActions.CreatePopulatedGroup;
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
 			_order2 = [_group2, "MECH", 500] new Order;
 			[_order2] call _mOrderQueue.PutOrder;
 			

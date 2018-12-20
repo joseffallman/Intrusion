@@ -47,7 +47,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
         	{
-        		_sideManagers pushBack [_mServerConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service

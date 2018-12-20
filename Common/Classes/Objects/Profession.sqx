@@ -26,6 +26,7 @@ namespace Intrusion.Common
         	_self.MaxGroupsCount = _maxGroupsCount;
         	_self.MinGroupSize = _minGroupSize;
         	_self.MaxGroupSize = _maxGroupSize;
+        	_self.MaxUnitsPerVehicle = _maxUnitsPerVehicle;
         	_self.MarkerTypeFriendly = _markerTypeFriendly;
         	_self.MarkerTypeEnemy = _markerTypeEnemy;
 		};
@@ -45,13 +46,13 @@ namespace Intrusion.Common
 		// Gets the maximum number of players in a group with this profession.
 		public property Scalar MaxGroupSize { get; private set; };
 		
+		// Gets the maximum units that fits into one vehicle. Then one more will be spawned. 0 = infinite.
+		public property Scalar MaxUnitsPerVehicle { get; private set; };
+		
 		// Gets the friendly marker type associated with the profession.
 		public property String MarkerTypeFriendly { get; private set; };
 		
 		// Gets the enemy marker type associated with the profession.
 		public property String MarkerTypeEnemy { get; private set; };
-		
-		// Gets the maximum units that fits into one vehicle. Then one more will be spawned. 0 = infinite.
-		public property Scalar MaxUnitsPerVehicle { get; private set; };
 	};
 };

@@ -22,6 +22,6 @@ namespace Intrusion.Common
 		method Profession GetProfession("_professionType" as ProfessionType);
 		
 		// Gets all professions.
-		property Array AllProfessions { get; };
+		method Array GetAllProfessions();
 	};
 };
