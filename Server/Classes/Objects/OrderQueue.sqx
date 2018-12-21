@@ -28,8 +28,8 @@ namespace Intrusion.Server
 		
 		// Removes all orders that belong to a certain group
 		// _group (Group): The group's orders that will be removed.
-		public method Boolean RemoveOrdersByGroup {
-			params ["_group" as Group];
+		public method Boolean RemoveOrdersByGroup("_group" as Group)
+		{
 			private ["_ordersToKeep" as Array];
 			
 			_ordersToKeep = [];
@@ -48,9 +48,8 @@ namespace Intrusion.Server
 		
 		// Adds a group to the queue if it is not already in it.
 		// _group (Group): The group to add.
-		public method PutOrder {
-			params ["_order" as Order];
-			
+		public method PutOrder("_order" as Order)
+		{
 			_mOrders pushBack _order;
 			
 			if (count _mOrders == 1) then {
@@ -60,7 +59,8 @@ namespace Intrusion.Server
 		
 		// Removes the current order and moves the queue pointer to the next group in the queue.
 		// Returns (Group): The group that is the current group after the pointer has moved.
-		public method RemoveCurrentOrder {
+		public method RemoveCurrentOrder()
+		{
 			private ["_currentOrder" as Order];
 			
 			// Delete the group
@@ -90,8 +90,19 @@ namespace Intrusion.Server
 		
 		// Gets the number of orders currently in the queue.
 		// Returns (Scalar): Number of orders in the queue.
-		public method Scalar Count {
+		public method Scalar Count() {
 			count _mOrders
+		};
+		
+		public method MoveCurrentOrderLast()
+		{
+			private ["_order" as Order];
+			
+			if (count _mOrders > 0) then {
+				_order = _mOrders select 0;
+				_mOrders = [_mOrders, 0] call ArrayHandler.RemoveItemAtIndex;
+				_mOrders pushBack _order;
+			};
 		};
 	};
 };
