@@ -11,7 +11,7 @@
 using Intrusion.Server;
 using Intrusion.Common;
 
-namespace Tests.Helpers
+namespace Intrusion.Tests.Helpers
 {
 	public class TestVehicleClassNamesConfig : IVehicleClassNamesConfig
 	{

@@ -10,7 +10,7 @@
 
 using Intrusion.Server;
 
-namespace Tests.Helpers
+namespace Intrusion.Tests.Helpers
 {
 	public class TestScientist : IScientist
 	{

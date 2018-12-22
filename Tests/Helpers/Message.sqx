@@ -7,7 +7,7 @@
  * Description:
  * Test helper class for the message handler.
  */
-namespace Tests.Helpers
+namespace Intrusion.Tests.Helpers
 {
 	public class Message
 	{

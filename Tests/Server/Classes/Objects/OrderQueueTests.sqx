@@ -10,9 +10,9 @@
 
 using Sqx.UnitTest;
 using Intrusion.Server;
-using Tests.Helpers;
+using Intrusion.Tests.Helpers;
 
-namespace Tests.Server
+namespace Intrusion.Tests.Server
 {
 	public class OrderQueueTests
 	{

@@ -9,11 +9,11 @@
  */
 
 using Sqx.UnitTest;
-using Tests.Helpers;
+using Intrusion.Tests.Helpers;
 using Intrusion.Common;
 using Intrusion.Server;
 
-namespace Tests.Server
+namespace Intrusion.Tests.Server
 {
 	public class ScientistTests
 	{
