@@ -59,7 +59,7 @@ namespace Intrusion.Server
 		
 		// Removes the current order and moves the queue pointer to the next group in the queue.
 		// Returns (Group): The group that is the current group after the pointer has moved.
-		public method RemoveCurrentOrder()
+		public method RemoveCurrentOrder
 		{
 			private ["_currentOrder" as Order];
 			
@@ -90,10 +90,11 @@ namespace Intrusion.Server
 		
 		// Gets the number of orders currently in the queue.
 		// Returns (Scalar): Number of orders in the queue.
-		public method Scalar Count() {
+		public method Scalar Count {
 			count _mOrders
 		};
 		
+		// Moves the current order last.
 		public method MoveCurrentOrderLast()
 		{
 			private ["_order" as Order];
@@ -102,6 +103,9 @@ namespace Intrusion.Server
 				_order = _mOrders select 0;
 				_mOrders = [_mOrders, 0] call ArrayHandler.RemoveItemAtIndex;
 				_mOrders pushBack _order;
+				_order = _mOrders select 0;
+				_self.CurrentOrder = _order;
+				//_self.CurrentOrder = (_mOrders select 0); // TODO SQX: Compiler adds a semicolon too much.
 			};
 		};
 	};
