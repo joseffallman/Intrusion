@@ -91,30 +91,35 @@ namespace Intrusion.Server
 				if (!isNull _squad) then {
 					_professionVehicle = [_squad.ProfessionType] call _mProfessionVehiclesConfig.GetVehicle;
 					_technologyInvented = [_professionVehicle.RequiredTechnology] call _mScientist.TechnologyIsInvented;
-	
-					// Check how many vehicles that need to be created
-					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
-					
-					if (_profession.MaxUnitsPerVehicle <= 0) then {
-						_vehiclesCount = 1;
+
+					if (!_technologyInvented) then {
+						call _mOrderQueue.MoveCurrentOrderLast;
 					}
 					else {
-						_vehiclesCount = ceil ((count units _squad.Group) / (_profession.MaxUnitsPerVehicle));
-					};
-
-					if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then {
-						// Create the vehicle(s)
-						for "_i" from 1 to _vehiclesCount do {
-							[_squad.Group, _mOrderQueue.CurrentOrder.VehicleClassName, _squad.ProfessionType, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
-							[_cost] call _mResourceBook.WithdrawProduction;
+						// Check how many vehicles that need to be created
+						_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
+						
+						if (_profession.MaxUnitsPerVehicle <= 0) then {
+							_vehiclesCount = 1;
+						}
+						else {
+							_vehiclesCount = ceil ((count units _squad.Group) / (_profession.MaxUnitsPerVehicle));
 						};
-						
-						// Tell the group
-						["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group] call _mMessageHandler.ShowMessage;
-						
-						call _mOrderQueue.RemoveCurrentOrder;
-						
-						_tryOneMore = true;
+	
+						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then {
+							// Create the vehicle(s)
+							for "_i" from 1 to _vehiclesCount do {
+								[_squad.Group, _mOrderQueue.CurrentOrder.VehicleClassName, _squad.ProfessionType, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
+								[_cost] call _mResourceBook.WithdrawProduction;
+							};
+							
+							// Tell the group
+							["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group] call _mMessageHandler.ShowMessage;
+							
+							call _mOrderQueue.RemoveCurrentOrder;
+							
+							_tryOneMore = true;
+						};
 					};
 				};
 			};
