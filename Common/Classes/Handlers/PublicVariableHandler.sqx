@@ -56,6 +56,26 @@ namespace Intrusion.Common
 			!isNil "INT_Public_squads"
 		};
 
+		// Sets and broadcasts an array of player infos across the network.
+		// _playerInfos (PlayerInfoCollection): A collection of player infos.
+		public static method BroadcastPlayerInfos("_playerInfos" as PlayerInfoCollection)
+		{
+			[(str _this) + " PublicVariableHandler.BroadcastPlayerInfos"] call LogHandler.Debug;
+			
+			INT_Public_playerInfos = _playerInfos;
+			publicVariable "INT_Public_playerInfos";
+		};
+		
+		// Gets all player infos from the public network synchronized variable.
+		public static method PlayerInfoCollection GetPlayerInfos { 
+			INT_Public_playerInfos
+		};
+		
+		// Gets whether the player infos has been set on the current machine or not.
+		public static method Boolean PlayerInfosHasValue {
+			!isNil "INT_Public_playerInfos"
+		};
+
 		// Sets and broadcasts an array of intrusion vehicles across the network.
 		// _squads (Array): An array of all intrusion vehicles.
 		public static method BroadcastIntrusionVehicles("_intrusionVehicles" as Array)

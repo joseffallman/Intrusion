@@ -13,6 +13,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\MapObservation.sq
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Squad.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\SquadCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\MapMarkerInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfoCollection.sqx";
 
 using Intrusion.Common;
 

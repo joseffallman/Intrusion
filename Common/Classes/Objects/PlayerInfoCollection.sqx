@@ -1,0 +1,44 @@
+/*
+ * Name:	PlayerInfoCollection
+ * Date:	2018-12-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A collection of player information.
+ */
+namespace Intrusion.Common
+{
+	public class PlayerInfoCollection
+	{
+		private fields ["_mPlayerInfos" as Array /* of PlayerInfo */];
+	
+		// Creates a PlayerInfoCollection object.
+		public constructor {
+			_mPlayerInfos = [];
+		};
+		
+		// Gets player info about a player by UID.
+		// _uid (String): The player's UID.
+		public method PlayerInfo GetPlayerInfoByUid("_uid" as String)
+		{
+			scopeName "main";
+			
+			{
+				private ["_playerInfo" as PlayerInfo];
+				_playerInfo = _x;
+				
+				if (_playerInfo.Uid == _uid) then {
+					_playerInfo breakOut "main";
+				};
+			} foreach _mPlayerInfos as PlayerInfo;
+			
+			classNull
+		};
+		
+		public method AddPlayerInfo("_uid" as String, "_side" as Side)
+		{
+			_mPlayerInfos pushBack [[_uid, _side] new PlayerInfo];
+		};
+	};
+};
