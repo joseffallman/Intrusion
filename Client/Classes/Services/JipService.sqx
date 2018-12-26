@@ -16,7 +16,7 @@ namespace Intrusion.Client
 	public class JipService
 	{
 		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
-	
+
 		private static method Run()
 		{
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];

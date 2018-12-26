@@ -30,7 +30,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.s
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
-call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\ServerEventHandlers.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;

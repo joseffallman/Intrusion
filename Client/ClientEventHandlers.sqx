@@ -1,0 +1,2 @@
+// Fires when a JIP player is connecting.
+//["ClientEventHandlerId_01", "onPreloadFinished", { hintSilent str time }] call BIS_fnc_addStackedEventHandler;

@@ -23,6 +23,21 @@ namespace Intrusion.Server
 		
 		#endregion
 	
+		// Initializes and broadcasts the player info collection
+		private static method InitPlayerInfoCollection {
+			private ["_playerInfoCollection" as PlayerInfoCollection, "_allPlayers" as Array, "_player" as Object];
+			
+			_playerInfoCollection = new PlayerInfoCollection;
+			_allPlayers = call BIS_fnc_listPlayers;
+			
+			{
+				_player = _x;
+				[getPlayerUid _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
+			} foreach _allPlayers;
+			
+			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfos;
+		};
+
         // Runs the mission.
         private static method Run() {
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
@@ -32,6 +47,10 @@ namespace Intrusion.Server
         	_messageHandler = new MessageHandler;
         	_self.SquadHandler = new SquadHandler;
         	
+        	// Initialize the player info collection
+        	call _self.InitPlayerInfoCollection;
+        	
+        	// Aquire resource collections
         	call ResourceLocationHandler.AquireAllResourceLocations;
         	
         	// Start the mission counter.
