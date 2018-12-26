@@ -1,0 +1,18 @@
+/*
+ * Name:	MissionConfigMode
+ * Date:	2018-12-26
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum with possible mission configuration modes.
+ */
+namespace Intrusion.Common
+{
+	public enum MissionConfigMode
+	{
+		Develop,
+		Test,
+		Production
+	};
+};

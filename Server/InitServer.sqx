@@ -1,10 +1,12 @@
-call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
@@ -41,7 +43,12 @@ using Intrusion.Server;
 call WeaponClassNamesConfig.Init;
 call WeaponBoxClassNamesConfig.Init;
 
-gServerConfig = [new GameplayConfig, new TechnologyConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+if (DebugConfig.Mode == MissionConfigMode.Production) then {
+	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+}
+else {
+	gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+};
 
 /* Handlers */
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;

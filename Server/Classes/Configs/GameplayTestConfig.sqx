@@ -12,24 +12,16 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class GameplayConfig : IGameplayConfig
+	public class GameplayTestConfig : IGameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
-		public constructor {
-			if (DebugConfig.InDebugMode) then {
-				_self.CompetingSides = [east, west];
-				_self.MatchLengthMinutes = 8;
-				_self.TotalProduction = 10000;
-				_self.TotalResearch = 10000;
-				_self.MaxFreeVehiclesAtBase = 3;
-			}
-			else {
-				_self.CompetingSides = [east, west];
-				_self.MatchLengthMinutes = 120;
-				_self.TotalProduction = 20000;
-				_self.TotalResearch = 20000;
-				_self.MaxFreeVehiclesAtBase = 3;
-			};
+		public constructor()
+		{
+			_self.CompetingSides = [east, west];
+			_self.MatchLengthMinutes = 8;
+			_self.TotalProduction = 10000;
+			_self.TotalResearch = 10000;
+			_self.MaxFreeVehiclesAtBase = 3;
 		};
 		
 		// Gets the competing sides in the mission.

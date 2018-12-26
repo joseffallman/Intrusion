@@ -11,14 +11,14 @@ namespace Intrusion.Common
 	public class DebugConfig
 	{
 		public static method Init {
-			_self.InDebugMode = true;
+			_self.Mode = MissionConfigMode.Test;
 			_self.ShowTutorials = true;
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Info;
 		};
 	
 		// Gets whether the mission is in debug mode or not.
-		public static property Boolean InDebugMode { get; private set; };
+		public static property MissionConfigMode Mode { get; private set; };
 		
 		// Gets whether the mission shows tutorials or not
 		public static property Boolean ShowTutorials { get; private set; };
