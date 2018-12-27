@@ -36,5 +36,18 @@ namespace Intrusion.Server
 			
 			""
 		};
+		
+		public static method WeaponBoxInfo GetWeaponBoxInfo("_weaponBoxType" as WeaponBoxType)
+		{
+			scopeName "main";
+		
+			{
+				if (_x.WeaponBoxType == _weaponBoxType) then {
+					_x breakOut "main";
+				};
+			} foreach _mWeapons as WeaponBoxInfo;
+			
+			classNull
+		};
 	};
 };

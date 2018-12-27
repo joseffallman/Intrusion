@@ -14,11 +14,10 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */];
 		
-		private static method WeaponBox GetWeaponBox {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
-			
+		private static method WeaponBox GetWeaponBox("_side" as Side, "_weaponBoxType" as WeaponBoxType)
+		{
 			scopeName "main";
 			
 			{
@@ -30,8 +29,8 @@ namespace Intrusion.Server
 			classNull
 		};
 		
-		private static method AddWeaponBox {
-			params ["_weaponBox" as WeaponBox];
+		private static method AddWeaponBox("_weaponBox" as WeaponBox)
+		{
 			private ["_existingWeaponBox" as WeaponBox];
 		
 			scopeName "main";
@@ -49,8 +48,9 @@ namespace Intrusion.Server
 		};
 		
 		// Runs the weapons service.
-		private static method Run {
-			private ["_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo];
+		private static method Run()
+		{
+			private ["_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo, "_weaponBoxInfo" as WeaponBoxInfo, "_weaponBoxInvented" as Boolean];
 			
 			while { true } do
 			{
@@ -60,36 +60,41 @@ namespace Intrusion.Server
 					
 					_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 
-					// Create the basic weapon box if it is not already there
+					// Create the weapon boxes if it is not already there
 					
-					_weaponBox = [_side, WeaponBoxType.Basic] call _self.GetWeaponBox;
-					
-					if (isNull _weaponBox || { !(call _weaponBox.IsAlive) }) then
 					{
-						_weaponBox = [_side, getMarkerPos _markerInfo.WeaponDepotMarkerName, WeaponBoxType.Basic] new WeaponBox;
-						[_weaponBox] call WeaponsService.AddWeaponBox;
-						["Basic weapon box spawned for " + str _side] call LogHandler.Info;
-					};
-					
-					// Add weapon boxes
-					
-					// Basic weapons
-					if (!isNull _weaponBox) then
-					{
-						call _weaponBox.MakeEmpty;
-						_weaponBox.Object addWeaponCargoGlobal ["FirstAidKit", 10];
+						private ["_weaponBoxType" as WeaponBoxType];
+						_weaponBoxType = _x;
 						
+						_weaponBox = [_side, _weaponBoxType] call _self.GetWeaponBox;
+						_weaponBoxInfo = [_weaponBoxType] call WeaponBoxesConfig.GetWeaponBoxInfo;
+						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call Scientist.SideTechnologyIsInvented;
+						
+						if (_weaponBoxInvented && (isNull _weaponBox || { !(call _weaponBox.IsAlive) })) then
 						{
-							private ["_weaponInfo" as WeaponInfo];
-							_weaponInfo = _x;
-							
-							_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+							_weaponBox = [_side, getMarkerPos _markerInfo.WeaponDepotMarkerName, _weaponBoxType] new WeaponBox;
+							[_weaponBox] call WeaponsService.AddWeaponBox;
+							["Weapon box spawned for " + str _side] call LogHandler.Info;
+						};
+					
+						// Add weapons to boxes
+						if (!isNull _weaponBox) then
+						{
+							call _weaponBox.MakeEmpty;
+							_weaponBox.Object addWeaponCargoGlobal ["FirstAidKit", 10];
 							
 							{
-								_weaponBox.Object addMagazineCargoGlobal [_x, 300];
-							} foreach _weaponInfo.Magazines as String;
-						} foreach ([_side, WeaponBoxType.Basic] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;
-					};
+								private ["_weaponInfo" as WeaponInfo];
+								_weaponInfo = _x;
+								
+								_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+								
+								{
+									_weaponBox.Object addMagazineCargoGlobal [_x, 300];
+								} foreach _weaponInfo.Magazines as String;
+							} foreach ([_side, _weaponBoxType] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;
+						};
+					} foreach _mWeaponBoxTypes as WeaponBoxType;
 	        	} foreach _mGameplayConfig.CompetingSides as Side;
 				
 				sleep 60;
@@ -99,6 +104,13 @@ namespace Intrusion.Server
 		// Starts the weapons service.
 		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig)
 		{
+			_mWeaponBoxTypes = [
+				WeaponBoxType.Basic,
+				WeaponBoxType.Grenades,
+				WeaponBoxType.Launchers,
+				WeaponBoxType.Ordnance
+			];
+			
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mWeaponBoxes = [];
