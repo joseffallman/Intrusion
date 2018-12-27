@@ -11,6 +11,7 @@ namespace Intrusion.Server
 {
 	public enum Technology
 	{
+		None = 0,
 		Transport = 1,
 		Services = 2,
 		Maintenance = 3,

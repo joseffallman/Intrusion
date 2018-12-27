@@ -59,8 +59,8 @@ namespace Intrusion.Server
 					_side = _x;
 					
 					_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
-						
-					// Create the box if it is not already there
+
+					// Create the basic weapon box if it is not already there
 					
 					_weaponBox = [_side, WeaponBoxType.Basic] call _self.GetWeaponBox;
 					
@@ -80,7 +80,7 @@ namespace Intrusion.Server
 						_weaponBox.Object addWeaponCargoGlobal ["FirstAidKit", 10];
 						
 						{
-							private ["_weaponInfo" as SideWeaponInfo];
+							private ["_weaponInfo" as WeaponInfo];
 							_weaponInfo = _x;
 							
 							_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
@@ -88,7 +88,7 @@ namespace Intrusion.Server
 							{
 								_weaponBox.Object addMagazineCargoGlobal [_x, 300];
 							} foreach _weaponInfo.Magazines as String;
-						} foreach ([_side, WeaponBoxType.Basic] call WeaponClassNamesConfig.GetWeaponsBySideAndBoxType) as SideWeaponInfo;
+						} foreach ([_side, WeaponBoxType.Basic] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;
 					};
 	        	} foreach _mGameplayConfig.CompetingSides as Side;
 				
@@ -107,4 +107,3 @@ namespace Intrusion.Server
 		};
 	};
 };
-
