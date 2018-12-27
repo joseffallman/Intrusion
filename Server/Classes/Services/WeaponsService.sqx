@@ -50,10 +50,12 @@ namespace Intrusion.Server
 		
 		// Runs the weapons service.
 		private static method Run {
+			private ["_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo];
+			
 			while { true } do
 			{
 	        	{
-					private ["_side" as Side, "_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo, "_weapon", "_magazines", "_boxAlive"];
+					private ["_side" as Side];
 					_side = _x;
 					
 					_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
@@ -68,7 +70,6 @@ namespace Intrusion.Server
 						[_weaponBox] call WeaponsService.AddWeaponBox;
 						["Basic weapon box spawned for " + str _side] call LogHandler.Info;
 					};
-					
 					
 					// Add weapon boxes
 					

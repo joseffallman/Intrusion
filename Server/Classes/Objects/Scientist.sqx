@@ -15,10 +15,16 @@ namespace Intrusion.Server
 {
 	public class Scientist : IScientist
 	{
+		private static fields ["_mSideTechnologies" as Array /* of SideTechnology */];
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
 		private fields ["_mInventedTechnologies" as Array /* of Technology (enum) */, "_mSide" as Side];
 		private fields ["_mCurrentTechnology" as TechnologyInfo, "_mAllTechnologiesInvented" as Boolean];
-	
+		
+		public static method Init()
+		{
+			_mSideTechnologies = [];
+		};
+		
 		// Creates a Sceintist object.
 		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, ["_firstTechToResearch" as Technology, 1 as Technology])
 		{
@@ -38,6 +44,7 @@ namespace Intrusion.Server
 			private ["_technology" as Technology];
 			
 			_mInventedTechnologies pushBack _mCurrentTechnology.Technology;
+			_mSideTechnologies pushBack [_mSide, _mCurrentTechnology.Technology] new SideTechnology;
 			["Your side has invented '" + _mCurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
 			
 			// Get next technology to research
@@ -65,6 +72,22 @@ namespace Intrusion.Server
 		public method Boolean TechnologyIsInvented("_technology" as Technology)
 		{
 			_technology in _mInventedTechnologies
+		};
+		
+		public static method Boolean SideTechnologyIsInvented("_side" as Side, "_technology" as Technology)
+		{
+			scopeName "main";
+			
+			{
+				private ["_sideTech" as SideTechnology];
+				_sideTech = _x;
+				
+				if (_sideTech.Side == _side && _sideTech.Technology == _technology) then {
+					true breakOut "main";
+				};
+			} foreach _mSideTechnologies as SideTechnology;
+			
+			false
 		};
 	};
 };

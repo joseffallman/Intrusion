@@ -1,0 +1,24 @@
+/*
+ * Name:	SideTechnology
+ * Date:	2018-12-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Describes a technology invented by a side.
+ */
+namespace Intrusion.Server
+{
+	public class SideTechnology
+	{
+		// Creates a SideTechnology object.
+		public constructor("_side" as Side, "_technology" as Technology) {
+			_self.Side = _side;
+			_self.Technology = _technology;
+		};
+		
+		public property Side Side { get; private set; };
+		
+		public property Technology Technology { get; private set; };
+	};
+};
