@@ -1,0 +1,82 @@
+/*
+ * Name:	ScientistTests
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the Server.Scientist object.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Tests.Helpers;
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Server
+{
+	public class ScientistTests
+	{
+		#region Fields
+		
+		private static fields [
+			"_mMessageHandler" as TestMessageHandler,
+			"_mResourceBook" as ResourceBook,
+			"_mScientist" as Scientist];
+		
+		#endregion
+		
+		// Creates a OrderQueueTests object.
+		public static method Init {
+			["Tests.Server", "ScientistTests", [
+				"NoProgress_GetsFirstTechnology_TechnologyInvented",
+				"NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented"
+			]] call TestEngine.Register;
+		};
+		
+		// Creates a production manager and a group.
+		private static method BeforeEach {
+			_mResourceBook = new ResourceBook;
+			_mMessageHandler = new TestMessageHandler;
+			_mScientist = [west, _mResourceBook, new TestTechnologyConfig, _mMessageHandler] new Scientist;
+		};
+		
+//		private static method AfterEach {
+//		};
+		
+		private static method NoProgress_GetsFirstTechnology_TechnologyInvented {
+			private ["_message" as Message];
+		
+			// Arrange
+			call _mScientist.PerformResearch;
+			[1500] call _mResourceBook.DepositResearch;
+			
+			// Act
+			call _mScientist.PerformResearch;
+			
+			// Assert
+			[[Technology.Transport] call _mScientist.TechnologyIsInvented, "Technology Transport should be invented."] call Assert.IsTrue;
+			[1, count _mMessageHandler.Messages, "Message not sent."] call Assert.AreEqual;
+			
+			if (count _mMessageHandler.Messages > 0) then {
+				_message = _mMessageHandler.Messages select 0;
+				["Your side has invented 'Transport'", _message.Text] call Assert.AreEqual;
+				[west, _message.Address, "Message sent to wrong address."] call Assert.AreEqual;
+				[MessageType.Hint, _message.MessageType, "Message had wrong type."] call Assert.AreEqual;
+			};
+		};
+		
+		private static method NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented {
+			// Arrange
+			call _mScientist.PerformResearch;
+			[300] call _mResourceBook.DepositProduction;
+			
+			// Act
+			call _mScientist.PerformResearch;
+			
+			// Assert
+			[[Technology.Transport] call _mScientist.TechnologyIsInvented, "Technology Transport should not be invented."] call Assert.IsFalse;
+			[0, count _mMessageHandler.Messages] call Assert.AreEqual;
+		};
+	};
+};

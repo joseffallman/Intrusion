@@ -1,0 +1,7 @@
+namespace Intrusion.Tests.Helpers {
+	public enum MessageType {
+		Hint,
+		Title,
+		Subtitle
+	};
+};

@@ -1,0 +1,32 @@
+/*
+ * Name:	IVehicleSpawner
+ * Date:	2018-11-29
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles a side's Intrusion vehcile spawns.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public interface IVehicleSpawner
+	{
+		method IntrusionVehicle SpawnProfessionVehicle(
+			"_group" as Group,
+			"_vehicleClass" as String,
+			"_professionType" as ProfessionType,
+			"_cost" as Scalar);
+		
+		method IntrusionVehicle SpawnFreeVehicle("_side" as Side);
+		
+		method Scalar CountFreeVehiclesAtBase("_side" as Side);
+		
+		// Deletes a profession vehicle belonging to a group from the map.
+		// _group (Group): The group whose vehicle will be deleted.
+		// Returns (Scalar): The production cost of the vehicle.
+		method Scalar DeleteProfessionVehicles("_group" as Group);
+	};
+};

@@ -11,12 +11,12 @@ namespace Intrusion.Server
 {
 	public class ResourceCollector
 	{
-		private fields ["_mResourceBook" as ResourceBook];
+		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceBook" as ResourceBook];
 		private fields ["_mLastAquireTime" as Scalar, "_mSecondsSinceLastAquire" as Scalar];
 	
 		// Creates a ResourceCollector object.
-		public constructor {
-			params ["_side" as Side, "_resourceBook" as ResourceBook];
+		public constructor("_gameplayConfig" as IGameplayConfig, "_side" as Side, "_resourceBook" as ResourceBook) {
+			_mGameplayConfig = _gameplayConfig;
 			_self.Side = _side;
 			_mResourceBook = _resourceBook;
 			
@@ -30,7 +30,7 @@ namespace Intrusion.Server
 		// Calculates how much production has been generated since last aquire.
 		// Returns (Scalar): Amount of production.
 		private method Scalar AquireProduction {
-			private _pointsPerFacility = (GameplayConfig.TotalProduction / ResourceLocationHandler.FactoryLocationsCount) * (_mSecondsSinceLastAquire / (GameplayConfig.MatchLengthMinutes * 60));
+			private _pointsPerFacility = (_mGameplayConfig.TotalProduction / ResourceLocationHandler.FactoryLocationsCount) * (_mSecondsSinceLastAquire / (_mGameplayConfig.MatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call ResourceLocationHandler.GetFactoriesCountBySide;
 			private _ourCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
 			
@@ -42,7 +42,7 @@ namespace Intrusion.Server
 		// Calculates how much technology has been generated since last aquire.
 		// Returns (Scalar): Amount of technology.
 		private method Scalar AquireTechnology {
-			private _pointsPerFacility = (GameplayConfig.TotalTechnology / ResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (GameplayConfig.MatchLengthMinutes * 60));
+			private _pointsPerFacility = (_mGameplayConfig.TotalResearch / ResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mGameplayConfig.MatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call ResourceLocationHandler.GetTechLabsCountBySide;
 			private _ourCount = [_self.Side] call ResourceLocationHandler.GetTechLabsCountBySide;
 			
@@ -61,7 +61,7 @@ namespace Intrusion.Server
 			_technology = call _self.AquireTechnology;
 			
 			[_production] call _mResourceBook.DepositProduction;
-			[_technology] call _mResourceBook.DepositTechnology;
+			[_technology] call _mResourceBook.DepositResearch;
 			
 			_mLastAquireTime = time;
 		};

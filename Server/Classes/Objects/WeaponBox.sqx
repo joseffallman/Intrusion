@@ -19,7 +19,7 @@ namespace Intrusion.Server
 			params ["_side" as Side, "_pos" as Array, "_weaponBoxType" as WeaponBoxType];
 			[(str _this) + " WeaponBox.constructor"] call LogHandler.Debug;
 			
-			private _className = [_side, _weaponBoxType] call WeaponBoxClassNamesConfig.GetWeaponClassNameBySideAndBoxType;
+			private _className = [_side, _weaponBoxType] call WeaponBoxesConfig.GetWeaponClassNameBySideAndBoxType;
 			
 			_self.Object = _className createVehicle _pos;
 			_self.Side = _side;

@@ -1,0 +1,21 @@
+/*
+ * Name:	ITechnologyConfig
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that contains configuration settings for technologies.
+ */
+namespace Intrusion.Server
+{
+	public interface ITechnologyConfig
+	{
+		// Gets a profession vehicle from the list.
+		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
+		method TechnologyInfo GetTechnology("_technology" as Technology);
+		
+		// Gets a copy of all technologies.
+		property Array Technologies { get; };
+	};
+};

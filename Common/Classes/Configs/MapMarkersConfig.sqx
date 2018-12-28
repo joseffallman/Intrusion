@@ -1,0 +1,51 @@
+/*
+ * Name:	SideMarkersConfig
+ * Date:	2017-11-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains config information about a side.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Common
+{
+	public class MapMarkersConfig : IMapMarkersConfig
+	{
+		private fields ["_mSideInfos" as Array];
+	
+		// Initializes a SideMarkersConfig object.
+		public constructor {
+			_mSideInfos = [
+				[west, "respawn_west", "INT_CarParkWest", "INT_WeaponDepotMarkerWest", "\A3\Data_F\Flags\Flag_NATO_CO.paa", "b_hq"] new MapMarkerInfo,
+				[east, "respawn_east", "INT_CarParkEast", "INT_WeaponDepotMarkerEast", "\A3\Data_F\Flags\Flag_CSAT_CO.paa", "b_hq"] new MapMarkerInfo
+			];
+			
+			_self.WinnersLocationMarkerType = "hd_flag";
+		};
+		
+		// Gets the marker type of the winners marker type.
+		public property String WinnersLocationMarkerType { get; private set; };
+		
+		// Gets a mission side info config object.
+		// _side (Side): The side of the config object.
+		// Returns (MissionSideInfo): A mission side config object.
+		public method GetMapMarkerInfo("_side" as Side) {
+			private ["_info" as MapMarkerInfo];
+			[str _this + " MapMarkersInfo.GetMapMarkerInfo"] call LogHandler.Debug;
+
+			scopeName "main";
+			_info = classNull;
+			
+			{
+				if (_x.Side == _side) then {
+					_x breakOut "main";
+				};
+			} foreach _mSideInfos as MapMarkerInfo;
+			
+			_info
+		};
+	};
+};

@@ -1,0 +1,49 @@
+/*
+ * Name:	TechnologyConfig
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that contains configuration settings for technologies.
+ */
+namespace Intrusion.Server
+{
+	public class TechnologyProdConfig : ITechnologyConfig
+	{
+		private fields ["_mTechnologies" as Array /* of TechnologyInfo */];
+		
+		// Creates a TechnologyConfig object.
+		public constructor {
+			_mTechnologies = [
+				[Technology.Transport, "Transport", 500] new TechnologyInfo,
+				[Technology.Services, "Services", 750] new TechnologyInfo,
+				[Technology.Maintenance, "Maintenance", 1000] new TechnologyInfo,
+				[Technology.Launchers, "Launchers", 2000] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 3000] new TechnologyInfo,
+				[Technology.AntiArmor, "Anti Armor", 3500] new TechnologyInfo,
+				[Technology.Mechanized, "Mechanized Vehicles", 4000] new TechnologyInfo,
+				[Technology.Armored, "Armored Vehicles", 5000] new TechnologyInfo,
+			];
+			
+			_self.Technologies = +_mTechnologies;
+		};
+		
+		// Gets a copy of all technologies.
+		public property Array Technologies { get; private set; };
+		
+		// Gets a profession vehicle from the list.
+		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
+		public method TechnologyInfo GetTechnology("_technology" as Technology) {
+			scopeName "main";
+			
+			{
+				if (_technology == _x.Technology) then {
+					_x breakOut "main";
+				};
+			} foreach _mTechnologies as TechnologyInfo;
+			
+			classNull
+		};
+	};
+};

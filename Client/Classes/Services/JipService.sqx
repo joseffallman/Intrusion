@@ -1,0 +1,77 @@
+/*
+ * Name:	JipService
+ * Date:	2018-12-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service that starts up a JIP player.
+ */
+
+using Intrusion.Client;
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class JipService
+	{
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
+
+		private static method Run()
+		{
+			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];
+		
+			waitUntil { call PublicVariableHandler.PlayerInfosHasValue && player == player };
+			
+			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfos;
+			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;
+			_isCheating = !(isNull _playerInfo || { _playerInfo.Side == playerSide });
+			
+			if (_isCheating) then {
+				0 fadeSound 0;
+				removeAllWeapons player;
+				player removeweapon "itemmap";
+				player removeweapon "itemgps";
+				
+				[playerSide] spawn {
+					params ["_side"];
+					
+					while { true } do {
+						cutText ["You are not allowed to play " + str playerSide + " since you already belong to " + str _side + ".\nPlease switch back to " + str _side + ".", "BLACK FADED"];
+						sleep 1;
+					};
+				};
+			}
+			else {
+				private ["_mapMarkerInfo" as MapMarkerInfo];
+				
+				_mapMarkerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
+				player setPos getMarkerPos _mapMarkerInfo.BaseMarkerName;
+			
+				if (isNull _playerInfo) then {
+					[getPlayerUID player, playerSide] call _playerInfoCollection.AddPlayerInfo;
+					[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfos;
+				};
+				
+		    	//[player] call dre_SetInvideToGroupActionOnPlayerClients;
+		    	
+		  		cutText ["","BLACK IN", 1];
+		  		
+				[] spawn {
+				    sleep 1;
+				    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+//				    ["WELCOME"] call dre_fnc_CC_ShowTutorial;
+//		            ["ECONOMY"] call dre_fnc_CC_ShowTutorial;
+				};
+		    };
+		};
+	
+		// Creates a JipService object.
+		public static method StartAsync("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
+			cutText ["", "BLACK FADED"];
+			[] spawn _self.Run;
+		};
+	};
+};
+

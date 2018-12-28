@@ -1,0 +1,51 @@
+/*
+ * Name:	TechnologyInfo
+ * Date:	2018-12-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a technology step in the research and development progress.
+ */
+
+using Sqx.Collections;
+
+namespace Intrusion.Server
+{
+	public class TechnologyInfo : IComparer
+	{
+		// Creates a TechnologyInfo object.
+		public constructor("_technology" as Technology, "_name" as String, "_requiredResearch" as Scalar) {
+			_self.Technology = _technology;
+			_self.Name = _name;
+			_self.RequiredResearch = _requiredResearch;
+		};
+		
+		// Gets the technology for this progress step.
+		public property Technology Technology { get; private set; };
+		
+		// The name of the technology.
+		public property String Name { get; private set; };
+		
+		// Gets the required R&D to aquire this technology.
+		public property Scalar RequiredResearch { get; private set; };
+		
+		// Compares this technology to another technology.
+		public method Scalar Compare("_otherComparer" as IComparer)
+		{
+			private ["_compareResult" as Scalar, "_otherTechnology" as TechnologyInfo];
+			
+			_otherTechnology = _otherComparer as TechnologyInfo;
+			_compareResult = 0;
+			
+			if (_self.RequiredResearch < _otherTechnology.RequiredResearch) then {
+				_compareResult = -1;
+			};
+			if (_self.RequiredResearch > _otherTechnology.RequiredResearch) then {
+				_compareResult = 1;
+			};
+			
+			_compareResult
+		};
+	};
+};

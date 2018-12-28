@@ -13,6 +13,9 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\MapObservationsH
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientVehicleHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
+call compile preprocessFileLineNumbers "Client\ClientEventHandlers.sqx";
 
 using Intrusion.Client;
 
@@ -26,12 +29,14 @@ call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
+[gCommonConfig.Professions] call MapObservationsHandler.Init;
+[gCommonConfig.Professions] call ClientSquadHandler.Init;
 
 // Services
-call MapObservationsHandler.Init;
+[gCommonConfig.MapMarkers, gCommonConfig.Professions] call MapMarkerService.Init;
 
 // Dialogs
-//call ProfessionDialog.Init;
+[gCommonConfig.Professions] call ProfessionDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;
@@ -39,9 +44,14 @@ call BriefingHandler.CreateBriefing;
 // Add invite player actions on all possible players
 call GroupActionHandler.ResetInvitePlayerActions;
 
-// Show the Welcome tutorial
-[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+// Start the map marker service
+call MapMarkerService.RunAsync;
 
 if (didJIP) then {
-	
+	// Perform JIP stuff
+	[gCommonConfig.MapMarkers] call JipService.StartAsync;
+}
+else {
+	// Show the Welcome tutorial
+	[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
 };

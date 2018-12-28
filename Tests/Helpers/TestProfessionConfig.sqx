@@ -1,0 +1,80 @@
+/*
+ * Name:	TestProfessionConfig
+ * Date:	2018-12-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test class to substitute profession configurations.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestProfessionConfig : IProfessionConfig
+	{
+        // Field(s):
+		// _mProfessions (Array): All professions as an array of Profession objects.
+		private fields ["_mProfessions" as Array];
+
+        // Initializes all professions.
+        public constructor {
+        	_mProfessions = [];
+		};
+		
+		// Gets a profession by profession type.
+		// _professionType (ProfessionType): Profession type.
+		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
+			scopeName "main";
+			
+			{
+				if (_x.Type == _professionType) then {
+					_x breakOut "main";
+				};
+			} foreach _mProfessions as Profession;
+			
+			classNull
+		};
+		
+		// Gets a profession.
+		// _professionType (ProfessionType): The profession type.
+		// Returns (Profession): The sought profession. classNull if the profession was not found.
+		public method Profession GetProfession("_professionType" as ProfessionType) {
+			[(str _this) + " ProfessionConfig.GetProfession"] call LogHandler.Debug;
+
+			scopeName "main";
+			
+			{
+				private ["_profession" as Profession];
+				_profession = _x;
+				
+				if (_profession.Type == _professionType) then {
+					_profession breakOut "main";
+				};
+			} foreach _mProfessions as Profession;
+			
+			classNull
+		};
+		
+		// Gets all professions.
+		public method Array GetAllProfessions
+		{
+			+_mProfessions
+		};
+		
+		public method AddProfession(
+    		"_type" as ProfessionType,
+    		"_name" as String,
+    		"_maxGroupsCount" as Scalar,
+    		"_minGroupSize" as Scalar,
+    		"_maxGroupSize" as Scalar,
+    		"_maxUnitsPerVehicle" as Scalar,
+    		"_markerTypeFriendly" as String,
+    		"_markerTypeEnemy" as String)
+    	{
+    		_mProfessions pushBack [_type, _name, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _markerTypeFriendly, _markerTypeEnemy] new Profession;
+    	};
+	};
+};
+

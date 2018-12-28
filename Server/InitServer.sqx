@@ -1,32 +1,39 @@
-call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProVehiclesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\SideMarkersConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponClassNamesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxClassNamesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\SideMarkerInfo.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponInfo.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\SideWeaponBoxInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBoxInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Order.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\OrderQueue.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\TechnologyInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
-call compile preprocessFileLineNumbers "Server\EventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
+call compile preprocessFileLineNumbers "Server\ServerEventHandlers.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -34,19 +41,23 @@ using Intrusion.Server;
 #region Server Classes
 
 /* Configs */
-call GameplayConfig.Init;
-call SideMarkersConfig.Init;
-call VehicleClassNamesConfig.Init;
-call ProVehiclesConfig.Init;
-call WeaponClassNamesConfig.Init;
-call WeaponBoxClassNamesConfig.Init;
-call WeaponsService.Init;
+call WeaponsConfig.Init;
+call WeaponBoxesConfig.Init;
+
+if (DebugConfig.Mode == MissionConfigMode.Production) then {
+	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+}
+else {
+	gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+};
 
 /* Handlers */
-call SquadHandler.Init;
-call ResourceLocationHandler.Init;
+[gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
 
 /* Services */
 call ObservationService.Init;
+
+/* Scientist */
+call Scientist.Init;
 
 #endregion

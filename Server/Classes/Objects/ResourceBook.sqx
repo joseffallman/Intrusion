@@ -14,14 +14,14 @@ namespace Intrusion.Server
 		// Creates a ResourceBook object.
 		public constructor {
 			_self.TotalProduction = 0;
-			_self.TotalTechnology = 0;
+			_self.TotalResearch = 0;
 		};
 		
 		// Gets the total available production.
 		public property Scalar TotalProduction { get; private set; };
 		
 		// Gets the total available technology.
-		public property Scalar TotalTechnology { get; private set; };
+		public property Scalar TotalResearch { get; private set; };
 		
 		// Makes a deposito into the resource account.
 		// _amount (Scalar): The amount to deposit.
@@ -30,11 +30,11 @@ namespace Intrusion.Server
 			_self.TotalProduction = _self.TotalProduction + _amount;
 		};
 		
-		// Makes a deposito into the technology account.
+		// Makes a deposit into the technology account.
 		// _amount (Scalar): The amount to deposit.
-		public method DepositTechnology {
+		public method DepositResearch {
 			params ["_amount" as Scalar];
-			_self.TotalTechnology = _self.TotalTechnology + _amount;
+			_self.TotalResearch = _self.TotalResearch + _amount;
 		};
 		
 		// Makes a withdrawal from the resource account.
@@ -52,25 +52,10 @@ namespace Intrusion.Server
 			_success
 		};
 		
-		// Makes a withdrawal from the technology account.
-		// _amount (Scalar): The amount to withdraw.
-		// Returns (Boolean): true if the transaction was made. false if there were not enough on the account.
-		public method Boolean WithdrawTechnology {
-			params ["_amount" as Scalar];
-			private _success = false;
-			
-			if (_self.TotalTechnology >= _amount) then {
-				_self.TotalTechnology = _self.TotalTechnology - _amount;
-				_success = true;
-			};
-			
-			_success
-		};
-		
 		// Prints the resource book to a readable text.
 		// Retursn (String): A text string.
 		public method String ToString {
-			"Production: " + str _self.TotalProduction + ", Technology: " + str _self.TotalTechnology
+			"Production: " + str _self.TotalProduction + ", Technology: " + str _self.TotalResearch
 		};
 	};
 };

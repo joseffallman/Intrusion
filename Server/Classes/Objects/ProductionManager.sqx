@@ -8,6 +8,7 @@
  * A class modeling a side's production manager, refining generated production (i.e. spawns new
  * vehicles and weapons).
  */
+
 using Intrusion.Common;
 using Intrusion.Communication;
 
@@ -15,14 +16,20 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mOrderQueue" as OrderQueue];
-	
+		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mOrderQueue" as OrderQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as IProfessionConfig];
+
 		// Creates a ProductionManager object.
-		public constructor {
-			params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, ["_orderQueue" as OrderQueue, classNull]];
+		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as IProfessionConfig, ["_orderQueue" as OrderQueue, classNull])
+		{
+			_mProfessionVehiclesConfig = _professionVehiclesConfig;
+			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
 			_self.Side = _side;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mSquadHandler = _squadHandler;
 			_mResourceBook = _resourceBook;
+			_mScientist = _scientist;
+			_mMessageHandler = _messageHandler;
+			_mProfessionConfig = _professionConfig;
 			
 			_mOrderQueue = _orderQueue;
 			
@@ -42,18 +49,25 @@ namespace Intrusion.Server
 		// Called when a group on the production manager's side changes its profession.
 		// _group (Group): The group that is changing its profession.
 		// _professionType (ProfessionType): The group's new profession type.
-		public method OnGroupChangingProfession {
-			params ["_group" as Group, "_professionType" as ProfessionType];
-			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProVehicleInfo];
+		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
+			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
+			private ["_cost" as Scalar];
 			
+			// Delete the group's eventual existing vehicle and return its production value.
+			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
+			[_cost] call _mResourceBook.DepositProduction;
+			
+			// Remove the group's eventual existing orders.
 			[_group] call _mOrderQueue.RemoveOrdersByGroup;
 			
-			_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames;
+			_vehicleClassNames = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNames;
+			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX: Must generate error that VehicleClassNamesConfig is not static.
 			
 			// Create an order if there is a vehicle to assign.
 			if (count _vehicleClassNames > 0) then {
 				_vehicleClassName = selectRandom _vehicleClassNames;
-				_professionVehicle = [_professionType] call ProVehiclesConfig.GetVehicle;
+				_professionVehicle = [_professionType] call _mProfessionVehiclesConfig.GetVehicle;
 				
 				_order = [_group, _vehicleClassName, _professionVehicle.Cost] new Order;
 				[_order] call _mOrderQueue.PutOrder;
@@ -61,26 +75,52 @@ namespace Intrusion.Server
 		};
 		
 		// Produces vehicles from the production queue.
-		public method Produce {
-			private ["_tryOneMore" as Boolean];
+		public method PerformProduction {
+			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_professionVehicle" as ProfessionVehicleInfo, "_technologyInvented" as Boolean];
+			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
 			
 			_tryOneMore = true;
-		
+
 			while { _tryOneMore && {!isNull _mOrderQueue.CurrentOrder} } do {
 				private _totalProduction = _mResourceBook.TotalProduction;
 				private _cost = _mOrderQueue.CurrentOrder.ProductionCost;
 				
-				if (_totalProduction >= _cost) then {
-					[_mOrderQueue.CurrentOrder.VehicleClassName] call _mVehicleSpawner.SpawnVehicleOnCarpark;
-					
-					// Tell the group
-					["ClientMessageHandler.ShowMessage", ["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group]] call Remote.Invoke;
-					
-					call _mOrderQueue.RemoveCurrentOrder;
-					[_cost] call _mResourceBook.WithdrawProduction;
-				}
-				else {
-					_tryOneMore = false;
+				_tryOneMore = false;
+				_squad = [_mOrderQueue.CurrentOrder.Group] call _mSquadHandler.GetSquadByGroup;
+				
+				if (!isNull _squad) then {
+					_professionVehicle = [_squad.ProfessionType] call _mProfessionVehiclesConfig.GetVehicle;
+					_technologyInvented = [_professionVehicle.RequiredTechnology] call _mScientist.TechnologyIsInvented;
+
+					if (!_technologyInvented) then {
+						call _mOrderQueue.MoveCurrentOrderLast;
+					}
+					else {
+						// Check how many vehicles that need to be created
+						_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
+						
+						if (_profession.MaxUnitsPerVehicle <= 0) then {
+							_vehiclesCount = 1;
+						}
+						else {
+							_vehiclesCount = ceil ((count units _squad.Group) / (_profession.MaxUnitsPerVehicle));
+						};
+	
+						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then {
+							// Create the vehicle(s)
+							for "_i" from 1 to _vehiclesCount do {
+								[_squad.Group, _mOrderQueue.CurrentOrder.VehicleClassName, _squad.ProfessionType, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
+								[_cost] call _mResourceBook.WithdrawProduction;
+							};
+							
+							// Tell the group
+							["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group] call _mMessageHandler.ShowMessage;
+							
+							call _mOrderQueue.RemoveCurrentOrder;
+							
+							_tryOneMore = true;
+						};
+					};
 				};
 			};
 		};

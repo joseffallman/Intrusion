@@ -1,0 +1,26 @@
+/*
+ * Name:	IServerConfig
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Bundles all server configs together.
+ */
+namespace Intrusion.Server
+{
+	public interface IServerConfig
+	{
+		// Gets the gameplay configs.
+		property IGameplayConfig Gameplay { get; };
+		
+		// Gets the technology configs.
+		property ITechnologyConfig Technology { get; };
+		
+		// Gets the profession vehicles config.
+		property IProfessionVehiclesConfig ProfessionVehicles { get; };
+		
+		// Gets the vehicle class names config.
+		property IVehicleClassNamesConfig VehicleClassNames { get; };
+	};
+};

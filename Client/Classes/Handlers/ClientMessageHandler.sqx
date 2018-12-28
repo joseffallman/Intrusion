@@ -14,7 +14,7 @@ namespace Intrusion.Client
         // _message (String): The message to be shown.
         public static method ShowHint("_message" as String, ["_address" as Any, objNull])
         {
-		    if (isNull _address) then {
+		    if (_address is Object && { isNull _address }) then {
 	            hint _message;
 		    }
 		    else {

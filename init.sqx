@@ -1,10 +1,9 @@
-call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
-
 using Intrusion.Server;
 
 enableSaving [false, false];
 
 // First common
+call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
 call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
 
 // Then server
@@ -22,6 +21,6 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {
-	//call MissionEngine.RunAsync;
+	//[gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
 	call Sqx.UnitTest.TestEngine.RunDelayedAsync;
 };

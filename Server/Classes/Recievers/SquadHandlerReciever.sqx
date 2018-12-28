@@ -1,0 +1,26 @@
+/*
+ * Name:	SquadHandlerReciever
+ * Date:	2018-12-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles incoming method calls for the SquadHandler via Remote.Invoke.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class SquadHandlerReciever
+	{
+		// Sets a group's profession to the public variable property.
+		// This function aquires a lock during runtime.
+		// _group (Group): The group to change profession.
+		// _professionName (String): The name of the new profession.
+		public static method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
+			[_group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
+		};
+	};
+};

@@ -1,0 +1,45 @@
+/*
+ * Name:	TestMessageHandler
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A test class to substitute the message handler.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestMessageHandler : IMessageHandler
+	{
+		// Creates a TestMessageHandler object.
+		public constructor {
+			_self.Messages = [];
+		};
+		
+		public property Array Messages { get; private set; };
+		
+        // Shows a message as a hint.
+        // _message (String): The message to be shown.
+        public method ShowHint("_message" as String, ["_address" as Any, objNull])
+        {
+        	_self.Messages pushBack [MessageType.Hint, _address, _message] new Message;
+        };
+
+        // Shows a message to the user.
+        // _message (String): The message to be shown.
+        public method ShowMessage("_message" as String, ["_address" as Any, objNull])
+        {
+        	_self.Messages pushBack [MessageType.Title, _address, _message] new Message;
+        };
+
+        // Shows a sub title to the user.
+        // _message (String): The message to be shown.
+        public method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
+        {
+        	_self.Messages pushBack [MessageType.Subtitle, _address, _message] new Message;
+        };
+	};
+};

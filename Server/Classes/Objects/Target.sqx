@@ -42,7 +42,7 @@ namespace Intrusion.Server
 		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
 		public static method Array GetEnemyTargets {
 			params ["_unit" as Object, ["_maxRange" as Scalar, 4000]];
-			private ["_targets" as Array, "_resultingTargets" as Array];
+			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
 			
 			_resultingTargets = [];
 			
@@ -57,7 +57,7 @@ namespace Intrusion.Server
 			
     		// Get all targets within range
 	        _targets = _unit nearTargets _maxRange;
-
+	        
 			{
 			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar];
 			    
@@ -73,8 +73,21 @@ namespace Intrusion.Server
 				};
 			} foreach _targets as Array;
 			
+			// Add vehicles manually
+			{
+				private ["_targetUnit" as Object];
+				_targetUnit = _x as Object;
+				
+				if (vehicle _targetUnit != _targetUnit) then { // If unit is in a vehicle
+					_visibility = [objNull, "VIEW"] checkVisibility [eyePos _unit, [getPosASL _targetUnit select 0, getPosASL _targetUnit select 1, (getPosASL _targetUnit select 2) + 2]];
+					
+					if (_visibility > 0.1 && { !([side _unit, side _targetUnit] call BIS_fnc_sideIsFriendly) }) then {
+						_resultingTargets pushBack [side _unit, getPos _targetUnit, side _targetUnit, _targetUnit, 0] new Target;
+					};
+				};
+			} foreach allUnits as Object;
+			
 			_resultingTargets
 		};
 	};
 };
-

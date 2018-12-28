@@ -6,6 +6,9 @@
  * Description:
  * Manages the resource collection for a side.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class SideManager
@@ -20,13 +23,14 @@ namespace Intrusion.Server
         // Parameter(s):
         // _side (Side): The side to handle.
         public constructor {
-		    params ["_side" as Side, "_vehicleSpawner" as IVehicleSpawner];
+		    params ["_serverConfig" as IServerConfig, "_commonConfig" as ICommonConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler, "_messageHandler" as IMessageHandler];
             
             _self.Side = _side;
             
             _mResourceBook = new ResourceBook;
-            _mResourceCollector = [_side, _mResourceBook] new ResourceCollector;
-            _mProductionManager = [_side, _vehicleSpawner, _mResourceBook] new ProductionManager;
+            _mResourceCollector = [_serverConfig.Gameplay, _side, _mResourceBook] new ResourceCollector;
+            _mScientist = [_side, _mResourceBook, _serverConfig.Technology, _messageHandler] new Scientist;
+            _mProductionManager = [_serverConfig.ProfessionVehicles, _serverConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions] new ProductionManager;
 		};
 		
 		// Gets the side of the side handler.
@@ -35,7 +39,8 @@ namespace Intrusion.Server
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
 		public method PerformTurn {
 			call _mResourceCollector.CollectResources;
-			call _mProductionManager.Produce;
+			call _mScientist.PerformResearch;
+			call _mProductionManager.PerformProduction;
 			
 			//player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
 		};

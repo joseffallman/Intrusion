@@ -10,8 +10,9 @@
 
 using Sqx.UnitTest;
 using Intrusion.Server;
+using Intrusion.Tests.Helpers;
 
-namespace Tests.Server
+namespace Intrusion.Tests.Server
 {
 	public class OrderQueueTests
 	{
@@ -24,7 +25,8 @@ namespace Tests.Server
 				"TwoOrders_NextOrderSelected_SecondIsCurrent",
 				"TwoOrdersButNoUnitsInGroups_NextOrderSelected_CurrentIsNull",
 				"ThreeOrders_RemoveCurrentTwoTimes_ThirdIsCurrent",
-				"ThreeOrders_SecondIsEmpty_SecondIsRemoved"
+				"ThreeOrders_SecondIsEmpty_SecondIsRemoved",
+				"TwoOrdersInQueue_FirstOrderMovedLast_CurrentOrderChanged"
 			]] call TestEngine.Register;
 		};
 		
@@ -207,6 +209,34 @@ namespace Tests.Server
 			deleteGroup _group1;
 			deleteGroup _group2;
 			deleteGroup _group3;
+		};
+		
+		private static method TwoOrdersInQueue_FirstOrderMovedLast_CurrentOrderChanged {
+			private ["_order1" as Order, "_order2" as Order];
+			private ["_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_group1 = [1] call TestActions.CreatePopulatedGroup;
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			
+			_order1 = [_group1, "CAR", 100] new Order;
+			_order2 = [_group2, "BUS", 200] new Order;
+			
+			[_order1] call _mOrderQueue.PutOrder;
+			[_order2] call _mOrderQueue.PutOrder;
+			
+			// Act
+			call _mOrderQueue.MoveCurrentOrderLast;
+			
+			// Assert
+			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
+			[_group2, _mOrderQueue.CurrentOrder.Group, "Second order should now be current."] call Assert.AreEqual;
+			_order2 = (call _mOrderQueue.GetOrders) select 1;
+			[_group1, _order2.Group, "First order should now be second."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group1] call TestActions.DeletePopulatedGroup;
+			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 	};
 };

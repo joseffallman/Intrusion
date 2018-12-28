@@ -13,22 +13,24 @@ using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
-	public class SquadHandler
+	public class SquadHandler : ISquadHandler
 	{
-		private static fields ["_mSquads" as SquadCollection];
+		private fields ["_mSquads" as SquadCollection];
 		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
 		
-		// Initializes the SquadHandler object.
-		public static method Init {
+		// Creates a SquadHandler object.
+		public constructor {
 			_mSquads = new SquadCollection;
 			_mProfessionChangeListeners = [];
+			
+			[_mSquads] call PublicVariableHandler.BroadcastSquads;
 		};
 		
 		// Gets a group by its leader.
 		// _leader: The player object whose group to find.
 		// Returns: A player group. classNull if no group was found.
-		public static method Squad GetGroupByLeader {
-			params ["_leader" as Object];
+		public method Squad GetGroupByLeader("_leader" as Object)
+		{
 			private "_foundSquad" as Squad;
 			
 			scopeName "main";
@@ -45,20 +47,10 @@ namespace Intrusion.Server
 			_foundSquad
 		};
 		
-		// Called when a leader invites a player to his/her group.
-		// _leader: The leader of the group.
-		// _member: The member that was invited.
-		public static method OnPlayerAddedToGroup {
-			//params ["_leader" as Object];
-			//private "_member" as Squad;
-			
-			//_group = [_leader] call _self.GetGroupByLeader;
-		};
-		
 		// Registers a group change profession listener to the list of listeners.
 		// _listener (IGroupChangingProfessionListener): The object that will listen.
-		public static method RegisterGroupChangingProfessionListener {
-			params ["_listener" as IGroupChangingProfessionListener];
+		public static method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener)
+		{
 			_mProfessionChangeListeners pushBack _listener;
 		};
 		
@@ -66,8 +58,8 @@ namespace Intrusion.Server
 		// This function aquires a lock during runtime.
 		// _group (Group): The group to change profession.
 		// _professionName (String): The name of the new profession.
-		public static method SetSquadProfession {
-			params ["_group" as Group, "_professionType" as ProfessionType];
+		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
 			private ["_squad" as Squad];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
@@ -99,6 +91,25 @@ namespace Intrusion.Server
 				// Tell the clients that the change was rejected
 				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is not available."]] call Remote.Invoke;
 			};
+		};
+		
+		// Gets a squad by group.
+		// _group (Group): The group to get the squad for.
+		// Returns (Squad): The squad if it is found. Otherwise classNull.
+		public method Squad GetSquadByGroup("_group" as Group)
+		{
+			scopeName "main";
+			
+			{
+				private ["_squad" as Squad];
+				_squad = _x as Squad;
+				
+				if (_squad.Group == _group) then {
+					_squad breakOut "main";
+				};
+			} foreach (_mSquads.Squads) as Squad;
+			
+			classNull
 		};
 	};
 };

@@ -9,15 +9,16 @@
  */
 namespace Intrusion.Server
 {
-	public class SideWeaponBoxInfo
+	public class WeaponBoxInfo
 	{
 		// Creates a SideWeaponBoxInfo object.
 		public constructor {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String];
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String, "_requiredTechnology" as Technology];
 			
 			_self.Side = _side;
 			_self.WeaponBoxType = _weaponBoxType;
 			_self.ClassName = _className;
+			_self.RequiredTechnology = _requiredTechnology;
 		};
 		
 		// Gets the weapon's side.
@@ -28,6 +29,9 @@ namespace Intrusion.Server
 		
 		// Gets the weapon's class name.
 		public property String ClassName { get; private set; };
+		
+		// Get the required technology for this weapon box to spawn
+		public property Technology RequiredTechnology { get; private set; };
 	};
 };
 

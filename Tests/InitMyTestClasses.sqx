@@ -3,13 +3,23 @@
 /* Include helper classes */
 call compile preprocessFileLineNumbers "Tests\Helpers\TestActions.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleSpawner.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestSquadHandler.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestTechnologyConfig.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestMessageHandler.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\Message.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleClassNamesConfig.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestProfessionVehiclesConfig.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestScientist.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestProfessionConfig.sqx";
 
 /* Include test classes */
 //call compile preprocessFileLineNumbers "Tests\Example\ExampleTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OrderQueueTests.sqx";
-call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
+//call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
+//call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ScientistTests.sqx";
 
 /* Initialize test classes */
 //call Tests.Example.ExampleTests.Init;
-call Tests.Server.OrderQueueTests.Init;
-call Tests.Server.ProductionManagerTests.Init;
+call Intrusion.Tests.Server.OrderQueueTests.Init;
+//call Intrusion.Tests.Server.ProductionManagerTests.Init;
+//call Intrusion.Tests.Server.ScientistTests.Init;

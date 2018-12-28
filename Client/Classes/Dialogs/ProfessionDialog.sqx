@@ -15,18 +15,15 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		private static fields ["_mOptions" as Array /* of ProfessionType */];
+		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig];
 	
 		// Initializes the profession dialog.
-		public static method Init
+		public static method Init("_professionConfig" as IProfessionConfig)
 		{
+			_mProfessionConfig = _professionConfig;
 			_mOptions = [];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
-//			call _self.AddAvailableProfessions;
-		
-			// Set the selected profession
-//			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 		};
 		
 		// Gets or sets the profession type that the user has selected.
@@ -58,12 +55,11 @@ namespace Intrusion.Client
 					_profession = _x;
 					
 					// If profession is available, and if the group has a good size
-					player sideChat (str _playersInGroup);
 					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _profession.Type;
 					};
-				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             }
             else {
 				{
@@ -71,7 +67,7 @@ namespace Intrusion.Client
 						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
 						_options pushBack _x.Type;
 					};
-				} foreach (call ProfessionConfig.GetAllProfessions) as Profession;
+				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             };
             
             _mOptions = _options;
@@ -111,7 +107,7 @@ namespace Intrusion.Client
 			
 			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
 			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
-			["SquadHandler.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
+			["SquadHandlerReciever.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.

@@ -11,14 +11,17 @@ namespace Intrusion.Common
 {
 	public class SquadCollection
 	{
-		private fields ["_mSquads" as Array /* of Squad */];
 		private fields ["_mLockedById" as Scalar];
 		
 		// Creates a SquadCollection object.
-		public constructor {
-			_mSquads = [];
+		public constructor()
+		{
+			_self.Squads = [];
 			_mLockedById = 0;
 		};
+		
+		// Gets the squad array.
+		public property Array Squads { get; private set; };
 		
 		// Adds a new or updates an existing squad.
 		// _squad (Squad): The squad to add or update.
@@ -26,19 +29,19 @@ namespace Intrusion.Common
 		{
 			scopeName "main";
 
-			for "_i" from 0 to (count _mSquads - 1) do 
+			for "_i" from 0 to (count _self.Squads - 1) do 
 			{
 				private ["_existingSquad" as Squad];
 				
-				_existingSquad = _mSquads select _i;
+				_existingSquad = _self.Squads select _i;
 				
 				if (_existingSquad.Group == _squad.Group) then {
-					_mSquads set [_i, _squad];
+					_self.Squads set [_i, _squad];
 					breakOut "main";
 				};
 			};
 			
-			_mSquads pushBack _squad;
+			_self.Squads pushBack _squad;
 		};
 		
 		// Removes all empty squads.
@@ -51,9 +54,9 @@ namespace Intrusion.Common
 				if (!(call _x.IsEmpty)) then {
 					_squadsToKeep pushBack _x;
 				};
-			} foreach _mSquads as Squad;
+			} foreach _self.Squads as Squad;
 			
-			_mSquads = _squadsToKeep;
+			_self.Squads = _squadsToKeep;
 		};
 		
 		// Gets the number of squads with a profession type of a certain side.
@@ -62,7 +65,7 @@ namespace Intrusion.Common
 		public method CountByProfessionType("_side" as Side, "_professionType" as ProfessionType)
 		{
 			[(str _this) + " SquadCollection.CountByProfessionType"] call LogHandler.Debug;
-			{ side _x.Group == _side && _x.ProfessionType == _professionType } count _mSquads as Squad;
+			{ side _x.Group == _side && _x.ProfessionType == _professionType } count (_self.Squads) as Squad;
 		};
 		
 		// Checks whether a profession type is available for a squad to select.
@@ -76,7 +79,7 @@ namespace Intrusion.Common
 			[(str _this) + " SquadCollection.ProfessionTypeAvailable"] call LogHandler.Debug;
 			
 			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
-			_profession = [_professionType] call ProfessionConfig.GetProfession;
+			_profession = [_professionType] call gCommonConfig.Professions.GetProfession;
 			
 			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
 		};
@@ -91,6 +94,25 @@ namespace Intrusion.Common
 		// Releases the lock set by AquireLock so that other threads can make changes to squads.
 		public method ReleaseLock {
 			_mLockedById = 0;
+		};
+		
+		// Gets a squad by a group.
+		// _group (Group): The group to get squad for.
+		// Returns (Squad): The group's squad. classNull if the squad was not found.
+		public method Squad GetSquadByGroup("_group" as Group)
+		{
+			scopeName "main";
+		
+			{
+				private ["_squad" as Squad];
+				_squad = _x as Squad;
+				
+				if (_squad.Group == _group) then {
+					_squad breakOut "main";
+				};
+			} foreach _self.Squads as Squad;
+			
+			classNull
 		};
 	};
 };

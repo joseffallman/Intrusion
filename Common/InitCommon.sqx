@@ -1,8 +1,10 @@
-call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\LogLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
@@ -10,14 +12,18 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\MapObservation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Squad.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\SquadCollection.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\MapMarkerInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfoCollection.sqx";
 
 using Intrusion.Common;
 
 #region Common Objects
 
 // Configs
-call ProfessionConfig.Init;
 call DebugConfig.Init;
+
+gCommonConfig = [new MapMarkersConfig, new ProfessionConfig] new CommonConfig;
 
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;

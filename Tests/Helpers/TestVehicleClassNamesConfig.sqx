@@ -1,0 +1,50 @@
+/*
+ * Name:	TestVehicleClassNamesConfig
+ * Date:	2018-12-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that can substitute the vehicle class names configurations.
+ */
+
+using Intrusion.Server;
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestVehicleClassNamesConfig : IVehicleClassNamesConfig
+	{
+		private fields ["_mClassNamesInfos" as Array /* of ProVehicleClassName */];
+	
+		// Creates a TestVehicleClassNamesConfig object.
+		public constructor {
+			_mClassNamesInfos = [];
+		};
+		
+		public method AddVehicleClassName("_side" as Side, "_professionType" as ProfessionType, "_vehicleClassNames" as Array /* of String */)
+		{
+			_mClassNamesInfos pushBack [_side, _professionType, _vehicleClassNames] new ProVehicleSideInfo;
+		};
+		
+		// Gets the vehicle class names by side and profession type.
+		// _side (Side): Side.
+		// _professionType (ProfessionType): Profession type.
+		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
+		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType) {
+			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNames"] call LogHandler.Debug;
+			
+			scopeName "main";
+			
+			diag_log (str _mClassNamesInfos);
+				
+			{
+				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
+					_x.ClassNames breakOut "main";
+				};
+			} foreach _mClassNamesInfos as ProVehicleSideInfo;
+			
+			[]
+		};
+	};
+};

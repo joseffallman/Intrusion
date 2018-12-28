@@ -1,0 +1,51 @@
+/*
+ * Name:	TestSquadHandler
+ * Date:	2018-12-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A test class for the squad handler.
+ */
+
+using Intrusion.Server;
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestSquadHandler : ISquadHandler
+	{
+		private fields ["_mSquad" as Squad];
+	
+		// Creates a TestSquadHandler object.
+		public constructor() {
+		};
+		
+		// Sets the test squad to be returned from the methods that returns a squad.
+		// _squad (Squad): The squad to be returned.
+		public method SetSquadToReturn("_squad" as Squad)
+		{
+			_mSquad = _squad;
+		};
+		
+		// Gets a group by its leader.
+		// _leader: The player object whose group to find.
+		// Returns: A player group. classNull if no group was found.
+		public method Squad GetGroupByLeader("_leader" as Object) { _mSquad };
+		
+		// Registers a group change profession listener to the list of listeners.
+		// _listener (IGroupChangingProfessionListener): The object that will listen.
+		public method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener) { };
+		
+		// Sets a group's profession to the public variable property.
+		// This function aquires a lock during runtime.
+		// _group (Group): The group to change profession.
+		// _professionName (String): The name of the new profession.
+		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType) { };
+		
+		// Gets a squad by group.
+		// _group (Group): The group to get the squad for.
+		// Returns (Squad): The squad if it is found. Otherwise classNull.
+		public method Squad GetSquadByGroup("_group" as Group) { _mSquad };
+	};
+};

@@ -9,30 +9,31 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionConfig {
+	public class ProfessionConfig : IProfessionConfig
+	{
         // Field(s):
 		// _mProfessions (Array): All professions as an array of Profession objects.
-		private static fields ["_mProfessions" as Array];
+		private fields ["_mProfessions" as Array];
 
-        // Initializes the profession config. Initializes all professions.
-        public static method Init {
+        // Initializes all professions.
+        public constructor {
         	_mProfessions = [
-        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, "o_inf"] new Profession,
-			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, "o_inf"] new Profession,
-			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, "o_inf"] new Profession,
-			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, "o_inf"] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, "o_inf"] new Profession,
-			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, "o_inf"] new Profession
+        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, 0, "b_inf", "o_inf"] new Profession,
+			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, 2, "b_inf", "o_inf"] new Profession,
+			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, 2, "b_maint", "o_maint"] new Profession,
+			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, 5, "b_motor_inf", "o_motor_inf"] new Profession,
+			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, 4, "b_support", "o_support"] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, 10, "b_mech_inf", "o_mech_inf"] new Profession,
+			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, 3, "b_armor", "o_armor"] new Profession
         	];
 		};
 		
 		// Gets a profession by profession type.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Profession): The sought profession. null if the profession type was invalid.
-		public static method Array GetVehicleClassNames("_professionType" as ProfessionType) {
+		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
 			scopeName "main";
 			
 			{
@@ -47,7 +48,7 @@ namespace Intrusion.Common
 		// Gets a profession.
 		// _professionType (ProfessionType): The profession type.
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
-		public static method Profession GetProfession("_professionType" as ProfessionType) {
+		public method Profession GetProfession("_professionType" as ProfessionType) {
 			[(str _this) + " ProfessionConfig.GetProfession"] call LogHandler.Debug;
 
 			scopeName "main";
@@ -65,8 +66,9 @@ namespace Intrusion.Common
 		};
 		
 		// Gets all professions.
-		public static method Array GetAllProfessions {
-			_mProfessions
+		public method Array GetAllProfessions
+		{
+			+_mProfessions
 		};
 	};
 };

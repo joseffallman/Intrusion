@@ -11,7 +11,7 @@
 using Intrusion.Common;
 using Intrusion.Server;
 
-namespace Tests.Helpers
+namespace Intrusion.Tests.Helpers
 {
 	public class TestVehicleSpawner : IVehicleSpawner
 	{
@@ -22,8 +22,8 @@ namespace Tests.Helpers
 		
 		public property Array SpawnedVehicles { get; private set; };
 		
-		public method IntrusionVehicle SpawnVehicleOnCarpark {
-		    params ["_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0]];
+		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_vehicleClass" as String, "_professionType" as ProfessionType, "_cost" as Scalar)
+		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
 			_intrusionVehicle = [objNull, west, _professionType, _group, _cost] new IntrusionVehicle;
@@ -32,8 +32,13 @@ namespace Tests.Helpers
 			_intrusionVehicle
 		};
 		
-		public method IntrusionVehicle SpawnFreeVehicleOnCarpark {};
+		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {};
 		
-		public method Scalar CountFreeVehiclesAtBase { 0 };
+		public method Scalar CountFreeVehiclesAtBase("_side" as Side) { 0 };
+		
+		// Deletes a profession vehicle belonging to a group from the map.
+		// _group (Group): The group whose vehicle will be deleted.
+		// Returns (Scalar): The production cost of the vehicle.
+		public method Scalar DeleteProfessionVehicles("_group" as Group) { 100 };
 	};
 };

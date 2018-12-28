@@ -11,12 +11,12 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class VehicleClassNamesConfig
+	public class VehicleClassNamesConfig : IVehicleClassNamesConfig
 	{
-		private static fields ["_mClassNamesInfos" as Array];
+		private fields ["_mClassNamesInfos" as Array];
 	
 		// Creates a VehicleClassNamesConfig object.
-		public static method Init {
+		public constructor {
 			private _westFreeVehicleCarTypes = ["B_MRAP_01_F", "B_Quadbike_01_F"];
 			private _westTransportCarTypes = ["B_Truck_01_transport_F", "B_Truck_01_covered_F"];
 			private _westFuelCarTypes = ["B_Truck_01_fuel_F"];
@@ -64,8 +64,7 @@ namespace Intrusion.Server
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		public static method Array GetProVehiclesClassNames {
-			params ["_side" as Side, "_professionType" as ProfessionType];
+		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType) {
 			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNames"] call LogHandler.Debug;
 			
 			scopeName "main";
