@@ -15,6 +15,7 @@ namespace Intrusion.Common
 		public constructor("_uid" as String, "_side" as Side) {
 			_self.Uid = _uid;
 			_self.Side = _side;
+			_self.IsBrigadeLeader = false;
 		};
 		
 		// Gets the player's UID.
@@ -22,5 +23,8 @@ namespace Intrusion.Common
 		
 		// Gets the players side.
 		public property Side Side { get; private set; };
+		
+		// Gets whether the player is a brigade ledaer or not.
+		public property Boolean IsBrigadeLeader { get; set; };
 	};
 };

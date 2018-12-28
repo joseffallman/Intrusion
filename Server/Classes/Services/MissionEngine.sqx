@@ -33,6 +33,8 @@ namespace Intrusion.Server
 			{
 				_player = _x;
 				[getPlayerUid _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
+				
+				// I AM HERE
 			} foreach _allPlayers;
 			
 			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfos;
