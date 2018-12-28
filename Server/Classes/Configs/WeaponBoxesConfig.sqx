@@ -17,7 +17,13 @@ namespace Intrusion.Server
 		public static method Init {
 			_mWeapons = [
 				[west, WeaponBoxType.Basic, "Box_NATO_Wps_F", Technology.None] new WeaponBoxInfo,
-				[east, WeaponBoxType.Basic, "Box_East_Wps_F", Technology.None] new WeaponBoxInfo
+				[east, WeaponBoxType.Basic, "Box_East_Wps_F", Technology.None] new WeaponBoxInfo,
+				[west, WeaponBoxType.Grenades, "Box_NATO_Grenades_F", Technology.None] new WeaponBoxInfo,
+				[east, WeaponBoxType.Grenades, "Box_East_Grenades_F", Technology.None] new WeaponBoxInfo,
+				[west, WeaponBoxType.Launchers, "Box_NATO_WpsLaunch_F", Technology.Launchers] new WeaponBoxInfo,
+				[east, WeaponBoxType.Launchers, "Box_East_WpsLaunch_F", Technology.Launchers] new WeaponBoxInfo,
+				[west, WeaponBoxType.Ordnance, "Box_NATO_Wps_F", Technology.Launchers] new WeaponBoxInfo,
+				[east, WeaponBoxType.Ordnance, "Box_East_Wps_F", Technology.Launchers] new WeaponBoxInfo,
 			];
 		};
 		

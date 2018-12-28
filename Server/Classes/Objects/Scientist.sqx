@@ -78,14 +78,19 @@ namespace Intrusion.Server
 		{
 			scopeName "main";
 			
-			{
-				private ["_sideTech" as SideTechnology];
-				_sideTech = _x;
-				
-				if (_sideTech.Side == _side && _sideTech.Technology == _technology) then {
-					true breakOut "main";
-				};
-			} foreach _mSideTechnologies as SideTechnology;
+			if (_technology == Technology.None) then {
+				true breakOut "main";
+			}
+			else {
+				{
+					private ["_sideTech" as SideTechnology];
+					_sideTech = _x;
+					
+					if (_sideTech.Side == _side && _sideTech.Technology == _technology) then {
+						true breakOut "main";
+					};
+				} foreach _mSideTechnologies as SideTechnology;
+			};
 			
 			false
 		};
