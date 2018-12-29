@@ -14,7 +14,7 @@ namespace Intrusion.Common
 			_self.Mode = MissionConfigMode.Test;
 			_self.ShowTutorials = true;
 			_self.LogLevelFile = LogLevel.Debug;
-			_self.LogLevelScreen = LogLevel.Info;
+			_self.LogLevelScreen = LogLevel.Warning;
 		};
 	
 		// Gets whether the mission is in debug mode or not.

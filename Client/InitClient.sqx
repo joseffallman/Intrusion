@@ -46,12 +46,3 @@ call GroupActionHandler.ResetInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;
-
-if (didJIP) then {
-	// Perform JIP stuff
-	[gCommonConfig.MapMarkers] call JipService.StartAsync;
-}
-else {
-	// Show the Welcome tutorial
-	[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
-};

@@ -22,11 +22,11 @@ namespace Intrusion.Client
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];
 		
 			waitUntil { call PublicVariableHandler.PlayerInfosHasValue && player == player };
-			
+
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfos;
 			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;
 			_isCheating = !(isNull _playerInfo || { _playerInfo.Side == playerSide });
-			
+
 			if (_isCheating) then {
 				0 fadeSound 0;
 				removeAllWeapons player;

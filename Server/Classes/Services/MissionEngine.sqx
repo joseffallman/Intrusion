@@ -27,6 +27,7 @@ namespace Intrusion.Server
 		private static method InitPlayerInfoCollection {
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_allPlayers" as Array, "_player" as Object];
 			
+			sleep 2;
 			_playerInfoCollection = new PlayerInfoCollection;
 			_allPlayers = call BIS_fnc_listPlayers;
 			
