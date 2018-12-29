@@ -14,7 +14,7 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 		
 		private static method WeaponBox GetWeaponBox("_side" as Side, "_weaponBoxType" as WeaponBoxType)
 		{
@@ -68,7 +68,7 @@ namespace Intrusion.Server
 						
 						_weaponBox = [_side, _weaponBoxType] call _self.GetWeaponBox;
 						_weaponBoxInfo = [_weaponBoxType] call WeaponBoxesConfig.GetWeaponBoxInfo;
-						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call Scientist.SideTechnologyIsInvented;
+						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
 
 						if (_weaponBoxInvented && (isNull _weaponBox || { !(call _weaponBox.IsAlive) })) then
 						{
@@ -110,7 +110,7 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the weapons service.
-		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig)
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mWeaponBoxTypes = [
 				WeaponBoxType.Basic,
@@ -120,6 +120,7 @@ namespace Intrusion.Server
 			
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mWeaponBoxes = [];
 			
 			[] spawn _self.Run;

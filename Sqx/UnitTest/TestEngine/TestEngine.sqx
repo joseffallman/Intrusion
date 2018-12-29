@@ -11,7 +11,7 @@ namespace Sqx.UnitTest
 {
 	public class TestEngine
 	{
-		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean];
+		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean, "_mAllOutput" as String];
 		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String];
 		
 		// Initializes the test engine.
@@ -32,11 +32,17 @@ namespace Sqx.UnitTest
 		// _text (String): The text to be written.
 		private static method Output("_text" as String, ["_onlyToRpt" as Boolean, false])
 		{
+			private ["_crlf" as String];
+			
+			_crlf = toString [0x0D, 0x0A];
+			
 			if (!_onlyToRpt) then {
 				player sideChat _text;
 			};
 			
 			diag_log _text;
+			_mAllOutput = _mAllOutput + _text + _crlf;
+			copyToClipboard _mAllOutput;
 		};
 		
 		// Asserting a test and registeres it as failed.
@@ -77,16 +83,18 @@ namespace Sqx.UnitTest
 		private static method Run("_delayed" as Boolean)
 		{
 			private ["_sqfTestMethod" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sqfClassName" as String, "_sConstructorFunction" as String, "_sqfBeforeEach" as String, "_sqfAfterEach" as String];
-
+			private ["_startTime" as Scalar];
+			
 			_successCount = 0;
 			_failedCount = 0;
+			_mAllOutput = "";
 			
 			if (_delayed) then {
 				sleep 3;
 			};
 
 			["RUNNING TESTS..."] call _self.Output;
-			
+
 			{
 				_testUnit = _x;
 				
@@ -95,43 +103,53 @@ namespace Sqx.UnitTest
 				_sqfClassName = ([_mCurrentNamespaceName, ".", "_"] call _self.StringReplace) + "_" + _mCurrentClassName;
 				
 				_sConstructorFunction = "cl_" + _sqfClassName + "_constructor";
-				waitUntil { !(isNil compile _sConstructorFunction) };
+
+				_startTime = time;
+				waitUntil { time > _startTime + 5 || !(isNil compile _sConstructorFunction) };
 				
-				{
-					_mCurrentMethodName = _x;
-					_mMethodSucceeded = true;
-					
-					_sqfBeforeEach = _sqfClassName + "_BeforeEach";
-					if (!isNil _sqfBeforeEach) then {
-						call compile ("call " + _sqfBeforeEach);
-					};
-					
-					_sqfTestMethod = _sqfClassName + "_" + _mCurrentMethodName + ";";
-					
-					if (isNil compile _sqfTestMethod) then {
-						_mMethodSucceeded = false;
-						[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
-					}
-					else {
-						call compile ("call " + _sqfTestMethod);
-					};
-					
-					if (_mMethodSucceeded) then {
-						_successCount = _successCount + 1;
-						[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
-					}
-					else {
-						_failedCount = _failedCount + 1;
-					};
-					
-					_sqfAfterEach = _sqfClassName + "_AfterEach";
-					if (!(isNil compile _sqfAfterEach)) then {
-						call compile ("call " + _sqfAfterEach);
-					};
-				} foreach _testUnit.MethodNames as String;
+				if (isNil compile _sConstructorFunction) then {
+					[("MISSING: " + _mCurrentNamespaceName + "." + _mCurrentClassName + " - Test class was not found.")] call _self.Output;
+				}
+				else {
+					{
+						_mCurrentMethodName = _x;
+						_mMethodSucceeded = true;
+						
+						_sqfBeforeEach = _sqfClassName + "_BeforeEach";
+						if (!isNil _sqfBeforeEach) then {
+							call compile ("call " + _sqfBeforeEach);
+						};
+						
+						_sqfTestMethod = _sqfClassName + "_" + _mCurrentMethodName + ";";
+						
+						if (isNil compile _sqfTestMethod) then {
+							_mMethodSucceeded = false;
+							[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
+						}
+						else {
+							call compile ("call " + _sqfTestMethod);
+						};
+						
+						if (_mMethodSucceeded) then {
+							_successCount = _successCount + 1;
+							[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
+						}
+						else {
+							_failedCount = _failedCount + 1;
+						};
+						
+						_sqfAfterEach = _sqfClassName + "_AfterEach";
+						if (!(isNil compile _sqfAfterEach)) then {
+							call compile ("call " + _sqfAfterEach);
+						};
+					} foreach _testUnit.MethodNames as String;
+				};
+				
 			} foreach _mTestUnits as TestUnit;
 			
 			["TOTAL: " + str (_successCount + _failedCount) + ". PASSED: " + str _successCount + ". FAILED: " + str _failedCount] call _self.Output;
+			copyToClipboard _mAllOutput;
+			["Full test report copied to clipboard."] call _self.Output;
 		};
 		
 		// Starts a parallell task that runs all the tests.

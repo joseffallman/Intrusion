@@ -37,7 +37,7 @@ namespace Intrusion.Tests.Server
 		
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Tests.Server", "ProductionManagerTests", [
+			["Intrusion.Tests.Server", "ProductionManagerTests", [
 				"NoItemToProduce_Production_NoItemProduced",
 				"ItemToProduce_GroupCanAfford_ItemProduced",
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",

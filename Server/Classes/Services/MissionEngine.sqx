@@ -41,11 +41,13 @@ namespace Intrusion.Server
         // Runs the mission.
         private static method Run() {
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
-			private ["_messageHandler" as MessageHandler];
+			private ["_messageHandler" as MessageHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection];
         	
         	// Create handlers
         	_messageHandler = new MessageHandler;
         	_self.SquadHandler = new SquadHandler;
+        	
+        	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	
         	// Initialize the player info collection
         	call _self.InitPlayerInfoCollection;
@@ -57,7 +59,7 @@ namespace Intrusion.Server
         	[_mServerConfig.Gameplay] call MissionCounterService.RunAsync;
         	
         	// Start the weapon service
-        	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers] call WeaponsService.RunAsync;
+        	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, _inventedTechnologiesCollection] call WeaponsService.RunAsync;
         	
         	// Start the observation service
         	call ObservationService.RunAsync;
@@ -66,7 +68,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler, _inventedTechnologiesCollection] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service

@@ -18,7 +18,7 @@ namespace Intrusion.Tests.Server
 	{
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Tests.Server", "OrderQueueTests", [
+			["Intrusion.Tests.Server", "OrderQueueTests", [
 				"OrderQueueEmpty_NothingChanged_CurrentIsNull",
 				"OrderQueueEmpty_OrderAdded_SetAsCurrent",
 				"OrderQueueEmpty_TwoOrdersAdded_FirstIsCurrent",

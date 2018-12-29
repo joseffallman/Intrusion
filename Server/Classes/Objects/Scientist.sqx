@@ -15,26 +15,20 @@ namespace Intrusion.Server
 {
 	public class Scientist : IScientist
 	{
-		private static fields ["_mSideTechnologies" as Array /* of SideTechnology */];
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
-		private fields ["_mInventedTechnologies" as Array /* of Technology (enum) */, "_mSide" as Side];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mSide" as Side];
 		private fields ["_mCurrentTechnology" as TechnologyInfo, "_mAllTechnologiesInvented" as Boolean];
 		
-		public static method Init()
-		{
-			_mSideTechnologies = [];
-		};
-		
 		// Creates a Sceintist object.
-		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, ["_firstTechToResearch" as Technology, 1 as Technology])
+		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, ["_firstTechToResearch" as Technology, 1 as Technology])
 		{
 			_mSide = _side;
 			_mResourceBook = _resourceBook;
 			_mTechnologyConfig = _technologyConfig;
 			_mMessageHandler = _messageHandler;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			
 			_mCurrentTechnology = [_firstTechToResearch] call _mTechnologyConfig.GetTechnology;
-			_mInventedTechnologies = [];
 			_mAllTechnologiesInvented = false;
 		};
 		
@@ -43,8 +37,7 @@ namespace Intrusion.Server
 		{
 			private ["_technology" as Technology];
 			
-			_mInventedTechnologies pushBack _mCurrentTechnology.Technology;
-			_mSideTechnologies pushBack [_mSide, _mCurrentTechnology.Technology] new SideTechnology;
+			[_mSide, _mCurrentTechnology.Technology] call _mInventedTechnologiesCollection.AddInventedTechnology;
 			["Your side has invented '" + _mCurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
 			
 			// Get next technology to research
@@ -71,28 +64,7 @@ namespace Intrusion.Server
 		// Gets whether a technology is invented yet or not.
 		public method Boolean TechnologyIsInvented("_technology" as Technology)
 		{
-			_technology in _mInventedTechnologies
-		};
-		
-		public static method Boolean SideTechnologyIsInvented("_side" as Side, "_technology" as Technology)
-		{
-			scopeName "main";
-			
-			if (_technology == Technology.None) then {
-				true breakOut "main";
-			}
-			else {
-				{
-					private ["_sideTech" as SideTechnology];
-					_sideTech = _x;
-					
-					if (_sideTech.Side == _side && _sideTech.Technology == _technology) then {
-						true breakOut "main";
-					};
-				} foreach _mSideTechnologies as SideTechnology;
-			};
-			
-			false
+			[_mSide, _technology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented
 		};
 	};
 };
