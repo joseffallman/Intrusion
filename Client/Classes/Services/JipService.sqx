@@ -28,6 +28,7 @@ namespace Intrusion.Client
 			_isCheating = !(isNull _playerInfo || { _playerInfo.Side == playerSide });
 
 			if (_isCheating) then {
+				ClientState.IsOnCorrectSide = false;
 				0 fadeSound 0;
 				removeAllWeapons player;
 				player removeweapon "itemmap";
@@ -45,6 +46,7 @@ namespace Intrusion.Client
 			else {
 				private ["_mapMarkerInfo" as MapMarkerInfo];
 				
+				ClientState.IsOnCorrectSide = true;
 				_mapMarkerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
 				player setPos getMarkerPos _mapMarkerInfo.BaseMarkerName;
 			

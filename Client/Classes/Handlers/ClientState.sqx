@@ -1,0 +1,21 @@
+/*
+ * Name:	ClientState
+ * Date:	2018-12-30
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles different client states.
+ */
+namespace Intrusion.Client
+{
+	public class ClientState
+	{
+		public method Init()
+		{
+			_self.IsOnCorrectSide = true;
+		};
+	
+		public static property IsOnCorrectSide { get; set; };
+	};
+};
