@@ -14,61 +14,67 @@ namespace Intrusion.Client
         // _message (String): The message to be shown.
         public static method ShowHint("_message" as String, ["_address" as Any, objNull])
         {
-		    if (_address is Object && { isNull _address }) then {
-	            hint _message;
-		    }
-		    else {
-		    	if (_address is Object && {_address == player}) then {
+        	if (ClientState.IsOnCorrectSide) then {
+			    if (_address is Object && { isNull _address }) then {
 		            hint _message;
-		    	};
-		    	if (typeName _address == "Group" && {_address == group player}) then {
-		            hint _message;
-		    	};
-		    	if (typeName _address == "Side" && {_address == side player}) then {
-		            hint _message;
-		    	};
-		    };
+			    }
+			    else {
+			    	if (_address is Object && {_address == player}) then {
+			            hint _message;
+			    	};
+			    	if (typeName _address == "Group" && {_address == group player}) then {
+			            hint _message;
+			    	};
+			    	if (typeName _address == "Side" && {_address == side player}) then {
+			            hint _message;
+			    	};
+			    };
+        	};
 		};
 
         // Shows a message to the user.
         // _message (String): The message to be shown.
         public static method ShowMessage("_message" as String, ["_address" as Any, objNull])
         {
-		    if (isNull _address) then {
-	            titleText [_message, "PLAIN"];
-		    }
-		    else {
-		    	if (_address is Object && {_address == player}) then {
+        	if (ClientState.IsOnCorrectSide) then {
+			    if (isNull _address) then {
 		            titleText [_message, "PLAIN"];
-		    	};
-		    	//if (_address is Group && {_address == group player}) then { // SQX TODO - Group is interpretaded as the command and not the type
-		    	if (typeName _address == "Group" && {_address == group player}) then {
-		            titleText [_message, "PLAIN"];
-		    	};
-		    	if (typeName _address == "Side" && {_address == side player}) then {
-		            titleText [_message, "PLAIN"];
-		    	};
-		    };
+			    }
+			    else {
+			    	if (_address is Object && {_address == player}) then {
+			            titleText [_message, "PLAIN"];
+			    	};
+			    	//if (_address is Group && {_address == group player}) then { // SQX TODO - Group is interpretaded as the command and not the type
+			    	if (typeName _address == "Group" && {_address == group player}) then {
+			            titleText [_message, "PLAIN"];
+			    	};
+			    	if (typeName _address == "Side" && {_address == side player}) then {
+			            titleText [_message, "PLAIN"];
+			    	};
+			    };
+			};
 		};
 
         // Shows a sub title to the user.
         // _message (String): The message to be shown.
         public static method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
         {
-		    if (isNull _address) then {
-	            titleText [_message, "PLAIN DOWN"];
-		    }
-		    else {
-		    	if (_address is Object && {_address == player}) then {
+        	if (ClientState.IsOnCorrectSide) then {
+			    if (isNull _address) then {
 		            titleText [_message, "PLAIN DOWN"];
-		    	};
-		    	if (typeName _address == "Group" && {_address == group player}) then {
-		            titleText [_message, "PLAIN DOWN"];
-		    	};
-		    	if (typeName _address == "Side" && {_address == side player}) then {
-		            titleText [_message, "PLAIN DOWN"];
-		    	};
-		    };
+			    }
+			    else {
+			    	if (_address is Object && {_address == player}) then {
+			            titleText [_message, "PLAIN DOWN"];
+			    	};
+			    	if (typeName _address == "Group" && {_address == group player}) then {
+			            titleText [_message, "PLAIN DOWN"];
+			    	};
+			    	if (typeName _address == "Side" && {_address == side player}) then {
+			            titleText [_message, "PLAIN DOWN"];
+			    	};
+			    };
+			};
 		};
 	};
 };

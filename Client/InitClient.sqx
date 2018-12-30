@@ -20,6 +20,8 @@ call compile preprocessFileLineNumbers "Client\ClientEventHandlers.sqx";
 
 using Intrusion.Client;
 
+cutText ["", "BLACK FADED"];
+
 waitUntil { player == player };
 
 // Configs

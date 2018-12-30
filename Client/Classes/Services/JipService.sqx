@@ -71,7 +71,6 @@ namespace Intrusion.Client
 		// Creates a JipService object.
 		public static method StartAsync("_mapMarkersConfig" as IMapMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
-			cutText ["", "BLACK FADED"];
 			[] spawn _self.Run;
 		};
 	};

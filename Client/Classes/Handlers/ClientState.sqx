@@ -11,7 +11,7 @@ namespace Intrusion.Client
 {
 	public class ClientState
 	{
-		public method Init()
+		public static method Init()
 		{
 			_self.IsOnCorrectSide = true;
 		};

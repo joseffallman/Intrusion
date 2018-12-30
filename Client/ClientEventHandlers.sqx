@@ -1,12 +1,14 @@
 using Intrusion.Client;
 
-// Fires when a JIP player is connecting.
+// Fires when preload finishes.
 ["ClientEventHandlerId_01", "onPreloadFinished", { 
 	if (didJIP) then {
 		// Perform JIP stuff
 		[gCommonConfig.MapMarkers] call JipService.StartAsync;
 	}
 	else {
+  		cutText ["","BLACK IN", 1];
+  		
 		// Show the Welcome tutorial
 		[] spawn {
 			sleep 1;
