@@ -38,7 +38,11 @@ namespace Intrusion.Common
 		
 		public method AddPlayerInfo("_uid" as String, "_side" as Side)
 		{
-			_mPlayerInfos pushBack [[_uid, _side] new PlayerInfo];
+			_mPlayerInfos pushBack [_uid, _side] new PlayerInfo;
+		};
+		
+		public method GetPlayerInfos() {
+			_mPlayerInfos
 		};
 	};
 };

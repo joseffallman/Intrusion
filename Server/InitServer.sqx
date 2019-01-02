@@ -24,6 +24,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\TechnologyInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
@@ -56,8 +57,5 @@ else {
 
 /* Services */
 call ObservationService.Init;
-
-/* Scientist */
-call Scientist.Init;
 
 #endregion

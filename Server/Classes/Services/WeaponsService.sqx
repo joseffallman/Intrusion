@@ -14,7 +14,7 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 		
 		private static method WeaponBox GetWeaponBox("_side" as Side, "_weaponBoxType" as WeaponBoxType)
 		{
@@ -57,7 +57,7 @@ namespace Intrusion.Server
 	        	{
 					private ["_side" as Side];
 					_side = _x;
-					
+
 					_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 
 					// Create the weapon boxes if it is not already there
@@ -68,8 +68,8 @@ namespace Intrusion.Server
 						
 						_weaponBox = [_side, _weaponBoxType] call _self.GetWeaponBox;
 						_weaponBoxInfo = [_weaponBoxType] call WeaponBoxesConfig.GetWeaponBoxInfo;
-						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call Scientist.SideTechnologyIsInvented;
-						
+						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+
 						if (_weaponBoxInvented && (isNull _weaponBox || { !(call _weaponBox.IsAlive) })) then
 						{
 							_weaponBox = [_side, getMarkerPos _markerInfo.WeaponDepotMarkerName, _weaponBoxType] new WeaponBox;
@@ -87,11 +87,19 @@ namespace Intrusion.Server
 								private ["_weaponInfo" as WeaponInfo];
 								_weaponInfo = _x;
 								
-								_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+								if (_weaponInfo.ClassName != "") then {
+									_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+									
+									{
+										_weaponBox.Object addItemCargoGlobal [_x, 300];
+									} foreach _weaponInfo.Magazines as String;
+								}
+								else {
+									{
+										_weaponBox.Object addItemCargoGlobal [_x, 300];
+									} foreach _weaponInfo.Magazines as String;
+								};
 								
-								{
-									_weaponBox.Object addMagazineCargoGlobal [_x, 300];
-								} foreach _weaponInfo.Magazines as String;
 							} foreach ([_side, _weaponBoxType] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;
 						};
 					} foreach _mWeaponBoxTypes as WeaponBoxType;
@@ -102,17 +110,17 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the weapons service.
-		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig)
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mWeaponBoxTypes = [
 				WeaponBoxType.Basic,
 				WeaponBoxType.Grenades,
-				WeaponBoxType.Launchers,
-				WeaponBoxType.Ordnance
+				WeaponBoxType.Launchers
 			];
 			
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mWeaponBoxes = [];
 			
 			[] spawn _self.Run;

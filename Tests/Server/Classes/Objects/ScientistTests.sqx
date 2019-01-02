@@ -22,13 +22,14 @@ namespace Intrusion.Tests.Server
 		private static fields [
 			"_mMessageHandler" as TestMessageHandler,
 			"_mResourceBook" as ResourceBook,
+			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_mScientist" as Scientist];
 		
 		#endregion
 		
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Tests.Server", "ScientistTests", [
+			["Intrusion.Tests.Server", "ScientistTests", [
 				"NoProgress_GetsFirstTechnology_TechnologyInvented",
 				"NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented"
 			]] call TestEngine.Register;
@@ -38,7 +39,8 @@ namespace Intrusion.Tests.Server
 		private static method BeforeEach {
 			_mResourceBook = new ResourceBook;
 			_mMessageHandler = new TestMessageHandler;
-			_mScientist = [west, _mResourceBook, new TestTechnologyConfig, _mMessageHandler] new Scientist;
+			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			_mScientist = [west, _mResourceBook, new TestTechnologyConfig, _mMessageHandler, _mInventedTechnologiesCollection] new Scientist;
 		};
 		
 //		private static method AfterEach {

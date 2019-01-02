@@ -48,6 +48,8 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
     Added methods Assert.IsTrue and Assert.IsFalse.
     README changed location from Tests to Sqx\UnitTest.
 X.X Fixed: Change == to "isEqualTo" in Assert.AreEqual.
+    The test report is now copied to clipboard.
+    Added error message for when the test class does not exist.
 
 
 Good luck unit testing!
