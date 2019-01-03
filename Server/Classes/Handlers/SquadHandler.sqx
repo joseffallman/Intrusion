@@ -65,7 +65,6 @@ namespace Intrusion.Server
 			
 			// Create a new squad and add (or update) it to the list of squads.
 			if ([side _group, _professionType] call _mSquads.ProfessionTypeAvailable) then {
-				//call SquadCollection.AquireLock; // TODO SQX: Should not be permitted, since SquadCollection is not static. Important!
 				call _mSquads.AquireLock;
 				
 				_squad = [_group, _professionType] new Squad;

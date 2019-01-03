@@ -105,7 +105,7 @@ namespace Intrusion.Server
 				_mOrders pushBack _order;
 				_order = _mOrders select 0;
 				_self.CurrentOrder = _order;
-				//_self.CurrentOrder = (_mOrders select 0); // TODO SQX: Compiler adds a semicolon too much.
+				//_self.CurrentOrder = (_mOrders select 0); // TODO SQX (TEST ADDED): Compiler adds a semicolon too much.
 			};
 		};
 	};

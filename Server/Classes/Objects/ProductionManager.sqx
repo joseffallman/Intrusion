@@ -62,7 +62,7 @@ namespace Intrusion.Server
 			[_group] call _mOrderQueue.RemoveOrdersByGroup;
 			
 			_vehicleClassNames = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNames;
-			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX: Must generate error that VehicleClassNamesConfig is not static.
+			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX (TEST ADDED): Must generate error that VehicleClassNamesConfig is not static.
 			
 			// Create an order if there is a vehicle to assign.
 			if (count _vehicleClassNames > 0) then {
