@@ -1,7 +1,7 @@
 class IntBaseDialog_DialogSurface : BOX
 {
 	idc = 1800;
-	text = "Text"; //--- ToDo: Localize;
+	text = "Text";
 	x = 0 * GUI_GRID_W + GUI_GRID_X;
 	y = 0 * GUI_GRID_H + GUI_GRID_Y;
 	w = 40 * GUI_GRID_W;
@@ -12,7 +12,7 @@ class IntBaseDialog_DialogSurface : BOX
 class IntBaseDialog_Header : RscText
 {
 	idc = -1;
-	text = "Header"; //--- ToDo: Localize;
+	text = "Header";
 	x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 0.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 39 * GUI_GRID_W;
@@ -22,7 +22,7 @@ class IntBaseDialog_Header : RscText
 
 class IntBaseDialog_Button : RscButton
 {
-	text = "Hit me"; //--- ToDo: Localize;
+	text = "Hit me";
 	x = 35.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;
@@ -32,7 +32,7 @@ class IntBaseDialog_Button : RscButton
 
 class IntBaseDialog_CloseButton : IntBaseDialog_Button
 {
-	text = "Close"; //--- ToDo: Localize;
+	text = "Close";
 	x = 35.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;

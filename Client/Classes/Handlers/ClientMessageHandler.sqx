@@ -44,7 +44,7 @@ namespace Intrusion.Client
 			    	if (_address is Object && {_address == player}) then {
 			            titleText [_message, "PLAIN"];
 			    	};
-			    	//if (_address is Group && {_address == group player}) then { // SQX TODO - Group is interpretaded as the command and not the type
+			    	//if (_address is Group && {_address == group player}) then { // SQX TODO (TEST ADDED) - Group is interpretaded as the command and not the type
 			    	if (typeName _address == "Group" && {_address == group player}) then {
 			            titleText [_message, "PLAIN"];
 			    	};

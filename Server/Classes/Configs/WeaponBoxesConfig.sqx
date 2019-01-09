@@ -36,7 +36,7 @@ namespace Intrusion.Server
 			
 			{
 				if (_x.Side == _side && _x.WeaponBoxType == _weaponBoxType) then {
-					(_x.ClassName) breakOut "main"; // TODO SQX: Should work without parenthesis...
+					(_x.ClassName) breakOut "main"; // TODO SQX (TEST ADDED): Should work without parenthesis...
 				};
 			} foreach _mWeapons as WeaponBoxInfo;
 			
