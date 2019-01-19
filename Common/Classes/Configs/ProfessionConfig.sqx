@@ -19,7 +19,7 @@ namespace Intrusion.Common
         public constructor {
         	_mProfessions = [
         		[ProfessionType.Infantry, "Infantry", -1, 1, 10, 0, "b_inf", "o_inf"] new Profession,
-			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, 2, "b_inf", "o_inf"] new Profession,
+			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, 2, "b_service", "o_service"] new Profession,
 			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
 			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, 2, "b_service", "o_service"] new Profession,
 			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, 2, "b_maint", "o_maint"] new Profession,

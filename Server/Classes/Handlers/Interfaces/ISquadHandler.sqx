@@ -21,7 +21,7 @@ namespace Intrusion.Server
 		
 		// Registers a group change profession listener to the list of listeners.
 		// _listener (IGroupChangingProfessionListener): The object that will listen.
-		method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener);
+		//method RegisterGroupChangingProfessionListener("_listener" as IGroupChangingProfessionListener);
 		
 		// Sets a group's profession to the public variable property.
 		// This function aquires a lock during runtime.

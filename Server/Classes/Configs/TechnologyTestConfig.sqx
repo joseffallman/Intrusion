@@ -16,14 +16,14 @@ namespace Intrusion.Server
 		// Creates a TechnologyConfig object.
 		public constructor {
 			_mTechnologies = [
-				[Technology.Transport, "Transport", 10] new TechnologyInfo,
-				[Technology.Services, "Services", 20] new TechnologyInfo,
-				[Technology.Maintenance, "Maintenance", 30] new TechnologyInfo,
-				[Technology.Launchers, "Launchers", 40] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 50] new TechnologyInfo,
-				[Technology.AntiArmor, "Anti Armor", 60] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized Vehicles", 70] new TechnologyInfo,
-				[Technology.Armored, "Armored Vehicles", 80] new TechnologyInfo,
+				[Technology.Transport, "Transport", 250] new TechnologyInfo,
+				[Technology.Services, "Services", 500] new TechnologyInfo,
+				[Technology.Maintenance, "Maintenance", 750] new TechnologyInfo,
+				[Technology.Launchers, "Launchers", 1000] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 1250] new TechnologyInfo,
+				[Technology.AntiArmor, "Anti Armor", 1500] new TechnologyInfo,
+				[Technology.Mechanized, "Mechanized Vehicles", 1750] new TechnologyInfo,
+				[Technology.Armored, "Armored Vehicles", 2000] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;
