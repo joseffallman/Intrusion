@@ -31,8 +31,8 @@ namespace Intrusion.Server
 		
 		// Gets a profession vehicle from the list.
 		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
-		//public static method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType) // TODO SQX: If method is static it should not count as interface implemented
-		public method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType) // TODO SQX: If method is static it should not count as interface implemented
+		//public static method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType) // TODO SQX (TEST ADDED): If method is static it should not count as interface implemented
+		public method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType)
 		{
 			scopeName "main";
 			

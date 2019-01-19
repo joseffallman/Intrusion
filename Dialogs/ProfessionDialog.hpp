@@ -17,12 +17,12 @@ class IntProfessionDialog
 		
 		class IntProfessionDialog_Header : IntBaseDialog_Header
 		{
-			text = "Profession"; //--- ToDo: Localize;
+			text = "Profession";
 		};
 		
 		class IntProfessionDialog_Label : IntBaseDialog_Label
 		{
-			text = "Select a profession"; //--- ToDo: Localize;
+			text = "Select a profession";
 			x = 1.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 4 * GUI_GRID_H + GUI_GRID_Y;
 			w = 26 * GUI_GRID_W;

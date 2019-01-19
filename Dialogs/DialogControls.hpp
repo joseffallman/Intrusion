@@ -1,7 +1,7 @@
 class IntBaseDialog_DialogSurface : BOX
 {
 	idc = -1;
-	text = "Text"; //--- ToDo: Localize;
+	text = "Text";
 	x = 0 * GUI_GRID_W + GUI_GRID_X;
 	y = 0 * GUI_GRID_H + GUI_GRID_Y;
 	w = 40 * GUI_GRID_W;
@@ -12,7 +12,7 @@ class IntBaseDialog_DialogSurface : BOX
 class IntBaseDialog_Header : RscText
 {
 	idc = 43;
-	text = "Header"; //--- ToDo: Localize;
+	text = "Header";
 	x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 0.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 39 * GUI_GRID_W;
@@ -32,7 +32,7 @@ class IntBaseDialog_Combo: RscCombo
 class IntBaseDialog_Label: RscText
 {
 	idc = 1000;
-	text = "Label"; //--- ToDo: Localize;
+	text = "Label";
 	x = 1.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 4 * GUI_GRID_H + GUI_GRID_Y;
 	w = 26 * GUI_GRID_W;
@@ -42,7 +42,7 @@ class IntBaseDialog_Label: RscText
 class IntBaseDialog_Button : RscButton
 {
 	idc = -1;
-	text = "Hit me"; //--- ToDo: Localize;
+	text = "Hit me";
 	x = 35.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;
@@ -53,7 +53,7 @@ class IntBaseDialog_Button : RscButton
 class IntBaseDialog_CloseButton : IntBaseDialog_Button
 {
 	idc = -1;
-	text = "Close"; //--- ToDo: Localize;
+	text = "Close";
 	x = 35.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;
@@ -64,7 +64,7 @@ class IntBaseDialog_CloseButton : IntBaseDialog_Button
 class IntBaseDialog_OkButton : IntBaseDialog_Button
 {
 	idc = -1;
-	text = "OK"; //--- ToDo: Localize;
+	text = "OK";
 	x = 35.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;
@@ -75,7 +75,7 @@ class IntBaseDialog_OkButton : IntBaseDialog_Button
 class IntBaseDialog_CancelButton : IntBaseDialog_Button
 {
 	idc = -1;
-	text = "Cancel"; //--- ToDo: Localize;
+	text = "Cancel";
 	x = 30.5 * GUI_GRID_W + GUI_GRID_X;
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;

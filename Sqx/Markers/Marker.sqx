@@ -171,7 +171,6 @@ namespace Sqx.Markers
 			
 			_self.Tag = objNull;
 			
-			/// str (_self); // TODO: Mission space between str and _class_fields in compiled.
 			if (_self.IsVisible) then {
 				call _self.Draw;
 			};
