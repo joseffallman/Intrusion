@@ -100,7 +100,9 @@ namespace Intrusion.Server
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	
-			["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+        	if (_professionType != ProfessionType.Undefined) then {
+				["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+        	};
 			
 		    _intrusionVehicle
 		};
