@@ -15,15 +15,16 @@ namespace Intrusion.Server
 {
 	public class SquadHandler : ISquadHandler
 	{
-		private fields ["_mSquads" as SquadCollection];
+		private fields ["_mSquadCollection" as SquadCollection, "_mVehicleSpawner" as IVehicleSpawner];
 		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
 		
 		// Creates a SquadHandler object.
-		public constructor {
-			_mSquads = new SquadCollection;
+		public constructor("_vehicleSpawner" as IVehicleSpawner) {
+			_mVehicleSpawner = _vehicleSpawner;
+			_mSquadCollection = new SquadCollection;
 			_mProfessionChangeListeners = [];
 			
-			[_mSquads] call PublicVariableHandler.BroadcastSquads;
+			[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
 		};
 		
 		// Gets a group by its leader.
@@ -42,7 +43,7 @@ namespace Intrusion.Server
 					_foundSquad = _x;
 					breakTo "main";
 				};
-			} foreach _mSquads as Squad;
+			} foreach _mSquadCollection as Squad;
 			
 			_foundSquad
 		};
@@ -64,13 +65,13 @@ namespace Intrusion.Server
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
 			// Create a new squad and add (or update) it to the list of squads.
-			if ([side _group, _professionType] call _mSquads.ProfessionTypeAvailable) then {
-				call _mSquads.AquireLock;
+			if ([side _group, _professionType] call _mSquadCollection.ProfessionTypeAvailable) then {
+				call _mSquadCollection.AquireLock;
 				
 				_squad = [_group, _professionType] new Squad;
-				[_squad] call _mSquads.AddOrUpdateSquad;
+				[_squad] call _mSquadCollection.AddOrUpdateSquad;
 				
-				call _mSquads.RemoveEmptySquads;
+				call _self.RemoveEmptySquads;
 				
 				// Notify all local group change profession listeners of the current side.
 				{
@@ -79,12 +80,12 @@ namespace Intrusion.Server
 					};
 				} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
 				
-				[_mSquads] call PublicVariableHandler.BroadcastSquads;
+				[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
 				
 				// Tell the clients about the change
 				["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
 				
-				call _mSquads.ReleaseLock;
+				call _mSquadCollection.ReleaseLock;
 			}
 			else {
 				// Tell the clients that the change was rejected
@@ -106,9 +107,21 @@ namespace Intrusion.Server
 				if (_squad.Group == _group) then {
 					_squad breakOut "main";
 				};
-			} foreach (_mSquads.Squads) as Squad;
+			} foreach (_mSquadCollection.Squads) as Squad;
 			
 			classNull
+		};
+		
+		public method RemoveEmptySquads()
+		{
+			[str _this + "SquadHandler.RemoveEmptySquads"] call LogHandler.Debug;
+			private ["_removedSquads" as Array /* of Squad */];
+			
+			_removedSquads = call _mSquadCollection.RemoveEmptySquads;
+			
+			{
+				[_x.Group] call _mVehicleSpawner.DeleteProfessionVehicles;
+			} foreach _removedSquads as Squad;
 		};
 	};
 };

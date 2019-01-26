@@ -45,18 +45,24 @@ namespace Intrusion.Common
 		};
 		
 		// Removes all empty squads.
-		public method RemoveEmptySquads {
-			private ["_squadsToKeep" as Array];
+		// Returns (Array): All squads that were removed.
+		public method Array RemoveEmptySquads {
+			private ["_squadsToKeep" as Array, "_squadsToDelete" as Array];
 			
 			_squadsToKeep = [];
+			_squadsToDelete = [];
 		
 			{
 				if (!(call _x.IsEmpty)) then {
 					_squadsToKeep pushBack _x;
+				}
+				else {
+					_squadsToDelete pushBack _x;
 				};
 			} foreach _self.Squads as Squad;
 			
 			_self.Squads = _squadsToKeep;
+			_squadsToDelete
 		};
 		
 		// Gets the number of squads with a profession type of a certain side.

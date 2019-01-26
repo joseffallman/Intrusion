@@ -20,7 +20,17 @@ namespace Intrusion.Server
 		// _professionName (String): The name of the new profession.
 		public static method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
+			[str _this + "SquadHandlerReciever.SetSquadProfession"] call LogHandler.Debug;
+			
 			[_group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
+		};
+		
+		// Removes all empty squads.
+		public static method RemoveEmptySquads()
+		{
+			[str _this + "SquadHandlerReciever.RemoveEmptySquads"] call LogHandler.Debug;
+			
+			call MissionEngine.SquadHandler.RemoveEmptySquads;
 		};
 	};
 };

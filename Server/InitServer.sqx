@@ -1,8 +1,10 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
@@ -50,7 +52,12 @@ if (DebugConfig.Mode == MissionConfigMode.Production) then {
 	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesProdConfig, new VehicleClassNamesConfig] new ServerConfig;
 }
 else {
-	gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesTestConfig, new VehicleClassNamesConfig] new ServerConfig;
+	if (DebugConfig.Mode == MissionConfigMode.Test) then {
+		gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesTestConfig, new VehicleClassNamesConfig] new ServerConfig;
+	}
+	else { // Dev
+		gServerConfig = [new GameplayTestConfig, new TechnologyDevConfig, new ProfessionVehiclesDevConfig, new VehicleClassNamesConfig] new ServerConfig;
+	};
 };
 
 /* Handlers */

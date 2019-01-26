@@ -167,6 +167,7 @@ namespace Intrusion.Server
 		// Returns (Scalar): The production cost of the vehicle.
 		public method Scalar DeleteProfessionVehicles("_group" as Group)
 		{
+			[str _this + "VehicleSpawner.DeleteProfessionVehicles"] call LogHandler.Debug;
 			private ["_intrusionVehiclesToKeep" as Array, "_totalCost" as Scalar, "_vehicleCount" as Scalar, "_totalVehicleDamage" as Scalar];
 			private ["_returnedCost" as Scalar];
 			
