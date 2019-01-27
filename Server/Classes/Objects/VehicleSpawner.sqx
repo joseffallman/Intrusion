@@ -102,8 +102,10 @@ namespace Intrusion.Server
 		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
-		    clearWeaponCargo _vehicleObj;
-		    
+		    clearWeaponCargoGlobal _vehicleObj;
+		    clearMagazineCargoGlobal _vehicleObj;
+		    clearBackpackCargoGlobal _vehicleObj;
+		    clearItemCargoGlobal _vehicleObj;
 		    
 		    {
             	_vehicleObj addBackpackCargoGlobal [_x, 1];
