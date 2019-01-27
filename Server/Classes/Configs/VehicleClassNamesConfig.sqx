@@ -38,25 +38,25 @@ namespace Intrusion.Server
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
 			
 			_mClassNamesInfos = [
-				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Transport, _westTransportCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Fuel, _westFuelCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Ammo, _westAmmoCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Repair, _westRepairCarTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes] new ProVehicleSideInfo,
-				[west, ProfessionType.Armored, _westArmorVehicleTypes] new ProVehicleSideInfo,
+				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Transport, _westTransportCarTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Fuel, _westFuelCarTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Ammo, _westAmmoCarTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Repair, _westRepairCarTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, ["B_AT_01_weapon_F", "B_HMG_01_support_F"]] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes, []] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Armored, _westArmorVehicleTypes, []] new ProVehicleClassNamesInfo,
 				
-				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Transport, _eastTransportCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Fuel, _eastFuelCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Ammo, _eastAmmoCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Repair, _eastRepairCarTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes] new ProVehicleSideInfo,
-				[east, ProfessionType.Armored, _eastArmorVehicleTypes] new ProVehicleSideInfo,
+				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Transport, _eastTransportCarTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Fuel, _eastFuelCarTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Ammo, _eastAmmoCarTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Repair, _eastRepairCarTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, ["O_AT_01_weapon_F", "O_HMG_01_support_F"]] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes, []] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Armored, _eastArmorVehicleTypes, []] new ProVehicleClassNamesInfo,
 			];
 		};
 		
@@ -64,20 +64,18 @@ namespace Intrusion.Server
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		public method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType) {
-			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNames"] call LogHandler.Debug;
+		public method ProVehicleClassNamesInfo GetProVehiclesClassNameInfo("_side" as Side, "_professionType" as ProfessionType) {
+			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNameInfo"] call LogHandler.Debug;
 			
 			scopeName "main";
 			
-			diag_log (str _mClassNamesInfos);
-				
 			{
 				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
-					_x.ClassNames breakOut "main";
+					_x breakOut "main";
 				};
-			} foreach _mClassNamesInfos as ProVehicleSideInfo;
+			} foreach _mClassNamesInfos as ProVehicleClassNamesInfo;
 			
-			[]
+			classNull
 		};
 	};
 };

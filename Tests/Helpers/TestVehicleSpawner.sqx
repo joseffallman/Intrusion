@@ -22,7 +22,7 @@ namespace Intrusion.Tests.Helpers
 		
 		public property Array SpawnedVehicles { get; private set; };
 		
-		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_vehicleClass" as String, "_professionType" as ProfessionType, "_cost" as Scalar)
+		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_professionType" as ProfessionType, "_vehicleClass" as String, "_cost" as Scalar)
 		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
