@@ -11,21 +11,21 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class ProfessionVehiclesConfig : IProfessionVehiclesConfig
+	public class ProfessionVehiclesProdConfig : IProfessionVehiclesConfig
 	{
 		private fields ["_mProVehicles"];
 	
 		// Creates a ProVehiclesConfig object.
 		public constructor {
 			_mProVehicles = [
-				[ProfessionType.Transport, 10, Technology.Transport] new ProfessionVehicleInfo,
-				[ProfessionType.Fuel, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Ammo, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Repair, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Motorized, 50, Technology.Motorized] new ProfessionVehicleInfo,
-				[ProfessionType.Mechanized, 80, Technology.Mechanized] new ProfessionVehicleInfo,
-				[ProfessionType.AntiArmor, 50, Technology.AntiArmor] new ProfessionVehicleInfo,
-				[ProfessionType.Armored, 120, Technology.Armored] new ProfessionVehicleInfo,
+				[ProfessionType.Transport, 50, Technology.Transport] new ProfessionVehicleInfo,
+				[ProfessionType.Fuel, 50, Technology.Services] new ProfessionVehicleInfo,
+				[ProfessionType.Ammo, 50, Technology.Services] new ProfessionVehicleInfo,
+				[ProfessionType.Repair, 50, Technology.Services] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 150, Technology.Motorized] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 200, Technology.Mechanized] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 150, Technology.AntiArmor] new ProfessionVehicleInfo,
+				[ProfessionType.Armored, 300, Technology.Armored] new ProfessionVehicleInfo,
 			];
 		};
 		

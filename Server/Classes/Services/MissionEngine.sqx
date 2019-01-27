@@ -46,9 +46,12 @@ namespace Intrusion.Server
         	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
 			private ["_messageHandler" as MessageHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection];
         	
+    		// Create the central vehicle spawner
+    		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
+    		
         	// Create handlers
         	_messageHandler = new MessageHandler;
-        	_self.SquadHandler = new SquadHandler;
+        	_self.SquadHandler = [_vehicleSpawner] new SquadHandler;        	
         	
         	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	
@@ -69,7 +72,7 @@ namespace Intrusion.Server
         	
         	// Create a side manager for each side.
         	_sideManagers = [];
-    		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
+    		
         	{
         		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler, _inventedTechnologiesCollection] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;

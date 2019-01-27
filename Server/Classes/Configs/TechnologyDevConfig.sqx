@@ -9,21 +9,21 @@
  */
 namespace Intrusion.Server
 {
-	public class TechnologyTestConfig : ITechnologyConfig
+	public class TechnologyDevConfig : ITechnologyConfig
 	{
 		private fields ["_mTechnologies" as Array /* of TechnologyInfo */];
 		
 		// Creates a TechnologyConfig object.
 		public constructor {
 			_mTechnologies = [
-				[Technology.Transport, "Transport", 250] new TechnologyInfo,
-				[Technology.Services, "Services", 500] new TechnologyInfo,
-				[Technology.Maintenance, "Maintenance", 750] new TechnologyInfo,
-				[Technology.Launchers, "Launchers", 1000] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 1250] new TechnologyInfo,
-				[Technology.AntiArmor, "Anti Armor", 1500] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized Vehicles", 1750] new TechnologyInfo,
-				[Technology.Armored, "Armored Vehicles", 2000] new TechnologyInfo,
+				[Technology.Transport, "Transport", 100] new TechnologyInfo,
+				[Technology.Services, "Services", 200] new TechnologyInfo,
+				[Technology.Maintenance, "Maintenance", 300] new TechnologyInfo,
+				[Technology.Launchers, "Launchers", 400] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 500] new TechnologyInfo,
+				[Technology.AntiArmor, "Anti Armor", 600] new TechnologyInfo,
+				[Technology.Mechanized, "Mechanized Vehicles", 700] new TechnologyInfo,
+				[Technology.Armored, "Armored Vehicles", 800] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;

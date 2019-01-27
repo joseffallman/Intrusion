@@ -48,10 +48,16 @@ namespace Intrusion.Client
 		// Invites another player to the local player's group.
 		private static method InviteOtherPlayerToGroup("_otherPlayer" as Object)
 		{
-        	[str _this + "GroupActionHandler.InviteOtherPlayerToGroup"] call LogHandler.Debug;
+			private ["_previousGroup" as Group];
+			[str _this + "GroupActionHandler.InviteOtherPlayerToGroup"] call LogHandler.Debug;
 			
 			// Add the other player to the local player's group
+			_previousGroup = group _otherPlayer;
 			[_otherPlayer] join player;
+			
+			if (count units _previousGroup == 0) then {
+				["SquadHandlerReciever.RemoveEmptySquads"] call Remote.Invoke;
+			};
 			
 			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
 		};

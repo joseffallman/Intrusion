@@ -15,9 +15,9 @@ namespace Intrusion.Server
 	public interface IVehicleSpawner
 	{
 		method IntrusionVehicle SpawnProfessionVehicle(
-			"_group" as Group,
-			"_vehicleClass" as String,
-			"_professionType" as ProfessionType,
+			"_group" as Group, 
+			"_professionType" as ProfessionType, 
+			"_vehicleClass" as String, 
 			"_cost" as Scalar);
 		
 		method IntrusionVehicle SpawnFreeVehicle("_side" as Side);

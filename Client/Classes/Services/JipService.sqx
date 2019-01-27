@@ -34,7 +34,7 @@ namespace Intrusion.Client
 				player removeweapon "itemmap";
 				player removeweapon "itemgps";
 				
-				[playerSide] spawn {
+				[_playerInfo.Side] spawn {
 					params ["_side"];
 					
 					while { true } do {

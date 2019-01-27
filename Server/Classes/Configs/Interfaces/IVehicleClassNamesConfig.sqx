@@ -16,7 +16,7 @@ namespace Intrusion.Server
 		// Gets the vehicle class names by side and profession type.
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
-		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		method Array GetProVehiclesClassNames("_side" as Side, "_professionType" as ProfessionType);
+		// Returns (ProVehicleClassNamesInfo): A profession vehciel class name info object. classNull empty array if no class names were found.
+		method ProVehicleClassNamesInfo GetProVehiclesClassNameInfo("_side" as Side, "_professionType" as ProfessionType);
 	};
 };

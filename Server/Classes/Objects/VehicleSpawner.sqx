@@ -75,14 +75,22 @@ namespace Intrusion.Server
 		// _group (Group): Optional. The group that the vehicle belongs to (default: grpNull).
 		// _cost (Scalar): Optional. The vehicle's cost in production (default: 0).
 		// Returns (IntrusionVehicle): The intrusion vehicle that was spawned.
-		private method IntrusionVehicle SpawnVehicle("_side" as Side, "_vehicleClass" as String, ["_professionType" as ProfessionType, ProfessionType.Undefined], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
+		private method IntrusionVehicle SpawnIntrusionVehicle("_side" as Side, "_professionType" as ProfessionType, ["_explicitClassName" as String, ""], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
 		{
 			[str _this + " VehicleHandler.SpawnVehicle"] call LogHandler.Debug;
-		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array];
-		    private ["_intrusionVehicle" as IntrusionVehicle];
+		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array, "_vehicleClassInfo" as ProVehicleClassNamesInfo];
+		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
 		    
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
+        	_vehicleClassInfo = [_side, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
+        	
+        	if (_explicitClassName != "") then {
+        		_vehicleClass = _explicitClassName;
+        	}
+        	else {
+			    _vehicleClass = selectRandom _vehicleClassInfo.ClassNames;
+        	};
 		    
 			_spawnDir = markerDir _markerInfo.CarParkMarkerName;
 		    _spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
@@ -94,13 +102,23 @@ namespace Intrusion.Server
 		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
+		    clearWeaponCargoGlobal _vehicleObj;
+		    clearMagazineCargoGlobal _vehicleObj;
+		    clearBackpackCargoGlobal _vehicleObj;
+		    clearItemCargoGlobal _vehicleObj;
+		    
+		    {
+            	_vehicleObj addBackpackCargoGlobal [_x, 1];
+		    } foreach _vehicleClassInfo.CargoWeapons as String;
 		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	
-			["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+        	if (_professionType != ProfessionType.Undefined) then {
+				["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+        	};
 			
 		    _intrusionVehicle
 		};
@@ -109,12 +127,12 @@ namespace Intrusion.Server
 		// _vehicleClass (String): Vehicle class to spawn.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
 		// Returns (IntrusionVehicle): The spawned Intrusioni vehicle.
-		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_vehicleClass" as String, "_professionType" as ProfessionType, "_cost" as Scalar)
+		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_professionType" as ProfessionType, "_vehicleClass" as String, "_cost" as Scalar)
 		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 		    [str _this + " VehicleHandler.SpawnVehicleOnCarpark"] call LogHandler.Debug;
 		    
-		    _intrusionVehicle = [side _group, _vehicleClass, _professionType, _group, _cost] call _self.SpawnVehicle;
+		    _intrusionVehicle = [side _group, _professionType, _vehicleClass, _group, _cost] call _self.SpawnIntrusionVehicle;
         	
 		    _intrusionVehicle
 		};
@@ -123,12 +141,11 @@ namespace Intrusion.Server
 		// _side (Side): The side's carpark on which to spawn the vehicle.
 		// Returns (IntrusionVehicle): The spawned Intrusion vehicle.
 		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {
-		    private ["_vehicleClass" as String, "_intrusionVehicle" as IntrusionVehicle];
+		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
         	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
         	
-        	_vehicleClass = selectRandom ([_side, ProfessionType.Undefined] call _mVehicleClassNamesConfig.GetProVehiclesClassNames);
-        	_intrusionVehicle = [_side, _vehicleClass] call _self.SpawnVehicle;
+        	_intrusionVehicle = [_side, ProfessionType.Undefined] call _self.SpawnIntrusionVehicle;
         	
         	_intrusionVehicle
 		};
@@ -165,6 +182,7 @@ namespace Intrusion.Server
 		// Returns (Scalar): The production cost of the vehicle.
 		public method Scalar DeleteProfessionVehicles("_group" as Group)
 		{
+			[str _this + "VehicleSpawner.DeleteProfessionVehicles"] call LogHandler.Debug;
 			private ["_intrusionVehiclesToKeep" as Array, "_totalCost" as Scalar, "_vehicleCount" as Scalar, "_totalVehicleDamage" as Scalar];
 			private ["_returnedCost" as Scalar];
 			

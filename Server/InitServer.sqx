@@ -1,14 +1,17 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\ProVehicleSideInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
@@ -46,10 +49,15 @@ call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesProdConfig, new VehicleClassNamesConfig] new ServerConfig;
 }
 else {
-	gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesConfig, new VehicleClassNamesConfig] new ServerConfig;
+	if (DebugConfig.Mode == MissionConfigMode.Test) then {
+		gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesTestConfig, new VehicleClassNamesConfig] new ServerConfig;
+	}
+	else { // Dev
+		gServerConfig = [new GameplayTestConfig, new TechnologyDevConfig, new ProfessionVehiclesDevConfig, new VehicleClassNamesConfig] new ServerConfig;
+	};
 };
 
 /* Handlers */

@@ -26,13 +26,18 @@ namespace Intrusion.Communication
 		public static method Recieve {
 			params ["_methodFullName" as String, "_parameters" as Any];
         	[(str _this) + " Remote.Recieve"] call LogHandler.Debug;
-		
+			
+			// If the server is the reciever
+			
 			if (isServer) then {
 				switch (_methodFullName) do {
 					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
+					case "SquadHandlerReciever.RemoveEmptySquads": { _parameters spawn SquadHandlerReciever.RemoveEmptySquads; };
 				};
 			};
+			
+			// If the client is the reciever
 			
 			if (!isDedicated) then {
 				switch (_methodFullName) do {

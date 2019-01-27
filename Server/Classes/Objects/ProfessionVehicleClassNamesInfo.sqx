@@ -11,15 +11,16 @@ using Intrusion.Common;
  
 namespace Intrusion.Server
 {
-	public class ProVehicleSideInfo
+	public class ProVehicleClassNamesInfo
 	{
 		// Creates a ProVehicleInfo object.
 		public constructor {
-			params ["_side" as Side, "_professionType" as ProfessionType, "_classNames" as Array];
+			params ["_side" as Side, "_professionType" as ProfessionType, "_classNames" as Array, "_cargoWeapons" as Array];
 			
 			_self.Side = _side;
 			_self.ProfessionType = _professionType;
 			_self.ClassNames = _classNames;
+			_self.CargoWeapons = _cargoWeapons;
 		};
 		
 		public property Side Side { get; private set; };
@@ -27,5 +28,8 @@ namespace Intrusion.Server
 		public property ProfessionType ProfessionType { get; private set; };
 		
 		public property Array ClassNames { get; private set; };
+		
+		// Gets the weapon classes for weapons in the cargo space.
+		public property Array CargoWeapons { get; private set; };
 	};
 };

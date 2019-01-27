@@ -51,7 +51,7 @@ namespace Intrusion.Server
 		// _professionType (ProfessionType): The group's new profession type.
 		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
-			private ["_order" as Order, "_vehicleClassNames" as Array, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
+			private ["_order" as Order, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
 			private ["_cost" as Scalar];
 			
 			// Delete the group's eventual existing vehicle and return its production value.
@@ -61,12 +61,12 @@ namespace Intrusion.Server
 			// Remove the group's eventual existing orders.
 			[_group] call _mOrderQueue.RemoveOrdersByGroup;
 			
-			_vehicleClassNames = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNames;
+			_vehicleClassNamesInfo = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX (TEST ADDED): Must generate error that VehicleClassNamesConfig is not static.
 			
 			// Create an order if there is a vehicle to assign.
-			if (count _vehicleClassNames > 0) then {
-				_vehicleClassName = selectRandom _vehicleClassNames;
+			if (!isNull _vehicleClassNamesInfo) then {
+				_vehicleClassName = selectRandom _vehicleClassNamesInfo.ClassNames;
 				_professionVehicle = [_professionType] call _mProfessionVehiclesConfig.GetVehicle;
 				
 				_order = [_group, _vehicleClassName, _professionVehicle.Cost] new Order;
@@ -109,7 +109,7 @@ namespace Intrusion.Server
 						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then {
 							// Create the vehicle(s)
 							for "_i" from 1 to _vehiclesCount do {
-								[_squad.Group, _mOrderQueue.CurrentOrder.VehicleClassName, _squad.ProfessionType, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
+								[_squad.Group, _squad.ProfessionType, _mOrderQueue.CurrentOrder.VehicleClassName, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
 								[_cost] call _mResourceBook.WithdrawProduction;
 							};
 							
