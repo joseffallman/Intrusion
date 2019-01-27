@@ -94,6 +94,7 @@ namespace Intrusion.Server
 		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
+		    clearWeaponCargo _vehicleObj;
 		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
