@@ -21,6 +21,9 @@ namespace Intrusion.Server
 		// Gets the mission's squad handler.
 		public static property SquadHandler SquadHandler { get; private set; };
 		
+		// Gets the mission's brigade leadership handler.
+		public static property BrigadeLeadershipHandler BrigadeLeadershipHandler { get; private set; };
+		
 		#endregion
 	
 		// Initializes and broadcasts the player info collection
@@ -38,7 +41,7 @@ namespace Intrusion.Server
 				// I AM HERE
 			} foreach _allPlayers;
 			
-			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfos;
+			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
 		};
 
         // Runs the mission.
@@ -51,7 +54,8 @@ namespace Intrusion.Server
     		
         	// Create handlers
         	_messageHandler = new MessageHandler;
-        	_self.SquadHandler = [_vehicleSpawner] new SquadHandler;        	
+        	_self.SquadHandler = [_vehicleSpawner] new SquadHandler;
+        	_self.BrigadeLeadershipHandler = new BrigadeLeadershipHandler;
         	
         	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	

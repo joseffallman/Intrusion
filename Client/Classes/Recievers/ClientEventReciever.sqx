@@ -1,0 +1,30 @@
+/*
+ * Name:	ClientEventReciever
+ * Date:	2019-01-31
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Static class that handles all Intrusion events sent from the server.
+ */
+namespace Intrusion.Client
+{
+	public class ClientEventReciever
+	{
+		// Called when a player was set as a new brigade leader.
+		// _playerUid (String): The player's UID.
+		// _side (Side): The player's side.
+		public static method OnNewBrigadeLeader("_playerUid" as String, "_side" as Side)
+		{
+			hint "Set as leader";
+		};
+		
+		// Called when a player was set rejected as a new brigade leader.
+		// _playerUid (String): The player's UID.
+		// _side (Side): The player's side.
+		public static method OnBrigadeLeaderRejected("_playerUid" as String, "_side" as Side)
+		{
+			hint "Rejected as leader";
+		};
+	};
+};

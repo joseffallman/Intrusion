@@ -34,6 +34,7 @@ namespace Intrusion.Communication
 					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
 					case "SquadHandlerReciever.RemoveEmptySquads": { _parameters spawn SquadHandlerReciever.RemoveEmptySquads; };
+					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };					
 				};
 			};
 			
@@ -51,7 +52,8 @@ namespace Intrusion.Communication
 					case "MissionEndHandler.PlayEndScene": { _parameters spawn MissionEndHandler.PlayEndScene };
 					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
 					case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
-					//case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
+					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
+					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };
 				};
 			};
 		};

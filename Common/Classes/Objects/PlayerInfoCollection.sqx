@@ -44,5 +44,33 @@ namespace Intrusion.Common
 		public method GetPlayerInfos() {
 			_mPlayerInfos
 		};
+		
+		public method Boolean SideHasBrigadeLeader("_side" as Side)
+		{
+			scopeName "main";
+		
+			{
+				if (_x.Side == _side && _x.IsBrigadeLeader) then {
+					true breakOut "main";
+				};
+			} foreach _mPlayerInfos as PlayerInfo;
+			
+			false
+		};
+		
+		public method Boolean TrySetBrigadeLeader("_playerUid" as String, "_side" as Side)
+		{
+			private ["_playerIsBrigadeLeader" as Boolean, "_playerInfo" as PlayerInfo];
+			
+			_playerIsBrigadeLeader = false;
+		
+			if (!([_side] call _self.SideHasBrigadeLeader)) then {
+				_playerInfo = [_playerUid] call _self.GetPlayerInfoByUid;
+				_playerInfo.IsBrigadeLeader = true;
+				_playerIsBrigadeLeader = true;
+			};
+			
+			_playerIsBrigadeLeader
+		};
 	};
 };

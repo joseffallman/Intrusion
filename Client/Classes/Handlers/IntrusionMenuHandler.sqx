@@ -16,13 +16,54 @@ namespace Intrusion.Client
 	{
         // Initializes the Intrusion Menu for the player and adds the "Open Intrusion Menu" action.
         public static method Init {
-			INT_IntrusionMenu = 
-			[
-			  ["Intrusion Menu", true],
-			  ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"],
-			];
+        	_self.OptionLeaveGroupVisible = false;
+        	_self.OptionClaimBrigadeLeadershipVisible = !didJIP;
+        
+			call _self.BuildIntrusionMenu;
 			
 			player addAction ["Open Intrusion Menu", { call IntrusionMenuHandler.Open; }];
+		};
+		
+		public static property Boolean OptionLeaveGroupVisible { get; private set; };
+		
+		public static method ShowOptionLeaveGroup("_show" as Boolean)
+		{
+			if (_show != _self.OptionLeaveGroupVisible) then {
+				_self.OptionLeaveGroupVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+		
+		public static property Boolean OptionClaimBrigadeLeadershipVisible { get; private set; };
+		
+		public static method ShowOptionClaimBrigadeLeadership("_show" as Boolean)
+		{
+			if (_show != _self.OptionClaimBrigadeLeadershipVisible) then {
+				_self.OptionClaimBrigadeLeadershipVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+		
+		private static method BuildIntrusionMenu()
+		{
+//			INT_IntrusionMenu = 
+//			[
+//			  ["Intrusion Menu", true],
+//			  ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"],
+//			];
+			
+			INT_IntrusionMenu = 
+			[
+			  ["Intrusion Menu", true]
+			];
+			
+			if (_self.OptionLeaveGroupVisible) then {
+				INT_IntrusionMenu pushBack ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"];
+			};
+			
+			if (_self.OptionClaimBrigadeLeadershipVisible) then {
+				INT_IntrusionMenu pushBack ["Claim brigade leadership", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnClaimBrigadeLeadership"]], "1", "1"];
+			};
 		};
 		
 		// Opens the Intrusion menu for the current player.
@@ -34,6 +75,11 @@ namespace Intrusion.Client
 		private static method OnLeaveGroup {
 			[player] joinSilent grpNull;
 			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+		};
+		
+		// Called when the local player selects the "Leave Group" option.
+		private static method OnClaimBrigadeLeadership {
+			["ServerEventReciever.OnPlayerClaimBrigadeLeadership", [getPlayerUID player, playerSide]] call Remote.Invoke;
 		};
 	};
 };

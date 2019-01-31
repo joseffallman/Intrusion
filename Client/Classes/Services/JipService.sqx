@@ -21,9 +21,9 @@ namespace Intrusion.Client
 		{
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];
 		
-			waitUntil { call PublicVariableHandler.PlayerInfosHasValue && player == player };
+			waitUntil { call PublicVariableHandler.PlayerInfoCollectionHasValue && player == player };
 
-			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfos;
+			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
 			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;
 			_isCheating = !(isNull _playerInfo || { _playerInfo.Side == playerSide });
 
@@ -52,7 +52,7 @@ namespace Intrusion.Client
 			
 				if (isNull _playerInfo) then {
 					[getPlayerUID player, playerSide] call _playerInfoCollection.AddPlayerInfo;
-					[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfos;
+					[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
 				};
 				
 		    	//[player] call dre_SetInvideToGroupActionOnPlayerClients;

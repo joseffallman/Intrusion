@@ -14,6 +14,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandle
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientVehicleHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientState.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\ClientEventHandlers.sqx";

@@ -29,6 +29,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\TechnologyInfo.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
@@ -37,6 +38,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.s
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Server\ServerEventHandlers.sqx";
 
 using Intrusion.Common;
