@@ -12,14 +12,18 @@ namespace Intrusion.Common
 	public class PlayerInfo
 	{
 		// Creates a PlayerInfo object.
-		public constructor("_uid" as String, "_side" as Side) {
+		public constructor("_uid" as String, "_name" as String, "_side" as Side) {
 			_self.Uid = _uid;
+			_self.Name = _name;
 			_self.Side = _side;
 			_self.IsBrigadeLeader = false;
 		};
 		
 		// Gets the player's UID.
 		public property String Uid { get; private set; };
+		
+		// Gets the player's name.
+		public property String Name { get; private set; };
 		
 		// Gets the players side.
 		public property Side Side { get; private set; };

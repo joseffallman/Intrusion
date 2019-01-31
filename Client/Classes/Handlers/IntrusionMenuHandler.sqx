@@ -18,6 +18,7 @@ namespace Intrusion.Client
         public static method Init {
         	_self.OptionLeaveGroupVisible = false;
         	_self.OptionClaimBrigadeLeadershipVisible = !didJIP;
+        	_self.OptionQuitBrigadeLeadershipVisible = false;
         
 			call _self.BuildIntrusionMenu;
 			
@@ -38,20 +39,24 @@ namespace Intrusion.Client
 		
 		public static method ShowOptionClaimBrigadeLeadership("_show" as Boolean)
 		{
-			if (_show != _self.OptionClaimBrigadeLeadershipVisible) then {
+			if (!(_show isEqualTo _self.OptionClaimBrigadeLeadershipVisible)) then {
 				_self.OptionClaimBrigadeLeadershipVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+		
+		public static property Boolean OptionQuitBrigadeLeadershipVisible { get; private set; };
+		
+		public static method ShowOptionQuitBrigadeLeadership("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionQuitBrigadeLeadershipVisible)) then {
+				_self.OptionQuitBrigadeLeadershipVisible = _show;
 				call _self.BuildIntrusionMenu;
 			};
 		};
 		
 		private static method BuildIntrusionMenu()
 		{
-//			INT_IntrusionMenu = 
-//			[
-//			  ["Intrusion Menu", true],
-//			  ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"],
-//			];
-			
 			INT_IntrusionMenu = 
 			[
 			  ["Intrusion Menu", true]
@@ -63,6 +68,10 @@ namespace Intrusion.Client
 			
 			if (_self.OptionClaimBrigadeLeadershipVisible) then {
 				INT_IntrusionMenu pushBack ["Claim brigade leadership", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnClaimBrigadeLeadership"]], "1", "1"];
+			};
+			
+			if (_self.OptionQuitBrigadeLeadershipVisible) then {
+				INT_IntrusionMenu pushBack ["Quit brigade leadership", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnQuitBrigadeLeadership"]], "1", "1"];
 			};
 		};
 		
@@ -77,9 +86,14 @@ namespace Intrusion.Client
 			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
 		};
 		
-		// Called when the local player selects the "Leave Group" option.
+		// Called when the local player selects the "Claim Brigade Leadership" option.
 		private static method OnClaimBrigadeLeadership {
 			["ServerEventReciever.OnPlayerClaimBrigadeLeadership", [getPlayerUID player, playerSide]] call Remote.Invoke;
+		};
+		
+		// Called when the local player selects the "Quit Brigade Leadership" option.
+		private static method OnQuitBrigadeLeadership {
+			["ServerEventReciever.OnPlayerQuitBrigadeLeadership", [getPlayerUID player]] call Remote.Invoke;
 		};
 	};
 };

@@ -14,9 +14,14 @@ namespace Intrusion.Client
 		// Called when a player was set as a new brigade leader.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
-		public static method OnNewBrigadeLeader("_playerUid" as String, "_side" as Side)
+		public static method OnNewBrigadeLeader("_playerUid" as String, "_side" as Side, "_player" as Object)
 		{
-			hint "Set as leader";
+			[false] call IntrusionMenuHandler.ShowOptionClaimBrigadeLeadership;
+			
+			if (_playerUid == getPlayerUID player) then {
+				ClientState.IsBrigadeLeader = true;
+				[true] call IntrusionMenuHandler.ShowOptionQuitBrigadeLeadership;
+			};
 		};
 		
 		// Called when a player was set rejected as a new brigade leader.
@@ -24,7 +29,18 @@ namespace Intrusion.Client
 		// _side (Side): The player's side.
 		public static method OnBrigadeLeaderRejected("_playerUid" as String, "_side" as Side)
 		{
-			hint "Rejected as leader";
+			["Your claim for brigade leadership was rejected.", player] call ClientMessageHandler.ShowMessage;
+		};
+		
+		// Called when a player quits as brigade leader
+		public static method OnBrigadeLeaderQuit("_playerUid" as String)
+		{
+			[false] call IntrusionMenuHandler.ShowOptionQuitBrigadeLeadership;
+			[true] call IntrusionMenuHandler.ShowOptionClaimBrigadeLeadership;
+			
+			if (_playerUid == getPlayerUID player) then {
+				ClientState.IsBrigadeLeader = false;
+			};
 		};
 	};
 };

@@ -17,5 +17,12 @@ namespace Intrusion.Server
 		public static method OnPlayerClaimBrigadeLeadership("_playerUid" as String, "_side" as Side) {
 			[_playerUid, _side] call MissionEngine.BrigadeLeadershipHandler.TrySetBrigadeLeader;
 		};
+		
+		// Called when a player quits brigade leadership.
+		// _playerUid (String): The player's UID.
+		// _side (Side): The player's side.
+		public static method OnPlayerQuitBrigadeLeadership("_playerUid" as String) {
+			[_playerUid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+		};
 	};
 };

@@ -15,25 +15,48 @@ namespace Intrusion.Server
 {
 	public class BrigadeLeadershipHandler
 	{
+		private fields ["_mMessageHandler" as IMessageHandler];
+		
 		// Creates a BrigadeLeadershipHandler object.
-		public constructor {
-			
+		public constructor("_messageHandler" as IMessageHandler) {
+			_mMessageHandler = _messageHandler;
 		};
 		
 		// Sets the brigade leadership if it is not already occupied by another player.
 		public method TrySetBrigadeLeader("_playerUid" as String, "_side" as Side)
 		{
-			private ["_playerInfoCollection" as PlayerInfoCollection, "_newLeadershipSet" as Boolean];
+			private ["_playerInfoCollection" as PlayerInfoCollection, "_newLeadershipSet" as Boolean, "_playerInfo" as PlayerInfo];
 		
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
 			
 			_newLeadershipSet = [_playerUid, _side] call _playerInfoCollection.TrySetBrigadeLeader;
 			
 			if (_newLeadershipSet) then {
+				[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
+				
+				_playerInfo = [_playerUid] call _playerInfoCollection.GetPlayerInfoByUid;
+				
 				["ClientEventReciever.OnNewBrigadeLeader", [_playerUid]] call Remote.Invoke;
+				[_playerInfo.Name + " is your new brigade leader.", _side] call _mMessageHandler.ShowHint;
 			}
 			else {
 				["ClientEventReciever.OnBrigadeLeaderRejected", [_playerUid]] call Remote.Invoke;
+			};
+		};
+		
+		public method QuitBrigadeLeadership("_playerUid" as String)
+		{
+			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo];
+		
+			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
+			
+			_playerInfo = [_playerUid] call _playerInfoCollection.GetPlayerInfoByUid;
+			
+			if (_playerInfo.IsBrigadeLeader) then {
+				_playerInfo.IsBrigadeLeader = false;
+				[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
+				["ClientEventReciever.OnBrigadeLeaderQuit", [_playerUid]] call Remote.Invoke;
+				[_playerInfo.Name + " is no longer brigade leader.", _playerInfo.Side] call _mMessageHandler.ShowHint;
 			};
 		};
 	};

@@ -36,9 +36,9 @@ namespace Intrusion.Common
 			classNull
 		};
 		
-		public method AddPlayerInfo("_uid" as String, "_side" as Side)
+		public method AddPlayerInfo("_uid" as String, "_name" as String, "_side" as Side)
 		{
-			_mPlayerInfos pushBack [_uid, _side] new PlayerInfo;
+			_mPlayerInfos pushBack [_uid, _name, _side] new PlayerInfo;
 		};
 		
 		public method GetPlayerInfos() {

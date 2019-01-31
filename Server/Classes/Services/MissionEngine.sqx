@@ -30,15 +30,13 @@ namespace Intrusion.Server
 		private static method InitPlayerInfoCollection {
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_allPlayers" as Array, "_player" as Object];
 			
-			sleep 2;
+			//sleep 2;
 			_playerInfoCollection = new PlayerInfoCollection;
 			_allPlayers = call BIS_fnc_listPlayers;
 			
 			{
 				_player = _x;
-				[getPlayerUid _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
-				
-				// I AM HERE
+				[getPlayerUid _player, name _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
 			} foreach _allPlayers;
 			
 			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
@@ -55,7 +53,7 @@ namespace Intrusion.Server
         	// Create handlers
         	_messageHandler = new MessageHandler;
         	_self.SquadHandler = [_vehicleSpawner] new SquadHandler;
-        	_self.BrigadeLeadershipHandler = new BrigadeLeadershipHandler;
+        	_self.BrigadeLeadershipHandler = [_messageHandler] new BrigadeLeadershipHandler;
         	
         	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	

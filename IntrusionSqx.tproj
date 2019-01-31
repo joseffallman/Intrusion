@@ -31,7 +31,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="false" FileName="Client\Classes\Handlers">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="true" FileName="Client\Classes\Handlers">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BriefingHandler.sqx" IsExpanded="false" FileName="Client\Classes\Handlers\BriefingHandler.sqx">
@@ -97,7 +97,7 @@
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ClientEventReciever.sqx" IsExpanded="false" FileName="Client\Classes\Recievers\ClientEventReciever.sqx">
-                    <IsSelected>true</IsSelected>
+                    <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>
@@ -226,7 +226,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PlayerInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\PlayerInfo.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PlayerInfoCollection.sqx" IsExpanded="false" FileName="Common\Classes\Objects\PlayerInfoCollection.sqx">

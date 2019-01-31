@@ -14,8 +14,11 @@ namespace Intrusion.Client
 		public static method Init()
 		{
 			_self.IsOnCorrectSide = true;
+			_self.IsBrigadeLeader = false;
 		};
 	
 		public static property IsOnCorrectSide { get; set; };
+		
+		public static property IsBrigadeLeader { get; set; };
 	};
 };

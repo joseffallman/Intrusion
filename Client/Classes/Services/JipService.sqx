@@ -51,7 +51,7 @@ namespace Intrusion.Client
 				player setPos getMarkerPos _mapMarkerInfo.BaseMarkerName;
 			
 				if (isNull _playerInfo) then {
-					[getPlayerUID player, playerSide] call _playerInfoCollection.AddPlayerInfo;
+					[getPlayerUID player, name player, playerSide] call _playerInfoCollection.AddPlayerInfo;
 					[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
 				};
 				
