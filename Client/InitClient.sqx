@@ -2,6 +2,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\BuildBaseDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
@@ -17,6 +18,8 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientState.sqx"
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\MoveBaseService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 call compile preprocessFileLineNumbers "Client\ClientEventHandlers.sqx";
 
 using Intrusion.Client;
@@ -42,9 +45,13 @@ call ClientState.Init;
 
 // Dialogs
 [gCommonConfig.Professions] call ProfessionDialog.Init;
+call BuildBaseDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;
+
+// Initialize the intrusion client object
+gClient = new IntrusionClient;
 
 // Add invite player actions on all possible players
 call GroupActionHandler.ResetInvitePlayerActions;

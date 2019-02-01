@@ -1,0 +1,24 @@
+/*
+ * Name:	MoveBaseService
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Service that handles the process when a brigade leader is building a new base.
+ */
+namespace Intrusion.Client
+{
+	public class MoveBaseService : IService
+	{
+		// Creates a MoveBaseService object.
+		public constructor {
+			
+		};
+		
+		public method RunAsync()
+		{
+			hint "Started service!";
+		};
+	};
+};

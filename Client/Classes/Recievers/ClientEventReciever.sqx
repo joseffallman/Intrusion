@@ -21,6 +21,7 @@ namespace Intrusion.Client
 			if (_playerUid == getPlayerUID player) then {
 				ClientState.IsBrigadeLeader = true;
 				[true] call IntrusionMenuHandler.ShowOptionQuitBrigadeLeadership;
+				[true] call IntrusionMenuHandler.ShowOptionMoveBase;
 			};
 		};
 		

@@ -1,0 +1,39 @@
+/*
+ * Name:	BuildBaseDialog
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that models the Build Base dialog.
+ */
+namespace Intrusion.Client
+{
+	public class BuildBaseDialog
+	{
+		// Creates a BuildBaseDialog object.
+		public static method Init {
+			_self.IsOpen = false;
+		};
+		
+		// Gets whether the dialog is open or not.
+		public static property Boolean IsOpen { get; private set; };
+		
+		// Shows the dialog.
+		// Returns (DialogResult): A dialog result.
+		public static method DialogResult ShowDialog {
+			waitUntil { !dialog };
+			
+			// Create the dialog
+            createDialog "IntBuildBaseDialog";
+			
+			_self.IsOpen = true;
+
+			// Wait until dialog is closed
+			//waitUntil { !dialog };
+			
+			// Return OK.
+			//DialogResult.Ok
+		};
+	};
+};

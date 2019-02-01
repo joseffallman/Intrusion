@@ -19,13 +19,26 @@ namespace Intrusion.Client
         	_self.OptionLeaveGroupVisible = false;
         	_self.OptionClaimBrigadeLeadershipVisible = !didJIP;
         	_self.OptionQuitBrigadeLeadershipVisible = false;
+        	_self.OptionMoveBaseVisible = false;
         
 			call _self.BuildIntrusionMenu;
 			
 			player addAction ["Open Intrusion Menu", { call IntrusionMenuHandler.Open; }];
 		};
 		
+		#region Option Properties
+		
 		public static property Boolean OptionLeaveGroupVisible { get; private set; };
+		
+		public static property Boolean OptionClaimBrigadeLeadershipVisible { get; private set; };
+		
+		public static property Boolean OptionQuitBrigadeLeadershipVisible { get; private set; };
+		
+		public static property Boolean OptionMoveBaseVisible { get; private set; };
+		
+		#endregion
+		
+		#region Show Methods
 		
 		public static method ShowOptionLeaveGroup("_show" as Boolean)
 		{
@@ -35,8 +48,6 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public static property Boolean OptionClaimBrigadeLeadershipVisible { get; private set; };
-		
 		public static method ShowOptionClaimBrigadeLeadership("_show" as Boolean)
 		{
 			if (!(_show isEqualTo _self.OptionClaimBrigadeLeadershipVisible)) then {
@@ -45,8 +56,6 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public static property Boolean OptionQuitBrigadeLeadershipVisible { get; private set; };
-		
 		public static method ShowOptionQuitBrigadeLeadership("_show" as Boolean)
 		{
 			if (!(_show isEqualTo _self.OptionQuitBrigadeLeadershipVisible)) then {
@@ -54,6 +63,18 @@ namespace Intrusion.Client
 				call _self.BuildIntrusionMenu;
 			};
 		};
+		
+		public static method ShowOptionMoveBase("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionMoveBaseVisible)) then {
+				_self.OptionMoveBaseVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+
+		#endregion
+		
+		#region Methods
 		
 		private static method BuildIntrusionMenu()
 		{
@@ -73,12 +94,20 @@ namespace Intrusion.Client
 			if (_self.OptionQuitBrigadeLeadershipVisible) then {
 				INT_IntrusionMenu pushBack ["Quit brigade leadership", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnQuitBrigadeLeadership"]], "1", "1"];
 			};
+			
+			if (_self.OptionMoveBaseVisible) then {
+				INT_IntrusionMenu pushBack ["Move Base", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnMoveBase"]], "1", "1"];
+			};
 		};
 		
 		// Opens the Intrusion menu for the current player.
 		public static method Open {
 			showCommandingMenu "#USER:INT_IntrusionMenu";
 		};
+		
+		#endregion
+		
+		#region Option Event Handlers
 		
 		// Called when the local player selects the "Leave Group" option.
 		private static method OnLeaveGroup {
@@ -95,5 +124,12 @@ namespace Intrusion.Client
 		private static method OnQuitBrigadeLeadership {
 			["ServerEventReciever.OnPlayerQuitBrigadeLeadership", [getPlayerUID player]] call Remote.Invoke;
 		};
+		
+		// Called when the local player selects the "Move Base" option.
+		private static method OnMoveBase {
+			["ServerEventReciever.OnMoveBase", [getPlayerUID player]] call gClient.MoveBaseService.RunAsync();
+		};
+		
+		#endregion
 	};
 };
