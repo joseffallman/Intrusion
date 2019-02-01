@@ -1,0 +1,76 @@
+/*
+ * Name:	MoveBaseHandler
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the brigade leader's base move.
+ */
+namespace Intrusion.Client
+{
+	public class MoveBaseHandler
+	{
+		private fields ["_mBaseConfig" as BaseConfig];
+		private fields ["_mRespawnPoint" as ViewPos, "_mCarParkPoint" as ViewPos, "_mWeaponDepotPoint" as ViewPos];
+
+		// Creates a MoveBaseHandler object.
+		public constructor("_baseConfig" as BaseConfig) {
+			_mBaseConfig = _baseConfig;
+		
+			_mRespawnPoint = classNull;
+			_mCarParkPoint = classNull;
+			_mWeaponDepotPoint = classNull;
+			
+			_self.RespawnPointSet = false;
+		};
+		
+		public property Boolean RespawnPointSet { get; private set; };
+		public property Boolean CarParkPointSet { get; private set; };
+		public property Boolean WeaponsPointSet { get; private set; };
+		
+		public method SetRespawnPoint()
+		{
+		player sideChat str _mBaseConfig;
+			private ["_arrow" as Object];
+		
+			_self.RespawnPointSet = true;
+			_mRespawnPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
+			
+			_arrow = _mBaseConfig.BuildBaseRespawnArrowClassName createVehicleLocal _mRespawnPoint.Position;
+			_arrow setPos _mRespawnPoint.Position;
+		};
+		
+		public method SetCarParkPoint()
+		{
+			private ["_arrow" as Object];
+		
+			_self.CarParkPointSet = true;
+			_mCarParkPoint = [getPos player, getDir player] new ViewPos;
+			
+			_arrow = _mBaseConfig.BuildBaseVehiclesArrowClassName createVehicleLocal _mCarParkPoint.Position;
+			_arrow setPos _mCarParkPoint.Position;
+		};
+		
+		public method SetWeaponDepotPoint()
+		{
+			private ["_arrow" as Object];
+		
+			_self.WeaponsPointSet = true;
+			_mWeaponDepotPoint = [getPos player, getDir player] new ViewPos;
+			
+			_arrow = _mBaseConfig.BuildBaseWeaponsArrowClassName createVehicleLocal _mWeaponDepotPoint.Position;
+			_arrow setPos _mWeaponDepotPoint.Position;
+		};
+		
+		public method String Valitate()
+		{
+			
+		};
+		
+		public method DoMoveBase()
+		{
+			
+		};
+	};
+};

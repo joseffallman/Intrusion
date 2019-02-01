@@ -1,0 +1,25 @@
+/*
+ * Name:	ViewPos
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a position with a direction.
+ */
+namespace Intrusion.Client
+{
+	public class ViewPos
+	{
+		// Creates a ViewPos object.
+		public constructor("_position" as Array, "_direction" as Scalar) {
+			_self.Position = _position;
+			_self.Direction = _direction;
+		};
+		
+		public property Array Position { get; private set; };
+		
+		public property Scalar Direction { get; private set; };
+	};
+};
+

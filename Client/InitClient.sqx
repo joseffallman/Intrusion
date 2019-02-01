@@ -1,8 +1,10 @@
-call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Objects\ViewPos.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Dialogs\BuildBaseDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
@@ -15,6 +17,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\MissionEndHandle
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\RadioTriggerHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientVehicleHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientState.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\MoveBaseHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
@@ -45,7 +48,7 @@ call ClientState.Init;
 
 // Dialogs
 [gCommonConfig.Professions] call ProfessionDialog.Init;
-call BuildBaseDialog.Init;
+call MoveBaseDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;

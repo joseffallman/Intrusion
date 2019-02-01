@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Client
 {
-	public class BuildBaseDialog
+	public class MoveBaseDialog
 	{
 		// Creates a BuildBaseDialog object.
 		public static method Init {
@@ -30,10 +30,31 @@ namespace Intrusion.Client
 			_self.IsOpen = true;
 
 			// Wait until dialog is closed
-			//waitUntil { !dialog };
+			waitUntil { !dialog };
 			
 			// Return OK.
-			//DialogResult.Ok
+			DialogResult.Ok
+		};
+		
+		// Closes the dialog if it is open.
+		public static method CloseDialog {
+			if (_self.IsOpen) then {
+				closeDialog 0;
+			};
+		};
+		
+		public static method OnRespawnButtonPressed() {
+			call gClient.MoveBaseHandler.SetRespawnPoint;
+		};
+		
+		// Called by the .hpp-dialog when the Cancel button is pressed.
+		public static method OnOkButtonPressed {
+			call _self.CloseDialog;
+		};
+		
+		// Called by the .hpp-dialog when the Cancel button is pressed.
+		public static method OnCancelButtonPressed {
+			call _self.CloseDialog;
 		};
 	};
 };

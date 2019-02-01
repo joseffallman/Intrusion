@@ -127,7 +127,7 @@ namespace Intrusion.Client
 		
 		// Called when the local player selects the "Move Base" option.
 		private static method OnMoveBase {
-			["ServerEventReciever.OnMoveBase", [getPlayerUID player]] call gClient.MoveBaseService.RunAsync();
+			spawn MoveBaseDialog.ShowDialog;
 		};
 		
 		#endregion

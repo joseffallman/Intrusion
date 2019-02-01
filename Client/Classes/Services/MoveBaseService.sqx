@@ -13,12 +13,20 @@ namespace Intrusion.Client
 	{
 		// Creates a MoveBaseService object.
 		public constructor {
-			
+			_self.IsRunning = false;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Run()
+		{
+			call MoveBaseDialog.ShowDialog;
 		};
 		
 		public method RunAsync()
 		{
-			call BuildBaseDialog.ShowDialog;
+			_self.IsRunning = true;
+			[] spawn _self.Run;
 		};
 	};
 };

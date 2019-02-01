@@ -12,10 +12,17 @@ namespace Intrusion.Client
 	public class IntrusionClient
 	{
 		// Creates a IntrusionClient object.
-		public constructor {
+		public constructor() {
+			private ["_baseConfig" as BaseConfig];
+			
+			_baseConfig = new BaseConfig;
+			
+			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
 			_self.MoveBaseService = new MoveBaseService;
 		};
 	
+		public property MoveBaseHandler MoveBaseHandler { get; private set; };
+		
 		public property IService MoveBaseService { get; private set; };
 	};
 };

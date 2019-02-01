@@ -11,6 +11,8 @@ namespace Intrusion.Client
 {
 	public interface IService
 	{
+		property Boolean IsRunning { get; };
+	
 		method RunAsync();
 	};
 };

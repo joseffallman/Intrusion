@@ -1,0 +1,25 @@
+/*
+ * Name:	BaseConfig
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all client non-side base configs.
+ */
+namespace Intrusion.Client
+{
+	public class BaseConfig
+	{
+		// Creates a ClassNamesConfig object.
+		public constructor {
+			_self.BuildBaseRespawnArrowClassName = "Sign_Arrow_Large_Blue_F";
+			_self.BuildBaseVehiclesArrowClassName = "Sign_Arrow_Large_F";
+			_self.BuildBaseWeaponsArrowClassName = "Sign_Arrow_Large_Green_F";
+		};
+		
+		public property BuildBaseRespawnArrowClassName { get; private set; };
+		public property BuildBaseVehiclesArrowClassName { get; private set; };
+		public property BuildBaseWeaponsArrowClassName { get; private set; };
+	};
+};
