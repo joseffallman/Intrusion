@@ -1,0 +1,38 @@
+/*
+ * Name:	ServerEventHandlers
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Container for the server's event handlers.
+ */
+
+using Intrusion.Server;
+using Intrusion.Common;
+using Intrusion.Communication;
+
+namespace Intrusion.Server
+{
+	public class ServerEventHandlers
+	{
+		public static method Init()
+		{
+			// Fires when a JIP player is connecting.
+			addMissionEventHandler ["PlayerConnected",
+			{
+				params ["_id" as Scalar, "_uid" as String, "_name" as String, "_jip" as Boolean, "_owner" as Scalar];
+				
+				if (_jip) then {
+					["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+				};
+			}];
+			
+			addMissionEventHandler ["PlayerDisconnected", {
+				params ["_id" as Scalar, "_uid" as String, "_name" as String, "_jip" as Boolean, "_owner" as Scalar];
+				
+				[_uid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+			}];
+		};
+	};
+};

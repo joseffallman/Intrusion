@@ -39,7 +39,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterSe
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
-call compile preprocessFileLineNumbers "Server\ServerEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -49,6 +49,7 @@ using Intrusion.Server;
 /* Configs */
 call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
+call ServerEventHandlers.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
 	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesProdConfig, new VehicleClassNamesConfig] new ServerConfig;
