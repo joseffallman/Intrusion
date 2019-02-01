@@ -1,11 +1,11 @@
 class IntBuildBaseDialog
 {
     idd = -1;
-    movingenable = false;
+    movingenable = true;
 
 	class Controls
     {
-		class IntProfessionDialog_DialogSurface : IntBaseDialog_BuildBaseDialogSurface {};
+		class IntProfessionDialog_DialogSurface : IntBaseDialog_DialogSurface {};
 		
 		class IntProfessionDialog_CancelButton : IntBaseDialog_CancelButton {
 			action = "call Intrusion_Client_ProfessionDialog_OnCancelButtonPressed;";
