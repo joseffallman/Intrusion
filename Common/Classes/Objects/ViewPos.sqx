@@ -7,7 +7,7 @@
  * Description:
  * Models a position with a direction.
  */
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
 	public class ViewPos
 	{
@@ -22,4 +22,3 @@ namespace Intrusion.Client
 		public property Scalar Direction { get; private set; };
 	};
 };
-

@@ -28,5 +28,12 @@ namespace Intrusion.Server
 		// _group (Group): The group whose vehicle will be deleted.
 		// Returns (Scalar): The production cost of the vehicle.
 		method Scalar DeleteProfessionVehicles("_group" as Group);
+		
+		// Places an existing vehicle on a side's car park.
+		method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side);
+		
+		// Gets all spawned vehicles.
+		// Returns (Array): A list of IntrusionVehicle objects.
+		method Array GetAllVehicles();
 	};
 };

@@ -37,9 +37,11 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sq
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -62,6 +64,8 @@ else {
 		gServerConfig = [new GameplayTestConfig, new TechnologyDevConfig, new ProfessionVehiclesDevConfig, new VehicleClassNamesConfig] new ServerConfig;
 	};
 };
+
+gServer = new IntrusionServer;
 
 /* Handlers */
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;

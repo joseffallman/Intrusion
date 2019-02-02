@@ -1,7 +1,6 @@
 call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Objects\ViewPos.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
@@ -21,7 +20,6 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\MoveBaseHandler.
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 call compile preprocessFileLineNumbers "Client\ClientEventHandlers.sqx";
 

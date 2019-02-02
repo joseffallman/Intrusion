@@ -1,0 +1,101 @@
+/*
+ * Name:	MoveBaseService
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Service that handles the process when a brigade leader is building a new base.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class MoveBaseService : IService
+	{
+		private fields ["_mSide" as Side, "_mBaseLayout" as BaseLayout, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo];
+		
+		// Creates a MoveBaseService object.
+		// _leader (Object): The leader unit moving the base.
+		public constructor("_side" as Side, "_baseLayout" as BaseLayout, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner) {
+			_self.IsRunning = false;
+			
+			_mSide = _side;
+			_mBaseLayout = _baseLayout;
+			_mMessageHandler = _messageHandler;
+			_mMapMarkersConfig = _mapMarkersConfig;
+			_mVehicleSpawner = _vehicleSpawner;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Run()
+		{
+			private ["_side" as Side, "_newWeaponPos" as Array, "_oldWeaponPos" as Array, "_oldVehicleSpawnPos" as Array, "_offsetX" as Scalar, "_offsetY" as Scalar];
+		    private ["_timeLeft" as Scalar, "_sleepTime" as Scalar, "_allSpawnedVehicles" as Array];
+		    
+			_side = _mSide;
+			_mMapMarkerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			_timeLeft = 20;
+			_sleepTime = 10;
+			
+	    	while { _timeLeft > 0 } do {
+	    		["Base will be moved in " + str _timeLeft + " seconds.", _side] call _mMessageHandler.ShowHint;
+	    		
+		    	sleep _sleepTime;
+		    	_timeLeft = _timeLeft - _sleepTime;
+	    	};
+	    	
+			// Move player respawn marker
+			
+			_mMapMarkerInfo.BaseMarkerName setMarkerPos _mBaseLayout.RespawnPlacement.Position;
+			
+			// Move carpark marker and vehicles
+			
+			_oldVehicleSpawnPos = getMarkerPos _mMapMarkerInfo.CarParkMarkerName;
+			_mMapMarkerInfo.CarParkMarkerName setMarkerPos _mBaseLayout.CarParkPlacement.Position;
+			_mMapMarkerInfo.CarParkMarkerName setMarkerDir _mBaseLayout.CarParkPlacement.Direction;
+			
+			_allSpawnedVehicles = call _mVehicleSpawner.GetAllVehicles;
+			
+			{
+				private ["_intrusionVehicle" as IntrusionVehicle];
+				_intrusionVehicle = _x;
+				
+				// Move vehicle if it is near the base and is empty
+				if (_intrusionVehicle.Vehicle distance _oldVehicleSpawnPos < 125 && count (crew _intrusionVehicle.Vehicle) == 0) then
+				{
+				    [_intrusionVehicle.Vehicle, _intrusionVehicle.Side] call _mVehicleSpawner.PlaceVehicleOnCarPark;
+				};
+			} foreach _allSpawnedVehicles as IntrusionVehicle;
+			
+			// Move weapon marker and weapon boxes
+			
+			_oldWeaponPos = getMarkerPos _mMapMarkerInfo.WeaponDepotMarkerName;
+			_newWeaponPos = _mBaseLayout.WeaponDepotPlacement.Position;
+			
+			{
+				private ["_weaponBox" as WeaponBox];
+				_weaponBox = _x;
+				
+				_offsetX = (getPos _weaponBox.Object select 0) - (_oldWeaponPos select 0);
+				_offsetY = (getPos _weaponBox.Object select 1) - (_oldWeaponPos select 1);
+				
+				_weaponBox.Object setPos [(_newWeaponPos select 0) + _offsetX, (_newWeaponPos select 1) + _offsetY];
+			} foreach ([_side] call WeaponsService.GetAllWeaponBoxesBySide) as WeaponBox;
+			
+			_mMapMarkerInfo.WeaponDepotMarkerName setMarkerPos _newWeaponPos;
+			
+			["Your brigade leader has moved your base to a new location.", _side] call _mMessageHandler.ShowHint;
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};

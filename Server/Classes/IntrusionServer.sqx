@@ -1,0 +1,27 @@
+/*
+ * Name:	IntrusionServer
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains "global" server objects and services.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class IntrusionServer
+	{
+		// Creates a IntrusionClient object.
+		public constructor() {
+			_self.MessageHandler = new MessageHandler;
+			_self.VehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
+		};
+	
+		public property IMessageHandler MessageHandler { get; private set; };
+		
+		public property IVehicleSpawner VehicleSpawner { get; private set; };
+	};
+};

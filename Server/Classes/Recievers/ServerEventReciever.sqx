@@ -7,6 +7,9 @@
  * Description:
  * Static class that handles all Intrusion events sent from clients.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class ServerEventReciever
@@ -23,6 +26,14 @@ namespace Intrusion.Server
 		// _side (Side): The player's side.
 		public static method OnPlayerQuitBrigadeLeadership("_playerUid" as String) {
 			[_playerUid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+		};
+		
+		public static method OnLeaderMoveBase("_leader" as Object, "_baseLayout" as BaseLayout)
+		{
+			private ["_moveBaseService" as MoveBaseService];
+			
+			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new MoveBaseService;
+			call _moveBaseService.RunAsync;
 		};
 	};
 };

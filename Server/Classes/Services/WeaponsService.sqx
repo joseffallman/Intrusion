@@ -47,6 +47,21 @@ namespace Intrusion.Server
 			_mWeaponBoxes pushBack _weaponBox;
 		};
 		
+		public static method GetAllWeaponBoxesBySide("_side" as Side)
+		{
+			private ["_boxes" as Array /* of WeaponBox */];
+			
+			_boxes = [];
+			
+			{
+				if (_x.Side == _side) then {
+					_boxes pushBack _x;
+				};
+			} foreach _mWeaponBoxes as WeaponBox;
+			
+			_boxes;
+		};
+		
 		// Runs the weapons service.
 		private static method Run()
 		{

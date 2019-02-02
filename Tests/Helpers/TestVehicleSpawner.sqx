@@ -40,5 +40,14 @@ namespace Intrusion.Tests.Helpers
 		// _group (Group): The group whose vehicle will be deleted.
 		// Returns (Scalar): The production cost of the vehicle.
 		public method Scalar DeleteProfessionVehicles("_group" as Group) { 100 };
+		
+		public method Array GetAllVehicles()
+		{
+			[]
+		};
+		
+		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side)
+		{
+		};
 	};
 };

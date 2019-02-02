@@ -12,7 +12,7 @@ namespace Intrusion.Server
 {
 	public class FreeVehiclesService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mVehicleSpawner" as VehicleSpawner];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mVehicleSpawner" as IVehicleSpawner];
 	
 		// Starts the thread that runs though whole of the mission and assigns free vehicles to all sides.
 		private static method Run {
@@ -44,7 +44,7 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the thread that runs though whole of the mission and assigns some free vehicles to all sides.
-		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_vehicleSpawner" as VehicleSpawner) {
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_vehicleSpawner" as IVehicleSpawner) {
 			_mGameplayConfig = _gameplayConfig;
 			_mVehicleSpawner = _vehicleSpawner;
 			

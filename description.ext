@@ -2,7 +2,7 @@
 #include "Dialogs\DialogControls.hpp"
 #include "Dialogs\TutorialDialog.hpp"
 #include "Dialogs\ProfessionDialog.hpp"
-#include "Dialogs\BuildBaseDialog.hpp"
+#include "Dialogs\MoveBaseDialog.hpp"
 
 // Mission Header
 class Header

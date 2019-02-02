@@ -18,11 +18,8 @@ namespace Intrusion.Client
 			_baseConfig = new BaseConfig;
 			
 			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
-			_self.MoveBaseService = new MoveBaseService;
 		};
 	
 		public property MoveBaseHandler MoveBaseHandler { get; private set; };
-		
-		public property IService MoveBaseService { get; private set; };
 	};
 };

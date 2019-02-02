@@ -1,5 +1,5 @@
 /*
- * Name:	BuildBaseDialog
+ * Name:	MoveBaseDialog
  * Date:	2019-02-01
  * Version: 1.0
  * Author:  Engima
@@ -11,7 +11,7 @@ namespace Intrusion.Client
 {
 	public class MoveBaseDialog
 	{
-		// Creates a BuildBaseDialog object.
+		// Creates a MoveBaseDialog object.
 		public static method Init {
 			_self.IsOpen = false;
 		};
@@ -25,7 +25,7 @@ namespace Intrusion.Client
 			waitUntil { !dialog };
 			
 			// Create the dialog
-            createDialog "IntBuildBaseDialog";
+            createDialog "IntMoveBaseDialog";
 			
 			_self.IsOpen = true;
 
@@ -47,9 +47,17 @@ namespace Intrusion.Client
 			call gClient.MoveBaseHandler.SetRespawnPoint;
 		};
 		
+		public static method OnCarParkButtonPressed() {
+			call gClient.MoveBaseHandler.SetCarParkPoint;
+		};
+		
+		public static method OnWeaponDepotButtonPressed() {
+			call gClient.MoveBaseHandler.SetWeaponDepotPoint;
+		};
+		
 		// Called by the .hpp-dialog when the Cancel button is pressed.
 		public static method OnOkButtonPressed {
-			call _self.CloseDialog;
+			call gClient.MoveBaseHandler.StartMoveBaseService;
 		};
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.

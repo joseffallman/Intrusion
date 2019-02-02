@@ -67,6 +67,23 @@ namespace Intrusion.Server
 			_spawnpos		
 		};
 		
+		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side)
+		{
+		    private ["_markerInfo" as MapMarkerInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
+		    
+		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
+		    
+			_spawnDir = markerDir _markerInfo.CarParkMarkerName;
+		    _spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
+		    
+		    while {count _spawnPos == 0} do {
+		    	_spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
+		    };
+		    
+		    _vehicle setDir _spawnDir;
+		    _vehicle setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
+		};
+		
 		// Performs the actual spawn and puts the vehicle on a free spot on the ground around the base.
 		// _side (Side): The side that the vehicle belongs to.
 		// _vehicleClass (String): The class name of the vehicle to spawn.
@@ -78,7 +95,7 @@ namespace Intrusion.Server
 		private method IntrusionVehicle SpawnIntrusionVehicle("_side" as Side, "_professionType" as ProfessionType, ["_explicitClassName" as String, ""], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
 		{
 			[str _this + " VehicleHandler.SpawnVehicle"] call LogHandler.Debug;
-		    private ["_vehicleObj" as Object, "_spawnDir" as Scalar, "_spawnPos" as Array, "_vehicleClassInfo" as ProVehicleClassNamesInfo];
+		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
 		    
@@ -99,7 +116,8 @@ namespace Intrusion.Server
 		    	_spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10] call _self.FindSpawnPos;
 		    };
 		    
-		    _vehicleObj = _vehicleClass createVehicle [_spawnPos select 0, _spawnPos select 1, 100];
+		    _vehicleObj = createVehicle [_vehicleClass, [_spawnPos select 0, _spawnPos select 1, 100]];
+		    [_vehicleObj, _side] call _self.PlaceVehicleOnCarPark;
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
 		    clearWeaponCargoGlobal _vehicleObj;
@@ -213,6 +231,13 @@ namespace Intrusion.Server
 			};
 			
 			_returnedCost
+		};
+		
+		// Gets all spawned vehicles.
+		// Returns (Array): A list of IntrusionVehicle objects.
+		public method Array GetAllVehicles()
+		{
+			+_mAllIntrusionVehicles;
 		};
 	};
 };

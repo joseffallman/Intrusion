@@ -36,6 +36,7 @@ namespace Intrusion.Communication
 					case "SquadHandlerReciever.RemoveEmptySquads": { _parameters spawn SquadHandlerReciever.RemoveEmptySquads; };
 					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };
 					case "ServerEventReciever.OnPlayerQuitBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerQuitBrigadeLeadership; };
+					case "ServerEventReciever.OnLeaderMoveBase": { _parameters spawn ServerEventReciever.OnLeaderMoveBase; };
 				};
 			};
 			

@@ -14,7 +14,7 @@ namespace Intrusion.Server
 {
 	public class MissionEngine
 	{
-		private static fields ["_mServerConfig" as IServerConfig, "_mCommonConfig" as ICommonConfig];
+		private static fields ["_mServer" as IntrusionServer, "_mServerConfig" as IServerConfig, "_mCommonConfig" as ICommonConfig];
 	
 		#region Handlers
 		
@@ -44,16 +44,12 @@ namespace Intrusion.Server
 
         // Runs the mission.
         private static method Run() {
-        	private ["_sideManagers" as Array, "_vehicleSpawner" as VehicleSpawner];
-			private ["_messageHandler" as MessageHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection];
+        	private ["_sideManagers" as Array];
+			private ["_inventedTechnologiesCollection" as InventedTechnologiesCollection];
         	
-    		// Create the central vehicle spawner
-    		_vehicleSpawner = [_mServerConfig.VehicleClassNames, _mCommonConfig.MapMarkers] new VehicleSpawner;
-    		
         	// Create handlers
-        	_messageHandler = new MessageHandler;
-        	_self.SquadHandler = [_vehicleSpawner] new SquadHandler;
-        	_self.BrigadeLeadershipHandler = [_messageHandler] new BrigadeLeadershipHandler;
+        	_self.SquadHandler = [_mServer.VehicleSpawner] new SquadHandler;
+        	_self.BrigadeLeadershipHandler = [_mServer.MessageHandler] new BrigadeLeadershipHandler;
         	
         	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	
@@ -76,11 +72,11 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _vehicleSpawner, _self.SquadHandler, _messageHandler, _inventedTechnologiesCollection] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, _self.SquadHandler, _mServer.MessageHandler, _inventedTechnologiesCollection] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service
-        	[_mServerConfig.Gameplay, _vehicleSpawner] call FreeVehiclesService.RunAsync;
+        	[_mServerConfig.Gameplay, _mServer.VehicleSpawner] call FreeVehiclesService.RunAsync;
         	
 			// Perform the mission digest loop
 			while { MissionCounterService.MissionIsRunning } do
@@ -97,8 +93,9 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the mission
-		public static method RunAsync("_serverConfig" as IServerConfig, "_commonConfig" as ICommonConfig)
+		public static method RunAsync("_server" as IntrusionServer, "_serverConfig" as IServerConfig, "_commonConfig" as ICommonConfig)
 		{
+			_mServer = _server;
 			_mServerConfig = _serverConfig;
 			_mCommonConfig = _commonConfig;
 			

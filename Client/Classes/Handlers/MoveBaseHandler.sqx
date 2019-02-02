@@ -7,22 +7,52 @@
  * Description:
  * Handles the brigade leader's base move.
  */
+
+using Intrusion.Common;
+using Intrusion.Communication;
+
 namespace Intrusion.Client
 {
 	public class MoveBaseHandler
 	{
 		private fields ["_mBaseConfig" as BaseConfig];
 		private fields ["_mRespawnPoint" as ViewPos, "_mCarParkPoint" as ViewPos, "_mWeaponDepotPoint" as ViewPos];
+		private fields ["_mRespawnArrow" as Object, "_mCarParkArrow" as Object, "_mWeaponDepotArrow" as Object];
 
 		// Creates a MoveBaseHandler object.
 		public constructor("_baseConfig" as BaseConfig) {
 			_mBaseConfig = _baseConfig;
+			
+			_mRespawnArrow = objNull;
+			_mCarParkArrow = objNull;
+			_mWeaponDepotArrow = objNull;
+			
+			call _self.Reset;
+		};
 		
+		private method Reset()
+		{
 			_mRespawnPoint = classNull;
 			_mCarParkPoint = classNull;
 			_mWeaponDepotPoint = classNull;
 			
+			if (!isNull _mRespawnArrow) then {
+				deleteVehicle _mRespawnArrow;
+			};
+			if (!isNull _mCarParkArrow) then {
+				deleteVehicle _mCarParkArrow;
+			};
+			if (!isNull _mWeaponDepotArrow) then {
+				deleteVehicle _mWeaponDepotArrow;
+			};
+			
+			_mRespawnArrow = objNull;
+			_mCarParkArrow = objNull;
+			_mWeaponDepotArrow = objNull;
+			
 			_self.RespawnPointSet = false;
+			_self.CarParkPointSet = false;
+			_self.WeaponsPointSet = false;
 		};
 		
 		public property Boolean RespawnPointSet { get; private set; };
@@ -31,46 +61,81 @@ namespace Intrusion.Client
 		
 		public method SetRespawnPoint()
 		{
-		player sideChat str _mBaseConfig;
-			private ["_arrow" as Object];
-		
 			_self.RespawnPointSet = true;
 			_mRespawnPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
 			
-			_arrow = _mBaseConfig.BuildBaseRespawnArrowClassName createVehicleLocal _mRespawnPoint.Position;
-			_arrow setPos _mRespawnPoint.Position;
+			if (!isNull _mRespawnArrow) then {
+				deleteVehicle _mRespawnArrow;
+			};
+			
+			_mRespawnArrow = _mBaseConfig.MoveBaseRespawnArrowClassName createVehicleLocal _mRespawnPoint.Position;
+			_mRespawnArrow setPos _mRespawnPoint.Position;
 		};
 		
 		public method SetCarParkPoint()
 		{
-			private ["_arrow" as Object];
-		
 			_self.CarParkPointSet = true;
-			_mCarParkPoint = [getPos player, getDir player] new ViewPos;
+			_mCarParkPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
 			
-			_arrow = _mBaseConfig.BuildBaseVehiclesArrowClassName createVehicleLocal _mCarParkPoint.Position;
-			_arrow setPos _mCarParkPoint.Position;
+			if (!isNull _mCarParkArrow) then {
+				deleteVehicle _mCarParkArrow;
+			};
+			
+			_mCarParkArrow = _mBaseConfig.MoveBaseVehiclesArrowClassName createVehicleLocal _mCarParkPoint.Position;
+			_mCarParkArrow setPos _mCarParkPoint.Position;
 		};
 		
 		public method SetWeaponDepotPoint()
 		{
-			private ["_arrow" as Object];
-		
 			_self.WeaponsPointSet = true;
-			_mWeaponDepotPoint = [getPos player, getDir player] new ViewPos;
+			_mWeaponDepotPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
 			
-			_arrow = _mBaseConfig.BuildBaseWeaponsArrowClassName createVehicleLocal _mWeaponDepotPoint.Position;
-			_arrow setPos _mWeaponDepotPoint.Position;
+			if (!isNull _mWeaponDepotArrow) then {
+				deleteVehicle _mWeaponDepotArrow;
+			};
+			
+			_mWeaponDepotArrow = _mBaseConfig.MoveBaseWeaponsArrowClassName createVehicleLocal _mWeaponDepotPoint.Position;
+			_mWeaponDepotArrow setPos _mWeaponDepotPoint.Position;
 		};
 		
-		public method String Valitate()
+		public method Boolean Validate()
 		{
+			scopeName "main";
 			
+			if (!_self.RespawnPointSet) then {
+				["No respawn position is set.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			if (!_self.CarParkPointSet) then {
+				["No vehicles park position is set.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			if (!_self.WeaponsPointSet) then {
+				["No weapon depot position is set.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			if (_mCarParkPoint.Position distance _mRespawnPoint.Position > _mBaseConfig.BaseRadius || _mWeaponDepotPoint.Position distance _mRespawnPoint.Position > _mBaseConfig.BaseRadius) then {
+				["Too far between base markers. All markers must be within " + str _mBaseConfig.BaseRadius + " meters from the player respawn marker.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			true
 		};
 		
-		public method DoMoveBase()
+		public method StartMoveBaseService()
 		{
-			
+			private ["_baseLayout" as BaseLayout];
+		
+			if (call _self.Validate) then
+			{
+				_baseLayout = [_mRespawnPoint, _mCarParkPoint, _mWeaponDepotPoint] new BaseLayout;
+				["ServerEventReciever.OnLeaderMoveBase", [player, _baseLayout]] call Remote.Invoke;
+				
+				call _self.Reset;
+			};
 		};
 	};
 };

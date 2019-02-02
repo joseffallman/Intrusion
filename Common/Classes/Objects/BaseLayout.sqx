@@ -1,0 +1,27 @@
+/*
+ * Name:	BaseLayout
+ * Date:	2019-02-02
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Describes the layout of a base.
+ */
+namespace Intrusion.Common
+{
+	public class BaseLayout
+	{
+		// Creates a BaseLayout object.
+		public constructor("_respawnPlacement" as ViewPos, "_carParkPlacement" as ViewPos, "_weaponDepotPlacement" as ViewPos) {
+			_self.RespawnPlacement = _respawnPlacement;
+			_self.CarParkPlacement = _carParkPlacement;
+			_self.WeaponDepotPlacement = _weaponDepotPlacement;
+		};
+		
+		public property ViewPos RespawnPlacement { get; private set; };
+		
+		public property ViewPos CarParkPlacement { get; private set; };
+		
+		public property ViewPos WeaponDepotPlacement { get; private set; };
+	};
+};

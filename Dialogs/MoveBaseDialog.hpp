@@ -9,7 +9,7 @@ class IntBaseDialog_PlaceButton : IntBaseDialog_Button
 	action = " closeDialog 0; ";
 };
 
-class IntBuildBaseDialog
+class IntMoveBaseDialog
 {
     idd = -1;
     movingenable = true;
@@ -25,22 +25,25 @@ class IntBuildBaseDialog
 		};
 		
 		class IntMoveBaseDialog_PlaceRespawnPointButton : IntBaseDialog_PlaceButton {
+			text = "Place respawn point here";
 			y = 3 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_MoveBaseDialog_OnRespawnButtonPressed;";
 		};
 		
 		class IntMoveBaseDialog_PlaceVehiclesPointButton : IntBaseDialog_PlaceButton {
+			text = "Place vehicles park here";
 			y = 5 * GUI_GRID_H + GUI_GRID_Y;
-			action = "hint ""Vehicles""";
+			action = "call Intrusion_Client_MoveBaseDialog_OnCarParkButtonPressed;";
 		};
 		
 		class IntMoveBaseDialog_PlaceWeaponsPointButton : IntBaseDialog_PlaceButton {
+			text = "Place weapon depot here";
 			y = 7 * GUI_GRID_H + GUI_GRID_Y;
-			action = "hint ""Weapons""";
+			action = "call Intrusion_Client_MoveBaseDialog_OnWeaponDepotButtonPressed;";
 		};
 		
 		class IntMoveBaseDialog_CancelButton : IntBaseDialog_CancelButton {
-			text = "Cancel";
+			text = "Close";
 			action = "call Intrusion_Client_MoveBaseDialog_OnCancelButtonPressed;";
 			x = 27.5 * GUI_GRID_W + GUI_GRID_X;
 		};

@@ -7,7 +7,7 @@
  * Description:
  * Interface for all services.
  */
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
 	public interface IService
 	{
