@@ -27,7 +27,7 @@ namespace Intrusion.Common
 		};
 		
 		// Gets all resource locations from the public network synchronized variable.
-		public static method Array GetResourceLocations { 
+		public static method Array GetResourceLocations {
 			INT_Public_resourceLocations
 		};
 		
@@ -87,7 +87,7 @@ namespace Intrusion.Common
 		};
 		
 		// Gets all intrusion vehicles from the public network synchronized variable.
-		public static method Array GetIntrusionVehicles { 
+		public static method Array GetIntrusionVehicles {
 			INT_Public_intrusionVehicles
 		};
 		

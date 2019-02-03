@@ -35,5 +35,13 @@ namespace Intrusion.Server
 			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new MoveBaseService;
 			call _moveBaseService.RunAsync;
 		};
+		
+		// Called when a player joined a group
+		public static method OnPlayerJoinedGroup("_player" as Object, "_oldGroup" as Group, "_newGroup" as Group)
+		{
+			if (count units _oldGroup == 0) then {
+				call MissionEngine.SquadHandler.RemoveEmptySquads;
+			};
+		};
 	};
 };

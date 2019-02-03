@@ -45,19 +45,33 @@ namespace Intrusion.Client
 		
 		public static method OnRespawnButtonPressed() {
 			call gClient.MoveBaseHandler.SetRespawnPoint;
+			
+			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
+				call _self.CloseDialog;
+			};
 		};
 		
 		public static method OnCarParkButtonPressed() {
 			call gClient.MoveBaseHandler.SetCarParkPoint;
+			
+			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
+				call _self.CloseDialog;
+			};
 		};
 		
 		public static method OnWeaponDepotButtonPressed() {
 			call gClient.MoveBaseHandler.SetWeaponDepotPoint;
+			
+			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
+				call _self.CloseDialog;
+			};
 		};
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.
 		public static method OnOkButtonPressed {
-			call gClient.MoveBaseHandler.StartMoveBaseService;
+			if (call gClient.MoveBaseHandler.StartMoveBaseService) then {
+				call _self.CloseDialog;
+			};
 		};
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.

@@ -24,7 +24,7 @@ namespace Intrusion.Server
 				params ["_id" as Scalar, "_uid" as String, "_name" as String, "_jip" as Boolean, "_owner" as Scalar];
 				
 				if (_jip) then {
-					["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+					["ClientEventReciever.OnJipPlayerConnected", [_uid]] call Remote.Invoke;
 				};
 			}];
 			

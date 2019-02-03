@@ -59,6 +59,11 @@ namespace Intrusion.Client
 		public property Boolean CarParkPointSet { get; private set; };
 		public property Boolean WeaponsPointSet { get; private set; };
 		
+		public method Boolean CheckAllPointsSet()
+		{
+			_self.RespawnPointSet && _self.CarParkPointSet && _self.WeaponsPointSet
+		};
+		
 		public method SetRespawnPoint()
 		{
 			_self.RespawnPointSet = true;
@@ -125,17 +130,22 @@ namespace Intrusion.Client
 			true
 		};
 		
-		public method StartMoveBaseService()
+		public method Boolean StartMoveBaseService()
 		{
-			private ["_baseLayout" as BaseLayout];
+			private ["_baseLayout" as BaseLayout, "_result" as Boolean];
 		
+			_result = false;
+			
 			if (call _self.Validate) then
 			{
 				_baseLayout = [_mRespawnPoint, _mCarParkPoint, _mWeaponDepotPoint] new BaseLayout;
 				["ServerEventReciever.OnLeaderMoveBase", [player, _baseLayout]] call Remote.Invoke;
 				
 				call _self.Reset;
+				_result = true;
 			};
+			
+			_result
 		};
 	};
 };

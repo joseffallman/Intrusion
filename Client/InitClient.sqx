@@ -33,13 +33,13 @@ waitUntil { player == player };
 call TutorialConfig.Init;
 
 // Handlers
+call ClientState.Init;
 call TutorialHandler.Init;
 call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
 [gCommonConfig.Professions] call ClientSquadHandler.Init;
-call ClientState.Init;
 
 // Services
 [gCommonConfig.MapMarkers, gCommonConfig.Professions] call MapMarkerService.Init;
@@ -55,7 +55,7 @@ call BriefingHandler.CreateBriefing;
 gClient = new IntrusionClient;
 
 // Add invite player actions on all possible players
-call GroupActionHandler.ResetInvitePlayerActions;
+call GroupActionHandler.UpdateAllInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;
