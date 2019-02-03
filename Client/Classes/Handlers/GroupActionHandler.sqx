@@ -15,9 +15,9 @@ namespace Intrusion.Client
 	public class GroupActionHandler
 	{
         // Adds 'Invite player to group' actions to every single member group leader.
-        public static method ResetInvitePlayerActions {
+        public static method UpdateAllInvitePlayerActions {
         	private ["_playableUnits" as Array];
-        	["GroupActionHandler.ResetInvitePlayerActions"] call LogHandler.Debug;
+        	["GroupActionHandler.UpdateAllInvitePlayerActions"] call LogHandler.Debug;
         	
         	_playableUnits = [switchableUnits, playableUnits] select isMultiplayer;
         	
@@ -55,16 +55,13 @@ namespace Intrusion.Client
 			_previousGroup = group _otherPlayer;
 			[_otherPlayer] join player;
 			
-			if (count units _previousGroup == 0) then {
-				["SquadHandlerReciever.RemoveEmptySquads"] call Remote.Invoke;
-			};
-			
-			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+			["ClientEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
+			["ServerEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
 		};
 		
 		// Called when any player leaves a group.
 		public static method OnPlayerLeavingGroup {
-			call _self.ResetInvitePlayerActions;
+			call _self.UpdateAllInvitePlayerActions;
 		};
 	};
 };

@@ -24,13 +24,5 @@ namespace Intrusion.Server
 			
 			[_group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
 		};
-		
-		// Removes all empty squads.
-		public static method RemoveEmptySquads()
-		{
-			[str _this + "SquadHandlerReciever.RemoveEmptySquads"] call LogHandler.Debug;
-			
-			call MissionEngine.SquadHandler.RemoveEmptySquads;
-		};
 	};
 };

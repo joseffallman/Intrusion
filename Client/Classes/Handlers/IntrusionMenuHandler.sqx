@@ -40,7 +40,7 @@ namespace Intrusion.Client
 		
 		#region Show Methods
 		
-		public static method ShowOptionLeaveGroup("_show" as Boolean)
+		private static method ShowOptionLeaveGroup("_show" as Boolean)
 		{
 			if (_show != _self.OptionLeaveGroupVisible) then {
 				_self.OptionLeaveGroupVisible = _show;
@@ -48,7 +48,7 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public static method ShowOptionClaimBrigadeLeadership("_show" as Boolean)
+		private static method ShowOptionClaimBrigadeLeadership("_show" as Boolean)
 		{
 			if (!(_show isEqualTo _self.OptionClaimBrigadeLeadershipVisible)) then {
 				_self.OptionClaimBrigadeLeadershipVisible = _show;
@@ -56,7 +56,7 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public static method ShowOptionQuitBrigadeLeadership("_show" as Boolean)
+		private static method ShowOptionQuitBrigadeLeadership("_show" as Boolean)
 		{
 			if (!(_show isEqualTo _self.OptionQuitBrigadeLeadershipVisible)) then {
 				_self.OptionQuitBrigadeLeadershipVisible = _show;
@@ -64,7 +64,7 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public static method ShowOptionMoveBase("_show" as Boolean)
+		private static method ShowOptionMoveBase("_show" as Boolean)
 		{
 			if (!(_show isEqualTo _self.OptionMoveBaseVisible)) then {
 				_self.OptionMoveBaseVisible = _show;
@@ -75,6 +75,18 @@ namespace Intrusion.Client
 		#endregion
 		
 		#region Methods
+		
+		public static method UpdateVisibleOptions()
+		{
+			private ["_playerInfoCollection" as PlayerInfoCollection];
+			
+			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
+			
+			_self.OptionLeaveGroupVisible = leader group player != player;
+			_self.OptionClaimBrigadeLeadershipVisible = [playerSide] call _playerInfoCollection.SideHasBrigadeLeader;
+			_self.OptionQuitBrigadeLeadershipVisible = ClientState.IsBrigadeLeader;
+			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
+		};
 		
 		private static method BuildIntrusionMenu()
 		{
@@ -111,8 +123,12 @@ namespace Intrusion.Client
 		
 		// Called when the local player selects the "Leave Group" option.
 		private static method OnLeaveGroup {
+			private ["_oldGroup" as Group];
+			
+			_oldGroup = group player;
 			[player] joinSilent grpNull;
-			["GroupActionHandler.ResetInvitePlayerActions"] call Remote.Invoke;
+			
+			["ClientEventReciever.OnPlayerLeftGroup", [player, _oldGroup]] call Remote.Invoke;
 		};
 		
 		// Called when the local player selects the "Claim Brigade Leadership" option.

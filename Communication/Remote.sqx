@@ -33,10 +33,11 @@ namespace Intrusion.Communication
 				switch (_methodFullName) do {
 					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
-					case "SquadHandlerReciever.RemoveEmptySquads": { _parameters spawn SquadHandlerReciever.RemoveEmptySquads; };
 					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };
 					case "ServerEventReciever.OnPlayerQuitBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerQuitBrigadeLeadership; };
 					case "ServerEventReciever.OnLeaderMoveBase": { _parameters spawn ServerEventReciever.OnLeaderMoveBase; };
+					case "ServerEventReciever.OnPlayerJoinedGroup": { _parameters spawn ServerEventReciever.OnPlayerJoinedGroup; };
+					//case "ServerEventReciever.OnPlayerLeftGroup": { _parameters spawn ServerEventReciever.OnPlayerLeftGroup; };
 				};
 			};
 			
@@ -45,7 +46,6 @@ namespace Intrusion.Communication
 			if (!isDedicated) then {
 				switch (_methodFullName) do {
 					case "ClientResourceLocationHandler.UpdateResourceLocations": { _parameters spawn ClientResourceLocationHandler.UpdateResourceLocations; };
-					case "GroupActionHandler.ResetInvitePlayerActions": { _parameters spawn GroupActionHandler.ResetInvitePlayerActions; };
 					case "ClientSquadHandler.OnGroupProfessionChanged": { _parameters spawn ClientSquadHandler.OnGroupProfessionChanged };
 					case "ClientSquadHandler.OnGroupProfessionChangeRejected": { _parameters spawn ClientSquadHandler.OnGroupProfessionChangeRejected };
 					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
@@ -57,6 +57,9 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
 					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };
 					case "ClientEventReciever.OnBrigadeLeaderQuit": { _parameters spawn ClientEventReciever.OnBrigadeLeaderQuit };
+					case "ClientEventReciever.OnPlayerJoinedGroup": { _parameters spawn ClientEventReciever.OnPlayerJoinedGroup; };
+					case "ClientEventReciever.OnPlayerLeftGroup": { _parameters spawn ClientEventReciever.OnPlayerLeftGroup; };
+					case "ClientEventReciever.OnJipPlayerConnected": { _parameters spawn ClientEventReciever.OnJipPlayerConnected; };
 				};
 			};
 		};

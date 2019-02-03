@@ -55,7 +55,7 @@ call BriefingHandler.CreateBriefing;
 gClient = new IntrusionClient;
 
 // Add invite player actions on all possible players
-call GroupActionHandler.ResetInvitePlayerActions;
+call GroupActionHandler.UpdateAllInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;

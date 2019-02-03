@@ -16,13 +16,11 @@ namespace Intrusion.Client
 		// _side (Side): The player's side.
 		public static method OnNewBrigadeLeader("_playerUid" as String, "_side" as Side, "_player" as Object)
 		{
-			[false] call IntrusionMenuHandler.ShowOptionClaimBrigadeLeadership;
-			
 			if (_playerUid == getPlayerUID player) then {
 				ClientState.IsBrigadeLeader = true;
-				[true] call IntrusionMenuHandler.ShowOptionQuitBrigadeLeadership;
-				[true] call IntrusionMenuHandler.ShowOptionMoveBase;
 			};
+			
+			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
 		// Called when a player was set rejected as a new brigade leader.
@@ -36,12 +34,30 @@ namespace Intrusion.Client
 		// Called when a player quits as brigade leader
 		public static method OnBrigadeLeaderQuit("_playerUid" as String)
 		{
-			[false] call IntrusionMenuHandler.ShowOptionQuitBrigadeLeadership;
-			[true] call IntrusionMenuHandler.ShowOptionClaimBrigadeLeadership;
-			
 			if (_playerUid == getPlayerUID player) then {
 				ClientState.IsBrigadeLeader = false;
 			};
+			
+			call IntrusionMenuHandler.UpdateVisibleOptions;
+		};
+		
+		// Called when a player joined a group
+		public static method OnPlayerJoinedGroup("_player" as Object, "_oldGroup" as Group, "_newGroup" as Group)
+		{
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
+			call IntrusionMenuHandler.UpdateVisibleOptions;
+		};
+		
+		// Called when a player left a group
+		public static method OnPlayerLeftGroup("_player" as Object, "_oldGroup" as Group)
+		{
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
+			call IntrusionMenuHandler.UpdateVisibleOptions;
+		};
+		
+		public static method OnJipPlayerConnected("_uid" as String)
+		{
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
 		};
 	};
 };
