@@ -7,6 +7,9 @@
  * Description:
  * Contains client objects and services.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class IntrusionClient
@@ -14,12 +17,16 @@ namespace Intrusion.Client
 		// Creates a IntrusionClient object.
 		public constructor() {
 			private ["_baseConfig" as BaseConfig];
+			private ["_mapMarkersConfig" as MapMarkersConfig];
 			
 			_baseConfig = new BaseConfig;
+			_mapMarkersConfig = new MapMarkersConfig;
 			
 			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
+			_Self.TeleportHandler = [_mapMarkersConfig] new TeleportHandler;
 		};
 	
 		public property MoveBaseHandler MoveBaseHandler { get; private set; };
+		public property TeleportHandler TeleportHandler { get; private set; };
 	};
 };

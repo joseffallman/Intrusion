@@ -16,11 +16,6 @@ namespace Intrusion.Client
 	{
         // Initializes the Intrusion Menu for the player and adds the "Open Intrusion Menu" action.
         public static method Init {
-//        	_self.OptionLeaveGroupVisible = false;
-//        	_self.OptionClaimBrigadeLeadershipVisible = !didJIP;
-//        	_self.OptionQuitBrigadeLeadershipVisible = false;
-//        	_self.OptionMoveBaseVisible = false;
-        
         	call _self.UpdateVisibleOptions;
 			call _self.BuildIntrusionMenu;
 			
@@ -36,6 +31,8 @@ namespace Intrusion.Client
 		public static property Boolean OptionQuitBrigadeLeadershipVisible { get; private set; };
 		
 		public static property Boolean OptionMoveBaseVisible { get; private set; };
+		
+		public static property Boolean OptionBeamToBaseVisible { get; private set; };
 		
 		#endregion
 		
@@ -73,6 +70,14 @@ namespace Intrusion.Client
 			};
 		};
 
+		private static method ShowOptionBeamToBase("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionBeamToBaseVisible)) then {
+				_self.OptionBeamToBaseVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+
 		#endregion
 		
 		#region Methods
@@ -91,6 +96,7 @@ namespace Intrusion.Client
 			_self.OptionClaimBrigadeLeadershipVisible = _optionClaimBrigadeLeadershipVisible;
 			_self.OptionQuitBrigadeLeadershipVisible = ClientState.IsBrigadeLeader;
 			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
+			_self.OptionBeamToBaseVisible = leader group player == player;
 			
 			call _self.BuildIntrusionMenu;
 		};
@@ -115,7 +121,11 @@ namespace Intrusion.Client
 			};
 			
 			if (_self.OptionMoveBaseVisible) then {
-				INT_IntrusionMenu pushBack ["Move Base", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnMoveBase"]], "1", "1"];
+				INT_IntrusionMenu pushBack ["Move base", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnMoveBase"]], "1", "1"];
+			};
+			
+			if (_self.OptionBeamToBaseVisible) then {
+				INT_IntrusionMenu pushBack ["Beam to base", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnBeamToBase"]], "1", "1"];
 			};
 		};
 		
@@ -146,6 +156,10 @@ namespace Intrusion.Client
 		// Called when the local player selects the "Quit Brigade Leadership" option.
 		private static method OnQuitBrigadeLeadership {
 			["ServerEventReciever.OnPlayerQuitBrigadeLeadership", [getPlayerUID player]] call Remote.Invoke;
+		};
+		
+		private static method OnBeamToBase {
+			["ClientEventReciever.OnGroupTeleportingToBase", [group player]] call Remote.Invoke;
 		};
 		
 		// Called when the local player selects the "Move Base" option.

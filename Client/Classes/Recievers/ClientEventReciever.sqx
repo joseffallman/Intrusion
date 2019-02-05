@@ -55,9 +55,18 @@ namespace Intrusion.Client
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
+		// Called when a JIP player has connected.
 		public static method OnJipPlayerConnected("_uid" as String)
 		{
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
+		};
+		
+		// Called when a group leader is teleporting his/her group back to base.
+		public static method OnGroupTeleportingToBase("_group" as Group)
+		{
+			if (_group == group player) then {
+				call gClient.TeleportHandler.TeleportPlayerToBase;
+			};
 		};
 	};
 };

@@ -1,0 +1,40 @@
+/*
+ * Name:	TeleportHandler
+ * Date:	2019-02-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the groups' teleport possibilities.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class TeleportHandler
+	{
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig];
+	
+		// Creates a TeleportHandler object.
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
+		};
+		
+		// Teleports the player instantly to the base.
+		public method TeleportPlayerToBase()
+		{
+			private ["_mapMarkerInfo" as MapMarkerInfo, "_pos" as Array];
+			
+			_mapMarkerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			cutText ["", "WHITE OUT", 1];
+			sleep 1.2;
+			
+			_pos = getMarkerPos _mapMarkerInfo.BaseMarkerName;
+			player setPos [(_pos select 0) - 5 + random 10, (_pos select 1) - 5 + random 10, 0.1];
+			
+			cutText ["", "WHITE IN", 1];
+		};
+	};
+};

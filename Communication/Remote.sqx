@@ -60,6 +60,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnPlayerJoinedGroup": { _parameters spawn ClientEventReciever.OnPlayerJoinedGroup; };
 					case "ClientEventReciever.OnPlayerLeftGroup": { _parameters spawn ClientEventReciever.OnPlayerLeftGroup; };
 					case "ClientEventReciever.OnJipPlayerConnected": { _parameters spawn ClientEventReciever.OnJipPlayerConnected; };
+					case "ClientEventReciever.OnGroupTeleportingToBase": { _parameters spawn ClientEventReciever.OnGroupTeleportingToBase; };
 				};
 			};
 		};
