@@ -159,7 +159,9 @@ namespace Intrusion.Client
 		};
 		
 		private static method OnBeamToBase {
-			["ClientEventReciever.OnGroupTeleportingToBase", [group player]] call Remote.Invoke;
+			if (call gClient.TeleportHandler.CheckOkToTeleport) then {
+				["ClientEventReciever.OnGroupTeleportingToBase", [group player]] call Remote.Invoke;
+			};
 		};
 		
 		// Called when the local player selects the "Move Base" option.

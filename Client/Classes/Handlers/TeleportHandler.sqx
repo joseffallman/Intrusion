@@ -14,11 +14,35 @@ namespace Intrusion.Client
 {
 	public class TeleportHandler
 	{
-		private fields ["_mMapMarkersConfig" as IMapMarkersConfig];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mBaseConfig" as BaseConfig];
 	
 		// Creates a TeleportHandler object.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_baseConfig" as BaseConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mBaseConfig = _baseConfig;
+		};
+		
+		// Checks if it is ok to beam to base.
+		public method Boolean CheckOkToTeleport()
+		{
+			scopeName "main";
+			
+			if ({ ([side player, side _x] call BIS_fnc_sideIsEnemy) && player distance _x < _mBaseConfig.BeamToBaseEnemiesMinDistance } count allUnits > 0) then {
+				["You cannot beam to base unless you are clear from nearby enemies.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			if ({ player distance _x > _mBaseConfig.BeamToBaseGroupMembersMaxDistance } count units group player > 0) then {
+				["You can only beam to base if all your group members are within " + str _mBaseConfig.BeamToBaseGroupMembersMaxDistance + " meters from you.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			if ({ vehicle _x != _x } count units group player > 0) then {
+				["You can not beam to base if you or your group members are in a vehicle.", player] call ClientMessageHandler.ShowMessage;
+				false breakOut "main";
+			};
+			
+			true
 		};
 		
 		// Teleports the player instantly to the base.
