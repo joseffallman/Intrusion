@@ -1,0 +1,36 @@
+/*
+ * Name:	ServerEventHandlers
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Container for the server's event handlers.
+ */
+
+namespace Intrusion.Client
+{
+	public class ClientEventHandlers
+	{
+		public static method Init()
+		{
+			// Fires when preload finishes.
+			["ClientEventHandlerId_01", "onPreloadFinished",
+			{ 
+				if (didJIP) then {
+					// Perform JIP stuff
+					[gCommonConfig.MapMarkers] call JipService.StartAsync;
+				}
+				else {
+						cutText ["","BLACK IN", 1];
+						
+					// Show the Welcome tutorial
+					[] spawn {
+						sleep 1;
+						[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+					};
+				};
+			}] call BIS_fnc_addStackedEventHandler;
+		};
+	};
+};
