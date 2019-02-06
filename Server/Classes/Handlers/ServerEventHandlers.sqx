@@ -33,6 +33,15 @@ namespace Intrusion.Server
 				
 				[_uid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
 			}];
+			
+			// Fired when a player leaves the MP game.
+			addMissionEventHandler ["HandleDisconnect", {
+				params ["_unit" as Object, "_id" as Scalar, "_uid" as String, "_name" as String];
+				
+				["ClientEventReciever.OnPlayerDisconnected", [_unit, _id, _uid, _name]] call Remote.Invoke;
+				
+				false
+			}];
 		};
 	};
 };

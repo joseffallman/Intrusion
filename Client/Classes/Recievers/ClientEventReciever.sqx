@@ -68,5 +68,19 @@ namespace Intrusion.Client
 				call gClient.TeleportHandler.TeleportPlayerToBase;
 			};
 		};
+		
+		// Called when a player was killed.
+		// _unit (Object): The dead body.
+		// _side (Side): The player's side.
+		public static method OnPlayerKilled("_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean, "_side" as Side)
+		{
+			removeAllActions _unit;
+		};
+		
+		// Called when a player disconnected from an MP game.
+		public static method OnPlayerDisconnected("_unit" as Object, "_id" as Scalar, "_uid" as String, "_name" as String)
+		{
+			removeAllActions _unit;
+		};
 	};
 };

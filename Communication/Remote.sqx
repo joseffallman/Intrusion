@@ -61,6 +61,8 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnPlayerLeftGroup": { _parameters spawn ClientEventReciever.OnPlayerLeftGroup; };
 					case "ClientEventReciever.OnJipPlayerConnected": { _parameters spawn ClientEventReciever.OnJipPlayerConnected; };
 					case "ClientEventReciever.OnGroupTeleportingToBase": { _parameters spawn ClientEventReciever.OnGroupTeleportingToBase; };
+					case "ClientEventReciever.OnPlayerKilled": { _parameters spawn ClientEventReciever.OnPlayerKilled; };
+					case "ClientEventReciever.OnPlayerDisconnected": { _parameters spawn ClientEventReciever.OnPlayerDisconnected; };
 				};
 			};
 		};
