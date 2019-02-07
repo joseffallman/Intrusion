@@ -15,13 +15,15 @@ namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
-		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig];
-		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarker" as Marker];
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
+		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarker" as Marker, "_mSquadMemberMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
 		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mProfessionConfig = _professionConfig;
+			_mSquadMarkersConfig = _squadMarkersConfig;
+			_mSquadMemberMarkers = [];
 		
 			_mMapMarkers = [];
 			_mBaseMarker = classNull;
@@ -161,6 +163,48 @@ namespace Intrusion.Client
 			[(getMarkerPos (_markerInfo.BaseMarkerName))] call _mBaseMarker.SetPosition;
 		};
 		
+		// Updates player and all squad members.
+		private static method UpdateSquadMemberMarkers()
+		{
+			private ["_markedUnits" as Array /* of Object */, "_markersToKeep" as Array /* of Marker */];
+			private ["_marker" as Marker];
+			
+			_markedUnits = [];
+			_markersToKeep = [];
+		
+			// Remove markers that are not squad members (if anyone has left or died or so)
+			{
+				_marker = _x;
+				
+				// If the existing marker is for a squad member AND the member is not in a vehicle, then update marker position and keep it
+				if (_marker.Tag in units group player && {_marker.Tag == vehicle _marker.Tag}) then {
+					[getPos _marker.Tag] call _marker.SetPosition;
+					_markedUnits pushBack _marker.Tag;
+					_markersToKeep pushBack _marker;
+				}
+				else {
+					call _marker.Hide;
+				};
+			} foreach _mSquadMemberMarkers as Marker;
+			
+			// See if there are any new units that ar not yet marked on the map
+			{
+				if (!(_x in _markedUnits) && {_x == vehicle _x}) then {
+					_marker = [getPos _x, _mSquadMarkersConfig.SquadMemberMarkerType, "ColorBlufor"] call Marker.CreateIconMarkerLocal;
+					_marker.Tag = _x;
+					
+					if (_x == player) then {
+						["Me"] call _marker.SetText;
+					};
+					
+					_markersToKeep pushBack _marker;
+					_markedUnits pushBack _x;
+				};
+			} foreach (units group player) as Object;
+			
+			_mSquadMemberMarkers = _markersToKeep;
+		};
+		
         // Runs the service.
         private static method Run {
         	waitUntil { call PublicVariableHandler.SquadsHasValue };
@@ -170,6 +214,7 @@ namespace Intrusion.Client
         		call _self.UpdateAlliedBaseMarker;
         		call _self.UpdateAlliedForcesMarkers;
         		call _self.UpdateSquadVehicleMarker;
+        		call _self.UpdateSquadMemberMarkers;
         		
         		sleep 1;
         	};

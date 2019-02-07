@@ -11,7 +11,10 @@ namespace Intrusion.Client
 {
 	public interface ISquadMarkersConfig
 	{
-		// Gets the marker type of the squad's vehicle.
+		// Gets the marker type of the squad's vehicle on the map.
 		property String SquadVehicleMarkerType { get; };
+		
+		// Gets the marker type of the squad's member on the map.
+		property String SquadMemberMarkerType { get; };
 	};
 };

@@ -15,9 +15,13 @@ namespace Intrusion.Client
 		// Initializes a SideMarkersConfig object.
 		public constructor {
 			_self.SquadVehicleMarkerType = "hd_dot";
+			_self.SquadMemberMarkerType = "hd_dot";
 		};
 		
 		// Gets the marker type of the squad's vehicle.
 		public property String SquadVehicleMarkerType { get; private set; };
+		
+		// Gets the marker type of the squad's member on the map.
+		public property String SquadMemberMarkerType { get; private set; };
 	};
 };
