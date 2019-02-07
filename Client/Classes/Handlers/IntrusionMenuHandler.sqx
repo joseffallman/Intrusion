@@ -120,7 +120,7 @@ namespace Intrusion.Client
 			];
 			
 			if (_self.OptionSelectProfession) then {
-				INT_IntrusionMenu pushBack ["Set group's profession", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnSelectProfession"]], "1", "1-IsLeader"];
+				INT_IntrusionMenu pushBack ["Set group's profession", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnSelectProfession"]], "1", "1"];
 			};
 			
 			if (_self.OptionLeaveGroupVisible) then {
