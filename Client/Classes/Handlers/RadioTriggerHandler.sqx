@@ -11,29 +11,29 @@ namespace Intrusion.Client
 {
 	public class RadioTriggerHandler
 	{
-		private static fields ["_mProfessionDialogTrigger" as Object];
+//		private static fields ["_mProfessionDialogTrigger" as Object];
 
 		// Creates a RadioTriggerHandler object.
 		public static method Init {
-			_mProfessionDialogTrigger = objNull;
+//			_mProfessionDialogTrigger = objNull;
 		
-			call _self.ShowProfessionDialog;
+			//call _self.ShowProfessionDialog;
 		};
 		
-		public static method ShowProfessionDialog {
-			// Create the profession dialog trigger
-			if (isNull _mProfessionDialogTrigger) then {
-	            _mProfessionDialogTrigger = createTrigger ["EmptyDetector", [0, 0, 0]];
-	            _mProfessionDialogTrigger setTriggerActivation ["ALPHA", "PRESENT", true];
-	            _mProfessionDialogTrigger setTriggerText "Open group dialog";
-	            _mProfessionDialogTrigger setTriggerStatements ["this", "[] spawn Intrusion_Client_ProfessionDialog_ShowDialog;", ""];
-			};
-		};
+//		public static method ShowProfessionDialog {
+//			// Create the profession dialog trigger
+//			if (isNull _mProfessionDialogTrigger) then {
+//	            _mProfessionDialogTrigger = createTrigger ["EmptyDetector", [0, 0, 0]];
+//	            _mProfessionDialogTrigger setTriggerActivation ["ALPHA", "PRESENT", true];
+//	            _mProfessionDialogTrigger setTriggerText "Open group dialog";
+//	            _mProfessionDialogTrigger setTriggerStatements ["this", "[] spawn Intrusion_Client_ProfessionDialog_ShowDialog;", ""];
+//			};
+//		};
 		
-		public static method HideProfessionDialog {
-			if (!isNull _mProfessionDialogTrigger) then {
-				deleteVehicle _mProfessionDialogTrigger;
-			};
-		};
+//		public static method HideProfessionDialog {
+//			if (!isNull _mProfessionDialogTrigger) then {
+//				deleteVehicle _mProfessionDialogTrigger;
+//			};
+//		};
 	};
 };

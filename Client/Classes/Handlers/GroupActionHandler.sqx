@@ -37,12 +37,7 @@ namespace Intrusion.Client
 	            };
             } foreach _playableUnits;
             
-            if (player == leader group player) then {
-            	call RadioTriggerHandler.ShowProfessionDialog;
-            }
-            else {
-            	call RadioTriggerHandler.HideProfessionDialog;
-            };
+            call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
 		// Invites another player to the local player's group.

@@ -34,6 +34,8 @@ namespace Intrusion.Client
 		
 		public static property Boolean OptionBeamToBaseVisible { get; private set; };
 		
+		public static property Boolean OptionSelectProfession { get; private set; };
+		
 		#endregion
 		
 		#region Show Methods
@@ -78,6 +80,14 @@ namespace Intrusion.Client
 			};
 		};
 
+		private static method ShowOptionSelectProfession("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionSelectProfession)) then {
+				_self.OptionSelectProfession = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+
 		#endregion
 		
 		#region Methods
@@ -97,6 +107,7 @@ namespace Intrusion.Client
 			_self.OptionQuitBrigadeLeadershipVisible = ClientState.IsBrigadeLeader;
 			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
 			_self.OptionBeamToBaseVisible = leader group player == player;
+			_self.OptionSelectProfession = leader group player == player;
 			
 			call _self.BuildIntrusionMenu;
 		};
@@ -107,6 +118,10 @@ namespace Intrusion.Client
 			[
 			  ["Intrusion Menu", true]
 			];
+			
+			if (_self.OptionSelectProfession) then {
+				INT_IntrusionMenu pushBack ["Set group's profession", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnSelectProfession"]], "1", "1-IsLeader"];
+			};
 			
 			if (_self.OptionLeaveGroupVisible) then {
 				INT_IntrusionMenu pushBack ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"];
@@ -167,6 +182,11 @@ namespace Intrusion.Client
 		// Called when the local player selects the "Move Base" option.
 		private static method OnMoveBase {
 			spawn MoveBaseDialog.ShowDialog;
+		};
+		
+		// Called when the local player selects the "Move Base" option.
+		private static method OnSelectProfession {
+			spawn ProfessionDialog.ShowDialog;
 		};
 		
 		#endregion
