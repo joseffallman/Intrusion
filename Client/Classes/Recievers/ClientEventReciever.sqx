@@ -28,7 +28,9 @@ namespace Intrusion.Client
 		// _side (Side): The player's side.
 		public static method OnBrigadeLeaderRejected("_playerUid" as String, "_side" as Side)
 		{
-			["Your claim for brigade leadership was rejected.", player] call ClientMessageHandler.ShowMessage;
+			if (_playerUid == getPlayerUID player) then {
+				["Your claim for brigade leadership was rejected.", player] call ClientMessageHandler.ShowMessage;
+			};
 		};
 		
 		// Called when a player quits as brigade leader
