@@ -66,7 +66,7 @@ namespace Intrusion.Server
 				_intrusionVehicle = _x;
 				
 				// Move vehicle if it is near the base and is empty
-				if (_intrusionVehicle.Vehicle distance _oldVehicleSpawnPos < 125 && count (crew _intrusionVehicle.Vehicle) == 0) then
+				if (_intrusionVehicle.Vehicle distance _oldVehicleSpawnPos < 125 && count (units _intrusionVehicle.Vehicle) == 0) then
 				{
 				    [_intrusionVehicle.Vehicle, _intrusionVehicle.Side] call _mVehicleSpawner.PlaceVehicleOnCarPark;
 				};
