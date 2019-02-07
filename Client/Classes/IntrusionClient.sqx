@@ -24,8 +24,10 @@ namespace Intrusion.Client
 			
 			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
 			_self.TeleportHandler = [_mapMarkersConfig, _baseConfig] new TeleportHandler;
+			_self.SquadMarkersConfig = new SquadMarkersConfig;
 		};
 	
+		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };
 		public property MoveBaseHandler MoveBaseHandler { get; private set; };
 		public property TeleportHandler TeleportHandler { get; private set; };
 	};

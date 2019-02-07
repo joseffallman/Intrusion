@@ -87,6 +87,7 @@ namespace Intrusion.Common
 		};
 		
 		// Gets all intrusion vehicles from the public network synchronized variable.
+		// Returns (Array of IntrusionVehicle): All intrusion vehicles.
 		public static method Array GetIntrusionVehicles {
 			INT_Public_intrusionVehicles
 		};

@@ -16,15 +16,16 @@ namespace Intrusion.Client
 	public class MapMarkerService
 	{
 		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig];
-		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker];
+		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarker" as Marker];
 		
 		// Initializes the observation service.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mProfessionConfig = _professionConfig;
 		
 			_mMapMarkers = [];
 			_mBaseMarker = classNull;
+			_mSquadVehicleMarker = [[0,0,0], _squadMarkersConfig.SquadVehicleMarkerType, "ColorBlufor", "Vehicle", false] call Marker.CreateIconMarkerLocal;
 		};
 		
 		// Gets a marker tagged with a certain group.
@@ -121,6 +122,30 @@ namespace Intrusion.Client
     		} foreach allGroups as Group;
 		};
 		
+		// Updates the squad's vehicle marker.
+		private static method UpdateSquadVehicleMarker()
+		{
+			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */, "_intrusionVehicle" as IntrusionVehicle];
+			
+			_intrusionVehicle = classNull;
+			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+			
+			{
+				if (_x.OwnerGroup == group player) then {
+					_intrusionVehicle = _x;
+				};
+			} foreach _intrusionVehicles as IntrusionVehicle;
+			
+			// If the group has a vehicle, update its marker on the map
+			if (!isNull _intrusionVehicle) then {
+				[getPos _intrusionVehicle.Vehicle] call _mSquadVehicleMarker.SetPosition;	
+				call _mSquadVehicleMarker.Show;
+			}
+			else {
+				call _mSquadVehicleMarker.Hide;
+			};
+		};
+		
 		// Updates the base marker.
 		private static method UpdateAlliedBaseMarker()
 		{
@@ -144,6 +169,7 @@ namespace Intrusion.Client
         	while { true } do {
         		call _self.UpdateAlliedBaseMarker;
         		call _self.UpdateAlliedForcesMarkers;
+        		call _self.UpdateSquadVehicleMarker;
         		
         		sleep 1;
         	};

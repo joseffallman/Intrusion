@@ -1,5 +1,6 @@
 call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Configs\SquadMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
@@ -43,8 +44,11 @@ call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
 [gCommonConfig.Professions] call ClientSquadHandler.Init;
 
+// Initialize the intrusion client object
+gClient = new IntrusionClient;
+
 // Services
-[gCommonConfig.MapMarkers, gCommonConfig.Professions] call MapMarkerService.Init;
+[gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig] call MapMarkerService.Init;
 
 // Dialogs
 [gCommonConfig.Professions] call ProfessionDialog.Init;
@@ -52,9 +56,6 @@ call MoveBaseDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;
-
-// Initialize the intrusion client object
-gClient = new IntrusionClient;
 
 // Add invite player actions on all possible players
 call GroupActionHandler.UpdateAllInvitePlayerActions;

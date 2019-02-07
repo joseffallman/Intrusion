@@ -1,0 +1,23 @@
+/*
+ * Name:	SideMarkersConfig
+ * Date:	2017-11-25
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains config information about map markers concerning a squad.
+ */
+
+namespace Intrusion.Client
+{
+	public class SquadMarkersConfig : ISquadMarkersConfig
+	{
+		// Initializes a SideMarkersConfig object.
+		public constructor {
+			_self.SquadVehicleMarkerType = "hd_dot";
+		};
+		
+		// Gets the marker type of the squad's vehicle.
+		public property String SquadVehicleMarkerType { get; private set; };
+	};
+};

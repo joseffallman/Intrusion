@@ -1,0 +1,17 @@
+/*
+ * Name:	ISquadMarkersConfig
+ * Date:	2019-02-07
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains config information about map markers concerning squads.
+ */
+namespace Intrusion.Client
+{
+	public interface ISquadMarkersConfig
+	{
+		// Gets the marker type of the squad's vehicle.
+		property String SquadVehicleMarkerType { get; };
+	};
+};
