@@ -14,6 +14,13 @@ namespace Intrusion.Client
 {
 	public class GroupActionHandler
 	{
+		private static fields ["_mProfessionConfig" as IProfessionConfig];
+		
+		public static method Init("_professionConfig" as IProfessionConfig)
+		{
+			_mProfessionConfig = _professionConfig;
+		};
+	
         // Adds 'Invite player to group' actions to every single member group leader.
         public static method UpdateAllInvitePlayerActions {
         	private ["_playableUnits" as Array];
@@ -43,15 +50,29 @@ namespace Intrusion.Client
 		// Invites another player to the local player's group.
 		private static method InviteOtherPlayerToGroup("_otherPlayer" as Object)
 		{
-			private ["_previousGroup" as Group];
+			private ["_previousGroup" as Group, "_squadCollection" as SquadCollection, "_mySquad" as Squad, "_profession" as Profession, "_maxPlayers" as Scalar];
 			[str _this + "GroupActionHandler.InviteOtherPlayerToGroup"] call LogHandler.Debug;
 			
-			// Add the other player to the local player's group
-			_previousGroup = group _otherPlayer;
-			[_otherPlayer] join player;
+			_maxPlayers = 0;
+			_squadCollection = call PublicVariableHandler.GetSquads;
+			_mySquad = [group player] call _squadCollection.GetSquadByGroup;
 			
-			["ClientEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
-			["ServerEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
+			if (!isNull _mySquad) then {
+				_profession = [_mySquad.ProfessionType] call _mProfessionConfig.GetProfession;
+				_maxPlayers = _profession.MaxGroupSize;
+			};
+			
+			if (_maxPlayers == 0 || count units group player < _maxPlayers) then {
+				// Add the other player to the local player's group
+				_previousGroup = group _otherPlayer;
+				[_otherPlayer] join player;
+				
+				["ClientEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
+				["ServerEventReciever.OnPlayerJoinedGroup", [_otherPlayer, _previousGroup, group player]] call Remote.Invoke;
+			}
+			else {
+				["You cannot invite " + name _otherPlayer + " since your profession allows for a maximum of " + str _maxPlayers + " players.", player] call ClientMessageHandler.ShowMessage;
+			};
 		};
 		
 		// Called when any player leaves a group.

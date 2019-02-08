@@ -43,6 +43,7 @@ call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
 [gCommonConfig.Professions] call ClientSquadHandler.Init;
+[gCommonConfig.Professions] call GroupActionHandler.Init;
 
 // Initialize the intrusion client object
 gClient = new IntrusionClient;
