@@ -18,20 +18,21 @@ namespace Intrusion.Server
 		private static fields ["_mObservations" as Array, "_mCurrentId" as Scalar];
 		
 		// Initializes the observation service.
-		public static method Init {
+		public static method Init() {
 			_mCurrentId = 0;
 			_mObservations = [];
 		};
 		
 		// Marks all observations in the observation collection as deleted.
-		private static method MarkObservationsAsDeleted {
+		private static method MarkObservationsAsDeleted() {
 			{
 				_x.MarkedAsDeleted = true;
 			} foreach _mObservations as Observation;
 		};
 		
 		// Deletes all observations that are marked as deleted.
-		private static method DeleteMarkedObservations {
+		private static method DeleteMarkedObservations()
+		{
 			private ["_observationsToKeep" as Array];
 			
 			_observationsToKeep = [];
@@ -47,7 +48,8 @@ namespace Intrusion.Server
 		
 		// Converts the service's list of observations into broadcastable and client optimized map observations.
 		// Returns (Array): An array of map observations.
-		private static method ConvertToMapObservations {
+		private static method ConvertToMapObservations()
+		{
 			private _mapObservations = [];
 			
 			{
@@ -61,8 +63,8 @@ namespace Intrusion.Server
 		// Uses different matching techniques to figure out which one it may be.
 		// _target (Target): The target used to find the observation.
 		// Returns (Observation): The found observation. classNull if observation was not found.
-		private static method Observation GetExistingObservation {
-			params ["_target" as Target];
+		private static method Observation GetExistingObservation("_target" as Target)
+		{
 			private ["_observation" as Observation];
 			
 			_observation = classNull;
@@ -86,9 +88,8 @@ namespace Intrusion.Server
 		// set on the observation.
 		// _observation (Observation): The observation that will be updated.
 		// _target (Target): The target with values
-		private static method PrioritizeObservation {
-			params ["_observation" as Observation, "_target" as Target];
-			
+		private static method PrioritizeObservation("_observation" as Observation, "_target" as Target)
+		{
 			_observation.MarkedAsDeleted = false;
 			
 			// Always update the accuracy, percieved position and percieved side.
@@ -101,8 +102,8 @@ namespace Intrusion.Server
 		
 		// Adds a target to the list of current observations.
 		// _target (Target): The target to add as an observation.
-		private static method AddTargetToObservations {
-			params ["_target" as Target];
+		private static method AddTargetToObservations("_target" as Target)
+		{
 			private ["_existingObservation" as Observation, "_newObservation" as Observation];
 			
 			_existingObservation = [_target] call _self.GetExistingObservation;
@@ -118,7 +119,7 @@ namespace Intrusion.Server
 		};
 		
         // Runs the service.
-        private static method Run {
+        private static method Run() {
         	private ["_targets" as Array, "_mapObservations" as Array];
         	
         	_mCurrentId = 0;

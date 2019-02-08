@@ -11,16 +11,25 @@ Always ends with "Config".
 -------
 Handlers
 --------
-Global classes that performs global actions regarding the area defined by its name.
-Always ends with "Handler".
+Global classes that performs global actions regarding the area defined by its name. Should be non-static.
+Most often ends with "Handler".
 
 -------
 Objects
 -------
 Non static classes modeling general objects that can be used as parameters and sent over the network.
 
--------
+--------
 Services
 --------
-Static classes with a public StartAsync method and a private Run method, performing its own task concurrently.
-Always ends with "Service".
+Non static classes with a public StartAsync method, performing its own tasks concurrently.
+Most often ends with "Service", or sometimes "Engine".
+
+---------
+Recievers
+---------
+A kind of event handlers that fires on the multiplayer network, and the base in the communications
+between the server and the clients.
+
+*Note: Many static classes were created before these conventions were taken into account, and are thus 
+still static. There's an ongoing refactoring...
