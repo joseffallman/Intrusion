@@ -14,7 +14,7 @@ namespace Intrusion.Client
 	{
 		// Initializes a SideMarkersConfig object.
 		public constructor {
-			_self.SquadVehicleMarkerType = "hd_dot";
+			_self.SquadVehicleMarkerType = "mil_box";
 			_self.SquadMemberMarkerType = "hd_dot";
 		};
 		

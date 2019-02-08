@@ -16,18 +16,18 @@ namespace Intrusion.Client
 	public class MapMarkerService
 	{
 		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
-		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarker" as Marker, "_mSquadMemberMarkers" as Array /* of Marker */];
+		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarkers" as Array /* of Marker */, "_mSquadMemberMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
 		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mProfessionConfig = _professionConfig;
 			_mSquadMarkersConfig = _squadMarkersConfig;
+			_mSquadVehicleMarkers = [];
 			_mSquadMemberMarkers = [];
 		
 			_mMapMarkers = [];
 			_mBaseMarker = classNull;
-			_mSquadVehicleMarker = [[0,0,0], _squadMarkersConfig.SquadVehicleMarkerType, "ColorBlufor", "Vehicle", false] call Marker.CreateIconMarkerLocal;
 		};
 		
 		// Gets a marker tagged with a certain group.
@@ -127,25 +127,50 @@ namespace Intrusion.Client
 		// Updates the squad's vehicle marker.
 		private static method UpdateSquadVehicleMarker()
 		{
-			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */, "_intrusionVehicle" as IntrusionVehicle];
+			private ["_squadsIntrusionVehicles" as Array /* of IntrusionVehicle */, "_allIntrusionVehicles" as Array /* of IntrusionVehicle */];
+			private ["_markedVehicles" as Array /* of Object */, "_markersToKeep" as Array /* of Marker */];
+			private ["_marker" as Marker, "_squadsVehicles" as Array];
 			
-			_intrusionVehicle = classNull;
-			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+			_markedVehicles = [];
+			_markersToKeep = [];
+			_squadsIntrusionVehicles = [];
+			_squadsVehicles = [];
+			_allIntrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
 			
+			// Find the vehicles belonging to the squad
 			{
 				if (_x.OwnerGroup == group player) then {
-					_intrusionVehicle = _x;
+					_squadsIntrusionVehicles pushBack _x;
+					_squadsVehicles pushBack _x.Vehicle;
 				};
-			} foreach _intrusionVehicles as IntrusionVehicle;
+			} foreach _allIntrusionVehicles as IntrusionVehicle;
 			
-			// If the group has a vehicle, update its marker on the map
-			if (!isNull _intrusionVehicle) then {
-				[getPos _intrusionVehicle.Vehicle] call _mSquadVehicleMarker.SetPosition;	
-				call _mSquadVehicleMarker.Show;
-			}
-			else {
-				call _mSquadVehicleMarker.Hide;
-			};
+			// Remove markers that are not squad vehicles
+			{
+				_marker = _x;
+				
+				// If the existing marker is for a squad vehicle
+				if (_marker.Tag in _squadsVehicles) then {
+					[getPos _marker.Tag] call _marker.SetPosition;
+					_markedVehicles pushBack _marker.Tag;
+					_markersToKeep pushBack _marker;
+				}
+				else {
+					call _marker.Hide;
+				};
+			} foreach _mSquadVehicleMarkers as Marker;
+			
+			// See if there are any new vehicles that ar not yet marked on the map
+			{
+				if (!(_x in _markedVehicles)) then {
+					_marker = [getPos _x, _mSquadMarkersConfig.SquadVehicleMarkerType, "ColorBlufor"] call Marker.CreateIconMarkerLocal;
+					_marker.Tag = _x;
+					_markersToKeep pushBack _marker;
+					_markedVehicles pushBack _x;
+				};
+			} foreach _squadsVehicles as Object;
+			
+			_mSquadVehicleMarkers = _markersToKeep;
 		};
 		
 		// Updates the base marker.
