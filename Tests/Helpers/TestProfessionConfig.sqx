@@ -70,10 +70,11 @@ namespace Intrusion.Tests.Helpers
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
     		"_maxUnitsPerVehicle" as Scalar,
+    		"_vehicleRevealsProfessionType" as Boolean,
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
     	{
-    		_mProfessions pushBack [_type, _name, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _markerTypeFriendly, _markerTypeEnemy] new Profession;
+    		_mProfessions pushBack [_type, _name, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy] new Profession;
     	};
 	};
 };

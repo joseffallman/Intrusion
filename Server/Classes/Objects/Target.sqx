@@ -7,17 +7,21 @@
  * Description:
  * Class that models a unit's target, recieved by command nearTargets.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class Target
 	{
 		// Creates a Target object.
 		public constructor {
-			params ["_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_unit" as Object, "_accuracy" as Scalar];
+			params ["_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_percievedProfessionType" as ProfessionType, "_unit" as Object, "_accuracy" as Scalar];
 			
 			_self.ObservingSide = _observingSide;
 			_self.PercievedPos = _percievedPos;
 			_self.PercievedSide = _percievedSide;
+			_self.PercievedProfessionType = _percievedProfessionType;
 			_self.Unit = _unit;
 			_self.Accuracy = _accuracy;
 		};
@@ -28,66 +32,16 @@ namespace Intrusion.Server
 		// Gets the target's percieved position.
 		public property Array PercievedPos { get; private set; };
 		
-		// Gets the target's side.
+		// Gets the target's percieved side.
 		public property Side PercievedSide { get; private set; };
+		
+		// Gets the target's percieved profession type.
+		public property ProfessionType PercievedProfessionType { get; private set; };
 		
 		// Gets the target's target unit.
 		public property Object Unit { get; private set; };
 		
 		// Gets the target's accuracy.
 		public property Scalar Accuracy { get; private set; };
-		
-		// Gets a unit's all enemy targets
-		// _unit (Object): The unit for which to check enemy targets.
-		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
-		public static method Array GetEnemyTargets {
-			params ["_unit" as Object, ["_maxRange" as Scalar, 4000]];
-			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
-			
-			_resultingTargets = [];
-			
-			// Reveal all units to the unit
-			{
-				if (alive _x && !([side _unit, side _x] call BIS_fnc_sideIsFriendly)) then {
-					if ([objNull, "VIEW"] checkVisibility [eyePos vehicle _unit, eyePos vehicle _x] > 0.1) then {
-						_unit reveal _x;
-					};
-				};
-			} foreach allUnits;
-			
-    		// Get all targets within range
-	        _targets = _unit nearTargets _maxRange;
-	        
-			{
-			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar];
-			    
-			    _percievedPos = _x select 0;
-			    _percievedSide = _x select 2;
-			    _targetUnit = _x select 4;
-			    _accuracy = _x select 5;
-			    
-				if (alive _targetUnit && { !([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly) && _accuracy < 25 }) then {
-					if (_unit knowsAbout _targetUnit > 1) then {
-						_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _targetUnit, _accuracy] new Target;
-					};
-				};
-			} foreach _targets as Array;
-			
-			// Add vehicles manually
-			{
-				private ["_targetUnit" as Object];
-				_targetUnit = _x as Object;
-				
-				if (vehicle _targetUnit != _targetUnit) then { // If unit is in a vehicle
-					_visibility = [objNull, "VIEW"] checkVisibility [eyePos _unit, [getPosASL _targetUnit select 0, getPosASL _targetUnit select 1, (getPosASL _targetUnit select 2) + 2]];
-					
-					if (_visibility > 0.1 && { !([side _unit, side _targetUnit] call BIS_fnc_sideIsFriendly) }) then {
-						_resultingTargets pushBack [side _unit, getPos _targetUnit, side _targetUnit, _targetUnit, 0] new Target;
-					};
-				};
-			} foreach allUnits as Object;
-			
-			_resultingTargets
-		};
 	};
 };

@@ -18,10 +18,13 @@ namespace Intrusion.Server
 		public constructor() {
 			_self.MessageHandler = new MessageHandler;
 			_self.VehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
+			_self.TargetHandler = [gCommonConfig.Professions] new TargetHandler;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
 		
 		public property IVehicleSpawner VehicleSpawner { get; private set; };
+		
+		public property TargetHandler TargetHandler { get; private set; };
 	};
 };

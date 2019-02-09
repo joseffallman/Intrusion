@@ -1,0 +1,137 @@
+/*
+ * Name:	TargetHandler
+ * Date:	2019-02-09
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A helper class for some target logic.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class TargetHandler
+	{
+		private fields ["_mProfessionConfig" as IProfessionConfig];
+	
+		public constructor("_professionConfig" as IProfessionConfig)
+		{
+			_mProfessionConfig = _professionConfig;
+		};
+		
+		// Gets a unit's all enemy targets
+		// _unit (Object): The unit for which to check enemy targets.
+		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
+		public method Array GetEnemyTargets {
+			params ["_unit" as Object, ["_maxRange" as Scalar, 2000]];
+			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
+			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_professionType" as ProfessionType, "_intrusionVehicles" as Array /* of IntrusionVehicle */];
+			private ["_targetUnitNearItsIntrusionVehicle" as Boolean];
+			_resultingTargets = [];
+			
+			// Reveal all units to the unit
+			{
+				if (alive _x && !([side _unit, side _x] call BIS_fnc_sideIsFriendly)) then {
+					if ([objNull, "VIEW"] checkVisibility [eyePos vehicle _unit, eyePos vehicle _x] > 0.1) then {
+						_unit reveal _x;
+						_unit reveal vehicle _x;
+					};
+				};
+			} foreach allUnits;
+			
+    		// Get all targets within range
+	        _targets = _unit nearTargets _maxRange;
+	        _squadCollection = call PublicVariableHandler.GetSquads;
+			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+	        
+			{
+			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar];
+			    
+			    _percievedPos = _x select 0;
+			    _percievedSide = _x select 2;
+			    _targetUnit = _x select 4;
+			    _accuracy = _x select 5;
+			    
+				if (_targetUnit isKindOf "Man" && alive _targetUnit && { !([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly) && _accuracy < 25 }) then
+				{
+					_professionType = ProfessionType.Undefined;
+					
+					if (_unit knowsAbout _targetUnit > 1) then {
+						if (_unit knowsAbout _targetUnit > 3) then {
+
+							_squad = [group _targetUnit] call _squadCollection.GetSquadByGroup;
+							
+							// If the profession type is a warrior type, the observing unit is guessing depending on nearby vehicles
+							if (!isNull _squad) then
+							{
+								// Check if the unit is near its profession vehicle
+								_targetUnitNearItsIntrusionVehicle = false;
+								{
+									if (_x.OwnerGroup == _squad.Group) then {
+										if (vehicle _targetUnit distance _x.Vehicle < 100 && alive _x.Vehicle) then {
+											_targetUnitNearItsIntrusionVehicle = true;
+										};
+									};
+								} foreach _intrusionVehicles as IntrusionVehicle;
+								
+								if (_targetUnitNearItsIntrusionVehicle) then {
+									_professionType = _squad.ProfessionType;
+								};
+							};
+						};
+					
+						_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _professionType, _targetUnit, _accuracy] new Target;
+					};
+				};
+			} foreach _targets as Array;
+			
+			// Add units in vehicles manually
+			{
+				private ["_targetUnit" as Object, "_vehicleHeight" as Scalar, "_squadsIntrusionVehicles" as Array, "_targetUnitInItsIntrusionVehicle" as Boolean, "_profession" as Profession];
+				_targetUnit = _x as Object;
+				
+				if (vehicle _targetUnit != _targetUnit) then { // If unit is in a vehicle
+					_vehicleHeight = ((boundingBox vehicle _targetUnit) select 1) select 2;
+					_visibility = [objNull, "VIEW"] checkVisibility [eyePos _unit, [getPosASL vehicle _targetUnit select 0, getPosASL vehicle _targetUnit select 1, (getPosASL vehicle _targetUnit select 2) + _vehicleHeight + 0.5]];
+					
+					if (_visibility > 0.1 && { !([side _unit, side _targetUnit] call BIS_fnc_sideIsFriendly) }) then
+					{
+						_professionType = ProfessionType.Undefined;
+						
+						// If they are in their profession vehicle, the profession is kind of known
+						
+						_squad = [group _targetUnit] call _squadCollection.GetSquadByGroup;
+						if (!isNull _squad) then
+						{
+							_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
+							
+							if (_profession.VehicleRevealsProfessionType) then
+							{
+								// Check if the unit is in its profession vehicle
+								_targetUnitInItsIntrusionVehicle = false;
+								{
+									if (_x.OwnerGroup == _squad.Group) then {
+										if (_x.Vehicle == vehicle _targetUnit) then {
+											_targetUnitInItsIntrusionVehicle = true;
+										};
+									};
+								} foreach _intrusionVehicles as IntrusionVehicle;
+								
+								if (_targetUnitInItsIntrusionVehicle) then {
+									_professionType = _squad.ProfessionType;
+								};
+							};
+						};
+						
+						_resultingTargets pushBack [side _unit, getPos vehicle _targetUnit, side _targetUnit, _professionType, _targetUnit, 0] new Target;
+					};
+				};
+			} foreach allUnits as Object;
+			
+			_resultingTargets
+		};
+	};
+};
+

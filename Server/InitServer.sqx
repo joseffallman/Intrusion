@@ -32,6 +32,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -71,6 +72,6 @@ gServer = new IntrusionServer;
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
 
 /* Services */
-call ObservationService.Init;
+[gServer.TargetHandler] call ObservationService.Init;
 
 #endregion

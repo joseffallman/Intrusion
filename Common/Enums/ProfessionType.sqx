@@ -10,15 +10,15 @@ namespace Intrusion.Common
 {
 	public enum ProfessionType
 	{
-		Undefined,
-		Infantry,
-		Transport,
-		Fuel,
-		Ammo,
-		Repair,
-		Motorized,
-		AntiArmor,
-		Mechanized,
-		Armored,
+		Undefined = 0, // Important: Undefined must be the option with lowest number
+		Infantry = 10, // Important: First non warrior type
+		Transport = 20,
+		Fuel = 30,
+		Ammo = 40,
+		Repair = 50, // Important: First warrior type
+		Motorized = 60,
+		AntiArmor = 70,
+		Mechanized = 80,
+		Armored = 90,
 	};
 };

@@ -37,9 +37,13 @@ namespace Intrusion.Client
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
 			if (_mapObservation.IsIdentifiedAsEnemy) then {
-				_profession = [_mapObservation.PercievedProfessionType] call _mProfessionConfig.GetProfession;
 				_color = "ColorRed";
-				_markerType = _profession.MarkerTypeEnemy;
+				_profession = [_mapObservation.PercievedProfessionType] call _mProfessionConfig.GetProfession;
+				
+				_markerType = "o_unknown";
+				if (!isNull _profession) then {
+					_markerType = _profession.MarkerTypeEnemy;
+				};
 			};
 			
 			_name setMarkerColorLocal _color;
@@ -59,9 +63,13 @@ namespace Intrusion.Client
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
 			if (_mapObservation.IsIdentifiedAsEnemy) then {
-				_profession = [_mapObservation.PercievedProfessionType] call _mProfessionConfig.GetProfession;
 				_color = "ColorRed";
-				_markerType = _profession.MarkerTypeEnemy;
+				_profession = [_mapObservation.PercievedProfessionType] call _mProfessionConfig.GetProfession;
+				
+				_markerType = "o_unknown";
+				if (!isNull _profession) then {
+					_markerType = _profession.MarkerTypeEnemy;
+				};
 			};
 			
 			_name setMarkerColorLocal _color;

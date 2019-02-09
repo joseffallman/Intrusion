@@ -15,10 +15,11 @@ namespace Intrusion.Server
 {
 	public class ObservationService
 	{
-		private static fields ["_mObservations" as Array, "_mCurrentId" as Scalar];
+		private static fields ["_mObservations" as Array, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
 		
 		// Initializes the observation service.
-		public static method Init() {
+		public static method Init("_targetHandler" as TargetHandler) {
+			_mTargetHandler = _targetHandler;
 			_mCurrentId = 0;
 			_mObservations = [];
 		};
@@ -73,7 +74,7 @@ namespace Intrusion.Server
 				scopeName "loop";
 				
 				if (_x.ObservingSide == _target.ObservingSide) then {
-					if (group _x.Unit == group _target.Unit) then {
+					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 300) then {
 						_observation = _x;
 					
 						breakOut "loop";
@@ -93,11 +94,10 @@ namespace Intrusion.Server
 			_observation.MarkedAsDeleted = false;
 			
 			// Always update the accuracy, percieved position and percieved side.
-			_observation.Accuracy = _target.Accuracy;
+			_observation.Accuracy = if (_observation.Accuracy > _target.Accuracy) then { _observation.Accuracy } else { _target.Accuracy };
 			_observation.PercievedPos = _target.PercievedPos;
-			_observation.PercievedSide = _target.PercievedSide;			
-			
-			_observation.PercievedProfessionType = ProfessionType.Infantry;
+			_observation.PercievedSide = if (_observation.PercievedSide != sideUnknown) then { _observation.PercievedSide } else { _target.PercievedSide };
+			_observation.PercievedProfessionType = if ((_observation.PercievedProfessionType as Scalar) > (_target.PercievedProfessionType as Scalar)) then { _observation.PercievedProfessionType } else { _target.PercievedProfessionType };
 		};
 		
 		// Adds a target to the list of current observations.
@@ -110,7 +110,7 @@ namespace Intrusion.Server
 			
 			if (isNull _existingObservation) then {
 				_mCurrentId = _mCurrentId + 1;
-				_newObservation = [_mCurrentId, _target.ObservingSide, getPos _target.Unit, _target.PercievedSide, group _target.Unit, _target.Unit, ProfessionType.Infantry, _target.Accuracy] new Observation;
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy] new Observation;
 			
 				_mObservations pushBack _newObservation;
 			} else {
@@ -134,7 +134,7 @@ namespace Intrusion.Server
 	        		_unit = _x;
 	        	
 	        		if (alive _unit) then {
-		        		_targets = [_unit] call Target.GetEnemyTargets;
+		        		_targets = [_unit] call _mTargetHandler.GetEnemyTargets;
 		        		
 		        		{
 		        			[_x] call _self.AddTargetToObservations;
@@ -148,7 +148,7 @@ namespace Intrusion.Server
 	        	_mapObservations = call _self.ConvertToMapObservations;
 				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 2;
+        		sleep 1;
 			};
 		};
 		
