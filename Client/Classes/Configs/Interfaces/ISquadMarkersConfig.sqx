@@ -16,5 +16,8 @@ namespace Intrusion.Client
 		
 		// Gets the marker type of the squad's member on the map.
 		property String SquadMemberMarkerType { get; };
+		
+		// Gets the marker color of the player's marker on the map.
+		property String PlayerMarkerColor { get; };
 	};
 };

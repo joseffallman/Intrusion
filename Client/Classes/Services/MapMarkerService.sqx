@@ -170,6 +170,16 @@ namespace Intrusion.Client
 				};
 			} foreach _squadsVehicles as Object;
 			
+			// Set player color of the vehicle that the player is in
+			{
+				if (_x.Tag == vehicle player) then {
+					[_mSquadMarkersConfig.PlayerMarkerColor] call _x.SetColor;
+				}
+				else {
+					["ColorBlufor"] call _x.SetColor;
+				};
+			} foreach _markersToKeep as Marker;
+			
 			_mSquadVehicleMarkers = _markersToKeep;
 		};
 		
@@ -226,6 +236,16 @@ namespace Intrusion.Client
 					_markedUnits pushBack _x;
 				};
 			} foreach (units group player) as Object;
+			
+			// Set player color
+			{
+				if (_x.Tag == player) then {
+					[_mSquadMarkersConfig.PlayerMarkerColor] call _x.SetColor;
+				}
+				else {
+					["ColorBlufor"] call _x.SetColor;
+				};
+			} foreach _markersToKeep as Marker;
 			
 			_mSquadMemberMarkers = _markersToKeep;
 		};

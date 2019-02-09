@@ -408,6 +408,24 @@ namespace Sqx.Markers
 			};
 		};
 		
+		// Sets (updates) the marker's color.
+		// _type (String): The new color of the marker.
+		public method SetColor("_color" as String)
+		{
+			if (!(_color isEqualTo _self.Color)) then {
+				_self.Color = _color;
+				
+				if (_self.IsVisible) then {
+					if (_self.IsLocal) then {
+						(_self.Name) setMarkerColorLocal _color;
+					}
+					else {
+						(_self.Name) setMarkerColor _color;
+					};
+				};
+			};
+		};
+		
 		// Sets (updates) the marker's brush.
 		// _brush (String): The new marker brush.
 		public method SetBrush("_brush" as String)
