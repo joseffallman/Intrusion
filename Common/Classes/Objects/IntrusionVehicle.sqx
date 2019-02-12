@@ -35,6 +35,12 @@ namespace Intrusion.Common
 		
 		// Gets the vehicle's production cost.
 		public property Scalar Cost { get; private set; };
+		
+		// Removes the squad's ownership of the vehicle.
+		public method RemoveOwnership()
+		{
+			_self.OwnerGroup = grpNull;
+		};
 	};
 };
 

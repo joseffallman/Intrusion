@@ -46,9 +46,8 @@ namespace Intrusion.Server
 		public method PerformTurn {
 			call _mResourceCollector.CollectResources;
 			call _mScientist.PerformResearch;
+			call _mProductionManager.AddOrdersForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
-			
-			//player sideChat str _self.Side + ": " + (call _mResourceBook.ToString);
 		};
 	};
 };

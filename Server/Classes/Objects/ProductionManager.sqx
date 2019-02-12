@@ -72,14 +72,30 @@ namespace Intrusion.Server
 				
 				_order = [_group, _vehicleClassName, _professionVehicle.Cost] new Order;
 				[_order] call _mOrderQueue.PutOrder;
+				
+				if (call _mOrderQueue.Count == 1) then {
+					[_mOrderQueue.CurrentOrder.Group] call _self.TellSquadVehicleSoonDelivered;
+				};
 			};
+		};
+		
+		private method TellSquadVehicleSoonDelivered("_group" as Group)
+		{
+			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowSubTitle;
+		};
+		
+		public method AddOrdersForSquadsWithNoVehicle()
+		{
+			call _mVehicleSpawner.RemoveOwnershipOfDestroyedVehicles;
+			
+			// Här är jag...
 		};
 		
 		// Produces vehicles from the production queue.
 		public method PerformProduction {
 			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_professionVehicle" as ProfessionVehicleInfo, "_technologyInvented" as Boolean];
 			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
-			
+
 			_tryOneMore = true;
 
 			while { _tryOneMore && {!isNull _mOrderQueue.CurrentOrder} } do {
@@ -115,9 +131,15 @@ namespace Intrusion.Server
 							};
 							
 							// Tell the group
-							["Your vehicle is ready and waiting at the base.", _mOrderQueue.CurrentOrder.Group] call _mMessageHandler.ShowMessage;
+							["Your squad's vehicle is ready and waiting for you at the base.", _mOrderQueue.CurrentOrder.Group] call _mMessageHandler.ShowMessage;
 							
+							// Remove the order
 							call _mOrderQueue.RemoveCurrentOrder;
+							
+							// Tell the next squad that their vehicle is being produced.
+							if (call _mOrderQueue.Count > 0) then {
+								[_mOrderQueue.CurrentOrder.Group] call _self.TellSquadVehicleSoonDelivered;
+							};
 							
 							_tryOneMore = true;
 						};

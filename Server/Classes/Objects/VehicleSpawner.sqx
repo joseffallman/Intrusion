@@ -239,5 +239,23 @@ namespace Intrusion.Server
 		{
 			+_mAllIntrusionVehicles;
 		};
+		
+		public method RemoveOwnershipOfDestroyedVehicles()
+		{
+			private ["_collectionModified" as Boolean];
+			
+			_collectionModified = false;
+			
+			{
+				if (! alive _x.Vehicle && !isNull _x.OwnerGroup) then {
+					call _x.RemoveOwnership;
+					_collectionModified = true;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			if (_collectionModified) then {
+				[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
+			};
+		};
 	};
 };

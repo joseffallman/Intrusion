@@ -49,5 +49,10 @@ namespace Intrusion.Tests.Helpers
 		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side)
 		{
 		};
+		
+		// Removes squad's ownership of all destroyed vehicles.
+		public method RemoveOwnershipOfDestroyedVehicles()
+		{
+		};
 	};
 };

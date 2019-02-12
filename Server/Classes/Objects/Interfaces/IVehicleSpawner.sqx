@@ -35,5 +35,8 @@ namespace Intrusion.Server
 		// Gets all spawned vehicles.
 		// Returns (Array): A list of IntrusionVehicle objects.
 		method Array GetAllVehicles();
+		
+		// Removes squad's ownership of all destroyed vehicles.
+		method RemoveOwnershipOfDestroyedVehicles();
 	};
 };
