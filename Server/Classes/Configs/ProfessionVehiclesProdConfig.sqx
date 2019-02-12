@@ -22,9 +22,10 @@ namespace Intrusion.Server
 				[ProfessionType.Fuel, 50, Technology.Services] new ProfessionVehicleInfo,
 				[ProfessionType.Ammo, 50, Technology.Services] new ProfessionVehicleInfo,
 				[ProfessionType.Repair, 50, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Motorized, 150, Technology.Motorized] new ProfessionVehicleInfo,
-				[ProfessionType.Mechanized, 200, Technology.Mechanized] new ProfessionVehicleInfo,
-				[ProfessionType.AntiArmor, 150, Technology.AntiArmor] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 200, Technology.Motorized] new ProfessionVehicleInfo,
+				[ProfessionType.Mortars, 100, Technology.Artillery] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 250, Technology.Mechanized] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 100, Technology.AntiArmor] new ProfessionVehicleInfo,
 				[ProfessionType.Armored, 300, Technology.Armored] new ProfessionVehicleInfo,
 			];
 		};

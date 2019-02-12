@@ -20,6 +20,7 @@ namespace Intrusion.Server
 				[Technology.Services, "Services", 750] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 1000] new TechnologyInfo,
 				[Technology.Launchers, "Launchers", 2000] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 2500] new TechnologyInfo,
 				[Technology.Motorized, "Motorized Vehicles", 3000] new TechnologyInfo,
 				[Technology.AntiArmor, "Anti Armor", 3500] new TechnologyInfo,
 				[Technology.Mechanized, "Mechanized Vehicles", 4000] new TechnologyInfo,

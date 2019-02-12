@@ -53,6 +53,7 @@ namespace Intrusion.Server
 		{
 			private ["_order" as Order, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
 			private ["_cost" as Scalar];
+		    [str _this + " ProductionManager.OnGroupChangingProfession"] call LogHandler.Debug;
 			
 			// Delete the group's eventual existing vehicle and return its production value.
 			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
@@ -63,7 +64,7 @@ namespace Intrusion.Server
 			
 			_vehicleClassNamesInfo = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX (TEST ADDED): Must generate error that VehicleClassNamesConfig is not static.
-			
+
 			// Create an order if there is a vehicle to assign.
 			if (!isNull _vehicleClassNamesInfo) then {
 				_vehicleClassName = selectRandom _vehicleClassNamesInfo.ClassNames;

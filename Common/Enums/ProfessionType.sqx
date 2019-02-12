@@ -17,8 +17,9 @@ namespace Intrusion.Common
 		Ammo = 40,
 		Repair = 50, // Important: First warrior type
 		Motorized = 60,
-		AntiArmor = 70,
-		Mechanized = 80,
-		Armored = 90,
+		Mortars = 70,
+		AntiArmor = 80,
+		Mechanized = 90,
+		Armored = 100,
 	};
 };

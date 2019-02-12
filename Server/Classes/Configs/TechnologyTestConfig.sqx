@@ -20,10 +20,11 @@ namespace Intrusion.Server
 				[Technology.Services, "Services", 500] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 750] new TechnologyInfo,
 				[Technology.Launchers, "Launchers", 1000] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 1250] new TechnologyInfo,
-				[Technology.AntiArmor, "Anti Armor", 1500] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized Vehicles", 1750] new TechnologyInfo,
-				[Technology.Armored, "Armored Vehicles", 2000] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 1250] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 1500] new TechnologyInfo,
+				[Technology.AntiArmor, "Anti Armor", 1750] new TechnologyInfo,
+				[Technology.Mechanized, "Mechanized Vehicles", 2000] new TechnologyInfo,
+				[Technology.Armored, "Armored Vehicles", 2250] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;

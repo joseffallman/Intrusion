@@ -8,6 +8,7 @@
  * A queue for the groups on the side to get needed materiels as soon as the side can afford it.
  */
 
+using Intrusion.Common;
 using Sqx.Collections;
 
 namespace Intrusion.Server
@@ -50,6 +51,7 @@ namespace Intrusion.Server
 		// _group (Group): The group to add.
 		public method PutOrder("_order" as Order)
 		{
+		    [str _this + " OrderQueue.PutOrder"] call LogHandler.Debug;
 			_mOrders pushBack _order;
 			
 			if (count _mOrders == 1) then {

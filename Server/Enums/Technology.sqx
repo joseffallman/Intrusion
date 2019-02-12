@@ -17,9 +17,10 @@ namespace Intrusion.Server
 		Maintenance = 3,
 		Launchers = 4,
 		Motorized = 5,
-		AntiArmor = 6,
-		Mechanized = 7,
-		Armored = 8,
-		EndOfTechnologies = 9
+		Artillery = 6,
+		AntiArmor = 7,
+		Mechanized = 8,
+		Armored = 9,
+		EndOfTechnologies = 10
 	};
 };
