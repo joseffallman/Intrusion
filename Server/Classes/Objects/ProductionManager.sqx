@@ -53,6 +53,9 @@ namespace Intrusion.Server
 		{
 			private ["_order" as Order, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
 			
+			// Remove the group's eventual existing orders.
+			[_group] call _mOrderQueue.RemoveOrdersByGroup;
+			
 			_vehicleClassNamesInfo = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX (TEST ADDED): Must generate error that VehicleClassNamesConfig is not static.
 
@@ -82,21 +85,18 @@ namespace Intrusion.Server
 			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
 			[_cost] call _mResourceBook.DepositProduction;
 			
-			// Remove the group's eventual existing orders.
-			[_group] call _mOrderQueue.RemoveOrdersByGroup;
-			
 			[_group, _professionType] call _self.CreateOrder;
 		};
 		
 		private method TellSquadVehicleSoonDelivered("_group" as Group)
 		{
-			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowSubTitle;
+			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowMessage;
 		};
 		
 		public method AddOrdersForSquadsWithNoVehicle()
 		{
 			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
-			private ["_squadCollection" as SquadCollection, "_squad" as Squad];
+			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_order" as Order];
 			
 			call _mVehicleSpawner.RemoveOwnershipOfDestroyedVehicles;
 			
@@ -104,10 +104,17 @@ namespace Intrusion.Server
 			
 			{
 				_squad = _x;
-				_intrusionVehicles = [_squad.Group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
 				
-				if (count _intrusionVehicles == 0) then {
-					[_squad.Group, _squad.ProfessionType] call _self.CreateOrder;
+				if (side _squad.Group == _self.Side) then {
+					_order = [_squad.Group] call _mOrderQueue.GetOrderByGroup;
+					
+					if (isNull _order) then {
+						_intrusionVehicles = [_squad.Group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
+		
+						if (count _intrusionVehicles == 0) then {
+							[_squad.Group, _squad.ProfessionType] call _self.CreateOrder;
+						};
+					};
 				};
 			} foreach _squadCollection.Squads as Squad;
 		};
@@ -156,7 +163,7 @@ namespace Intrusion.Server
 							
 							// Remove the order
 							call _mOrderQueue.RemoveCurrentOrder;
-							
+
 							// Tell the next squad that their vehicle is being produced.
 							if (call _mOrderQueue.Count > 0) then {
 								[_mOrderQueue.CurrentOrder.Group] call _self.TellSquadVehicleSoonDelivered;

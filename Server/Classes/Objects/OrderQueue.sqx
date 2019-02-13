@@ -110,5 +110,21 @@ namespace Intrusion.Server
 				//_self.CurrentOrder = (_mOrders select 0); // TODO SQX (TEST ADDED): Compiler adds a semicolon too much.
 			};
 		};
+		
+		public method GetOrderByGroup("_group" as Group)
+		{
+			private ["_order" as Order];
+			scopeName "main";
+		
+			{
+				_order = _x;
+				
+				if (_order.Group == _group) then {
+					_order breakOut "main";
+				};
+			} foreach _mOrders as Order;
+	
+			classNull
+		};
 	};
 };

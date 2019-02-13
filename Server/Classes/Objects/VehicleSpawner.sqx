@@ -149,7 +149,7 @@ namespace Intrusion.Server
 		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 		    [str _this + " VehicleSpawner.SpawnProfessionVehicle"] call LogHandler.Debug;
-		    
+
 		    _intrusionVehicle = [side _group, _professionType, _vehicleClass, _group, _cost] call _self.SpawnIntrusionVehicle;
         	
 		    _intrusionVehicle
@@ -247,7 +247,7 @@ namespace Intrusion.Server
 			_collectionModified = false;
 			
 			{
-				if (! alive _x.Vehicle && !isNull _x.OwnerGroup) then {
+				if (!alive _x.Vehicle && !isNull _x.OwnerGroup) then {
 					call _x.RemoveOwnership;
 					_collectionModified = true;
 				};
@@ -269,7 +269,7 @@ namespace Intrusion.Server
 			_squadVehicles = [];
 			
 			{
-				if (! alive _x.Vehicle && _x.OwnerGroup == _group) then {
+				if (_x.OwnerGroup == _group) then {
 					_squadVehicles pushBack _x;
 				};
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
