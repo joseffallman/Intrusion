@@ -46,21 +46,12 @@ namespace Intrusion.Server
 		// Gets the production manager's side.
 		public property Side Side { get; private set; };
 		
-		// Called when a group on the production manager's side changes its profession.
-		// _group (Group): The group that is changing its profession.
-		// _professionType (ProfessionType): The group's new profession type.
-		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
+		// Creates a vehicle order for a group
+		// _group (Group): The group to create order for.
+		// _professionType (ProfessionType): The profession type.
+		private method CreateOrder("_group" as Group, "_professionType" as ProfessionType)
 		{
 			private ["_order" as Order, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
-			private ["_cost" as Scalar];
-		    [str _this + " ProductionManager.OnGroupChangingProfession"] call LogHandler.Debug;
-			
-			// Delete the group's eventual existing vehicle and return its production value.
-			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
-			[_cost] call _mResourceBook.DepositProduction;
-			
-			// Remove the group's eventual existing orders.
-			[_group] call _mOrderQueue.RemoveOrdersByGroup;
 			
 			_vehicleClassNamesInfo = [side _group, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 			//_vehicleClassNames = [side _group, _professionType] call VehicleClassNamesConfig.GetProVehiclesClassNames; // TODO SQX (TEST ADDED): Must generate error that VehicleClassNamesConfig is not static.
@@ -79,6 +70,24 @@ namespace Intrusion.Server
 			};
 		};
 		
+		// Called when a group on the production manager's side changes its profession.
+		// _group (Group): The group that is changing its profession.
+		// _professionType (ProfessionType): The group's new profession type.
+		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
+		{
+			private ["_cost" as Scalar];
+		    [str _this + " ProductionManager.OnGroupChangingProfession"] call LogHandler.Debug;
+			
+			// Delete the group's eventual existing vehicle and return its production value.
+			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
+			[_cost] call _mResourceBook.DepositProduction;
+			
+			// Remove the group's eventual existing orders.
+			[_group] call _mOrderQueue.RemoveOrdersByGroup;
+			
+			[_group, _professionType] call _self.CreateOrder;
+		};
+		
 		private method TellSquadVehicleSoonDelivered("_group" as Group)
 		{
 			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowSubTitle;
@@ -86,9 +95,21 @@ namespace Intrusion.Server
 		
 		public method AddOrdersForSquadsWithNoVehicle()
 		{
+			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
+			private ["_squadCollection" as SquadCollection, "_squad" as Squad];
+			
 			call _mVehicleSpawner.RemoveOwnershipOfDestroyedVehicles;
 			
-			// Här är jag...
+			_squadCollection = call PublicVariableHandler.GetSquads;
+			
+			{
+				_squad = _x;
+				_intrusionVehicles = [_squad.Group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
+				
+				if (count _intrusionVehicles == 0) then {
+					[_squad.Group, _squad.ProfessionType] call _self.CreateOrder;
+				};
+			} foreach _squadCollection.Squads as Squad;
 		};
 		
 		// Produces vehicles from the production queue.

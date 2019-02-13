@@ -54,5 +54,13 @@ namespace Intrusion.Tests.Helpers
 		public method RemoveOwnershipOfDestroyedVehicles()
 		{
 		};
+		
+		// Gets a squad's intrusion vehciels.
+		// _group (Group): The group that owns the vehicles.
+		// Returns (Array of IntrusionVehicle): A list of the squad's intrusion vehicles.
+		public method Array GetIntrusionVehiclesByGroup("_group" as Group)
+		{
+			[]
+		};
 	};
 };

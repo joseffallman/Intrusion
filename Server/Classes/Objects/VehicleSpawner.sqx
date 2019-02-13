@@ -257,5 +257,24 @@ namespace Intrusion.Server
 				[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 			};
 		};
+		
+		
+		// Gets a squad's intrusion vehciels.
+		// _group (Group): The group that owns the vehicles.
+		// Returns (Array of IntrusionVehicle): A list of the squad's intrusion vehicles.
+		public method Array GetIntrusionVehiclesByGroup("_group" as Group)
+		{
+			private ["_squadVehicles" as Array];
+			
+			_squadVehicles = [];
+			
+			{
+				if (! alive _x.Vehicle && _x.OwnerGroup == _group) then {
+					_squadVehicles pushBack _x;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			_squadVehicles
+		};
 	};
 };
