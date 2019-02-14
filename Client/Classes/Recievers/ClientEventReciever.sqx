@@ -7,6 +7,9 @@
  * Description:
  * Static class that handles all Intrusion events sent from the server.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class ClientEventReciever
@@ -86,9 +89,12 @@ namespace Intrusion.Client
 		};
 		
 		// Called when the resource report collection is updated.
-		public static method OnResourceReportCollectionUpdated("_resourceReportCollection" as ClientResourceLocationHandler)
+		public static method OnResourceReportCollectionUpdated("_resourceReportCollection" as ResourceReportCollection)
 		{
-			player sideChat str _resourceReportCollection;
+			private ["_resourceReport" as ResourceReport];
+			
+			_resourceReport = [playerSide] call _resourceReportCollection.GetReport;
+			player commandChat "Brigade info. Production: " + str floor _resourceReport.Production + "; Research: " + str floor _resourceReport.Research;
 		};
 	};
 };
