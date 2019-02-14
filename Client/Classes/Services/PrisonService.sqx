@@ -1,0 +1,48 @@
+/*
+ * Name:	PrisonService
+ * Date:	2019-02-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A prison service that is used to warn and punish players that misbehave.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class PrisonService : IService
+	{
+		private fields ["_mPrisonTimeMin" as Scalar];
+	
+		// Creates a PrisonService object.
+		// _prisonTimeMin (Scalar): The time to spend in prison in minutes.
+		public constructor("_prisonTimeMin" as Scalar) {
+			_mPrisonTimeMin = _prisonTimeMin;
+			_self.IsRunning = false;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Run()
+		{
+			private ["_startTime" as Scalar];
+			
+			_startTime = time;
+			
+			while { time < _startTime + _mPrisonTimeMin * 60 } do {
+				cutText ["You have to spend one minute in team kill prison. If you team kill again, next time you will spend 10 minutes.", "BLACK FADED"];
+				sleep 1;
+			};
+			
+			_self.IsRunning = false;
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};

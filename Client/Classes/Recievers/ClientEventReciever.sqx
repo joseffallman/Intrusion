@@ -79,7 +79,17 @@ namespace Intrusion.Client
 		// _side (Side): The player's side.
 		public static method OnPlayerKilled("_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean, "_side" as Side)
 		{
+			private ["_prisonService" as PrisonService];
+			
 			removeAllActions _unit;
+			
+			player sideChat str (_killer == player);
+			player sideChat str ([_side, side _killer] call BIS_fnc_sideIsFriendly);
+			
+			if (_killer == player && [_side, side _killer] call BIS_fnc_sideIsFriendly) then {
+				_prisonService = [1] new PrisonService;
+				call _prisonService.RunAsync;
+			};
 		};
 		
 		// Called when a player disconnected from an MP game.

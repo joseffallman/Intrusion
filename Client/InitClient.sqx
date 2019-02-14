@@ -23,6 +23,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientEventHandl
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
