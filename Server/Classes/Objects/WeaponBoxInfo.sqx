@@ -7,6 +7,9 @@
  * Description:
  * Contains the class information for weapon boxes.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class WeaponBoxInfo

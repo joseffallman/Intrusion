@@ -7,6 +7,9 @@
  * Description:
  * Modeling a side's R&D refining generated technology (i.e. unlocks new technology).
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public interface IScientist
@@ -16,6 +19,9 @@ namespace Intrusion.Server
 
 		// Gets whether a technology is invented yet or not.
 		method Boolean TechnologyIsInvented("_technology" as Technology);
+		
+		// Gets the technology currently being researched.
+		property TechnologyInfo CurrentTechnology { get; };
 	};
 };
 

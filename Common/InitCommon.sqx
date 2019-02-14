@@ -4,6 +4,9 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx"
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
@@ -19,6 +22,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\ViewPos.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\BaseLayout.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReport.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReportCollection.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\TechnologyInfo.sqx";
 
 using Intrusion.Common;
 
@@ -27,7 +31,17 @@ using Intrusion.Common;
 // Configs
 call DebugConfig.Init;
 
-gCommonConfig = [new MapMarkersConfig, new ProfessionConfig] new CommonConfig;
+if (DebugConfig.Mode == MissionConfigMode.Production) then {
+	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig] new CommonConfig;
+}
+else {
+	if (DebugConfig.Mode == MissionConfigMode.Test) then {
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig] new CommonConfig;
+	}
+	else { // Dev
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig] new CommonConfig;
+	};
+};
 
 // Handlers
 [DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;

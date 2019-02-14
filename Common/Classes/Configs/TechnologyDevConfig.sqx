@@ -7,7 +7,7 @@
  * Description:
  * Class that contains configuration settings for technologies.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public class TechnologyDevConfig : ITechnologyConfig
 	{
@@ -40,6 +40,22 @@ namespace Intrusion.Server
 			
 			{
 				if (_technology == _x.Technology) then {
+					_x breakOut "main";
+				};
+			} foreach _mTechnologies as TechnologyInfo;
+			
+			classNull
+		};
+		
+		// Gets the next technology to investigate.
+		// _research (Scalar): The current research points.
+		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been invented.
+		public method TechnologyInfo GetNextTechnology("_research" as Scalar)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.RequiredResearch > _research) then {
 					_x breakOut "main";
 				};
 			} foreach _mTechnologies as TechnologyInfo;

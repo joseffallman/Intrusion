@@ -7,7 +7,7 @@
  * Description:
  * Enum for technologies.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public enum Technology
 	{

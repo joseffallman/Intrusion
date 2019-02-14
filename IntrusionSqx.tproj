@@ -52,7 +52,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="false" FileName="Client\Classes\Handlers">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="true" FileName="Client\Classes\Handlers">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BriefingHandler.sqx" IsExpanded="false" FileName="Client\Classes\Handlers\BriefingHandler.sqx">
@@ -80,6 +80,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ClientVehicleHandler.sqx" IsExpanded="false" FileName="Client\Classes\Handlers\ClientVehicleHandler.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="DisplayHandler.sqx" IsExpanded="false" FileName="Client\Classes\Handlers\DisplayHandler.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -126,16 +130,16 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Recievers" IsExpanded="false" FileName="Client\Classes\Recievers">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Recievers" IsExpanded="true" FileName="Client\Classes\Recievers">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ClientEventReciever.sqx" IsExpanded="false" FileName="Client\Classes\Recievers\ClientEventReciever.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="true" FileName="Client\Classes\Services">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Client\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="JipService.sqx" IsExpanded="false" FileName="Client\Classes\Services\JipService.sqx">
@@ -176,7 +180,7 @@
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitClient.sqx" IsExpanded="false" FileName="Client\InitClient.sqx">
-            <IsSelected>true</IsSelected>
+            <IsSelected>false</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
         </SubNodes>
@@ -187,10 +191,10 @@
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Common\Classes">
             <IsSelected>false</IsSelected>
             <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="false" FileName="Common\Classes\Configs">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="true" FileName="Common\Classes\Configs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
-                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces">
+                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="true" FileName="Common\Classes\Configs\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ICommonConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\ICommonConfig.sqx">
@@ -202,6 +206,10 @@
                         <SubNodes />
                       </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IProfessionConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IProfessionConfig.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ITechnologyConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\ITechnologyConfig.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -223,9 +231,21 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyDevConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\TechnologyDevConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyProdConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\TechnologyProdConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyTestConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\TechnologyTestConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="true" FileName="Common\Classes\Handlers">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Handlers" IsExpanded="false" FileName="Common\Classes\Handlers">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Common\Classes\Handlers\Interfaces">
@@ -247,7 +267,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Common\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Common\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseLayout.sqx" IsExpanded="false" FileName="Common\Classes\Objects\BaseLayout.sqx">
@@ -298,6 +318,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\TechnologyInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ViewPos.sqx" IsExpanded="false" FileName="Common\Classes\Objects\ViewPos.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -339,6 +363,10 @@
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Technology.sqx" IsExpanded="false" FileName="Common\Enums\Technology.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommon.sqx" IsExpanded="false" FileName="Common\InitCommon.sqx">
@@ -347,7 +375,7 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" IsExpanded="true" FileName="Communication">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" IsExpanded="false" FileName="Communication">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommunication.sqx" IsExpanded="false" FileName="Communication\InitCommunication.sqx">
@@ -426,10 +454,6 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ITechnologyConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces\ITechnologyConfig.sqx">
-                        <IsSelected>false</IsSelected>
-                        <SubNodes />
-                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IVehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces\IVehicleClassNamesConfig.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
@@ -457,18 +481,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ServerConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\ServerConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyDevConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\TechnologyDevConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyProdConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\TechnologyProdConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyTestConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\TechnologyTestConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -528,7 +540,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Server\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Server\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="true" FileName="Server\Classes\Objects\Interfaces">
@@ -600,10 +612,6 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\TechnologyInfo.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBox.sqx" IsExpanded="false" FileName="Server\Classes\Objects\WeaponBox.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -635,7 +643,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Server\Classes\Services">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="true" FileName="Server\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="FreeVehiclesService.sqx" IsExpanded="false" FileName="Server\Classes\Services\FreeVehiclesService.sqx">
@@ -673,10 +681,6 @@
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Enums" IsExpanded="true" FileName="Server\Enums">
             <IsSelected>false</IsSelected>
             <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Technology.sqx" IsExpanded="false" FileName="Server\Enums\Technology.sqx">
-                <IsSelected>false</IsSelected>
-                <SubNodes />
-              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBoxType.sqx" IsExpanded="false" FileName="Server\Enums\WeaponBoxType.sqx">
                 <IsSelected>false</IsSelected>
                 <SubNodes />
@@ -774,7 +778,7 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Helpers" IsExpanded="false" FileName="Tests\Helpers">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Helpers" IsExpanded="true" FileName="Tests\Helpers">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Message.sqx" IsExpanded="false" FileName="Tests\Helpers\Message.sqx">

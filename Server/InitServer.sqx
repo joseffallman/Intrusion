@@ -1,8 +1,5 @@
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyDevConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\TechnologyProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
@@ -25,7 +22,6 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\TechnologyInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
@@ -55,14 +51,14 @@ call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gServerConfig = [new GameplayProdConfig, new TechnologyProdConfig, new ProfessionVehiclesProdConfig, new VehicleClassNamesConfig] new ServerConfig;
+	gServerConfig = [new GameplayProdConfig, new ProfessionVehiclesProdConfig, new VehicleClassNamesConfig] new ServerConfig;
 }
 else {
 	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gServerConfig = [new GameplayTestConfig, new TechnologyTestConfig, new ProfessionVehiclesTestConfig, new VehicleClassNamesConfig] new ServerConfig;
+		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesTestConfig, new VehicleClassNamesConfig] new ServerConfig;
 	}
 	else { // Dev
-		gServerConfig = [new GameplayTestConfig, new TechnologyDevConfig, new ProfessionVehiclesDevConfig, new VehicleClassNamesConfig] new ServerConfig;
+		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesDevConfig, new VehicleClassNamesConfig] new ServerConfig;
 	};
 };
 

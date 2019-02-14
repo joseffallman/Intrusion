@@ -7,7 +7,7 @@
  * Description:
  * Class that contains configuration settings for technologies.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public interface ITechnologyConfig
 	{

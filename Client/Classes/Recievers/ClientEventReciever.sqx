@@ -104,7 +104,7 @@ namespace Intrusion.Client
 			private ["_resourceReport" as ResourceReport];
 			
 			_resourceReport = [playerSide] call _resourceReportCollection.GetReport;
-			player commandChat "Brigade info. Production: " + str floor _resourceReport.Production + "; Research: " + str floor _resourceReport.Research;
+			[_resourceReport] call gClient.DisplayHandler.DisplayResourceReport;
 		};
 	};
 };

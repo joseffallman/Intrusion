@@ -7,6 +7,9 @@
  * Description:
  * Keeps invented technologies for all sides in the game.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class InventedTechnologiesCollection

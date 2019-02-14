@@ -17,7 +17,7 @@ namespace Intrusion.Server
 	{
 		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mSide" as Side];
-		private fields ["_mCurrentTechnology" as TechnologyInfo, "_mAllTechnologiesInvented" as Boolean];
+		private fields ["_mAllTechnologiesInvented" as Boolean];
 		
 		// Creates a Sceintist object.
 		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, ["_firstTechToResearch" as Technology, 1 as Technology])
@@ -28,26 +28,29 @@ namespace Intrusion.Server
 			_mMessageHandler = _messageHandler;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			
-			_mCurrentTechnology = [_firstTechToResearch] call _mTechnologyConfig.GetTechnology;
+			_self.CurrentTechnology = [_firstTechToResearch] call _mTechnologyConfig.GetTechnology;
 			_mAllTechnologiesInvented = false;
 		};
+		
+		// Gets the technology currently being researched.
+		public property TechnologyInfo CurrentTechnology { get; private set;};
 		
 		// Sets the current technology as invented, notifies players, and starts research on next.
 		private method SetTechnologyAsInvented()
 		{
 			private ["_technology" as Technology];
 			
-			[_mSide, _mCurrentTechnology.Technology] call _mInventedTechnologiesCollection.AddInventedTechnology;
-			["Your side has invented '" + _mCurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
+			[_mSide, _self.CurrentTechnology.Technology] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			["Your side has established '" + _self.CurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
 			
 			// Get next technology to research
-			_technology = (_mCurrentTechnology.Technology as Scalar) + 1 as Technology;
+			_technology = (_self.CurrentTechnology.Technology as Scalar) + 1 as Technology;
 
 			if (_technology == Technology.EndOfTechnologies) then {
 				_mAllTechnologiesInvented = true;
 			}
 			else {
-				_mCurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
+				_self.CurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
 			};
 		};
 		
@@ -55,7 +58,7 @@ namespace Intrusion.Server
 		public method PerformResearch()
 		{
 			if (!_mAllTechnologiesInvented) then {
-				if (_mResourceBook.TotalResearch >= _mCurrentTechnology.RequiredResearch) then {
+				if (_mResourceBook.TotalResearch >= _self.CurrentTechnology.RequiredResearch) then {
 					call _self.SetTechnologyAsInvented;
 				};
 			};

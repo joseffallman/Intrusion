@@ -8,6 +8,7 @@
  * Class containing test values for technology configs.
  */
 
+using Intrusion.Common;
 using Intrusion.Server;
 
 namespace Intrusion.Tests.Helpers
@@ -37,5 +38,21 @@ namespace Intrusion.Tests.Helpers
 		};
 		
 		public property Array Technologies { get; private set; };
+		
+		// Gets the next technology to investigate.
+		// _research (Scalar): The current research points.
+		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been invented.
+		public method TechnologyInfo GetNextTechnology("_research" as Scalar)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.RequiredResearch > _research) then {
+					_x breakOut "main";
+				};
+			} foreach _self.Technologies as TechnologyInfo;
+			
+			classNull
+		};
 	};
 };

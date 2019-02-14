@@ -1,0 +1,54 @@
+/*
+ * Name:	DisplayHandler
+ * Date:	2019-02-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all display texts shown on the player's screen.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class DisplayHandler
+	{
+		private fields ["_mBrigadeInfoCtrl" as Control, "_mTechnologyConfig" as ITechnologyConfig];
+		
+		// Creates a DisplayHandler object.
+		public constructor("_technologyConfig" as ITechnologyConfig) {
+			_mTechnologyConfig = _technologyConfig;
+			_mBrigadeInfoCtrl = controlNull;
+		};
+		
+		public method DisplayResourceReport("_resourceReport" as ResourceReport)
+		{
+			private ["_technologyInfo" as TechnologyInfo];
+			
+			waitUntil {!isNull findDisplay 46};
+			disableSerialization;
+			
+			if (isNull _mBrigadeInfoCtrl) then {
+				_mBrigadeInfoCtrl = findDisplay 46 ctrlCreate ["RscStructuredText", -1];
+				_mBrigadeInfoCtrl ctrlSetPosition [safeZoneX, safeZoneY, safeZoneW, safeZoneH];
+				_mBrigadeInfoCtrl ctrlCommit 0;
+			};
+			
+			_technologyInfo = [_resourceReport.Research] call _mTechnologyConfig.GetNextTechnology;
+			
+			if (!isNull _technologyInfo) then {
+				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Research: %2 (%3 at %4)</t>",
+					str floor _resourceReport.Production, str floor _resourceReport.Research, _technologyInfo.Name, str _technologyInfo.RequiredResearch;
+				];
+			}
+			else {
+				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Research: %2 (No more technologies)</t>",
+					str floor _resourceReport.Production, str floor _resourceReport.Research;
+				];
+			};
+		};
+	};
+};

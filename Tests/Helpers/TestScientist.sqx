@@ -8,6 +8,7 @@
  * Test class that represents the scientist.
  */
 
+using Intrusion.Common;
 using Intrusion.Server;
 
 namespace Intrusion.Tests.Helpers
@@ -19,6 +20,7 @@ namespace Intrusion.Tests.Helpers
 		// Creates a TestScientist object.
 		public constructor() {
 			_mInventedTechnologies = [];
+			_self.CurrentTechnology = classNull;
 		};
 		
 		// Performs research and development, and notifies players when different technology progress steps are achieved.
@@ -37,5 +39,7 @@ namespace Intrusion.Tests.Helpers
 		{
 			_technology in _mInventedTechnologies
 		};
+		
+		public property TechnologyInfo CurrentTechnology { get; private set; };
 	};
 };

@@ -97,7 +97,7 @@ namespace Intrusion.Server
 				
 				["ClientEventReciever.OnResourceReportCollectionUpdated", [_resourceReportCollection]] call Remote.Invoke;
 				
-				sleep 10;
+				sleep 3;
 			};
 		};
 		

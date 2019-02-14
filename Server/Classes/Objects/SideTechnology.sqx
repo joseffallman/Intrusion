@@ -7,6 +7,9 @@
  * Description:
  * Describes a technology invented by a side.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class SideTechnology

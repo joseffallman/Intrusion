@@ -12,18 +12,14 @@ namespace Intrusion.Server
 	public class ServerConfig : IServerConfig
 	{
 		// Creates a ServerConfig object.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_technologyConfig" as ITechnologyConfig, "_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehiclesClassNamesConfig" as IVehicleClassNamesConfig) {
+		public constructor("_gameplayConfig" as IGameplayConfig, "_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehiclesClassNamesConfig" as IVehicleClassNamesConfig) {
 			_self.Gameplay = _gameplayConfig;
-			_self.Technology = _technologyConfig;
 			_self.ProfessionVehicles = _professionVehiclesConfig;
 			_self.VehicleClassNames = _vehiclesClassNamesConfig;
 		};
 		
 		// Gets the gameplay configs.
 		public property IGameplayConfig Gameplay { get; private set; };
-		
-		// Gets the technology configs.
-		public property ITechnologyConfig Technology { get; private set; };
 		
 		// Gets the profession vehicles config.
 		public property IProfessionVehiclesConfig ProfessionVehicles { get; private set; };

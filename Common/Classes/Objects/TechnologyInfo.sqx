@@ -10,7 +10,7 @@
 
 using Sqx.Collections;
 
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public class TechnologyInfo : IComparer
 	{

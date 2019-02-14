@@ -7,6 +7,9 @@
  * Description:
  * Handles all configuration about weapon boxes.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class WeaponBoxesConfig
