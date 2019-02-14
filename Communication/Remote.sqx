@@ -63,6 +63,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnGroupTeleportingToBase": { _parameters spawn ClientEventReciever.OnGroupTeleportingToBase; };
 					case "ClientEventReciever.OnPlayerKilled": { _parameters spawn ClientEventReciever.OnPlayerKilled; };
 					case "ClientEventReciever.OnPlayerDisconnected": { _parameters spawn ClientEventReciever.OnPlayerDisconnected; };
+					case "ClientEventReciever.OnResourceReportCollectionUpdated": { _parameters spawn ClientEventReciever.OnResourceReportCollectionUpdated; };
 				};
 			};
 		};

@@ -17,6 +17,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\PlayerInfoCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ViewPos.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\BaseLayout.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReport.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReportCollection.sqx";
 
 using Intrusion.Common;
 

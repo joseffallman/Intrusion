@@ -1,0 +1,59 @@
+/*
+ * Name:	ResourceReportCollection
+ * Date:	2019-02-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the sides' resource reports from server to client.
+ */
+namespace Intrusion.Common
+{
+	public class ResourceReportCollection
+	{
+		private fields ["_mResourceReports" as Array /* of ResourceReport */];
+	
+		// Creates a ResourceReportCollection object.
+		public constructor {
+			_mResourceReports = [];
+		};
+		
+		// Updates a resource report
+		public method AddOrUpdateResourceReport("_resourceReport" as ResourceReport)
+		{
+			private ["_existingResourceReport" as ResourceReport];
+			
+			_existingResourceReport = classNull;
+			
+			// Update existing side's resource report
+			for "_i" from 0 to count _mResourceReports - 1 do {
+				_existingResourceReport = _mResourceReports select _i;
+				
+				if (_existingResourceReport.Side == _resourceReport.Side) then {
+					_mResourceReports set [_i, _resourceReport];
+				};
+			};
+			
+			// First time there will be nothing to update, so we add it instead.
+			if (isNull _existingResourceReport) then {
+				_mResourceReports pushBack _resourceReport;
+			};
+		};
+		
+		// Gets a side's resource report.
+		// _side (Side): The side to get the report for.
+		// Returns (ResourceReport): The resource report for the side. classNull if it doesn't exist.
+		public method ResourceReport GetReport("_side" as Side)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side) then {
+					_x breakOut "main";
+				};
+			} foreach _mResourceReports as ResourceReport;
+			
+			classNull
+		};
+	};
+};

@@ -76,6 +76,28 @@ namespace Intrusion.Common
 			!isNil "INT_Public_playerInfoCollection"
 		};
 
+		/*
+		// Sets and broadcasts an array of resource reports across the network.
+		// _resourceReportCollection (ResourceReportCollection): A collection of resource reports.
+		public static method BroadcastResourceReportCollection("_resourceReportCollection" as ResourceReportCollection)
+		{
+			[(str _this) + " PublicVariableHandler.BroadcastResourceReportCollection"] call LogHandler.Debug;
+			
+			INT_Public_resourceReportCollection = _resourceReportCollection;
+			publicVariable "INT_Public_resourceReportCollection";
+		};
+		
+		// Gets all player infos from the public network synchronized variable.
+		public static method ResourceReportCollection GetResourceReportCollection { 
+			INT_Public_resourceReportCollection
+		};
+		
+		// Gets whether the player infos has been set on the current machine or not.
+		public static method Boolean ResourceReportCollectionHasValue {
+			!isNil "INT_Public_resourceReportCollection"
+		};
+		*/
+		
 		// Sets and broadcasts an array of intrusion vehicles across the network.
 		// _squads (Array): An array of all intrusion vehicles.
 		public static method BroadcastIntrusionVehicles("_intrusionVehicles" as Array)

@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
@@ -46,6 +47,10 @@ namespace Intrusion.Server
         private static method Run() {
         	private ["_sideManagers" as Array];
 			private ["_inventedTechnologiesCollection" as InventedTechnologiesCollection];
+			private ["_resourceReportCollection" as ResourceReportCollection, "_resourceReport" as ResourceReport];
+        	
+        	// Create collections
+        	_resourceReportCollection = new ResourceReportCollection;
         	
         	// Create handlers
         	_self.SquadHandler = [_mServer.VehicleSpawner] new SquadHandler;
@@ -85,8 +90,12 @@ namespace Intrusion.Server
 					private ["_sideManager" as SideManager];
 					_sideManager = _x;
 					
-					call _sideManager.PerformTurn;
+					_resourceReport = call _sideManager.PerformTurn;
+					
+					[_resourceReport] call _resourceReportCollection.AddOrUpdateResourceReport;
 				} foreach _sideManagers as SideManager;
+				
+				["ClientEventReciever.OnResourceReportCollectionUpdated", [_resourceReportCollection]] call Remote.Invoke;
 				
 				sleep 10;
 			};
@@ -99,7 +108,7 @@ namespace Intrusion.Server
 			_mServerConfig = _serverConfig;
 			_mCommonConfig = _commonConfig;
 			
-			[] spawn _self.Run; // TODO SQX: Why do we suddenly need a preargument?
+			[] spawn _self.Run;
 		};
 	};
 };

@@ -74,8 +74,8 @@ namespace Intrusion.Server
 		// Gets a resource location from the internal list of flag locations.
 		// _markerName (String): Name of the marker associated with the flag location.
 		// Returns (ResourceLocation): A flag location. classNull of no flag location was found.
-		private static method ResourceLocation GetResourceLocation {
-			params ["_markerName" as String];
+		private static method ResourceLocation GetResourceLocation("_markerName" as String)
+		{
 			scopeName "main";
 			
 			{
@@ -90,8 +90,8 @@ namespace Intrusion.Server
 		// Sets a new owner for a resource location and sends resource location updates to clients.
 		// _markerName (String): Name of the marker associated with the flag.
 		// _side (Side): The side of the player that captured the flag.
-		public static method SetNewFlagOwner {
-			params ["_markerName" as String, "_side" as Side];
+		public static method SetNewFlagOwner("_markerName" as String, "_side" as Side)
+		{
 			private ["_resourceLocation" as ResourceLocation];
 			private ["_markerInfo" as MapMarkerInfo];
 		

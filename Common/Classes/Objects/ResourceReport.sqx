@@ -1,0 +1,33 @@
+/*
+ * Name:	ResourceReport
+ * Date:	2019-02-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a resource report from server to clients.
+ */
+namespace Intrusion.Common
+{
+	public class ResourceReport
+	{
+		// Creates a ResourceReport object.
+		public constructor("_side" as Side, "_factoryCount" as Scalar, "_techLabCount" as Scalar, "_production" as Scalar, "_research" as Scalar) {
+			_self.Side = _side;
+			_self.FactoryCount = _factoryCount;
+			_self.TechLabCount = _techLabCount;
+			_self.Production = _production;
+			_self.Research = _research;
+		};
+		
+		public property Side Side { get; private set; };
+		
+		public property Scalar FactoryCount { get; private set; };
+		
+		public property Scalar TechLabCount { get; private set; };
+		
+		public property Scalar Production { get; private set; };
+		
+		public property Scalar Research { get; private set; };
+	};
+};

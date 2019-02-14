@@ -43,11 +43,18 @@ namespace Intrusion.Server
 		public property Side Side { get; private set; };
 		
 		// Performs a turn for the side. I.e. collects resources and creates vehicles etc.
-		public method PerformTurn {
+		public method ResourceReport PerformTurn {
+			private ["_factoryCount" as Scalar, "_techLabCount" as Scalar];
+		
 			call _mResourceCollector.CollectResources;
 			call _mScientist.PerformResearch;
 			call _mProductionManager.AddOrdersForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
+			
+			_factoryCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
+			_techLabCount = [_self.Side] call ResourceLocationHandler.GetTechLabsCountBySide;
+			
+			[_self.Side, _factoryCount, _techLabCount, _mResourceBook.TotalProduction, _mResourceBook.TotalResearch] new ResourceReport
 		};
 	};
 };

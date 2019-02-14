@@ -84,5 +84,11 @@ namespace Intrusion.Client
 		{
 			removeAllActions _unit;
 		};
+		
+		// Called when the resource report collection is updated.
+		public static method OnResourceReportCollectionUpdated("_resourceReportCollection" as ClientResourceLocationHandler)
+		{
+			player sideChat str _resourceReportCollection;
+		};
 	};
 };
