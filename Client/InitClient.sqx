@@ -21,6 +21,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\MoveBaseHandler.
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TeleportHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\DisplayHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\PrisonHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";

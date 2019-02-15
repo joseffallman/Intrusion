@@ -1,0 +1,41 @@
+/*
+ * Name:	PrisonHandler
+ * Date:	2019-02-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all about inprisonment of players.
+ */
+namespace Intrusion.Client
+{
+	public class PrisonHandler
+	{
+		private fields ["_mPrisonService" as PrisonService, "_mCountTimes" as Scalar];
+		
+		// Creates a PrisonHandler object.
+		public constructor {
+			_mPrisonService = new PrisonService;
+			_mCountTimes = 0;
+		};
+		
+		public method InprisonPlayer("_player" as Object)
+		{
+			private ["_imprisonmentTime" as Scalar, "_message" as String];
+			
+			_imprisonmentTime = 1;
+			_message = "You have to spend one minute in team kill prison. If you team kill again, next time you will spend 10 minutes.";
+			if (_mCountTimes > 0) then {
+				_imprisonmentTime = 10;
+				_message = "You have to spend ten minutes in team kill prison.";
+			};
+		
+			if (!_mPrisonService.IsRunning) then {
+				[_imprisonmentTime] call _mPrisonService.SetImprisonmentTime;
+				[_message] call _mPrisonService.SetPrisonMessage;
+				_mCountTimes = _mCountTimes + 1;
+				call _mPrisonService.RunAsync;
+			};
+		};
+	};
+};

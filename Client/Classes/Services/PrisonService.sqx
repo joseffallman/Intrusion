@@ -14,12 +14,12 @@ namespace Intrusion.Client
 {
 	public class PrisonService : IService
 	{
-		private fields ["_mPrisonTimeMin" as Scalar];
+		private fields ["_mPrisonTimeMin" as Scalar, "_mPrisonMessage" as String];
 	
 		// Creates a PrisonService object.
-		// _prisonTimeMin (Scalar): The time to spend in prison in minutes.
-		public constructor("_prisonTimeMin" as Scalar) {
-			_mPrisonTimeMin = _prisonTimeMin;
+		public constructor() {
+			_mPrisonTimeMin = 1;
+			_mPrisonMessage = "You are in prison.";
 			_self.IsRunning = false;
 		};
 		
@@ -32,7 +32,7 @@ namespace Intrusion.Client
 			_startTime = time;
 			
 			while { time < _startTime + _mPrisonTimeMin * 60 } do {
-				cutText ["You have to spend one minute in team kill prison. If you team kill again, next time you will spend 10 minutes.", "BLACK FADED"];
+				cutText [_mPrisonMessage, "BLACK FADED"];
 				sleep 1;
 			};
 			
@@ -43,6 +43,16 @@ namespace Intrusion.Client
 		{
 			_self.IsRunning = true;
 			[] spawn _self.Run;
+		};
+		
+		public method SetImprisonmentTime("_imprisonmentTime" as Scalar)
+		{
+			_mPrisonTimeMin = _imprisonmentTime;
+		};
+		
+		public method SetPrisonMessage("_message" as String)
+		{
+			_mPrisonMessage = _message;
 		};
 	};
 };
