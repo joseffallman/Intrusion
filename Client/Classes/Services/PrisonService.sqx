@@ -14,10 +14,12 @@ namespace Intrusion.Client
 {
 	public class PrisonService : IService
 	{
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig];
 		private fields ["_mPrisonTimeMin" as Scalar, "_mPrisonMessage" as String];
 	
 		// Creates a PrisonService object.
-		public constructor() {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mMapMarkersConfig = _mapMarkersConfig;
 			_mPrisonTimeMin = 1;
 			_mPrisonMessage = "You are in prison.";
 			_self.IsRunning = false;
@@ -27,15 +29,21 @@ namespace Intrusion.Client
 		
 		private method Run()
 		{
-			private ["_startTime" as Scalar];
+			private ["_startTime" as Scalar, "_mapMarkerInfo" as MapMarkerInfo];
 			
 			_startTime = time;
+			_mapMarkerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			// Move player to base.
+			player setPos getMarkerPos _mapMarkerInfo.BaseMarkerName;
+			disableUserInput true;
 			
 			while { time < _startTime + _mPrisonTimeMin * 60 } do {
 				cutText [_mPrisonMessage, "BLACK FADED"];
 				sleep 1;
 			};
 			
+			disableUserInput false;
 			_self.IsRunning = false;
 		};
 		

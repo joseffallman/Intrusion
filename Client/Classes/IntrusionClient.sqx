@@ -26,7 +26,7 @@ namespace Intrusion.Client
 			_self.TeleportHandler = [_mapMarkersConfig, _baseConfig] new TeleportHandler;
 			_self.SquadMarkersConfig = new SquadMarkersConfig;
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;
-			_self.PrisonHandler = new PrisonHandler;
+			_self.PrisonHandler = [_mapMarkersConfig] new PrisonHandler;
 		};
 	
 		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };

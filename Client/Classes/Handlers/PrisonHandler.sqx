@@ -7,6 +7,9 @@
  * Description:
  * Handles all about inprisonment of players.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class PrisonHandler
@@ -14,8 +17,8 @@ namespace Intrusion.Client
 		private fields ["_mPrisonService" as PrisonService, "_mCountTimes" as Scalar];
 		
 		// Creates a PrisonHandler object.
-		public constructor {
-			_mPrisonService = new PrisonService;
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig) {
+			_mPrisonService = [_mapMarkersConfig] new PrisonService;
 			_mCountTimes = 0;
 		};
 		
@@ -24,7 +27,7 @@ namespace Intrusion.Client
 			private ["_imprisonmentTime" as Scalar, "_message" as String];
 			
 			_imprisonmentTime = 1;
-			_message = "You have to spend one minute in team kill prison. If you team kill again, next time you will spend 10 minutes.";
+			_message = "You have to spend one minute in team kill prison. If you team kill again, next time you will spend ten minutes.";
 			if (_mCountTimes > 0) then {
 				_imprisonmentTime = 10;
 				_message = "You have to spend ten minutes in team kill prison.";
