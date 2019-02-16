@@ -3,6 +3,7 @@
 #include "Dialogs\TutorialDialog.hpp"
 #include "Dialogs\ProfessionDialog.hpp"
 #include "Dialogs\MoveBaseDialog.hpp"
+#include "Dialogs\OrderDialog.hpp"
 
 // Mission Header
 class Header

@@ -1,0 +1,59 @@
+dre_fnc_CC_FindClosestGroup = {
+    params ["_side", "_pos"];
+    private ["_group"];
+    private ["_closestDistance"];
+    
+    _group = group player; // Default
+    _closestDistance = vehicle player distance _pos;
+    
+    {
+        if ((side _x == _side) && vehicle leader _x distance _pos < _closestDistance) then {
+            _closestDistance = vehicle leader _x distance _pos;
+            _group = _x;
+        };
+    } foreach allGroups;
+    
+    _group
+};
+
+dre_fnc_CC_OnMapSingleClick = {
+    private ["_pos", "_group"];
+    _pos = _this;
+    
+    if (dre_glob_CC_WestLeaderUID == getPlayerUID player || dre_glob_CC_EastLeaderUID == getPlayerUID player) then {
+        
+        if (dre_loc_CC_SelectedOrder != "") then {
+            if (isNull dre_loc_CC_SelectedGroup) then {
+                player sideChat "No group is selected. Please first select a group by clicking on it (or near it) on the map.";
+            }
+            else {
+                if (dre_loc_CC_SelectedOrder == "ATTACK") then {
+                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will attack position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
+                };
+                if (dre_loc_CC_SelectedOrder == "REGROUP") then {
+                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will regroup at position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
+                };
+                if (dre_loc_CC_SelectedOrder == "DEFEND") then {
+                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will defend position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
+                };
+                if (dre_loc_CC_SelectedOrder == "RECON") then {
+                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will scout position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
+                };
+                
+                dre_glob_CC_CurrentSideLeaderTaskID = dre_glob_CC_CurrentSideLeaderTaskID + 1;
+                publicVariable "dre_glob_CC_CurrentSideLeaderTaskID";
+                
+                [dre_loc_CC_SelectedGroup, dre_loc_CC_SelectedOrder, _pos, dre_glob_CC_CurrentSideLeaderTaskID] call dre_GiveOrderClients;
+            };
+            
+            dre_loc_CC_SelectedGroup = grpNull;
+            dre_loc_CC_SelectedOrder = "";
+        }
+        else {
+            _group = [playerSide, _pos] call dre_fnc_CC_FindClosestGroup;
+            dre_loc_CC_SelectedGroup = _group;
+            player sideChat ("Group " + name leader _group + " selected!");
+        };
+    };
+};
+

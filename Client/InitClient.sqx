@@ -5,6 +5,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\OrderDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
@@ -25,6 +26,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReci
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
