@@ -1,59 +1,115 @@
-dre_fnc_CC_FindClosestGroup = {
-    params ["_side", "_pos"];
-    private ["_group"];
-    private ["_closestDistance"];
-    
-    _group = group player; // Default
-    _closestDistance = vehicle player distance _pos;
-    
-    {
-        if ((side _x == _side) && vehicle leader _x distance _pos < _closestDistance) then {
-            _closestDistance = vehicle leader _x distance _pos;
-            _group = _x;
-        };
-    } foreach allGroups;
-    
-    _group
-};
+/*
+ * Name:	GiveOrderService
+ * Date:	2019-02-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service that is used to when a brigade leader is .
+ */
 
-dre_fnc_CC_OnMapSingleClick = {
-    private ["_pos", "_group"];
-    _pos = _this;
-    
-    if (dre_glob_CC_WestLeaderUID == getPlayerUID player || dre_glob_CC_EastLeaderUID == getPlayerUID player) then {
-        
-        if (dre_loc_CC_SelectedOrder != "") then {
-            if (isNull dre_loc_CC_SelectedGroup) then {
-                player sideChat "No group is selected. Please first select a group by clicking on it (or near it) on the map.";
-            }
-            else {
-                if (dre_loc_CC_SelectedOrder == "ATTACK") then {
-                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will attack position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
-                };
-                if (dre_loc_CC_SelectedOrder == "REGROUP") then {
-                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will regroup at position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
-                };
-                if (dre_loc_CC_SelectedOrder == "DEFEND") then {
-                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will defend position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
-                };
-                if (dre_loc_CC_SelectedOrder == "RECON") then {
-                    player sideChat (name leader dre_loc_CC_SelectedGroup + " will scout position [" + str (_pos select 0) + ", " + str (_pos select 1) + "].");
-                };
-                
-                dre_glob_CC_CurrentSideLeaderTaskID = dre_glob_CC_CurrentSideLeaderTaskID + 1;
-                publicVariable "dre_glob_CC_CurrentSideLeaderTaskID";
-                
-                [dre_loc_CC_SelectedGroup, dre_loc_CC_SelectedOrder, _pos, dre_glob_CC_CurrentSideLeaderTaskID] call dre_GiveOrderClients;
-            };
-            
-            dre_loc_CC_SelectedGroup = grpNull;
-            dre_loc_CC_SelectedOrder = "";
-        }
-        else {
-            _group = [playerSide, _pos] call dre_fnc_CC_FindClosestGroup;
-            dre_loc_CC_SelectedGroup = _group;
-            player sideChat ("Group " + name leader _group + " selected!");
-        };
-    };
-};
+using Intrusion.Common;
+using Intrusion.Communication;
 
+namespace Intrusion.Client
+{
+	public class GiveOrderService : IService
+	{
+		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType];
+	
+		// Creates a GiveOrderService object.
+		public constructor() {
+			call _self.Reset;
+		};
+		
+		private method Reset()
+		{
+			_self.IsRunning = false;
+			_mWaitingForMapClick = false;
+			_mMapPos = [];
+			_mSelectedGroup = grpNull;
+			_mOrderType = OrderType.None;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		public method SendMapClick("_pos" as Array)
+		{
+			if (_mWaitingForMapClick) then {
+				_mMapPos = _pos;
+				_mWaitingForMapClick = false;
+			};
+		};
+		
+		public method SendOrderType("_orderType" as OrderType)
+		{
+			_mOrderType = _orderType;
+		};
+		
+		private method Group FindClosestGroup("_pos" as Array)
+		{
+		    private ["_group" as Group];
+		    private ["_closestDistance" as Scalar];
+		    
+		    _group = group player; // Default
+		    _closestDistance = vehicle player distance _pos;
+		    
+		    {
+		        if (vehicle leader _x distance _pos < _closestDistance) then {
+		            _closestDistance = vehicle leader _x distance _pos;
+		            _group = _x;
+		        };
+		    } foreach allGroups as Group;
+		    
+		    _group
+		};
+		
+		private method Run()
+		{
+			private ["_orderResult" as String, "_enoughWaitingTime" as Scalar];
+				
+			_orderResult = "Order cancelled.";
+		
+			// Open the map and ask player to select a group
+			openMap true;
+			player sideChat "Select a group by clicking near it on the map.";
+			
+			_mWaitingForMapClick = true;
+			_enoughWaitingTime = time + 30;
+			waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime };
+			
+			if (!_mWaitingForMapClick) then
+			{
+				_mSelectedGroup = [_mMapPos] call _self.FindClosestGroup;
+				player sideChat ("Group '" + name leader _mSelectedGroup + "' selected.");
+				
+				// Open the give order GUI
+				
+				call OrderDialog.ShowDialog;
+				
+				if (_mOrderType != OrderType.None) then
+				{
+					_mWaitingForMapClick = true;
+					_enoughWaitingTime = time + 30;
+					waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime};
+					
+					if (!_mWaitingForMapClick) then {
+						["ClientEventReciever.OnBrigadeLeaderGivingOrder", [_mSelectedGroup, _mOrderType, _mMapPos]] call Remote.Invoke;
+						_orderResult = ("Group '" + name leader _mSelectedGroup + "' have a new order.");
+					};
+				};
+			};
+			
+			player sideChat _orderResult;
+		};
+		
+		public method RunAsync()
+		{
+			if (!_self.IsRunning) then {
+				_self.IsRunning = true;
+				call _self.Reset;
+				[] spawn _self.Run;
+			};
+		};
+	};
+};

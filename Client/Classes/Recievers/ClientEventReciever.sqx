@@ -74,6 +74,17 @@ namespace Intrusion.Client
 			};
 		};
 		
+		// Called when the brigade leader is giving an order to a group.
+		// _group (Group): The recieving group of the order.
+		// _orderType (OrderType): Type of order (Recon, Attack, Defent ...).
+		// _targetPos (Array): The target position where the order is supposed to be carried out.
+		public static method OnBrigadeLeaderGivingOrder("_group" as Group, "_orderType" as OrderType, "_targetPos" as Array)
+		{
+			if (_group == group player) then {
+				player sideChat "Got order of type " + str _orderType;
+			};
+		};
+		
 		// Called when a player was killed.
 		// _unit (Object): The dead body.
 		// _side (Side): The player's side.
