@@ -45,21 +45,25 @@ namespace Intrusion.Client
 		
 		public static method OnReconButtonPressed()
 		{
+			[OrderType.Recon] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
 		public static method OnAttackButtonPressed()
 		{
+			[OrderType.Attack] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
 		public static method OnDefendButtonPressed()
 		{
+			[OrderType.Defend] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.
 		public static method OnCancelButtonPressed {
+			[OrderType.None] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 	};

@@ -204,8 +204,11 @@ namespace Intrusion.Client
 			spawn ProfessionDialog.ShowDialog;
 		};
 		
+		// Called when the local brigade leader selects the "Give Order" option.
 		private static method OnGiveOrder {
-			
+			if (!gClient.GiveOrderService.IsRunning) then {
+				call gClient.GiveOrderService.RunAsync;
+			};
 		};
 		
 		#endregion

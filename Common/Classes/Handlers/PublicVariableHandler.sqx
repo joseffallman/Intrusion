@@ -12,7 +12,7 @@
  * This is the *only* only file where the global public network variables are actually written.
  */ 
 
-using Intrusion.Common;
+using Intrusion.Client;
 
 namespace Intrusion.Common
 {
@@ -76,27 +76,25 @@ namespace Intrusion.Common
 			!isNil "INT_Public_playerInfoCollection"
 		};
 
-		/*
-		// Sets and broadcasts an array of resource reports across the network.
-		// _resourceReportCollection (ResourceReportCollection): A collection of resource reports.
-		public static method BroadcastResourceReportCollection("_resourceReportCollection" as ResourceReportCollection)
+		// Sets and broadcasts order collection across the network.
+		// _orderCollection (OrderCollection): A collection of orders.
+		public static method BroadcastOrderCollection("_orderCollection" as OrderCollection)
 		{
-			[(str _this) + " PublicVariableHandler.BroadcastResourceReportCollection"] call LogHandler.Debug;
+			[(str _this) + " PublicVariableHandler.BroadcastOrderCollection"] call LogHandler.Debug;
 			
-			INT_Public_resourceReportCollection = _resourceReportCollection;
-			publicVariable "INT_Public_resourceReportCollection";
+			INT_Public_orderCollection = _orderCollection;
+			publicVariable "INT_Public_orderCollection";
 		};
 		
-		// Gets all player infos from the public network synchronized variable.
-		public static method ResourceReportCollection GetResourceReportCollection { 
-			INT_Public_resourceReportCollection
+		// Gets all orders from the public network synchronized variable.
+		public static method OrderCollection GetOrderCollection { 
+			INT_Public_orderCollection
 		};
 		
-		// Gets whether the player infos has been set on the current machine or not.
-		public static method Boolean ResourceReportCollectionHasValue {
-			!isNil "INT_Public_resourceReportCollection"
+		// Gets whether the order collection has been set on the current machine or not.
+		public static method Boolean OrderCollectionHasValue {
+			!isNil "INT_Public_orderCollection"
 		};
-		*/
 		
 		// Sets and broadcasts an array of intrusion vehicles across the network.
 		// _squads (Array): An array of all intrusion vehicles.

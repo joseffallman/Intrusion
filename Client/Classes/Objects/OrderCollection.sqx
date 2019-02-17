@@ -1,0 +1,47 @@
+/*
+ * Name:	OrderCollection
+ * Date:	2019-02-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a collection of orders.
+ */
+namespace Intrusion.Client
+{
+	public class OrderCollection
+	{
+		private fields ["_mOrders" as Array /* of Order */];
+		
+		// Creates a OrderCollection object.
+		public constructor {
+			_mOrders = [];
+		};
+		
+		// Adds (or replaces) an order for a group to the order collection.
+		// _order (Order): Order to be added.
+		public method AddOrder("_order" as Order)
+		{
+			private ["_existingOrder" as Order, "_orderReplaced" as Boolean];
+			
+			_orderReplaced = false;
+		
+			for "_i" from 0 to count _mOrders - 1 do {
+				_existingOrder = _mOrders select _i;
+				
+				if (_existingOrder.Group == _order.Group) then
+				{
+					// Replace order
+					_mOrders set [_i, _order];
+					_orderReplaced = true;
+				};
+			};
+			
+			if (!_orderReplaced) then
+			{
+				// Add order
+				_mOrders pushBack _order;
+			};
+		};
+	};
+};

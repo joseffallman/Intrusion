@@ -74,6 +74,15 @@ namespace Intrusion.Client
 			};
 		};
 		
+		// Called when the brigade leader is giving an order to a group.
+		// _order (Order): The order.
+		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
+		{
+			if (_order.Group == group player) then {
+				player sideChat "Got order of type " + str _order.Type;
+			};
+		};
+		
 		// Called when a player was killed.
 		// _unit (Object): The dead body.
 		// _side (Side): The player's side.
