@@ -1,4 +1,4 @@
-class IntBaseDialog_PlaceButton : IntBaseDialog_Button
+class IntOrderDialog_PlaceButton : IntBaseDialog_Button
 {
 	idc = -1;
 	text = "Place respawn point here";
@@ -24,22 +24,22 @@ class IntOrderDialog
 			x = 1 * GUI_GRID_W + GUI_GRID_X;
 		};
 		
-		class IntOrderDialog_AttackButton : IntBaseDialog_PlaceButton {
-			text = "Attack";
+		class IntOrderDialog_ReconButton : IntOrderDialog_PlaceButton {
+			text = "Recon";
 			y = 3 * GUI_GRID_H + GUI_GRID_Y;
+			action = "call Intrusion_Client_OrderDialog_OnReconButtonPressed;";
+		};
+		
+		class IntOrderDialog_AttackButton : IntOrderDialog_PlaceButton {
+			text = "Attack";
+			y = 5 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnAttackButtonPressed;";
 		};
 		
-		class IntOrderDialog_DefendButton : IntBaseDialog_PlaceButton {
+		class IntOrderDialog_DefendButton : IntOrderDialog_PlaceButton {
 			text = "Defend";
-			y = 5 * GUI_GRID_H + GUI_GRID_Y;
-			action = "call Intrusion_Client_OrderDialog_OnCarParkButtonPressed;";
-		};
-		
-		class IntOrderDialog_ReconButton : IntBaseDialog_PlaceButton {
-			text = "Recon";
 			y = 7 * GUI_GRID_H + GUI_GRID_Y;
-			action = "call Intrusion_Client_OrderDialog_OnReconButtonPressed;";
+			action = "call Intrusion_Client_OrderDialog_OnDefendButtonPressed;";
 		};
 		
 		class IntOrderDialog_CancelButton : IntBaseDialog_CancelButton {

@@ -261,7 +261,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=77;
+		items=76;
 		class Item0
 		{
 			dataType="Marker";
@@ -2605,14 +2605,6 @@ class Mission
 			{
 			};
 			id=461;
-		};
-		class Item76
-		{
-			dataType="Marker";
-			position[]={2832.7959,2.7692542,5906.0571};
-			name="marker_21";
-			type="mil_destroy";
-			id=463;
 		};
 	};
 };

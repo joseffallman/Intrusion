@@ -94,7 +94,7 @@ namespace Intrusion.Client
 					waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime};
 					
 					if (!_mWaitingForMapClick) then {
-						["ClientEventReciever.OnBrigadeLeaderGivingOrder", [_mSelectedGroup, _mOrderType, _mMapPos] new Order] call Remote.Invoke;
+						["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
 						_orderResult = ("Group '" + name leader _mSelectedGroup + "' have a new order.");
 					};
 				};
