@@ -79,7 +79,7 @@ namespace Intrusion.Client
 		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
 		{
 			if (_order.Group == group player) then {
-				player sideChat "Got order of type " + str _order.Type;
+				[_order] call gClient.TakeOrderHandler.SetNewOrder;
 			};
 		};
 		

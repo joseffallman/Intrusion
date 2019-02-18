@@ -1,0 +1,48 @@
+/*
+ * Name:	TakeOrderHandler
+ * Date:	2019-02-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that converts orders to tasks and keeps all logic about them.
+ */
+namespace Intrusion.Client
+{
+	public class TakeOrderHandler
+	{
+		private fields ["_mCurrentTaskId" as Scalar];
+		
+		// Creates a TakeOrderHandler object.
+		public constructor {
+			_mCurrentTaskId = 0;
+		};
+		
+		// Sets a new order.
+		// _order (Order): The new order.
+		public method SetNewOrder("_order" as Order)
+		{
+			private ["_taskId" as String, "_description" as Array];
+			
+			// First cancel the current task
+			if (_mCurrentTaskId > 0) then {
+				_taskId = "IntrusionPlayerTask_" + str _mCurrentTaskId;
+				[_taskId, "SUCCEEDED", true] call BIS_fnc_taskSetState;
+			};
+			
+			// Create the new task
+			_mCurrentTaskId = _mCurrentTaskId + 1;
+			_taskId = "IntrusionPlayerTask_" + str _mCurrentTaskId;
+			
+			_description = ["Undefined task in Client/Handlers/TakeOrderHandler.sqx.", "Undefined task", ""];
+			
+			switch (_order.Type) do {
+				case OrderType.Recon: { _description = ["Recon area!", "Recon area", ""]; };
+				case OrderType.Attack: { _description = ["Attack position!", "Attack position", ""]; };
+				case OrderType.Defend: { _description = ["Defend position!", "Defend position", ""]; };
+			};
+			
+			[player, _taskId, _description, _order.TargetPosition, "CREATED", _mCurrentTaskId, true, "", false] call BIS_fnc_taskCreate;
+		};
+	};
+};

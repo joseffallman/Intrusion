@@ -27,6 +27,7 @@ namespace Intrusion.Client
 			_self.SquadMarkersConfig = new SquadMarkersConfig;
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;
 			_self.GiveOrderService = new GiveOrderService;
+			_self.TakeOrderHandler = new TakeOrderHandler;
 		};
 	
 		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };
@@ -34,5 +35,6 @@ namespace Intrusion.Client
 		public property TeleportHandler TeleportHandler { get; private set; };
 		public property DisplayHandler DisplayHandler { get; private set; };
 		public property GiveOrderService GiveOrderService { get; private set; };
+		public property TakeOrderHandler TakeOrderHandler { get; private set; };
 	};
 };
