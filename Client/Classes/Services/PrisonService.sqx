@@ -29,7 +29,7 @@ namespace Intrusion.Client
 		
 		private method Run()
 		{
-			private ["_startTime" as Scalar, "_mapMarkerInfo" as MapMarkerInfo];
+			private ["_startTime" as Scalar, "_mapMarkerInfo" as MapMarkerInfo, "_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			
 			_startTime = time;
 			_mapMarkerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
@@ -37,6 +37,12 @@ namespace Intrusion.Client
 			// Move player to base.
 			player setPos getMarkerPos _mapMarkerInfo.BaseMarkerName;
 			disableUserInput true;
+			
+			// If player is alone in a group, then his/her intrusion vehicle should be returned.
+			if (count units group player == 1) then {
+				_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+				
+			};
 			
 			while { time < _startTime + _mPrisonTimeMin * 60 } do {
 				cutText [_mPrisonMessage, "BLACK FADED"];

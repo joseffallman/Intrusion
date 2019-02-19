@@ -22,12 +22,13 @@ namespace Intrusion.Client
 			_mCountTimes = 0;
 		};
 		
-		public method InprisonPlayer("_player" as Object)
+		// Imprisions the local player.
+		public method InprisonPlayer()
 		{
 			private ["_imprisonmentTime" as Scalar, "_message" as String];
 			
 			_imprisonmentTime = 1;
-			_message = "You have to spend one minute in team kill prison. If you team kill again, next time you will spend ten minutes.";
+			_message = "You have to spend one minute in team kill prison. If you team kill again, then next time you will spend ten minutes.";
 			if (_mCountTimes > 0) then {
 				_imprisonmentTime = 10;
 				_message = "You have to spend ten minutes in team kill prison.";
