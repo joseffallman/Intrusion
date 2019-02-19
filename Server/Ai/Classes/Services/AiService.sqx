@@ -1,0 +1,86 @@
+/*
+ * Name:	AiService
+ * Date:	2019-02-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * The service that performs actions on all AI squads.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Server.Ai
+{
+	public class AiService : IService
+	{
+		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */];
+		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig];
+		
+		// Creates a AiService object.
+		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig)
+		{
+			_mUnitCounterConfig = _unitCounterConfig;
+			_mGameplayConfig = _gameplayConfig;
+			_mUnitsConfig = _unitsConfig;
+			_mMapMarkersConfig = _mapMarkersConfig;
+			_mSquads = [];
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Scalar CountExistingAiUnits("_side" as Side)
+		{
+			private ["_count" as Scalar];
+			
+			_count = 0;
+			
+			{
+				if (side _x.Group == _side) then {
+					_count = _count + count units _x.Group;
+				};
+			} foreach _mSquads as AiSquad;
+			
+			_count
+		};
+		
+		private method CreateNewSquads()
+		{
+			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar];
+			
+			{
+				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
+				player sideChat str _existingUnitsCount;
+				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
+			
+				if (_existingUnitsCount < _maxUnitsCount) then {
+					_mSquads pushBack [_mUnitsConfig, _mMapMarkersConfig, _x, 2] new AiSquad;
+				};
+			} foreach _mGameplayConfig.CompetingSides as Side;
+		};
+		
+		private method Run()
+		{
+			while { true } do
+			{
+				call _self.CreateNewSquads;
+				
+				{
+					call _x.Act;
+					sleep 1;
+				} foreach _mSquads as AiSquad
+
+				sleep 1;
+			};
+			
+			_self.IsRunning = false;
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};

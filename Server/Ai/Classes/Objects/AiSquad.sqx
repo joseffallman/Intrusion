@@ -1,0 +1,47 @@
+/*
+ * Name:	AiSquad
+ * Date:	2019-02-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models an AI squad.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server.Ai
+{
+	public class AiSquad
+	{
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean];
+	
+		// Creates an AiSquad object.
+		// _noOfUnits (Scalar): Number of units to spawn.
+		public constructor("_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_side" as Side, "_noOfUnits" as Scalar)
+		{
+			private ["_unitInfo" as AiUnitInfo];
+			
+			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
+			_unitInfo = [_side] call _unitsConfig.GetUnitInfo;
+			_self.Group = createGroup [_side, true];
+			_mHasActed = false;
+			
+			for "_i" from 1 to _noOfUnits do {
+				_unitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+			};
+		};
+		
+		// Gets the AI squad's group.
+		public property Group Group { get; private set; };
+		
+		// Gives the AI squad an opportunity to act.
+		public method Act()
+		{
+			if (!_mHasActed) then {
+				_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
+				_mHasActed = true;
+			};
+		};
+	};
+};

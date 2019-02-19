@@ -1,0 +1,18 @@
+/*
+ * Name:	IAiUnitCounterConfig
+ * Date:	2019-02-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Keeps track of how many AI units that are allowed on each side.
+ */
+namespace Intrusion.Server.Ai
+{
+	public interface IAiUnitCounterConfig
+	{
+		// Gets the number of AI units allowed for a side.
+		method Scalar GetAllowedUnitCount("_side" as Side);
+	};
+};
+

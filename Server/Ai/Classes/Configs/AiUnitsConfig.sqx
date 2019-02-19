@@ -1,0 +1,36 @@
+/*
+ * Name:	AiUnitsConfig
+ * Date:	2019-02-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Configs regarding AI units.
+ */
+namespace Intrusion.Server.Ai
+{
+	public class AiUnitsConfig : IAiUnitsConfig
+	{
+		private fields ["_mUnitInfos" as Array /* of AiUnitInfo */];
+	
+		// Creates a AiUnitsConfig object.
+		public constructor {
+			_mUnitInfos = [];
+			_mUnitInfos pushBack [west, "B_Soldier_F"] new AiUnitInfo;
+			_mUnitInfos pushBack [east, "O_Soldier_F"] new AiUnitInfo;
+		};
+		
+		public method AiUnitInfo GetUnitInfo("_side" as Side)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side) then {
+					_x breakOut "main";
+				};
+			} foreach _mUnitInfos as AiUnitInfo;
+			
+			classNull;
+		};
+	};
+};
