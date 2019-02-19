@@ -7,6 +7,9 @@
  * Description:
  * Models a collection of orders.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class OrderCollection
@@ -42,6 +45,23 @@ namespace Intrusion.Client
 				// Add order
 				_mOrders pushBack _order;
 			};
+		};
+		
+		// Gets a group's order.
+		// _group (Group): The group whose order will be returned.
+		// Returns (Order): The group's order. classNull if no order was found.
+		public method Order GetOrderByGroup("_group" as Group)
+		{
+			scopeName "main";
+		
+			{
+				if (_x.Group == _group) then {
+					_x breakOut "main";
+				};
+			} foreach _mOrders as Order;
+			
+			
+			classNull
 		};
 	};
 };
