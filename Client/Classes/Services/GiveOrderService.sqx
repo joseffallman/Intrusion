@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * A service that is used to when a brigade leader is .
+ * A service that is used to when a brigade leader is giving order.
  */
 
 using Intrusion.Common;
