@@ -2,9 +2,12 @@ call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\SquadMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Objects\Order.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Objects\OrderCollection.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\OrderDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
@@ -22,10 +25,12 @@ call compile preprocessFileLineNumbers "Client\Classes\Handlers\TeleportHandler.
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\DisplayHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\ClientEventHandlers.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\PrisonHandler.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Handlers\TaskHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Recievers\ClientEventReciever.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;

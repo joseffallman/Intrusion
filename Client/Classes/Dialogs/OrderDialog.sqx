@@ -1,0 +1,70 @@
+/*
+ * Name:	OrderDialog
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that models the Build Base dialog.
+ */
+namespace Intrusion.Client
+{
+	public class OrderDialog
+	{
+		// Creates a OrderDialog object.
+		public static method Init {
+			_self.IsOpen = false;
+		};
+		
+		// Gets whether the dialog is open or not.
+		public static property Boolean IsOpen { get; private set; };
+		
+		// Shows the dialog.
+		// Returns (DialogResult): A dialog result.
+		public static method DialogResult ShowDialog {
+			waitUntil { !dialog };
+			
+			// Create the dialog
+            createDialog "IntOrderDialog";
+			
+			_self.IsOpen = true;
+
+			// Wait until dialog is closed
+			waitUntil { !dialog };
+			
+			// Return OK.
+			DialogResult.Ok
+		};
+		
+		// Closes the dialog if it is open.
+		public static method CloseDialog {
+			if (_self.IsOpen) then {
+				closeDialog 0;
+			};
+		};
+		
+		public static method OnReconButtonPressed()
+		{
+			[OrderType.Recon] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+		
+		public static method OnAttackButtonPressed()
+		{
+			[OrderType.Attack] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+		
+		public static method OnDefendButtonPressed()
+		{
+			[OrderType.Defend] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+		
+		// Called by the .hpp-dialog when the Cancel button is pressed.
+		public static method OnCancelButtonPressed {
+			[OrderType.None] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+	};
+};

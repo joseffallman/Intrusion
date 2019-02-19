@@ -19,8 +19,15 @@ namespace Intrusion.Client
 		// _side (Side): The player's side.
 		public static method OnNewBrigadeLeader("_playerUid" as String, "_side" as Side, "_player" as Object)
 		{
+			private ["_orderCollection" as OrderCollection];
+		
 			if (_playerUid == getPlayerUID player) then {
 				ClientState.IsBrigadeLeader = true;
+				
+				if (!PublicVariableHandler.OrderCollectionHasValue) then {
+					_orderCollection = new OrderCollection;
+					[_orderCollection] call PublicVariableHandler.BroadcastOrderCollection;
+				};
 			};
 			
 			call IntrusionMenuHandler.UpdateVisibleOptions;
@@ -51,6 +58,10 @@ namespace Intrusion.Client
 		{
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
+			
+			if (_player == player) then {
+				call gClient.TaskHandler.UpdateWithGroupTask;
+			};
 		};
 		
 		// Called when a player left a group
@@ -58,6 +69,10 @@ namespace Intrusion.Client
 		{
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
+			
+			if (_player == player) then {
+				call gClient.TaskHandler.DeleteAllTasksAndReset;
+			};
 		};
 		
 		// Called when a JIP player has connected.
@@ -71,6 +86,15 @@ namespace Intrusion.Client
 		{
 			if (_group == group player) then {
 				call gClient.TeleportHandler.TeleportPlayerToBase;
+			};
+		};
+		
+		// Called when the brigade leader is giving an order to a group.
+		// _order (Order): The order.
+		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
+		{
+			if (_order.Group == group player) then {
+				[_order] call gClient.TaskHandler.CreateTaskFromOrder;
 			};
 		};
 		

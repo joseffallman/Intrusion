@@ -34,7 +34,9 @@ namespace Intrusion.Client
 		
 		public static property Boolean OptionBeamToBaseVisible { get; private set; };
 		
-		public static property Boolean OptionSelectProfession { get; private set; };
+		public static property Boolean OptionSelectProfessionVisible { get; private set; };
+		
+		public static property Boolean OptionGiveOrderVisible { get; private set; };
 		
 		#endregion
 		
@@ -82,8 +84,16 @@ namespace Intrusion.Client
 
 		private static method ShowOptionSelectProfession("_show" as Boolean)
 		{
-			if (!(_show isEqualTo _self.OptionSelectProfession)) then {
-				_self.OptionSelectProfession = _show;
+			if (!(_show isEqualTo _self.OptionSelectProfessionVisible)) then {
+				_self.OptionSelectProfessionVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
+
+		private static method ShowOptionGiveOrder("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionGiveOrderVisible)) then {
+				_self.OptionGiveOrderVisible = _show;
 				call _self.BuildIntrusionMenu;
 			};
 		};
@@ -107,7 +117,8 @@ namespace Intrusion.Client
 			_self.OptionQuitBrigadeLeadershipVisible = ClientState.IsBrigadeLeader;
 			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
 			_self.OptionBeamToBaseVisible = leader group player == player;
-			_self.OptionSelectProfession = leader group player == player;
+			_self.OptionSelectProfessionVisible = leader group player == player;
+			_self.OptionGiveOrderVisible = ClientState.IsBrigadeLeader;
 			
 			call _self.BuildIntrusionMenu;
 		};
@@ -119,7 +130,7 @@ namespace Intrusion.Client
 			  ["Intrusion Menu", true]
 			];
 			
-			if (_self.OptionSelectProfession) then {
+			if (_self.OptionSelectProfessionVisible) then {
 				INT_IntrusionMenu pushBack ["Set group's profession", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnSelectProfession"]], "1", "1"];
 			};
 			
@@ -141,6 +152,10 @@ namespace Intrusion.Client
 			
 			if (_self.OptionBeamToBaseVisible) then {
 				INT_IntrusionMenu pushBack ["Beam to base", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnBeamToBase"]], "1", "1"];
+			};
+			
+			if (_self.OptionGiveOrderVisible) then {
+				INT_IntrusionMenu pushBack ["Give order", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnGiveOrder"]], "1", "1"];
 			};
 		};
 		
@@ -187,6 +202,13 @@ namespace Intrusion.Client
 		// Called when the local player selects the "Move Base" option.
 		private static method OnSelectProfession {
 			spawn ProfessionDialog.ShowDialog;
+		};
+		
+		// Called when the local brigade leader selects the "Give Order" option.
+		private static method OnGiveOrder {
+			if (!gClient.GiveOrderService.IsRunning) then {
+				call gClient.GiveOrderService.RunAsync;
+			};
 		};
 		
 		#endregion
