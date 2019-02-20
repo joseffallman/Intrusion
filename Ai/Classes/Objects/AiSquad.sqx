@@ -14,7 +14,7 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean, "_mTargetPos" as Array, "_mVehicle" as Object];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean, "_mTargetPos" as Array, "_mVehicle" as Object, "_mCurrentOrder" as Order];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mLeaderPos" as Array];
 	
 		// Creates an AiSquad object.
@@ -30,6 +30,7 @@ namespace Intrusion.Ai
 			_mState = AiSquadState.Idle;
 			_mVehicle = objNull;
 			_mCurrentActionTimeoutTime = time;
+			_mCurrentOrder = classNull;
 			
 			for "_i" from 1 to _noOfUnits do {
 				_unitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -66,11 +67,15 @@ namespace Intrusion.Ai
 		{
 			private ["_unit" as Object];
 			
-			// if within 10 meters of an enemy flag, get it.
+			// if within 25 meters of enemy flag, have a unit to get it.
 			//_unit = 
 		
-			// If within 200 meters from an enemy flag, move towards the flag.
-		
+			// If within 200 meters from enemy flag, or in a vehicle, then move towards the flag.
+			
+			// If more than 200 meters to an enemy flag, and a vehicle nearby, then board it.
+			
+			// Else: Move to the closest of enemy flag and the car park.
+			
 			if (!_mHasActed) then {
 				_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
 				_mHasActed = true;
