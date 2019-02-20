@@ -11,7 +11,7 @@
 using Intrusion.Common;
 using Intrusion.Server;
 
-namespace Intrusion.Server.Ai
+namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{

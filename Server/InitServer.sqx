@@ -38,16 +38,16 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
-call compile preprocessFileLineNumbers "Server\Ai\Classes\Configs\AiUnitsConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Ai\Classes\Configs\FourEastAiUnitCounterConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Ai\Classes\Objects\AiSquad.sqx";
-call compile preprocessFileLineNumbers "Server\Ai\Classes\Objects\AiUnitInfo.sqx";
-call compile preprocessFileLineNumbers "Server\Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Configs\FourEastAiUnitCounterConfig.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
-using Intrusion.Server.Ai;
+using Intrusion.Ai;
 
 #region Server Classes
 

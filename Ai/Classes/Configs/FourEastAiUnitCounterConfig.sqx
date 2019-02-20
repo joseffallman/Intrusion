@@ -7,7 +7,7 @@
  * Description:
  * AI unit counter that allows four units on side east.
  */
-namespace Intrusion.Server.Ai
+namespace Intrusion.Ai
 {
 	public class FourEastAiUnitCounterConfig : IAiUnitCounterConfig
 	{

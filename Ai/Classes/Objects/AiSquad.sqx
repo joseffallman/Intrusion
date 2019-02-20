@@ -10,7 +10,7 @@
 
 using Intrusion.Common;
 
-namespace Intrusion.Server.Ai
+namespace Intrusion.Ai
 {
 	public class AiSquad
 	{

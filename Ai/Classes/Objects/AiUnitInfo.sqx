@@ -7,7 +7,7 @@
  * Description:
  * Config information about an AI unit.
  */
-namespace Intrusion.Server.Ai
+namespace Intrusion.Ai
 {
 	public class AiUnitInfo
 	{

@@ -7,7 +7,7 @@
  * Description:
  * Keeps track of how many AI units that are allowed on each side.
  */
-namespace Intrusion.Server.Ai
+namespace Intrusion.Ai
 {
 	public interface IAiUnitCounterConfig
 	{
