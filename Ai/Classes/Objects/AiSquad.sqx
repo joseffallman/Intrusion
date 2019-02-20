@@ -14,7 +14,8 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean, "_mTargetPos" as Array, "_mVehicle" as Object];
+		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mLeaderPos" as Array];
 	
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
@@ -26,6 +27,9 @@ namespace Intrusion.Ai
 			_unitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup [_side, true];
 			_mHasActed = false;
+			_mState = AiSquadState.Idle;
+			_mVehicle = objNull;
+			_mCurrentActionTimeoutTime = time;
 			
 			for "_i" from 1 to _noOfUnits do {
 				_unitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -35,12 +39,51 @@ namespace Intrusion.Ai
 		// Gets the AI squad's group.
 		public property Group Group { get; private set; };
 		
-		// Gives the AI squad an opportunity to act.
-		public method Act()
+		// Updates the tracking information of the squad.
+		private method UpdateTracking()
 		{
+			_mLeaderPos = getPos vehicle leader _self.Group;
+		};
+		
+		// Gets the team member closest to a position.
+		// Returns (Object): The closest team member. objNull if no unit that can stand was found or if the group is empty.
+		private method Object GetClosestTeamMember("_pos" as Array)
+		{
+			private ["_closestUnit" as Object, "_closestDistance" as Scalar];
+			
+			_closestDistance = 99999999;
+			_closestUnit = objNull;
+			
+			{
+				if (canStand _x && _x distance _pos < _closestDistance) then {
+					_closestUnit = _x;
+					_closestDistance = _x distance _pos;
+				};
+			} foreach units _self.Group;
+		};
+		
+		private method MakeNewDecision()
+		{
+			private ["_unit" as Object];
+			
+			// if within 10 meters of an enemy flag, get it.
+			//_unit = 
+		
+			// If within 200 meters from an enemy flag, move towards the flag.
+		
 			if (!_mHasActed) then {
 				_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
 				_mHasActed = true;
+			};
+		};
+		
+		// Gives the AI squad an opportunity to act.
+		public method Act()
+		{
+			call _self.UpdateTracking;
+			
+			switch (_mState) do {
+				case AiSquadState.Idle: { call _self.MakeNewDecision; };
 			};
 		};
 	};
