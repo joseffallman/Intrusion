@@ -1,0 +1,130 @@
+/*
+ * Name:	ProductionQueue
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A queue for the groups on the side to get needed materiels as soon as the side can afford it.
+ */
+
+using Intrusion.Common;
+using Sqx.Collections;
+
+namespace Intrusion.Server
+{
+	public class ReservationQueue
+	{
+		private fields ["_mReservations" as Array /* of Reservation */];
+		
+		// Creates a ProductionQueue object.
+		public constructor {
+			_mReservations = [];
+			_self.CurrentReservation = classNull;
+		};
+		
+		public method Array GetReservations {
+			+_mReservations
+		};
+		
+		// Removes all reservations that belong to a certain group
+		// _group (Group): The group's reservations that will be removed.
+		public method Boolean RemoveReservationsByGroup("_group" as Group)
+		{
+			private ["_reservationsToKeep" as Array];
+			
+			_reservationsToKeep = [];
+			
+			{
+				if (_x.Group != _group) then {
+					_reservationsToKeep pushBack _x;
+				};
+			} foreach _mReservations as Reservation;
+			
+			_mReservations = _reservationsToKeep;
+		};
+		
+		// Gets the group currently being built for.
+		public property Reservation CurrentReservation { get; private set; };
+		
+		// Adds a group to the queue if it is not already in it.
+		// _group (Group): The group to add.
+		public method PutReservation("_reservation" as Reservation)
+		{
+		    [str _this + " ReservationQueue.PutReservation"] call LogHandler.Debug;
+			_mReservations pushBack _reservation;
+			
+			if (count _mReservations == 1) then {
+				_self.CurrentReservation = _reservation;
+			};
+		};
+		
+		// Removes the current reservation and moves the queue pointer to the next group in the queue.
+		// Returns (Group): The group that is the current group after the pointer has moved.
+		public method RemoveCurrentReservation
+		{
+			private ["_currentReservation" as Reservation];
+			
+			// Delete the group
+			_mReservations = [_mReservations, 0] call ArrayHandler.RemoveItemAtIndex;
+			
+			if (count _mReservations == 0) then {
+				_currentReservation = classNull;
+			}
+			else {
+				_currentReservation = _mReservations select 0;
+			};
+			
+			while { count _mReservations > 0 && { isNull _currentReservation.Group || { count units _currentReservation.Group == 0 }}} do
+			{
+				_mReservations = [_mReservations, 0] call ArrayHandler.RemoveItemAtIndex;
+				
+				if (count _mReservations == 0) then {
+					_currentReservation = classNull;
+				}
+				else {
+					_currentReservation = _mReservations select 0;
+				};
+			};
+			
+			_self.CurrentReservation = _currentReservation;
+		};
+		
+		// Gets the number of reservations currently in the queue.
+		// Returns (Scalar): Number of reservations in the queue.
+		public method Scalar Count {
+			count _mReservations
+		};
+		
+		// Moves the current reservation last.
+		public method MoveCurrentReservationLast()
+		{
+			private ["_reservation" as Reservation];
+			
+			if (count _mReservations > 0) then {
+				_reservation = _mReservations select 0;
+				_mReservations = [_mReservations, 0] call ArrayHandler.RemoveItemAtIndex;
+				_mReservations pushBack _reservation;
+				_reservation = _mReservations select 0;
+				_self.CurrentReservation = _reservation;
+				//_self.CurrentReservation = (_mReservations select 0); // TODO SQX (TEST ADDED): Compiler adds a semicolon too much.
+			};
+		};
+		
+		public method GetReservationByGroup("_group" as Group)
+		{
+			private ["_reservation" as Reservation];
+			scopeName "main";
+		
+			{
+				_reservation = _x;
+				
+				if (_reservation.Group == _group) then {
+					_reservation breakOut "main";
+				};
+			} foreach _mReservations as Reservation;
+	
+			classNull
+		};
+	};
+};

@@ -1,0 +1,242 @@
+/*
+ * Name:	ReservationQueueTests
+ * Date:	2018-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the ReservationQueue object.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Server;
+using Intrusion.Tests.Helpers;
+
+namespace Intrusion.Tests.Server
+{
+	public class ReservationQueueTests
+	{
+		// Creates a ReservationQueueTests object.
+		public static method Init {
+			["Intrusion.Tests.Server", "ReservationQueueTests", [
+				"ReservationQueueEmpty_NothingChanged_CurrentIsNull",
+				"ReservationQueueEmpty_ReservationAdded_SetAsCurrent",
+				"ReservationQueueEmpty_TwoReservationsAdded_FirstIsCurrent",
+				"TwoReservations_NextReservationSelected_SecondIsCurrent",
+				"TwoReservationsButNoUnitsInGroups_NextReservationSelected_CurrentIsNull",
+				"ThreeReservations_RemoveCurrentTwoTimes_ThirdIsCurrent",
+				"ThreeReservations_SecondIsEmpty_SecondIsRemoved",
+				"TwoReservationsInQueue_FirstReservationMovedLast_CurrentReservationChanged"
+			]] call TestEngine.Register;
+		};
+		
+		private static fields ["_mReservationQueue" as ReservationQueue];
+		
+		private static method BeforeEach {
+			_mReservationQueue = new ReservationQueue;
+		};
+		
+		private static method ReservationQueueEmpty_NothingChanged_CurrentIsNull {
+			// Arrange
+			
+			// Act
+			
+			// Assert
+			[_mReservationQueue.CurrentReservation, "Current reservation should be null."] call Assert.IsNull;
+			[0, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+		};
+
+		private static method ReservationQueueEmpty_ReservationAdded_SetAsCurrent {
+			private ["_reservation" as Reservation, "_group" as Group];
+		
+			// Arrange
+			_group = createGroup west;
+			_reservation = [_group, "", 0] new Reservation;
+			
+			// Act
+			[_reservation] call _mReservationQueue.PutReservation;
+			
+			// Assert
+			[_group, _mReservationQueue.CurrentReservation.Group, "Added reservation does not match current reservation."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+						
+			// Cleanup
+			deleteGroup _group;
+		};
+
+		private static method ReservationQueueEmpty_TwoReservationsAdded_FirstIsCurrent {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation];
+		
+			// Arrange
+			_reservation1 = [createGroup west, "", 0] new Reservation;
+			_reservation2 = [createGroup west, "", 0] new Reservation;
+			
+			// Act
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			// Assert
+			[_reservation1.Group, _mReservationQueue.CurrentReservation.Group, "Wrong reservation is the current."] call Assert.AreEqual;
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteGroup _reservation1.Group;
+			deleteGroup _reservation2.Group;
+		};
+
+		private static method TwoReservations_NextReservationSelected_SecondIsCurrent {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation];
+			private ["_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group2];
+			
+			_reservation1 = [_group1, "", 0] new Reservation;
+			_reservation2 = [_group2, "", 0] new Reservation;
+			
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			// Act
+			call _mReservationQueue.RemoveCurrentReservation;
+			
+			// Assert
+			[_reservation2.Group, _mReservationQueue.CurrentReservation.Group, "Wrong reservation is the current."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _reservation1.Group select 1);
+			deleteVehicle (units _reservation2.Group select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
+		};
+		
+		private static method TwoReservationsButNoUnitsInGroups_NextReservationSelected_CurrentIsNull {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation];
+			private ["_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			
+			_reservation1 = [_group1, "", 0] new Reservation;
+			_reservation2 = [_group2, "", 0] new Reservation;
+			
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			// Act
+			call _mReservationQueue.RemoveCurrentReservation;
+			
+			// Assert
+			[0, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			[_mReservationQueue.CurrentReservation, "All reservations should be gone."] call Assert.IsNull;
+			
+			// Cleanup
+			deleteGroup _group1;
+			deleteGroup _group2;
+		};
+		
+		private static method ThreeReservations_RemoveCurrentTwoTimes_ThirdIsCurrent {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_reservation3" as Reservation];
+			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			_group3 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group2];
+			"B_Soldier_F" createUnit [[0,0,100], _group3];
+			
+			_reservation1 = [_group1, "", 0] new Reservation;
+			_reservation2 = [_group2, "", 0] new Reservation;
+			_reservation3 = [_group3, "", 0] new Reservation;
+			
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			[_reservation3] call _mReservationQueue.PutReservation;
+			
+			// Act
+			call _mReservationQueue.RemoveCurrentReservation;
+			call _mReservationQueue.RemoveCurrentReservation;
+			
+			// Assert
+			[_reservation3.Group, _mReservationQueue.CurrentReservation.Group, "Wrong reservation is the current."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _group1 select 1);
+			deleteVehicle (units _group2 select 1);
+			deleteVehicle (units _group3 select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
+			deleteGroup _group3;
+		};
+		
+		private static method ThreeReservations_SecondIsEmpty_SecondIsRemoved {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_reservation3" as Reservation];
+			private ["_group1" as Group, "_group2" as Group, "_group3" as Group];
+		
+			// Arrange
+			_group1 = createGroup west;
+			_group2 = createGroup west;
+			_group3 = createGroup west;
+			"B_Soldier_F" createUnit [[0,0,100], _group1];
+			"B_Soldier_F" createUnit [[0,0,100], _group3];
+			
+			_reservation1 = [_group1, "", 0] new Reservation;
+			_reservation2 = [_group2, "", 0] new Reservation;
+			_reservation3 = [_group3, "", 0] new Reservation;
+			
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			[_reservation3] call _mReservationQueue.PutReservation;
+			
+			// Act
+			call _mReservationQueue.RemoveCurrentReservation;
+			
+			// Assert
+			[_reservation3.Group, _mReservationQueue.CurrentReservation.Group, "Wrong reservation is the current."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			
+			// Cleanup
+			deleteVehicle (units _group1 select 1);
+			deleteVehicle (units _group3 select 1);
+			deleteGroup _group1;
+			deleteGroup _group2;
+			deleteGroup _group3;
+		};
+		
+		private static method TwoReservationsInQueue_FirstReservationMovedLast_CurrentReservationChanged {
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation];
+			private ["_group1" as Group, "_group2" as Group];
+		
+			// Arrange
+			_group1 = [1] call TestActions.CreatePopulatedGroup;
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			
+			_reservation1 = [_group1, "CAR", 100] new Reservation;
+			_reservation2 = [_group2, "BUS", 200] new Reservation;
+			
+			[_reservation1] call _mReservationQueue.PutReservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			// Act
+			call _mReservationQueue.MoveCurrentReservationLast;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			[_group2, _mReservationQueue.CurrentReservation.Group, "Second reservation should now be current."] call Assert.AreEqual;
+			_reservation2 = (call _mReservationQueue.GetReservations) select 1;
+			[_group1, _reservation2.Group, "First reservation should now be second."] call Assert.AreEqual;
+			
+			// Cleanup
+			[_group1] call TestActions.DeletePopulatedGroup;
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+	};
+};

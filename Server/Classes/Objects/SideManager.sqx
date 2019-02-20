@@ -48,7 +48,7 @@ namespace Intrusion.Server
 		
 			call _mResourceCollector.CollectResources;
 			call _mScientist.PerformResearch;
-			call _mProductionManager.AddOrdersForSquadsWithNoVehicle;
+			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
 			
 			_factoryCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
