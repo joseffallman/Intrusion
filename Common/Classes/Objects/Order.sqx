@@ -7,7 +7,7 @@
  * Description:
  * A class that models an order.
  */
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
 	public class Order
 	{

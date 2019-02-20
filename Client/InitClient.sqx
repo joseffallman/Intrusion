@@ -2,8 +2,6 @@ call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\SquadMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Objects\Order.sqx";
-call compile preprocessFileLineNumbers "Client\Classes\Objects\OrderCollection.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";

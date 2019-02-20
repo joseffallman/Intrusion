@@ -7,7 +7,7 @@
  * Description:
  * Order Types.
  */
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
 	public enum OrderType
 	{

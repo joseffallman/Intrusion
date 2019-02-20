@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Server
 {
-	public class Order
+	public class VehicleOrder
 	{
 		// Creates a Order object.
 		public constructor {

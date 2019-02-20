@@ -23,7 +23,7 @@ namespace Intrusion.Tests.Server
 			"_mProfessionVehiclesConfig" as TestProfessionVehiclesConfig,
 			"_mVehicleClassNamesConfig" as TestVehicleClassNamesConfig,
 			"_mVehicleSpawner" as TestVehicleSpawner, 
-			"_mOrderQueue" as OrderQueue, 
+			"_mReservationQueue" as ReservationQueue, 
 			"_mGroup" as Group,
 			"_mSquad" as Squad,
 			"_mSquadHandler" as TestSquadHandler,
@@ -35,7 +35,7 @@ namespace Intrusion.Tests.Server
 		
 		#endregion
 		
-		// Creates a OrderQueueTests object.
+		// Creates a ReservationQueueTests object.
 		public static method Init {
 			["Intrusion.Tests.Server", "ProductionManagerTests", [
 				"NoItemToProduce_Production_NoItemProduced",
@@ -43,16 +43,16 @@ namespace Intrusion.Tests.Server
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
 				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
-				"EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue",
-				"GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced",
-				"AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast",
-				"GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast",
-				"EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated",
-				"GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited",
+				"EmptyReservationQueue_GroupChangingProfession_ReservationPutInQueue",
+				"GroupAlreadyInReservationQueue_GroupChangingProfession_ReservationInQueueReplaced",
+				"AnotherGroupAlreadyInReservationQueue_GroupChangingProfession_ReservationAddedLast",
+				"GroupAndAnotherGroupInReservationQueue_GroupChangingProfession_ReservationReplacedAndLast",
+				"EmptyReservationQueue_GroupChangingToProfessionWithoutVehicle_NoReservationCreated",
+				"GroupAlreadyInReservationQueue_GroupChangingProfession_ProductionDeposited",
 				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced",
 				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced",
 				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
-				"TwoOrdersInQueue_TechNotInventedForFirst_OrderMovedLast"
+				"TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast"
 			]] call TestEngine.Register;
 		};
 		
@@ -61,7 +61,7 @@ namespace Intrusion.Tests.Server
 			_mProfessionVehiclesConfig = new TestProfessionVehiclesConfig;
 			_mVehicleClassNamesConfig = new TestVehicleClassNamesConfig;
 			_mVehicleSpawner = new TestVehicleSpawner;
-			_mOrderQueue = new OrderQueue;
+			_mReservationQueue = new ReservationQueue;
 			_mSquadHandler = new TestSquadHandler;
 			_mResourceBook = new ResourceBook;
 			_mScientist = new TestScientist;
@@ -73,7 +73,7 @@ namespace Intrusion.Tests.Server
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mProfessionConfig, _mOrderQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mProfessionConfig, _mReservationQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
@@ -88,16 +88,16 @@ namespace Intrusion.Tests.Server
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but no order exists."] call Assert.AreEqual;
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but no reservation exists."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanAfford_ItemProduced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 
 			// Arrange
-			_order = [_mGroup, "TANK", 1000] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
@@ -107,17 +107,17 @@ namespace Intrusion.Tests.Server
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
 			["TANK", _mVehicleSpawner.SpawnedVehicles select 0, "Wrong vehicle spawned."] call Assert.AreEqual;
-			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "Reservation is still active."] call Assert.AreEqual;
 			[0, _mResourceBook.TotalProduction, "No production should be left."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanNotAfford_ItemNotProduced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 		
 			// Arrange
-			_order = [_mGroup, "TANK", 1000] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			[100] call _mResourceBook.DepositProduction;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
 			
@@ -126,21 +126,21 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but group cannot afford."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order is removed."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Reservation is removed."] call Assert.AreEqual;
 			[100, _mResourceBook.TotalProduction, "Production should not be lost."] call Assert.AreEqual;
 		};
 		
 		private static method TwoItemsToProduce_GroupsCanAffordOne_ItemProduced
 		{
-			private ["_order" as Order, "_group2" as Group, "_squad2" as Squad];
+			private ["_reservation" as Reservation, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
-			_order = [_mGroup, "", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "", 600] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_order = [_group2, "", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_group2, "", 600] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
@@ -152,7 +152,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Reservation is still active."] call Assert.AreEqual;
 			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 			
 			// Cleanup
@@ -161,15 +161,15 @@ namespace Intrusion.Tests.Server
 		
 		private static method TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced
 		{
-			private ["_order1" as Order, "_order2" as Order, "_group2" as Group, "_squad2" as Squad];
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
-			_order1 = [_mGroup, "", 400] new Order;
-			[_order1] call _mOrderQueue.PutOrder;
+			_reservation1 = [_mGroup, "", 400] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_order2 = [_group2, "", 400] new Order;
-			[_order2] call _mOrderQueue.PutOrder;
+			_reservation2 = [_group2, "", 400] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
@@ -181,14 +181,14 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[0, call _mOrderQueue.Count, "Order is still active."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "Reservation is still active."] call Assert.AreEqual;
 			[200, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 			
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method EmptyOrderQueue_GroupChangingProfession_OrderPutInQueue
+		private static method EmptyReservationQueue_GroupChangingProfession_ReservationPutInQueue
 		{
 			// Arrange
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
@@ -197,62 +197,62 @@ namespace Intrusion.Tests.Server
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[1, call _mOrderQueue.Count, "There should be an order."] call Assert.AreEqual;
-			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "There should be an reservation."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_mGroup, _mReservationQueue.CurrentReservation.Group, "The reservation was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
-		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_OrderInQueueReplaced
+		private static method GroupAlreadyInReservationQueue_GroupChangingProfession_ReservationInQueueReplaced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 			
 			// Arrange
-			_order = [_mGroup, "CAR", 400] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "CAR", 400] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[1, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_mGroup, _mOrderQueue.CurrentOrder.Group, "The order was not assigned to the correct group."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_mGroup, _mReservationQueue.CurrentReservation.Group, "The reservation was not assigned to the correct group."] call Assert.AreEqual;
 		};
 		
-		private static method AnotherGroupAlreadyInOrderQueue_GroupChangingProfession_OrderAddedLast
+		private static method AnotherGroupAlreadyInReservationQueue_GroupChangingProfession_ReservationAddedLast
 		{
-			private ["_anotherGroup" as Group, "_order" as Order];
+			private ["_anotherGroup" as Group, "_reservation" as Reservation];
 		
 			// Arrange
 			_anotherGroup = [1] call TestActions.CreatePopulatedGroup;
-			_order = [_anotherGroup, "FUEL_TRUCK", 400] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_anotherGroup, "FUEL_TRUCK", 400] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			// Act
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["FUEL_TRUCK", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_anotherGroup, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_anotherGroup, _mReservationQueue.CurrentReservation.Group, "The existing reservation was changed."] call Assert.AreEqual;
 			
 			// Cleanup
 			[_anotherGroup] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method GroupAndAnotherGroupInOrderQueue_GroupChangingProfession_OrderReplacedAndLast
+		private static method GroupAndAnotherGroupInReservationQueue_GroupChangingProfession_ReservationReplacedAndLast
 		{
-			private ["_group1" as Group, "_order1" as Order, "_order2" as Order, "_order" as Order, "_orders" as Array];
+			private ["_group1" as Group, "_reservation1" as Reservation, "_reservation2" as Reservation, "_reservation" as Reservation, "_reservations" as Array];
 		
 			// Arrange
 			_group1 = [1] call TestActions.CreatePopulatedGroup;
-			_order1 = [_group1, "BUS", 600] new Order;
-			[_order1] call _mOrderQueue.PutOrder;
+			_reservation1 = [_group1, "BUS", 600] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
 			
-			_order2 = [_mGroup, "CAR", 400] new Order;
-			[_order2] call _mOrderQueue.PutOrder;
+			_reservation2 = [_mGroup, "CAR", 400] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
 
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 
@@ -260,20 +260,20 @@ namespace Intrusion.Tests.Server
 			[_mGroup, ProfessionType.Fuel] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["BUS", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_group1, _mOrderQueue.CurrentOrder.Group, "The existing order was changed."] call Assert.AreEqual;
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["BUS", _mReservationQueue.CurrentReservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_group1, _mReservationQueue.CurrentReservation.Group, "The existing reservation was changed."] call Assert.AreEqual;
 
-			_orders = call _mOrderQueue.GetOrders;
-			_order = _orders select 1;
-			["FUEL_TRUCK", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
-			[_mGroup, _order.Group, "The existing order was changed."] call Assert.AreEqual;
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 1;
+			["FUEL_TRUCK", _reservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[_mGroup, _reservation.Group, "The existing reservation was changed."] call Assert.AreEqual;
 
 			// Cleanup
 			[_group1] call TestActions.DeletePopulatedGroup;
 		};
 		
-		private static method EmptyOrderQueue_GroupChangingToProfessionWithoutVehicle_NoOrderCreated
+		private static method EmptyReservationQueue_GroupChangingToProfessionWithoutVehicle_NoReservationCreated
 		{
 			// Arrange
 			
@@ -281,10 +281,10 @@ namespace Intrusion.Tests.Server
 			[_mGroup, ProfessionType.Infantry] call _mProductionManager.OnGroupChangingProfession;
 			
 			// Assert
-			[0, call _mOrderQueue.Count, "There should be no order."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "There should be no reservation."] call Assert.AreEqual;
 		};
 		
-		private static method GroupAlreadyInOrderQueue_GroupChangingProfession_ProductionDeposited
+		private static method GroupAlreadyInReservationQueue_GroupChangingProfession_ProductionDeposited
 		{
 			// Arrange
 			[1000] call _mResourceBook.DepositProduction;
@@ -298,14 +298,14 @@ namespace Intrusion.Tests.Server
 		
 		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 		
 			// Arrange
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
-			_order = [_mGroup, "TANK", 600] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "TANK", 600] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
@@ -315,20 +315,20 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mOrderQueue.Count, "Order should still be active."] call Assert.AreEqual;
+			[1, call _mReservationQueue.Count, "Reservation should still be active."] call Assert.AreEqual;
 			[1000, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
 		private static method OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 		
 			// Arrange
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
-			_order = [_mGroup, "", 500] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "", 500] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			[Technology.Armored] call _mScientist.AddInventedTechnology;
@@ -338,17 +338,17 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[0, call _mOrderQueue.Count, "Order should still be active."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "Reservation should still be active."] call Assert.AreEqual;
 			[0, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
 		{
-			private ["_order" as Order];
+			private ["_reservation" as Reservation];
 
 			// Arrange
-			_order = [_mGroup, "TANK", 1000] new Order;
-			[_order] call _mOrderQueue.PutOrder;
+			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
 			
 			// Act
@@ -358,17 +358,17 @@ namespace Intrusion.Tests.Server
 			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
 		};
 		
-		private static method TwoOrdersInQueue_TechNotInventedForFirst_OrderMovedLast
+		private static method TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast
 		{
-			private ["_order1" as Order, "_order2" as Order, "_group2" as Group, "_orders" as Array, "_order" as Order];
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
 
 			// Arrange
-			_order1 = [_mGroup, "TANK", 800] new Order;
-			[_order1] call _mOrderQueue.PutOrder;
+			_reservation1 = [_mGroup, "TANK", 800] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_order2 = [_group2, "MECH", 500] new Order;
-			[_order2] call _mOrderQueue.PutOrder;
+			_reservation2 = [_group2, "MECH", 500] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			[Technology.Mechanized] call _mScientist.AddInventedTechnology;
@@ -377,12 +377,12 @@ namespace Intrusion.Tests.Server
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[2, call _mOrderQueue.Count, "Wrong number of orders in the queue."] call Assert.AreEqual;
-			["MECH", _mOrderQueue.CurrentOrder.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["MECH", _mReservationQueue.CurrentReservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 
-			_orders = call _mOrderQueue.GetOrders;
-			_order = _orders select 1;
-			["TANK", _order.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 1;
+			["TANK", _reservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
 
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;

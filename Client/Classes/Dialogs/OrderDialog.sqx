@@ -7,6 +7,9 @@
  * Description:
  * Class that models the Build Base dialog.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class OrderDialog

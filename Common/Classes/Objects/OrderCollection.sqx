@@ -8,9 +8,7 @@
  * Models a collection of orders.
  */
 
-using Intrusion.Common;
-
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
 	public class OrderCollection
 	{

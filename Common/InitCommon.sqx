@@ -23,6 +23,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\BaseLayout.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReport.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceReportCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\TechnologyInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\Order.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\OrderCollection.sqx";
 
 using Intrusion.Common;
 
