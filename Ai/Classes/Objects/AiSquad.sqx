@@ -18,7 +18,7 @@ namespace Intrusion.Ai
 	public class AiSquad
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mState" as AiSquadState, "_mStateSetTime" as Scalar, "_mCurrentActionTimeoutTime" as Scalar, "_mLeaderPos" as Array, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation];
+		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation];
 	
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
@@ -30,7 +30,6 @@ namespace Intrusion.Ai
 			_mVehicleSpawner = _vehicleSpawner;
 			_unitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup [_side, true];
-			_mHasActed = false;
 			_mState = AiSquadState.Idle;
 			_mVehicle = objNull;
 			_mCurrentActionTimeoutTime = time;
@@ -49,7 +48,7 @@ namespace Intrusion.Ai
 		// Updates the tracking information of the squad.
 		private method UpdateTracking()
 		{
-			_mLeaderPos = getPos vehicle leader _self.Group;
+			//_mLeaderPos = getPos vehicle leader _self.Group;
 		};
 		
 		// Gets the team member closest to a position.
@@ -67,12 +66,14 @@ namespace Intrusion.Ai
 					_closestDistance = _x distance _pos;
 				};
 			} foreach units _self.Group;
+			
+			_closestUnit
 		};
 		
 		private method CreateOrderOnOwnInitiative()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index"];
+			private ["_count" as Scalar, "_index" as Scalar];
 			
 			waitUntil { PublicVariableHandler.ResourceLocationCollectionHasValue };
 			
@@ -99,7 +100,7 @@ namespace Intrusion.Ai
 			
 			if (_count > 0) then {
 				_index = floor random _count;
-				_location = ((_valuedLocations select 0) as ValuedObject).Object as ResourceLocation;
+				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 				
 				_mResourceLocation = _location;
 				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
@@ -137,7 +138,6 @@ namespace Intrusion.Ai
 		private method SetState("_state" as AiSquadState, "_timeoutTime" as Scalar)
 		{
 			_mState = _state;
-			_mStateSetTime = time;
 			_mCurrentActionTimeoutTime = time + _timeoutTime;
 			
 			if (_state == AiSquadState.Idle) then {
@@ -148,7 +148,8 @@ namespace Intrusion.Ai
 		private method SetIdleIfActionTimedOut()
 		{
 			if (time > _mCurrentActionTimeoutTime) then {
-				[AiSquadState.Idle, 0] call _self.SetState;	
+				[AiSquadState.Idle, 0] call _self.SetState;
+				player sideChat "Idle";
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			};
 		};
@@ -183,6 +184,7 @@ namespace Intrusion.Ai
 					
 					_unit moveTo _mCurrentOrder.TargetPosition;
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
+					player sideChat "SingleUnitGettingFlag";
 					breakOut "main";
 				};
 
@@ -191,6 +193,7 @@ namespace Intrusion.Ai
 				{
 					_self.Group addWaypoint [getMarkerPos _mCurrentOrder.TargetPosition, 10];
 					[AiSquadState.Moving, 120] call _self.SetState;
+					player sideChat "Moving";
 					breakOut "main";
 				};
 				
@@ -201,13 +204,10 @@ namespace Intrusion.Ai
 				if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
 					[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
 					[AiSquadState.BoardingVehicle, 60] call _self.SetState;
+					player sideChat "BoardingVehicle";
 				};
 				
 				// Else: Move to the closest of enemy flag and the car park.
-				
-				if (!_mHasActed) then {
-					_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
-				};
 			};
 		};
 		
@@ -219,6 +219,7 @@ namespace Intrusion.Ai
 				};
 				
 				[AiSquadState.Idle, 0] call _self.SetState;
+				player sideChat "Idle";
 			};
 		};
 		
