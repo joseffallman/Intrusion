@@ -18,22 +18,22 @@ namespace Intrusion.Common
 {
 	public class PublicVariableHandler
 	{
-		// Sets and broadcasts an array of resource locations across the network.
-		// _resourceLocations (Array): An array of resource locations.
-		public static method BroadcastResourceLocations("_resourceLocations" as Array /* of ResourceLocation */)
+		// Sets and broadcasts resource location collection across the network.
+		// _resourceLocationCollection (Array): The resource location collection to be broadcasted.
+		public static method BroadcastResourceLocationCollection("_resourceLocationCollection" as ResourceLocationCollection)
 		{
-			INT_Public_resourceLocations = _resourceLocations;
-			publicVariable "INT_Public_resourceLocations";
+			INT_Public_resourceLocationCollection = _resourceLocationCollection;
+			publicVariable "INT_Public_resourceLocationCollection";
 		};
 		
-		// Gets all resource locations from the public network synchronized variable.
-		public static method Array GetResourceLocations {
-			INT_Public_resourceLocations
+		// Gets the resource collection from the public network synchronized variable.
+		public static method ResourceLocationCollection GetResourceLocationCollection {
+			INT_Public_resourceLocationCollection
 		};
 		
 		// Gets whether the resource locations has been set on the current machine or not.
-		public static method Boolean ResourceLocationsHasValue {
-			!isNil "INT_Public_resourceLocations"
+		public static method Boolean ResourceLocationCollectionHasValue {
+			!isNil "INT_Public_resourceLocationCollection"
 		};
 
 		// Sets and broadcasts an array of squads across the network.

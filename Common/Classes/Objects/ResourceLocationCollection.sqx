@@ -1,0 +1,71 @@
+/*
+ * Name:	ResourceLocationCollection
+ * Date:	2019-02-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a collection of resource locations.
+ */
+namespace Intrusion.Common
+{
+	public class ResourceLocationCollection
+	{
+		private fields ["_mResourceLocations" as Array];
+	
+		// Creates a ResourceLocationCollection object.
+		public constructor {
+			_mResourceLocations = [];
+		};
+		
+		public method Array GetResourceLocations()
+		{
+			+_mResourceLocations
+		};
+		
+		public method AddResourceLocation("_resourceLocation" as ResourceLocation)
+		{
+			_mResourceLocations pushBack _resourceLocation;
+		};
+		
+		// Get the number of factories owned by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of factories owned by the side.
+		public method Scalar GetFactoriesCountBySide("_side" as Side)
+		{
+			private ["_count" as Scalar, "_location" as ResourceLocation];
+
+			_count = 0;
+			
+			{
+				_location = _x;
+
+				if (_location.Side == _side && _location.FacilityType == ResourceFacility.Factory) then {
+					_count = _count + 1;
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+		
+			_count
+		};
+		
+		// Get the number of tech labs ownd by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of tech labs owned by the side.
+		public method Scalar GetTechLabsCountBySide {
+			params ["_side" as Side];
+			private ["_count" as Scalar, "_location" as ResourceLocation];
+
+			_count = 0;
+			
+			{
+				_location = _x;
+
+				if (_location.Side == _side && _location.FacilityType == ResourceFacility.TechLab) then {
+					_count = _count + 1;
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+		
+			_count
+		};
+	};
+};
