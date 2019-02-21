@@ -17,13 +17,13 @@ namespace Intrusion.Server
 	public class ResourceLocationHandler
 	{
 		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
-		private static fields ["_mResourceLocations" as Array];
+		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
 		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			
-			_mResourceLocations = [];
+			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
 		};
@@ -38,8 +38,9 @@ namespace Intrusion.Server
 			
 			// Find all factory locations
 			_number = 1;
-			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do {
-				_mResourceLocations pushBack ["Factory" + str _number, ResourceFacility.Factory] new ResourceLocation;
+			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do
+			{
+				[["Factory" + str _number, ResourceFacility.Factory] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			
@@ -47,16 +48,18 @@ namespace Intrusion.Server
 			
 			// Find all techlab locations
 			_number = 1;
-			while { ["TechLab" + str _number] call MarkerHelper.MarkerExists } do {
-				_mResourceLocations pushBack ["TechLab" + str _number, ResourceFacility.TechLab] new ResourceLocation;
+			while { ["TechLab" + str _number] call MarkerHelper.MarkerExists } do
+			{
+				[["TechLab" + str _number, ResourceFacility.TechLab] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			
 			_self.TechLabLocationsCount = _number - 1;
 			
 			// Set winner's location
-			private _winnersIndex = floor random count _mResourceLocations;
-			_self.WinnersLocation = _mResourceLocations select _winnersIndex;
+			private _resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
+			private _winnersIndex = floor random count _resourceLocations;
+			_self.WinnersLocation = _resourceLocations select _winnersIndex;
 			_self.WinnersLocation.IsWinnersLocation = true;
 			_self.WinnersLocation.MarkerName setMarkerType _mMapMarkersConfig.WinnersLocationMarkerType;
 			
@@ -65,10 +68,10 @@ namespace Intrusion.Server
 		
 		// Broadcasts all resource locations to the clients.
 		public static method BroadcastResourceLocations {
-			[_mResourceLocations] call PublicVariableHandler.BroadcastResourceLocations;
+			[_mResourceLocationCollection] call PublicVariableHandler.BroadcastResourceLocationCollection;
 			
 			// Tell the clients to update them.
-			["ClientResourceLocationHandler.UpdateResourceLocations", [_mResourceLocations]] call Remote.Invoke;
+			["ClientResourceLocationHandler.UpdateResourceLocations", [_mResourceLocationCollection]] call Remote.Invoke;
 		};
 		
 		// Gets a resource location from the internal list of flag locations.
@@ -76,13 +79,17 @@ namespace Intrusion.Server
 		// Returns (ResourceLocation): A flag location. classNull of no flag location was found.
 		private static method ResourceLocation GetResourceLocation("_markerName" as String)
 		{
+			private ["_resourceLocations" as Array];
+			
 			scopeName "main";
+			
+			_resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
 			
 			{
 				if (_x.MarkerName == _markerName) then {
 					_x breakOut "main";
 				};
-			} foreach _mResourceLocations as ResourceLocation;
+			} foreach _resourceLocations as ResourceLocation;
 			
 			classNull
 		};
@@ -118,41 +125,17 @@ namespace Intrusion.Server
 		// Get the number of factories owned by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of factories owned by the side.
-		public static method Scalar GetFactoriesCountBySide {
-			params ["_side" as Side];
-			private ["_count" as Scalar, "_location" as ResourceLocation];
-
-			_count = 0;
-			
-			{
-				_location = _x;
-
-				if (_location.Side == _side && _location.FacilityType == ResourceFacility.Factory) then {
-					_count = _count + 1;
-				};
-			} foreach _mResourceLocations as ResourceLocation;
-		
-			_count
+		public static method Scalar GetFactoriesCountBySide("_side" as Side)
+		{
+			[_side] call _mResourceLocationCollection.GetFactoriesCountBySide
 		};
 		
 		// Get the number of tech labs ownd by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of tech labs owned by the side.
-		public static method Scalar GetTechLabsCountBySide {
-			params ["_side" as Side];
-			private ["_count" as Scalar, "_location" as ResourceLocation];
-
-			_count = 0;
-			
-			{
-				_location = _x;
-
-				if (_location.Side == _side && _location.FacilityType == ResourceFacility.TechLab) then {
-					_count = _count + 1;
-				};
-			} foreach _mResourceLocations as ResourceLocation;
-		
-			_count
+		public static method Scalar GetTechLabsCountBySide("_side" as Side)
+		{
+			[_side] call _mResourceLocationCollection.GetTechLabsCountBySide
 		};
 	};
 };

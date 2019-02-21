@@ -10,6 +10,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyProdCon
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocationCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Profession.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\MapObservation.sqx";
