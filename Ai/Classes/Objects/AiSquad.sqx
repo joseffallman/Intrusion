@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Sqx.Collections;
 
 namespace Intrusion.Ai
 {
@@ -63,6 +64,40 @@ namespace Intrusion.Ai
 			} foreach units _self.Group;
 		};
 		
+		private method CreateOrderOnOwnInitiative()
+		{
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
+			private ["_count" as Scalar, "_index"];
+			
+			waitUntil { PublicVariableHandler.ResourceLocationCollectionHasValue };
+			
+			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+			_locations = call _resourceLocationCollection.GetResourceLocations;
+			_count = 0;
+			
+			// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
+			_valuedLocations = [];
+			{
+				_location = _x;
+				
+				if (_location.Side != side _self.Group) then {
+					_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
+					_count = _count + 1;
+				};
+			} foreach _locations as ResourceLocation;
+			
+			_valuedLocations = [_valuedLocations] call Sorter.QSort;
+			
+			if (_count > 3) then {
+				_count = 3;
+			};
+			
+			_index = floor random _count;
+			_location = ((_valuedLocations select 0) as ValuedObject).Object as ResourceLocation;
+			
+			_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+		};
+		
 		private method MakeNewDecision()
 		{
 			private ["_unit" as Object];
@@ -86,6 +121,10 @@ namespace Intrusion.Ai
 		public method Act()
 		{
 			call _self.UpdateTracking;
+			
+			if (isNull _mCurrentOrder) then {
+				call _self.CreateOrderOnOwnInitiative;
+			};
 			
 			switch (_mState) do {
 				case AiSquadState.Idle: { call _self.MakeNewDecision; };
