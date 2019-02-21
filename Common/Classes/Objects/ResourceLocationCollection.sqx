@@ -20,7 +20,7 @@ namespace Intrusion.Common
 		
 		public method Array GetResourceLocations()
 		{
-			+_mResourceLocations
+			_mResourceLocations
 		};
 		
 		public method AddResourceLocation("_resourceLocation" as ResourceLocation)
