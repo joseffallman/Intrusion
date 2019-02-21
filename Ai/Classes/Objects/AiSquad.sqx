@@ -177,7 +177,7 @@ namespace Intrusion.Ai
 			if (!isNull _unit) then
 			{
 				// if within 25 meters of enemy flag, have a unit to get it.
-				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 25) then
+				if (!isNull _mResourceLocation && { _mResourceLocation.Side != side _self.Group && vehicle _unit distance _mResourceLocation.Flag < 25 }) then
 				{
 					if (vehicle _unit != _unit) then {
 						call _self.ExitVehicle;
@@ -189,7 +189,7 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 				
-				// If within 100 meters from a flag, and in a vehicle, stop and get out
+				// If within 100 meters from an order's target position, and in a vehicle, stop and get out
 				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 100 && vehicle _unit != _unit) then
 				{
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
@@ -226,6 +226,7 @@ namespace Intrusion.Ai
 			if (_mUnit distance _mResourceLocation.Flag < 10) then {
 				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
 					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
+					call _self.CreateOrderOnOwnInitiative;
 				};
 				
 				[AiSquadState.Idle, 0] call _self.SetState;
