@@ -276,5 +276,33 @@ namespace Intrusion.Server
 			
 			_squadVehicles
 		};
+		
+		// Gets the nearest working empty free vehicle in relation to a position.
+		// _side (Side): The vehicle's side.
+		// _pos (Array): The relative position.
+		// Returns (IntrusionVehicle): The intrusion vehicle closest to the group. classNull if no vehicle was found.
+		public method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array)
+		{
+			private ["_nearestVehicle" as IntrusionVehicle, "_nearestDistance" as Scalar];
+			
+			_nearestVehicle = classNull;
+			_nearestDistance = 9999999;
+			
+			{
+				private ["_intrusionVehicle" as IntrusionVehicle];
+				_intrusionVehicle = _x;
+				
+				if (_intrusionVehicle.Side == _side && canMove _intrusionVehicle.Vehicle && isNull _intrusionVehicle.OwnerGroup) then {
+					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then {
+						if (isNull assignedDriver _intrusionVehicle.Vehicle && count assignedCargo _intrusionVehicle.Vehicle == 0) then {
+							_nearestVehicle = _intrusionVehicle;
+							_nearestDistance = _intrusionVehicle.Vehicle distance _pos;
+						};
+					};
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			_nearestVehicle
+		};
 	};
 };

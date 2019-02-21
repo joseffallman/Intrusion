@@ -14,5 +14,6 @@ namespace Intrusion.Ai
 		Idle,
 		Moving,
 		BoardingVehicle,
+		SingleUnitGettingFlag,
 	};
 };

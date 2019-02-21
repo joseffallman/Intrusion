@@ -78,7 +78,7 @@ gServer = new IntrusionServer;
 
 /* AI */
 private ["_aiService" as AiService];
-_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers] new AiService;
+_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new AiService;
 call _aiService.RunAsync;
 
 #endregion

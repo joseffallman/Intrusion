@@ -15,16 +15,17 @@ namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{
-		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */];
+		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig];
 		
 		// Creates a AiService object.
-		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig)
+		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner)
 		{
 			_mUnitCounterConfig = _unitCounterConfig;
 			_mGameplayConfig = _gameplayConfig;
 			_mUnitsConfig = _unitsConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mVehicleSpawner = _vehicleSpawner;
 			_mSquads = [];
 		};
 		
@@ -55,7 +56,7 @@ namespace Intrusion.Ai
 				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
-					_mSquads pushBack [_mUnitsConfig, _mMapMarkersConfig, _x, 2] new AiSquad;
+					_mSquads pushBack [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, 2] new AiSquad;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
 		};

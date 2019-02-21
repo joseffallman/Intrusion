@@ -9,22 +9,25 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Server;
 using Sqx.Collections;
+using Sqx.Waypoints;
 
 namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mHasActed" as Boolean, "_mTargetPos" as Array, "_mVehicle" as Object, "_mCurrentOrder" as Order];
-		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mLeaderPos" as Array];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mState" as AiSquadState, "_mStateSetTime" as Scalar, "_mCurrentActionTimeoutTime" as Scalar, "_mLeaderPos" as Array, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation];
 	
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_side" as Side, "_noOfUnits" as Scalar)
+		public constructor("_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar)
 		{
 			private ["_unitInfo" as AiUnitInfo];
 			
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
+			_mVehicleSpawner = _vehicleSpawner;
 			_unitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup [_side, true];
 			_mHasActed = false;
@@ -32,6 +35,8 @@ namespace Intrusion.Ai
 			_mVehicle = objNull;
 			_mCurrentActionTimeoutTime = time;
 			_mCurrentOrder = classNull;
+			_mUnit = objNull;
+			_mResourceLocation = classNull;
 			
 			for "_i" from 1 to _noOfUnits do {
 				_unitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -92,28 +97,142 @@ namespace Intrusion.Ai
 				_count = 3;
 			};
 			
-			_index = floor random _count;
-			_location = ((_valuedLocations select 0) as ValuedObject).Object as ResourceLocation;
+			if (_count > 0) then {
+				_index = floor random _count;
+				_location = ((_valuedLocations select 0) as ValuedObject).Object as ResourceLocation;
+				
+				_mResourceLocation = _location;
+				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+			};
 			
-			_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+			// If there is no flags to capture, maybe one can chose to defend one instead.
+		};
+		
+		private method ExitVehicle()
+		{
+			{
+				if (!isNull assignedVehicle _x) then {
+					unassignVehicle _x;
+					moveOut _x;
+				};
+			} foreach units _self.Group;
+		};
+		
+		private method EnterVehicle("_vehicle" as Object)
+		{
+			_mVehicle = _vehicle;
+			
+			{
+				if (isNull assignedDriver _vehicle) then {
+					_x assignAsDriver _vehicle;
+					_x orderGetIn true;
+				}
+				else {
+					_x assignAsCargo _vehicle;
+					_x orderGetIn true;
+				};
+			} foreach units _self.Group;
+		};
+		
+		private method SetState("_state" as AiSquadState, "_timeoutTime" as Scalar)
+		{
+			_mState = _state;
+			_mStateSetTime = time;
+			_mCurrentActionTimeoutTime = time + _timeoutTime;
+			
+			if (_state == AiSquadState.Idle) then {
+				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			};
+		};
+		
+		private method SetIdleIfActionTimedOut()
+		{
+			if (time > _mCurrentActionTimeoutTime) then {
+				[AiSquadState.Idle, 0] call _self.SetState;	
+				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			};
 		};
 		
 		private method MakeNewDecision()
 		{
-			private ["_unit" as Object];
+			private ["_unit" as Object, "_nearestIntrusionVehicle" as IntrusionVehicle];
 			
-			// if within 25 meters of enemy flag, have a unit to get it.
-			//_unit = 
+			scopeName "main";
+
+/*
+			// If with 1 meter of enemy flag, take it.
+			_unit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
+			if (!isNull _unit && {vehicle _unit distance _mCurrentOrder.TargetPosition < 2}) then {
+				// Take flag
+				
+				breakOut "main";
+			};
+*/
+
+			_unit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
+			_mUnit = _unit;
+			
+			if (!isNull _unit) then
+			{
+				// if within 25 meters of enemy flag, have a unit to get it.
+				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 25) then
+				{
+					if (vehicle _unit != _unit) then {
+						call _self.ExitVehicle;
+					};
+					
+					_unit moveTo _mCurrentOrder.TargetPosition;
+					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
+					breakOut "main";
+				};
+
+				// If within 200 meters from enemy flag, or in a vehicle, then move towards the flag.
+				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 200) then
+				{
+					_self.Group addWaypoint [getMarkerPos _mCurrentOrder.TargetPosition, 10];
+					[AiSquadState.Moving, 120] call _self.SetState;
+					breakOut "main";
+				};
+				
+				
+				// If there is a vehicle nearby, then board it.
+				_nearestIntrusionVehicle = [side _self.Group, getPos leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+				
+				if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
+					[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
+					[AiSquadState.BoardingVehicle, 60] call _self.SetState;
+				};
+				
+				// Else: Move to the closest of enemy flag and the car park.
+				
+				if (!_mHasActed) then {
+					_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
+				};
+			};
+		};
 		
-			// If within 200 meters from enemy flag, or in a vehicle, then move towards the flag.
-			
-			// If more than 200 meters to an enemy flag, and a vehicle nearby, then board it.
-			
-			// Else: Move to the closest of enemy flag and the car park.
-			
-			if (!_mHasActed) then {
-				_self.Group addWaypoint [getMarkerPos _mMapMarkerInfo.CarParkMarkerName, 0];
-				_mHasActed = true;
+		private method CheckIfFinishedSingleUnitGettingFlag()
+		{
+			if (_mUnit distance _mResourceLocation.Flag < 1) then {
+				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
+					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
+				};
+				
+				[AiSquadState.Idle, 0] call _self.SetState;
+			};
+		};
+		
+		private method CheckIfFinishedMoving()
+		{
+			if (vehicle _mUnit distance _mResourceLocation.Flag < 20) then {
+				[AiSquadState.Idle, 0] call _self.SetState;
+			};
+		};
+		
+		private method CheckIfFinishedBoardingVehicle()
+		{
+			if ({ vehicle _x == _mVehicle } count units _self.Group == count units _self.Group) then {
+				[AiSquadState.Idle, 0] call _self.SetState;
 			};
 		};
 		
@@ -121,6 +240,7 @@ namespace Intrusion.Ai
 		public method Act()
 		{
 			call _self.UpdateTracking;
+			call _self.SetIdleIfActionTimedOut;
 			
 			if (isNull _mCurrentOrder) then {
 				call _self.CreateOrderOnOwnInitiative;
@@ -128,6 +248,9 @@ namespace Intrusion.Ai
 			
 			switch (_mState) do {
 				case AiSquadState.Idle: { call _self.MakeNewDecision; };
+				case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
+				case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
+				case AiSquadState.BoardingVehicle: { call _self.CheckIfFinishedBoardingVehicle; };
 			};
 		};
 	};
