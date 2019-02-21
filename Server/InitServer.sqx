@@ -77,8 +77,11 @@ gServer = new IntrusionServer;
 [gServer.TargetHandler] call ObservationService.Init;
 
 /* AI */
-private ["_aiService" as AiService];
-_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new AiService;
-call _aiService.RunAsync;
+[] spawn {
+	sleep 5;
+	private ["_aiService" as AiService];
+	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new AiService;
+	call _aiService.RunAsync;
+};
 
 #endregion

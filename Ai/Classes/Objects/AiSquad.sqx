@@ -75,7 +75,7 @@ namespace Intrusion.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
 			private ["_count" as Scalar, "_index" as Scalar];
 			
-			waitUntil { PublicVariableHandler.ResourceLocationCollectionHasValue };
+			waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
 			
 			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 			_locations = call _resourceLocationCollection.GetResourceLocations;
@@ -93,6 +93,7 @@ namespace Intrusion.Ai
 			} foreach _locations as ResourceLocation;
 			
 			_valuedLocations = [_valuedLocations] call Sorter.QSort;
+			player sideChat "Closest location: " + str (_valuedLocations select 0);
 			
 			if (_count > 3) then {
 				_count = 3;
@@ -126,11 +127,11 @@ namespace Intrusion.Ai
 			{
 				if (isNull assignedDriver _vehicle) then {
 					_x assignAsDriver _vehicle;
-					_x orderGetIn true;
+					[_x] orderGetIn true;
 				}
 				else {
 					_x assignAsCargo _vehicle;
-					_x orderGetIn true;
+					[_x] orderGetIn true;
 				};
 			} foreach units _self.Group;
 		};
@@ -149,7 +150,7 @@ namespace Intrusion.Ai
 		{
 			if (time > _mCurrentActionTimeoutTime) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
-				player sideChat "Idle";
+				player sideChat "Timeout. Idle...";
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			};
 		};
@@ -182,21 +183,30 @@ namespace Intrusion.Ai
 						call _self.ExitVehicle;
 					};
 					
-					_unit moveTo _mCurrentOrder.TargetPosition;
+					_unit doMove _mCurrentOrder.TargetPosition;
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 					player sideChat "SingleUnitGettingFlag";
 					breakOut "main";
 				};
+				
+				// If within 100 meters from a flag, and in a vehicle, stop and get out
+				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 100 && vehicle _unit != _unit) then
+				{
+					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+					[AiSquadState.ExitingVehicle, 20] call _self.SetState;
+					player sideChat "ExitingVehicle";
+					breakOut "main";
+				};
 
 				// If within 200 meters from enemy flag, or in a vehicle, then move towards the flag.
-				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 200) then
+				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 200 || vehicle _unit != _unit) then
 				{
-					_self.Group addWaypoint [getMarkerPos _mCurrentOrder.TargetPosition, 10];
+					_waypoint = _self.Group addWaypoint [_mCurrentOrder.TargetPosition, 10];
+					_waypoint setWaypointSpeed "LIMITED";
 					[AiSquadState.Moving, 120] call _self.SetState;
 					player sideChat "Moving";
 					breakOut "main";
 				};
-				
 				
 				// If there is a vehicle nearby, then board it.
 				_nearestIntrusionVehicle = [side _self.Group, getPos leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
@@ -213,7 +223,7 @@ namespace Intrusion.Ai
 		
 		private method CheckIfFinishedSingleUnitGettingFlag()
 		{
-			if (_mUnit distance _mResourceLocation.Flag < 1) then {
+			if (_mUnit distance _mResourceLocation.Flag < 10) then {
 				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
 					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
 				};
@@ -225,7 +235,7 @@ namespace Intrusion.Ai
 		
 		private method CheckIfFinishedMoving()
 		{
-			if (vehicle _mUnit distance _mResourceLocation.Flag < 20) then {
+			if (vehicle _mUnit distance _mResourceLocation.Flag < 100) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
 			};
 		};
@@ -233,6 +243,14 @@ namespace Intrusion.Ai
 		private method CheckIfFinishedBoardingVehicle()
 		{
 			if ({ vehicle _x == _mVehicle } count units _self.Group == count units _self.Group) then {
+				[AiSquadState.Idle, 0] call _self.SetState;
+			};
+		};
+		
+		private method CheckIfFinishedExitingVehicle()
+		{
+			if (speed _mVehicle < 3) then {
+				call _self.ExitVehicle;
 				[AiSquadState.Idle, 0] call _self.SetState;
 			};
 		};
@@ -252,6 +270,7 @@ namespace Intrusion.Ai
 				case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
 				case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
 				case AiSquadState.BoardingVehicle: { call _self.CheckIfFinishedBoardingVehicle; };
+				case AiSquadState.ExitingVehicle: { call _self.CheckIfFinishedExitingVehicle; };
 			};
 		};
 	};

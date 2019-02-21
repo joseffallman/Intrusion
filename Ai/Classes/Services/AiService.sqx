@@ -52,7 +52,6 @@ namespace Intrusion.Ai
 			
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
-				player sideChat str _existingUnitsCount;
 				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
