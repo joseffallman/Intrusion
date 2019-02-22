@@ -157,19 +157,9 @@ namespace Intrusion.Ai
 		
 		private method MakeNewDecision()
 		{
-			private ["_unit" as Object, "_nearestIntrusionVehicle" as IntrusionVehicle];
+			private ["_unit" as Object, "_nearestIntrusionVehicle" as IntrusionVehicle, "_waypoint" as Array];
 			
 			scopeName "main";
-
-/*
-			// If with 1 meter of enemy flag, take it.
-			_unit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
-			if (!isNull _unit && {vehicle _unit distance _mCurrentOrder.TargetPosition < 2}) then {
-				// Take flag
-				
-				breakOut "main";
-			};
-*/
 
 			_unit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
 			_mUnit = _unit;
@@ -223,10 +213,10 @@ namespace Intrusion.Ai
 		
 		private method CheckIfFinishedSingleUnitGettingFlag()
 		{
-			if (_mUnit distance _mResourceLocation.Flag < 10) then {
+			if (_mUnit distance _mResourceLocation.Flag < 5) then {
 				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
 					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
-					call _self.CreateOrderOnOwnInitiative;
+					_mCurrentOrder = classNull;
 				};
 				
 				[AiSquadState.Idle, 0] call _self.SetState;
