@@ -25,7 +25,7 @@ namespace Intrusion.Server
 		// _unit (Object): The unit for which to check enemy targets.
 		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
 		public method Array GetEnemyTargets {
-			params ["_unit" as Object, ["_maxRange" as Scalar, 2000]];
+			params ["_unit" as Object, ["_maxRange" as Scalar, 1000]];
 			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
 			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_professionType" as ProfessionType, "_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			private ["_targetUnitNearItsIntrusionVehicle" as Boolean];
@@ -79,6 +79,9 @@ namespace Intrusion.Server
 								if (_targetUnitNearItsIntrusionVehicle) then {
 									_professionType = _squad.ProfessionType;
 								};
+							}
+							else { // If the unit has not selected a profession (and is outside a vehicle), it should be infantry.
+								_professionType = ProfessionType.Infantry;
 							};
 						};
 					
