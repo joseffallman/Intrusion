@@ -563,12 +563,12 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TargetHandler.sqx" IsExpanded="false" FileName="Server\Classes\Handlers\TargetHandler.sqx">
-                    <IsSelected>true</IsSelected>
+                    <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Server\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Server\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Objects\Interfaces">
@@ -637,7 +637,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Target.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Target.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponBox.sqx" IsExpanded="false" FileName="Server\Classes\Objects\WeaponBox.sqx">
