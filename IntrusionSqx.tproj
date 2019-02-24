@@ -772,7 +772,7 @@
                 </SubNodes>
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IntrusionServer.sqx" IsExpanded="false" FileName="Server\Classes\IntrusionServer.sqx">
-                <IsSelected>false</IsSelected>
+                <IsSelected>true</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
             </SubNodes>
