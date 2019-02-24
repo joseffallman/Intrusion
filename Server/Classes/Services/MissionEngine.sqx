@@ -46,7 +46,6 @@ namespace Intrusion.Server
         // Runs the mission.
         private static method Run() {
         	private ["_sideManagers" as Array];
-			private ["_inventedTechnologiesCollection" as InventedTechnologiesCollection];
 			private ["_resourceReportCollection" as ResourceReportCollection, "_resourceReport" as ResourceReport];
         	
         	// Create collections
@@ -55,8 +54,6 @@ namespace Intrusion.Server
         	// Create handlers
         	_self.SquadHandler = [_mServer.VehicleSpawner] new SquadHandler;
         	_self.BrigadeLeadershipHandler = [_mServer.MessageHandler] new BrigadeLeadershipHandler;
-        	
-        	_inventedTechnologiesCollection = new InventedTechnologiesCollection;
         	
         	// Initialize the player info collection
         	call _self.InitPlayerInfoCollection;
@@ -68,7 +65,7 @@ namespace Intrusion.Server
         	[_mServerConfig.Gameplay] call MissionCounterService.RunAsync;
         	
         	// Start the weapon service
-        	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, _inventedTechnologiesCollection] call WeaponsService.RunAsync;
+        	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, gServer.InventedTechnologiesCollection] call WeaponsService.RunAsync;
         	
         	// Start the observation service
         	call ObservationService.RunAsync;
@@ -77,7 +74,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, _self.SquadHandler, _mServer.MessageHandler, _inventedTechnologiesCollection] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, _self.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service

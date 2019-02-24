@@ -18,16 +18,16 @@ namespace Intrusion.Common
         // Initializes all professions.
         public constructor {
         	_mProfessions = [
-        		[ProfessionType.Infantry, "Infantry", -1, 1, 10, 0, false, "b_inf", "o_inf"] new Profession,
-			    [ProfessionType.Transport, "Transport Service", 1, 1, 1, 2, true, "b_service", "o_service"] new Profession,
-			    [ProfessionType.Fuel, "Fuel Service", 1, 1, 2, 2, true, "b_service", "o_service"] new Profession,
-			    [ProfessionType.Ammo, "Ammo Service, ", 1, 1, 2, 2, true, "b_service", "o_service"] new Profession,
-			    [ProfessionType.Repair, "Repair Service", 1, 1, 2, 2, true, "b_maint", "o_maint"] new Profession,
-			    [ProfessionType.Motorized, "Motorized Infantry", 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf"] new Profession,
-			    [ProfessionType.Mortars, "Mortars", 1, 1, 2, 2, false, "b_art", "o_art"] new Profession,
-			    [ProfessionType.AntiArmor, "Anti Armor", 2, 1, 2, 4, false, "b_support", "o_support"] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", 2, 3, 10, 10, true, "b_mech_inf", "o_mech_inf"] new Profession,
-			    [ProfessionType.Armored, "Armored Troops", 1, 2, 9, 3, true, "b_armor", "o_armor"] new Profession
+        		[ProfessionType.Infantry, "Infantry", Technology.None, -1, 1, 10, 0, false, "b_inf", "o_inf"] new Profession,
+			    [ProfessionType.Transport, "Transport Service", Technology.Transport, 1, 1, 1, 2, true, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, 1, 1, 2, 2, true, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, 1, 1, 2, 2, true, "b_service", "o_service"] new Profession,
+			    [ProfessionType.Repair, "Repair Service", Technology.Services, 1, 1, 2, 2, true, "b_maint", "o_maint"] new Profession,
+			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf"] new Profession,
+			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, 1, 1, 2, 2, false, "b_art", "o_art"] new Profession,
+			    [ProfessionType.AntiArmor, "Anti Armor", Technology.AntiArmor, 2, 1, 2, 4, false, "b_support", "o_support"] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.Mechanized, 2, 3, 10, 10, true, "b_mech_inf", "o_mech_inf"] new Profession,
+			    [ProfessionType.Armored, "Armored Troops", Technology.Armored, 1, 2, 9, 3, true, "b_armor", "o_armor"] new Profession
         	];
 		};
 		

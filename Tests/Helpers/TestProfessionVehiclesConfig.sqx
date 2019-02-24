@@ -20,14 +20,14 @@ namespace Intrusion.Tests.Helpers
 		// Creates a ProVehiclesConfig object.
 		public constructor {
 			_mProVehicles = [
-				[ProfessionType.Transport, 10, Technology.Transport] new ProfessionVehicleInfo,
-				[ProfessionType.Fuel, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Ammo, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Repair, 10, Technology.Services] new ProfessionVehicleInfo,
-				[ProfessionType.Motorized, 50, Technology.Motorized] new ProfessionVehicleInfo,
-				[ProfessionType.Mechanized, 80, Technology.Mechanized] new ProfessionVehicleInfo,
-				[ProfessionType.AntiArmor, 50, Technology.AntiArmor] new ProfessionVehicleInfo,
-				[ProfessionType.Armored, 120, Technology.Armored] new ProfessionVehicleInfo,
+				[ProfessionType.Transport, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Fuel, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Ammo, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 50] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 80] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 50] new ProfessionVehicleInfo,
+				[ProfessionType.Armored, 120] new ProfessionVehicleInfo,
 			];
 		};
 		
