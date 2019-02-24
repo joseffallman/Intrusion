@@ -14,11 +14,12 @@ namespace Intrusion.Server
 {
 	public class TargetHandler
 	{
-		private fields ["_mProfessionConfig" as IProfessionConfig];
+		private fields ["_mProfessionConfig" as IProfessionConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 	
-		public constructor("_professionConfig" as IProfessionConfig)
+		public constructor("_professionConfig" as IProfessionConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mProfessionConfig = _professionConfig;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 		};
 		
 		// Gets a unit's all enemy targets
@@ -33,7 +34,7 @@ namespace Intrusion.Server
 			
 			// Reveal all units to the unit
 			{
-				if (alive _x && !([side _unit, side _x] call BIS_fnc_sideIsFriendly)) then {
+				if (alive _x && !([side group _unit, side _x] call BIS_fnc_sideIsFriendly)) then {
 					if ([objNull, "VIEW"] checkVisibility [eyePos vehicle _unit, eyePos vehicle _x] > 0.1) then {
 						_unit reveal _x;
 						_unit reveal vehicle _x;
@@ -47,37 +48,47 @@ namespace Intrusion.Server
 			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
 	        
 			{
-			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar];
+			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar, "_profession" as Profession, "_technologyInvented" as Boolean];
 			    
 			    _percievedPos = _x select 0;
 			    _percievedSide = _x select 2;
 			    _targetUnit = _x select 4;
 			    _accuracy = _x select 5;
 			    
-				if (_targetUnit isKindOf "Man" && alive _targetUnit && { !([side _unit, _percievedSide] call BIS_fnc_sideIsFriendly) && _accuracy < 25 }) then
+				if (_targetUnit isKindOf "Man" && alive _targetUnit && { !([side group _unit, _percievedSide] call BIS_fnc_sideIsFriendly) && _accuracy < 25 }) then
 				{
 					_professionType = ProfessionType.Undefined;
 					
 					if (_unit knowsAbout _targetUnit > 1) then {
-						if (_unit knowsAbout _targetUnit > 3) then {
-
+						if (_unit knowsAbout _targetUnit > 3) then
+						{
 							_squad = [group _targetUnit] call _squadCollection.GetSquadByGroup;
 							
 							// If the profession type is a warrior type, the observing unit is guessing depending on nearby vehicles
 							if (!isNull _squad) then
 							{
-								// Check if the unit is near its profession vehicle
-								_targetUnitNearItsIntrusionVehicle = false;
-								{
-									if (_x.OwnerGroup == _squad.Group) then {
-										if (vehicle _targetUnit distance _x.Vehicle < 100 && alive _x.Vehicle) then {
-											_targetUnitNearItsIntrusionVehicle = true;
-										};
-									};
-								} foreach _intrusionVehicles as IntrusionVehicle;
+								_profession = [_professionType] call _mProfessionConfig.GetProfession;
+								_technologyInvented = [side group _unit, _profession.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
 								
-								if (_targetUnitNearItsIntrusionVehicle) then {
-									_professionType = _squad.ProfessionType;
+								if (_technologyInvented) then
+								{
+									// Check if the unit is near its profession vehicle
+									_targetUnitNearItsIntrusionVehicle = false;
+									
+									{
+										if (_x.OwnerGroup == _squad.Group) then {
+											if (vehicle _targetUnit distance _x.Vehicle < 100 && alive _x.Vehicle) then {
+												_targetUnitNearItsIntrusionVehicle = true;
+											};
+										};
+									} foreach _intrusionVehicles as IntrusionVehicle;
+								
+									if (_targetUnitNearItsIntrusionVehicle) then {
+										_professionType = _squad.ProfessionType;
+									};
+								}
+								else {
+									_professionType = ProfessionType.Infantry;
 								};
 							}
 							else { // If the unit has not selected a profession (and is outside a vehicle), it should be infantry.
@@ -85,7 +96,7 @@ namespace Intrusion.Server
 							};
 						};
 					
-						_resultingTargets pushBack [side _unit, _percievedPos, _percievedSide, _professionType, _targetUnit, _accuracy] new Target;
+						_resultingTargets pushBack [side group _unit, _percievedPos, _percievedSide, _professionType, _targetUnit, _accuracy] new Target;
 					};
 				};
 			} foreach _targets as Array;
@@ -100,7 +111,7 @@ namespace Intrusion.Server
 						_vehicleHeight = ((boundingBox vehicle _targetUnit) select 1) select 2;
 						_visibility = [objNull, "VIEW"] checkVisibility [eyePos _unit, [getPosASL vehicle _targetUnit select 0, getPosASL vehicle _targetUnit select 1, (getPosASL vehicle _targetUnit select 2) + _vehicleHeight + 0.5]];
 						
-						if (_visibility > 0.1 && { !([side _unit, side _targetUnit] call BIS_fnc_sideIsFriendly) }) then
+						if (_visibility > 0.1 && { !([side group _unit, side _targetUnit] call BIS_fnc_sideIsFriendly) }) then
 						{
 							_professionType = ProfessionType.Undefined;
 							_percievedSide = sideUnknown;
@@ -135,7 +146,7 @@ namespace Intrusion.Server
 							
 							};
 
-							_resultingTargets pushBack [side _unit, getPos vehicle _targetUnit, _percievedSide, _professionType, _targetUnit, 0] new Target;
+							_resultingTargets pushBack [side group _unit, getPos vehicle _targetUnit, _percievedSide, _professionType, _targetUnit, 0] new Target;
 						};
 					};
 				};

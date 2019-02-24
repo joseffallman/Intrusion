@@ -121,7 +121,7 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method PerformProduction {
-			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_professionVehicle" as ProfessionVehicleInfo, "_technologyInvented" as Boolean];
+			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
 			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
 
 			_tryOneMore = true;
@@ -134,16 +134,13 @@ namespace Intrusion.Server
 				_squad = [_mReservationQueue.CurrentReservation.Group] call _mSquadHandler.GetSquadByGroup;
 				
 				if (!isNull _squad) then {
-					_professionVehicle = [_squad.ProfessionType] call _mProfessionVehiclesConfig.GetVehicle;
-					_technologyInvented = [_professionVehicle.RequiredTechnology] call _mScientist.TechnologyIsInvented;
+					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
+					_technologyInvented = [_profession.RequiredTechnology] call _mScientist.TechnologyIsInvented;
 
 					if (!_technologyInvented) then {
 						call _mReservationQueue.MoveCurrentReservationLast;
 					}
 					else {
-						// Check how many vehicles that need to be created
-						_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
-						
 						if (_profession.MaxUnitsPerVehicle <= 0) then {
 							_vehiclesCount = 1;
 						}
