@@ -68,7 +68,11 @@ namespace Intrusion.Server
 							if (!isNull _squad) then
 							{
 								_profession = [_professionType] call _mProfessionConfig.GetProfession;
-								_technologyInvented = [side group _unit, _profession.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+								
+								_technologyInvented = true;								
+								if (!isNull _profession) then {
+									_technologyInvented = [side group _unit, _profession.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+								};
 								
 								if (_technologyInvented) then
 								{
