@@ -15,9 +15,8 @@ namespace Intrusion.Server
 	public class Target
 	{
 		// Creates a Target object.
-		public constructor {
-			params ["_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_percievedProfessionType" as ProfessionType, "_unit" as Object, "_accuracy" as Scalar];
-			
+		public constructor("_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_percievedProfessionType" as ProfessionType, "_unit" as Object, "_accuracy" as Scalar)
+		{
 			_self.ObservingSide = _observingSide;
 			_self.PercievedPos = _percievedPos;
 			_self.PercievedSide = _percievedSide;

@@ -80,7 +80,7 @@ gServer = new IntrusionServer;
 [] spawn {
 	sleep 5;
 	private ["_aiService" as AiService];
-	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new AiService;
+	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions] new AiService;
 	call _aiService.RunAsync;
 };
 

@@ -15,9 +15,8 @@ namespace Intrusion.Server
 	public class ProfessionVehicleInfo
 	{
 		// Creates a ProVehicleInfo object.
-		public constructor {
-			params ["_professionType" as ProfessionType, "_cost" as Scalar];
-			
+		public constructor("_professionType" as ProfessionType, "_cost" as Scalar)
+		{
 			_self.ProfessionType = _professionType;
 			_self.Cost = _cost;
 		};

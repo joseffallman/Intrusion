@@ -1,4 +1,3 @@
-call compile preprocessFileLineNumbers "Common\Enums\LogLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
@@ -34,6 +33,7 @@ using Intrusion.Common;
 
 // Configs
 call DebugConfig.Init;
+call ProfessionTypeMeta.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
 	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig] new CommonConfig;
