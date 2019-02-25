@@ -63,7 +63,7 @@ namespace Intrusion.Ai
 					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
 				};
 			};
-			
+
 			_professionType
 		};
 		
@@ -75,7 +75,7 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
 				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
-				_unitCount = (floor random 2) + 1;
+				_unitCount = (floor random 2) + 1 + 1;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount] new AiSquad;

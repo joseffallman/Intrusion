@@ -93,7 +93,6 @@ namespace Intrusion.Ai
 			} foreach _locations as ResourceLocation;
 			
 			_valuedLocations = [_valuedLocations] call Sorter.QSort;
-			player sideChat "Closest location: " + str (_valuedLocations select 0);
 			
 			if (_count > 3) then {
 				_count = 3;
