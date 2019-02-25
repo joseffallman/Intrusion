@@ -59,9 +59,10 @@ namespace Intrusion.Server
 		// This function aquires a lock during runtime.
 		// _group (Group): The group to change profession.
 		// _professionName (String): The name of the new profession.
-		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
+		// Returns (Boolean): true if the new profession was set, otherwise false.
+		public method Boolean SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
-			private ["_squad" as Squad];
+			private ["_squad" as Squad, "_professionSet" as Boolean];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
 			// Create a new squad and add (or update) it to the list of squads.
@@ -86,11 +87,15 @@ namespace Intrusion.Server
 				["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
 				
 				call _mSquadCollection.ReleaseLock;
+				_professionSet = true;
 			}
 			else {
 				// Tell the clients that the change was rejected
 				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is not available."]] call Remote.Invoke;
+				_professionSet = false;
 			};
+			
+			_professionSet
 		};
 		
 		// Gets a squad by group.
