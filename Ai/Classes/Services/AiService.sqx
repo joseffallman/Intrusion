@@ -54,7 +54,7 @@ namespace Intrusion.Ai
 			_ok = false;
 			
 			while { !_ok } do {
-				_professionType = selectRandom ProfessionTypeMeta.WarriorTypes;
+				_professionType = selectRandom ProfessionTypeMeta.AiWarriorTypes;
 				_profession = [_professionType] call _mProfessinConfig.GetProfession;
 				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
 				

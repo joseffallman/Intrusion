@@ -43,12 +43,20 @@ namespace Intrusion.Common
 				ProfessionType.Armored,
 			];
 			
+			_self.AiWarriorTypes = [
+				ProfessionType.Infantry,
+				ProfessionType.Motorized,
+				ProfessionType.Mechanized,
+				ProfessionType.Armored,
+			];
+			
 			_self.LastValue = ProfessionType.Armored;
 			_self.ProfessionTypeCount = _self.LastValue as Scalar;
 		};
 
-		public static property Array NonWarriorTypes { get; private set; };		
+		public static property Array NonWarriorTypes { get; private set; };
 		public static property Array WarriorTypes { get; private set; };		
+		public static property Array AiWarriorTypes { get; private set; };		
 		public static property ProfessionType LastValue { get; private set; };		
 		public static property Scalar ProfessionTypeCount { get; private set; };
 	};
