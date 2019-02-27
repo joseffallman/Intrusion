@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mOrderTime" as Scalar, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean];
 		
@@ -33,6 +33,7 @@ namespace Intrusion.Ai
 			_mVehicle = objNull;
 			_mCurrentActionTimeoutTime = time;
 			_mCurrentOrder = classNull;
+			_mOrderTime = 0;
 			_mUnit = objNull;
 			_mResourceLocation = classNull;
 			_mVehicleIsSquadVehicle = false;
@@ -104,6 +105,7 @@ namespace Intrusion.Ai
 				
 				_mResourceLocation = _location;
 				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+				_mOrderTime = time;
 			};
 			
 			// If there is no flags to capture, maybe one can chose to defend one instead.
@@ -162,32 +164,51 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		private method Boolean WholeGroupInVehicle()
+		{
+			scopeName "main";
+		
+			{
+				if (vehicle _x == _x) then {
+					false breakOut "main";
+				};
+			} foreach units _self.Group;
+			
+			true
+		};
+		
 		private method MakeNewDecision()
 		{
-			private ["_unit" as Object, "_nearestIntrusionVehicle" as IntrusionVehicle, "_waypoint" as Array];
+			private ["_nearestIntrusionVehicle" as IntrusionVehicle, "_waypoint" as Array];
 			
 			scopeName "main";
 
-			_unit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
-			_mUnit = _unit;
+			_mUnit = [_mCurrentOrder.TargetPosition] call _self.GetClosestTeamMember;
 			
-			if (!isNull _unit) then
+			if (!isNull _mUnit) then
 			{
 				// if within 25 meters of enemy flag, have a unit to get it.
-				if (!isNull _mResourceLocation && !_mVehicleIsSquadVehicle && { _mResourceLocation.Side != side _self.Group && vehicle _unit distance _mResourceLocation.Flag < 25 }) then
+				if (!isNull _mResourceLocation && { _mResourceLocation.Side != side _self.Group && vehicle _mUnit distance _mResourceLocation.Flag < 25 }) then
 				{
-					if (vehicle _unit != _unit) then {
-						call _self.ExitVehicle;
+					if (_mVehicleIsSquadVehicle && !isNull driver _mVehicle) then {
+						_mUnit = driver _mVehicle;
+						unassignVehicle _mUnit;
+						[_mUnit] orderGetIn false;
+					}
+					else {
+						if (vehicle _mUnit != _mUnit) then {
+							call _self.ExitVehicle;
+						};
 					};
 					
-					_unit doMove _mCurrentOrder.TargetPosition;
+					_mUnit doMove getPos _mResourceLocation.Flag;
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 					player sideChat "SingleUnitGettingFlag";
 					breakOut "main";
 				};
 				
 				// If squad is unmounted and have their intrusion vehicle, board it
-				if (vehicle _unit == _unit && _mVehicleIsSquadVehicle && alive _mVehicle) then {
+				if (!(call _self.WholeGroupInVehicle) && _mVehicleIsSquadVehicle && alive _mVehicle) then {
 					[_mVehicle] call _self.EnterVehicle;
 					[AiSquadState.BoardingVehicle, 30] call _self.SetState;
 					player sideChat "Entering vehicle";
@@ -195,16 +216,18 @@ namespace Intrusion.Ai
 				};
 				
 				// If within 100 meters from an order's target position, and in a vehicle, stop and get out
-				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 100 && vehicle _unit != _unit && !_mVehicleIsSquadVehicle) then
-				{
-					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-					[AiSquadState.ExitingVehicle, 20] call _self.SetState;
-					player sideChat "ExitingVehicle";
-					breakOut "main";
+				if (!_mVehicleIsSquadVehicle) then {
+					if (vehicle _mUnit distance _mCurrentOrder.TargetPosition < 100 && vehicle _mUnit != _mUnit) then
+					{
+						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+						[AiSquadState.ExitingVehicle, 20] call _self.SetState;
+						player sideChat "ExitingVehicle";
+						breakOut "main";
+					};
 				};
 
 				// If within 200 meters from enemy flag, or in a vehicle, then move towards the flag.
-				if (vehicle _unit distance _mCurrentOrder.TargetPosition < 200 || vehicle _unit != _unit) then
+				if (vehicle _mUnit distance _mCurrentOrder.TargetPosition < 200 || vehicle _mUnit != _mUnit) then
 				{
 					_waypoint = _self.Group addWaypoint [_mCurrentOrder.TargetPosition, 10];
 					_waypoint setWaypointSpeed "LIMITED";
@@ -292,8 +315,8 @@ namespace Intrusion.Ai
 		
 		private method BeamToBaseIfSquadVehicleIsThere()
 		{
-			private ["_vehicles" as Array, "_vehicle" as IntrusionVehicle, "_driverSeats" as Array, "_commanderSeats" as Array, "_gunnerSeats" as Array];
-			private ["_driverIn" as Boolean, "_commanderIn" as Boolean, "_gunnerIn" as Boolean, "_unit" as Object, "_basePos" as Array];
+			private ["_vehicles" as Array, "_vehicle" as IntrusionVehicle /*, "_driverSeats" as Array, "_commanderSeats" as Array, "_gunnerSeats" as Array */];
+			private [/* "_driverIn" as Boolean, "_commanderIn" as Boolean, "_gunnerIn" as Boolean, */ "_unit" as Object, "_basePos" as Array];
 			
 			_vehicles = [_self.Group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
 			
@@ -304,6 +327,7 @@ namespace Intrusion.Ai
 				_unit = [_basePos] call _self.GetClosestTeamMember;
 
 				if (((vehicle _unit) distance _basePos) > 200 && (_vehicle.Vehicle distance _basePos) < 150) then {
+					/*
 					_driverIn = false;
 					_commanderIn = false;
 					_gunnerIn = false;
@@ -311,10 +335,12 @@ namespace Intrusion.Ai
 					_driverSeats = fullCrew [_vehicle.Vehicle, "driver", true];
 					_commanderSeats = fullCrew [_vehicle.Vehicle, "commander", true];
 					_gunnerSeats = fullCrew [_vehicle.Vehicle, "gunner", true];
-					player sideChat "Beaming...";
+					*/
+
 					{
 						_x setPos _basePos;
 						
+						/*
 						if (!_driverIn && count _driverSeats > 0) then {
 							_x assignAsDriver _vehicle.Vehicle;
 							[_x] orderGetIn true;
@@ -338,14 +364,29 @@ namespace Intrusion.Ai
 								};
 							};
 						};
+						*/
 					} foreach units _self.Group;
 					
 					_mVehicle = _vehicle.Vehicle;
 					_mVehicleIsSquadVehicle = true;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-					[AiSquadState.BoardingVehicle, 120] call _self.SetState;
-					player sideChat "Boarding vehicle...";
+					[AiSquadState.Idle, 0] call _self.SetState;
+					call _self.CreateOrderOnOwnInitiative;
+					player sideChat "Beaming. Idle...";
 				};
+			};
+		};
+		
+		private method UpdateOrder()
+		{
+			if (isNull _mCurrentOrder) then {
+				call _self.CreateOrderOnOwnInitiative;
+			}
+			else {
+				// If flag at order target location is friendly, set a new order
+				if (_mResourceLocation.Side == side _self.Group) then {
+					call _self.CreateOrderOnOwnInitiative;
+				}
 			};
 		};
 		
@@ -355,9 +396,12 @@ namespace Intrusion.Ai
 			call _self.RespawnIfDead;
 			call _self.BeamToBaseIfSquadVehicleIsThere;
 			call _self.SetIdleIfActionTimedOut;
+			call _self.UpdateOrder;
 			
-			if (isNull _mCurrentOrder) then {
-				call _self.CreateOrderOnOwnInitiative;
+			if (_mState == AiSquadState.Idle && !isNull _mVehicle && { !alive _mVehicle }) then {
+				call _self.ExitVehicle;
+				_mVehicle = objNull;
+				_mVehicleIsSquadVehicle = false;
 			};
 			
 			switch (_mState) do {
