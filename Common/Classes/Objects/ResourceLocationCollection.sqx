@@ -67,5 +67,38 @@ namespace Intrusion.Common
 		
 			_count
 		};
+		
+		// Gets the resource location closest to a position.
+		// _pos (Array): The absolute position for the measure.
+		// Returns (ResourceLocation): The closest resource location. classNull if no one was found.
+		public method ResourceLocation GetClosestResourceLocation("_pos" as Array)
+		{
+			private ["_closestDistance" as Scalar, "_closestLocation" as ResourceLocation];
+			
+			_closestDistance = 9999999;
+			_closestLocation = classNull;
+			
+			{
+				if (_pos distance getMarkerPos _x.MarkerName < _closestDistance) then {
+					_closestLocation = _x;
+					_closestDistance = _pos distance getMarkerPos _x.MarkerName;
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+			
+			_closestLocation;
+		};
+		
+		public method ResourceLocation GetResourceLocationByMarkerName("_markerName" as String)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.MarkerName == _markerName) then {
+					_x breakOut "main";
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+			
+			classNull
+		};
 	};
 };
