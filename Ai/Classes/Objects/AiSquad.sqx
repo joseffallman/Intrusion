@@ -19,7 +19,7 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mOrderTime" as Scalar, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
-		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array];
+		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
@@ -38,6 +38,8 @@ namespace Intrusion.Ai
 			_mResourceLocation = classNull;
 			_mVehicleIsSquadVehicle = false;
 			_mMovingToPos = getMarkerPos _mMapMarkerInfo.BaseMarkerName;
+			_mLastPos = [];
+			_mLastPosTime = 0;
 			
 			for "_i" from 1 to _noOfUnits do {
 				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -50,7 +52,20 @@ namespace Intrusion.Ai
 		// Updates the tracking information of the squad.
 		private method UpdateTracking()
 		{
-			//_mLeaderPos = getPos vehicle leader _self.Group;
+			private ["_leaderPos" as Array];
+			
+			_leaderPos = getPos leader _self.Group;
+		
+			if (!(_mLastPos isEqualTo _leaderPos)) then {
+				_mLastPos = getPos leader _self.Group;
+				_mLastPosTime = time;
+			};
+			
+			if (time > _mLastPosTime + 60) then {
+				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				[AiSquadState.Idle, 0] call _self.SetState;
+				player sideChat "Movement timeout. Idle...";
+			};
 		};
 		
 		// Gets the team member closest to a position.
@@ -80,39 +95,55 @@ namespace Intrusion.Ai
 			waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
 			
 			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
-			_locations = call _resourceLocationCollection.GetResourceLocations;
-			_count = 0;
-			
-			// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
-			_valuedLocations = [];
-			{
-				_location = _x;
+
+			if (MissionCounterService.RemainingMinutes <= 12) then {
+				player sideChat "less than 12!";
 				
-				if (_location.Side != side _self.Group) then {
-					_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
-					_count = _count + 1;
+				_location = ResourceLocationHandler.WinnersLocation;
+				player sideChat str _location;
+				
+				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
+					_mResourceLocation = _location;
+					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+					_mOrderTime = time;
+					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+					player sideChat "End location order!";
 				};
-			} foreach _locations as ResourceLocation;
-			
-			_valuedLocations = [_valuedLocations] call Sorter.QSort;
-			
-			if (_count > 3) then {
-				_count = 3;
-			};
-			
-			if (_count > 0) then {
-				_index = floor random _count;
-				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+			}
+			else {
+				// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
 				
-				_mResourceLocation = _location;
-				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-				_mOrderTime = time;
-				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				_locations = call _resourceLocationCollection.GetResourceLocations;
+				_count = 0;
+				_valuedLocations = [];
 				
-				[getPos _location.Flag] call Sqx.Markers.Marker.CreateIconMarker;
+				{
+					_location = _x;
+					
+					if (_location.Side != side _self.Group) then {
+						_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
+						_count = _count + 1;
+					};
+				} foreach _locations as ResourceLocation;
+				
+				_valuedLocations = [_valuedLocations] call Sorter.QSort;
+				
+				if (_count > 3) then {
+					_count = 3;
+				};
+				
+				if (_count > 0) then {
+					_index = floor random _count;
+					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+					
+					_mResourceLocation = _location;
+					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+					_mOrderTime = time;
+					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				};
+				
+				// If there is no flags to capture, maybe one can chose to defend one instead.
 			};
-			
-			// If there is no flags to capture, maybe one can chose to defend one instead.
 		};
 		
 		private method ExitVehicle()
@@ -246,7 +277,7 @@ namespace Intrusion.Ai
 					};
 					
 					_mUnit doMove getPos _mResourceLocation.Flag;
-					_mUnit setBehaviour "CARELESS";
+					_mUnit setBehaviour "AWARE";
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 					player sideChat "SingleUnitGettingFlag";
 					breakOut "main";
@@ -342,7 +373,7 @@ namespace Intrusion.Ai
 			if (_mUnit distance _mResourceLocation.Flag < 5) then {
 				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
 					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
-					_mCurrentOrder = classNull;
+					//_mCurrentOrder = classNull;
 				};
 				
 				[AiSquadState.Idle, 0] call _self.SetState;
@@ -393,7 +424,7 @@ namespace Intrusion.Ai
 		
 		private method RespawnIfDead()
 		{
-			private ["_alive" as Boolean, "_noOfUnits" as Scalar];
+			private ["_alive" as Boolean, "_oldUnits" as Array];
 			
 			_alive = true;
 			if ({canMove _x} count units _self.Group == 0) then {
@@ -401,17 +432,17 @@ namespace Intrusion.Ai
 			};
 			
 			if (!_alive) then {
-				_noOfUnits = count units _self.Group;
+				_oldUnits = units _self.Group;
+				
+				for "_i" from 1 to (count _oldUnits) do {
+					_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+				};
 				
 				{
 					_x setDamage 1
-				} foreach units _self.Group;
+				} foreach _oldUnits;
 				
-				(units _self.Group) joinSilent grpNull;
-				
-				for "_i" from 1 to _noOfUnits do {
-					_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
-				};
+				(_oldUnits) joinSilent grpNull;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				_mState = AiSquadState.Idle;
@@ -480,16 +511,21 @@ namespace Intrusion.Ai
 		
 		private method UpdateOrder()
 		{
-			if (isNull _mCurrentOrder) then {
+			if (MissionCounterService.RemainingMinutes <= 12) then {
 				call _self.CreateOrderOnOwnInitiative;
-				player sideChat "new order #1.";
 			}
 			else {
-				// If flag at order target location is friendly, set a new order
-				if (_mResourceLocation.Side == side _self.Group) then {
+				if (isNull _mCurrentOrder) then {
 					call _self.CreateOrderOnOwnInitiative;
-					player sideChat "new order #2.";
+					player sideChat "new order #1.";
 				}
+				else {
+					// If flag at order target location is friendly, set a new order
+					if (_mResourceLocation.Side == side _self.Group) then {
+						call _self.CreateOrderOnOwnInitiative;
+						player sideChat "new order #2.";
+					}
+				};
 			};
 		};
 		
@@ -506,11 +542,15 @@ namespace Intrusion.Ai
 		// Gives the AI squad an opportunity to act.
 		public method Act()
 		{
+			call _self.UpdateTracking;
 			call _self.UpdateTargetResourceLocation;
 			call _self.RespawnIfDead;
 			call _self.SetIdleIfActionTimedOut;
-			call _self.BeamToBaseIfSquadVehicleIsThere;
-			call _self.UpdateOrder;
+			
+			if (_mState == AiSquadState.Idle) then {
+				call _self.BeamToBaseIfSquadVehicleIsThere;
+				call _self.UpdateOrder;
+			};
 			
 			if (_mState == AiSquadState.Idle && !isNull _mVehicle && { !alive _mVehicle }) then {
 				call _self.ExitVehicle;

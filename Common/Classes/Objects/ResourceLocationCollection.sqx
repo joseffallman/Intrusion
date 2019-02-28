@@ -100,5 +100,18 @@ namespace Intrusion.Common
 			
 			classNull
 		};
+		
+		public method ResourceLocation GetWinnersLocation()
+		{
+			scopeName "main";
+			
+			{
+				if (_x.IsWinnersLocation) then {
+					_x breakOut "main";
+				};
+			} foreach _mResourceLocations as ResourceLocation;
+			
+			classNull
+		};
 	};
 };

@@ -19,34 +19,36 @@ namespace Intrusion.Server
 	
 		// Gets whether the mission is running or not.
 		public static property Boolean MissionIsRunning { get; private set; };
+		
+		public static property Scalar RemainingMinutes { get; private set; };
 
 		// Performs the mission time count down, and informs all clients about remaining time
 		// and when mission ends.
         private static method Run {
-			private ["_endDayTime" as Scalar, "_remainingMinutes" as Scalar, "_lastReportMinute" as Scalar];
+			private ["_endDayTime" as Scalar, "_lastReportMinute" as Scalar];
 			
 			_endDayTime = dayTime + (_mGameplayConfig.MatchLengthMinutes / 60);
 			_lastReportMinute = _mGameplayConfig.MatchLengthMinutes;
 
 			while { daytime < _endDayTime } do {
-				_remainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
+				_self.RemainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
 				
 				// If a report is not done for this minute
-				if (_lastReportMinute != _remainingMinutes) then
+				if (_lastReportMinute != _self.RemainingMinutes) then
 				{
 					// If this minute is a reporting minute, report remaining time to players.
-					if (_remainingMinutes == 1 || 
-						_remainingMinutes == 2 || 
-						_remainingMinutes == 3 || 
-						_remainingMinutes == 4 || 
-						_remainingMinutes == 5 ||
-						_remainingMinutes == 10 ||
-						_remainingMinutes == 15 ||
-						_remainingMinutes == 20 ||
-						_remainingMinutes % 30 == 0) then
+					if (_self.RemainingMinutes == 1 || 
+						_self.RemainingMinutes == 2 || 
+						_self.RemainingMinutes == 3 || 
+						_self.RemainingMinutes == 4 || 
+						_self.RemainingMinutes == 5 ||
+						_self.RemainingMinutes == 10 ||
+						_self.RemainingMinutes == 15 ||
+						_self.RemainingMinutes == 20 ||
+						_self.RemainingMinutes % 30 == 0) then
 					{
-						["ClientMessageHandler.ShowHint", ["Mission ends in " + str _remainingMinutes + " minutes."]] call Remote.Invoke;
-						_lastReportMinute = _remainingMinutes;
+						["ClientMessageHandler.ShowHint", ["Mission ends in " + str _self.RemainingMinutes + " minutes."]] call Remote.Invoke;
+						_lastReportMinute = _self.RemainingMinutes;
 					};
 				};
 				
@@ -60,6 +62,7 @@ namespace Intrusion.Server
 		// Starts the mission
 		public static method RunAsync("_gameplayConfig" as IGameplayConfig) {
 			_mGameplayConfig = _gameplayConfig;
+			_self.RemainingMinutes = _gameplayConfig.MatchLengthMinutes;
         	_self.MissionIsRunning = true;
         	
 			[] spawn _self.Run;
