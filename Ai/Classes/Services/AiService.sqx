@@ -75,14 +75,14 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
 				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
-				_unitCount = 2; //(floor random 2) + 1;
+				_unitCount = (floor random 3) + 1;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount] new AiSquad;
 					_mSquads pushBack _aiSquad;
 					
 					_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
-					_professionType = ProfessionType.Motorized;
+					//_professionType = ProfessionType.Motorized;
 					[_aiSquad.Group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;

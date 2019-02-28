@@ -107,6 +107,7 @@ namespace Intrusion.Ai
 				_mResourceLocation = _location;
 				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
 				_mOrderTime = time;
+				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				
 				[getPos _location.Flag] call Sqx.Markers.Marker.CreateIconMarker;
 			};
@@ -285,17 +286,32 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 				
-				// If there is a vehicle nearby and no enemies, then board it.
+				// If there is a vehicle nearby and no enemies, and group fit, then board it.
 				
 				if (!_seeEnemies) then {
 					_nearestIntrusionVehicle = [side _self.Group, getPos leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
 					
 					if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
-						[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
-						[AiSquadState.BoardingVehicle, 60] call _self.SetState;
-						player sideChat "BoardingVehicle";
-						breakOut "main";
+						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {
+							[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
+							[AiSquadState.BoardingVehicle, 60] call _self.SetState;
+							player sideChat "BoardingVehicle";
+							breakOut "main";
+						};
 					};
+				};
+				
+				// If within 1500 meters from enemy flag, then move towards the flag.
+				
+				if (vehicle _mUnit distance _mCurrentOrder.TargetPosition < 1500) then
+				{
+					_mMovingToPos = _mCurrentOrder.TargetPosition;
+					_waypoint = _self.Group addWaypoint [_mMovingToPos, 10];
+					_waypoint setWaypointSpeed "NORMAL";
+					_self.Group setSpeedMode "NORMAL";
+					[AiSquadState.Moving, 600] call _self.SetState;
+					player sideChat "Moving #3";
+					breakOut "main";
 				};
 				
 				// Else: Move to the car park.
@@ -308,6 +324,17 @@ namespace Intrusion.Ai
 				player sideChat "Moving #2";
 				breakOut "main";
 			};
+		};
+		
+		private method Boolean GroupFitInVehicle("_vehicle" as Object)
+		{
+			private ["_crewPlacesCount" as Scalar, "_groupFit" as Boolean];
+			
+			_crewPlacesCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
+			
+			_groupFit = count units _self.Group >= _crewPlacesCount;
+			
+			_groupFit
 		};
 		
 		private method CheckIfFinishedSingleUnitGettingFlag()
