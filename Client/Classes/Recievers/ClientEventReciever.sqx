@@ -24,7 +24,7 @@ namespace Intrusion.Client
 			if (_playerUid == getPlayerUID player) then {
 				ClientState.IsBrigadeLeader = true;
 				
-				if (!PublicVariableHandler.OrderCollectionHasValue) then {
+				if (!call PublicVariableHandler.OrderCollectionHasValue) then {
 					_orderCollection = new OrderCollection;
 					[_orderCollection] call PublicVariableHandler.BroadcastOrderCollection;
 				};
