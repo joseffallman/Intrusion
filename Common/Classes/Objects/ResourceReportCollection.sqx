@@ -21,15 +21,16 @@ namespace Intrusion.Common
 		// Updates a resource report
 		public method AddOrUpdateResourceReport("_resourceReport" as ResourceReport)
 		{
-			private ["_existingResourceReport" as ResourceReport];
+			private ["_existingResourceReport" as ResourceReport, "_listResourceReport" as ResourceReport];
 			
 			_existingResourceReport = classNull;
 			
 			// Update existing side's resource report
 			for "_i" from 0 to count _mResourceReports - 1 do {
-				_existingResourceReport = _mResourceReports select _i;
+				_listResourceReport = _mResourceReports select _i;
 				
-				if (_existingResourceReport.Side == _resourceReport.Side) then {
+				if (_listResourceReport.Side == _resourceReport.Side) then {
+					_existingResourceReport = _listResourceReport;
 					_mResourceReports set [_i, _resourceReport];
 				};
 			};

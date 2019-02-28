@@ -34,7 +34,7 @@ namespace Intrusion.Client
 				_mBrigadeInfoCtrl ctrlSetPosition [safeZoneX, safeZoneY, safeZoneW, safeZoneH];
 				_mBrigadeInfoCtrl ctrlCommit 0;
 			};
-			
+
 			_technologyInfo = [_resourceReport.Research] call _mTechnologyConfig.GetNextTechnology;
 			
 			if (!isNull _technologyInfo) then {
