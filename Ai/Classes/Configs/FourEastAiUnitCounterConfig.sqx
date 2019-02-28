@@ -14,7 +14,7 @@ namespace Intrusion.Ai
 		// Gets the number of AI units allowed for a side.
 		public method Scalar GetAllowedUnitCount("_side" as Side)
 		{
-			if (_side == east) then { 0 } else { 2 };
+			if (_side == east) then { 10 } else { 10 };
 		};
 	};
 };

@@ -75,7 +75,7 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
 				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
-				_unitCount = (floor random 3) + 1;
+				_unitCount = (floor random 2) + 1;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount] new AiSquad;
@@ -96,7 +96,7 @@ namespace Intrusion.Ai
 				
 				{
 					call _x.Act;
-					sleep 1;
+					sleep 0.1;
 				} foreach _mSquads as AiSquad
 
 				sleep 1;

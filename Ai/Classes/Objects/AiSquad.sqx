@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mOrderTime" as Scalar, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar];
 		
@@ -33,7 +33,6 @@ namespace Intrusion.Ai
 			_mVehicle = objNull;
 			_mCurrentActionTimeoutTime = time;
 			_mCurrentOrder = classNull;
-			_mOrderTime = 0;
 			_mUnit = objNull;
 			_mResourceLocation = classNull;
 			_mVehicleIsSquadVehicle = false;
@@ -105,7 +104,7 @@ namespace Intrusion.Ai
 				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 					_mResourceLocation = _location;
 					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-					_mOrderTime = time;
+					//_mOrderTime = time;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 					player sideChat "End location order!";
 				};
@@ -138,7 +137,7 @@ namespace Intrusion.Ai
 					
 					_mResourceLocation = _location;
 					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-					_mOrderTime = time;
+					//_mOrderTime = time;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				};
 				
@@ -257,7 +256,7 @@ namespace Intrusion.Ai
 					};
 				};
 				
-				// if within 30 meters of enemy flag, have a unit to get it.
+				// if within 30 meters of enemy flag, have a unit go get it.
 				
 				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 				_location = [getPos vehicle _mUnit] call _resourceLocationCollection.GetClosestResourceLocation;
@@ -280,16 +279,31 @@ namespace Intrusion.Ai
 					_mUnit setBehaviour "AWARE";
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 					player sideChat "SingleUnitGettingFlag";
+					
+					[_mUnit, getMarkerPos _mResourceLocation.MarkerName] spawn {
+						params ["_unit" as Object, "_pos" as Array];
+						private ["_timeoutTime" as Scalar];
+						
+						_timeoutTime = time + 30;
+						waitUntil { getPos vehicle _unit distance _pos < 5 || time > _timeoutTime };
+						
+						if (getPos vehicle _unit distance _pos < 5) then {
+							doStop _unit;
+						};
+					};
+					
 					breakOut "main";
 				};
 				
 				// If squad is unmounted and have their intrusion vehicle, board it
 				
 				if (!(call _self.WholeGroupInVehicle) && _mVehicleIsSquadVehicle && alive _mVehicle) then {
-					[_mVehicle] call _self.EnterVehicle;
-					[AiSquadState.BoardingVehicle, 30] call _self.SetState;
-					player sideChat "Entering vehicle";
-					breakOut "main";
+					if ([_mVehicle] call _self.GroupFitInVehicle) then {
+						[_mVehicle] call _self.EnterVehicle;
+						[AiSquadState.BoardingVehicle, 30] call _self.SetState;
+						player sideChat "Entering vehicle";
+						breakOut "main";
+					};
 				};
 				
 				// If within 100 meters from any order's target position, and in a vehicle, stop and get out
@@ -311,6 +325,7 @@ namespace Intrusion.Ai
 					_mMovingToPos = _mCurrentOrder.TargetPosition;
 					_waypoint = _self.Group addWaypoint [_mMovingToPos, 10];
 					_waypoint setWaypointSpeed "LIMITED";
+					_waypoint setWaypointType "HOLD";
 					_self.Group setSpeedMode "LIMITED";
 					[AiSquadState.Moving, 120] call _self.SetState;
 					player sideChat "Moving";
@@ -339,6 +354,7 @@ namespace Intrusion.Ai
 					_mMovingToPos = _mCurrentOrder.TargetPosition;
 					_waypoint = _self.Group addWaypoint [_mMovingToPos, 10];
 					_waypoint setWaypointSpeed "NORMAL";
+					_waypoint setWaypointType "HOLD";
 					_self.Group setSpeedMode "NORMAL";
 					[AiSquadState.Moving, 600] call _self.SetState;
 					player sideChat "Moving #3";
@@ -350,6 +366,7 @@ namespace Intrusion.Ai
 				_mMovingToPos = getMarkerPos _mMapMarkerInfo.CarParkMarkerName;
 				_waypoint = _self.Group addWaypoint [_mMovingToPos, 25];
 				_waypoint setWaypointSpeed "NORMAL";
+				_waypoint setWaypointType "HOLD";
 				_self.Group setSpeedMode "NORMAL";
 				[AiSquadState.Moving, 120] call _self.SetState;
 				player sideChat "Moving #2";
@@ -362,23 +379,27 @@ namespace Intrusion.Ai
 			private ["_crewPlacesCount" as Scalar, "_groupFit" as Boolean];
 			
 			_crewPlacesCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
-			
-			_groupFit = count units _self.Group >= _crewPlacesCount;
+			_groupFit = count units _self.Group <= _crewPlacesCount;
 			
 			_groupFit
 		};
 		
 		private method CheckIfFinishedSingleUnitGettingFlag()
 		{
-			if (_mUnit distance _mResourceLocation.Flag < 5) then {
-				if (alive _mUnit && _mResourceLocation.Side != side _self.Group) then {
-					[_mResourceLocation.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
-					//_mCurrentOrder = classNull;
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation];
+			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+			_location = [getPos vehicle _mUnit] call _resourceLocationCollection.GetClosestResourceLocation;
+
+			{
+				if (_x distance2D _location.Flag < 10) then {
+					if (alive _x && _location.Side != side _self.Group) then {
+						[_location.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
+					};
+					
+					[AiSquadState.Idle, 0] call _self.SetState;
+					player sideChat "Idle";
 				};
-				
-				[AiSquadState.Idle, 0] call _self.SetState;
-				player sideChat "Idle";
-			};
+			} foreach units _self.Group;
 		};
 		
 		private method CheckIfFinishedMoving()
