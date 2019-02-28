@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={2648.7444,105.82249,5636.064};
-		dir[]={0.73801476,-0.55303484,0.38680097};
-		up[]={0.48992214,0.83309376,0.25677255};
-		aside[]={0.46424946,-1.1463271e-007,-0.88577992};
+		pos[]={3114.9482,9.2580624,6404.1714};
+		dir[]={0.16276278,-0.60056144,-0.78284371};
+		up[]={0.12225619,0.79955226,-0.58801794};
+		aside[]={-0.97906739,-2.1861342e-007,-0.2035594};
 	};
 };
 binarizationWanted=0;
@@ -306,11 +306,11 @@ class Mission
 		class Item4
 		{
 			dataType="Marker";
-			position[]={2806.1826,3.1160707e+015,5697.2583};
+			position[]={2789.1099,3.1160707e+015,5706.855};
 			name="INT_CarParkEast";
 			type="Empty";
 			fillName="Border";
-			angle=311.08463;
+			angle=59.998989;
 			drawBorder=1;
 			id=6;
 			atlOffset=3.1160707e+015;
@@ -490,7 +490,6 @@ class Mission
 					{
 						skill=0.60000002;
 						name="e1";
-						isPlayer=1;
 						isPlayable=1;
 					};
 					id=26;
@@ -1613,8 +1612,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={3115.4993,1.9355941,6391.5005};
-						angles[]={0.23081207,3.8831589,6.1934276};
+						position[]={3115.499,1.9355011,6391.501};
+						angles[]={0.23081979,3.8831656,6.1934228};
 					};
 					side="West";
 					flags=6;
@@ -1623,10 +1622,12 @@ class Mission
 						skill=0.60000002;
 						init="this addWeapon ""binocular""";
 						name="p1";
+						isPlayer=1;
 						isPlayable=1;
 					};
 					id=408;
 					type="B_Soldier_F";
+					atlOffset=-2.3841858e-007;
 					class CustomAttributes
 					{
 						class Attribute0
@@ -1675,6 +1676,7 @@ class Mission
 			{
 			};
 			id=407;
+			atlOffset=-2.3841858e-007;
 		};
 		class Item49
 		{
