@@ -27,7 +27,7 @@ namespace Intrusion.Server
 		// Marks all observations in the observation collection as deleted.
 		private static method MarkObservationsAsDeleted() {
 			{
-				if (call Functions.Time > _x.Time + 30) then {
+				if (call Functions.Time > _x.Time + 25) then {
 					_x.MarkedAsDeleted = true;
 				};
 			} foreach _mObservations as Observation;

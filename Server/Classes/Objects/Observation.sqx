@@ -76,8 +76,8 @@ namespace Intrusion.Server
 			else {
 				_isIdentifiedAsEnemy = [_self.ObservingSide, _self.PercievedSide] call BIS_fnc_sideIsEnemy;
 			};
-		
-			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, _self.Time > 10] new MapObservation
+
+			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, call Functions.Time > _self.Time + 10] new MapObservation
 		};
 	};
 };
