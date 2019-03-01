@@ -19,13 +19,14 @@ namespace Intrusion.Common
 		// _observingSide (Side): The observing side.
 		// _isIdentifiedAsEnemy (Boolean): Whether the target is identified as an enemy or not.
 		// _professionType (ProfessionType): The supposed profession type.
-		public constructor("_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType)
+		public constructor("_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType, "_isPercieved" as Boolean)
 		{
 			_self.Id = _id;
 			_self.ObservingSide = _observingSide;
 			_self.PercievedPos = _percievedPos;
 			_self.IsIdentifiedAsEnemy = _isIdentifiedAsEnemy;
 			_self.PercievedProfessionType = _percievedProfessionType;
+			_self.IsPercieved = _isPercieved;
 		};
 		
 		// Gets the unique and persistent ID of the observation.
@@ -42,5 +43,8 @@ namespace Intrusion.Common
 		
 		// Gets or sets the profession type that the observation is assumed to have.
 		public property ProfessionType PercievedProfessionType { get; set; };
+		
+		// Gets or sets whether this observation is currently looked at, or if it is just percieved (recently out of sight).
+		public property Boolean IsPercieved { get; set; };
 	};
 };

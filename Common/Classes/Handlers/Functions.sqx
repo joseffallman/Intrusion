@@ -1,0 +1,27 @@
+/*
+ * Name:	Functions
+ * Date:	2019-03-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A common function library.
+ */
+namespace Intrusion.Common
+{
+	public class Functions
+	{
+		// Gets the correct time since mission start, no matter SP or MP.
+		// Returns time since mission start in seconds.
+		public static method Scalar Time()
+		{
+			private _time = time;
+			
+			if (isMultiplayer) then {
+				_time = serverTime;	
+			};
+			
+			_time
+		};
+	};
+};
