@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3072.0239,29.833498,5866.7852};
-		dir[]={-0.79780191,-0.39482498,0.45575824};
-		up[]={-0.34285358,0.91873831,0.19586165};
-		aside[]={0.49605694,-8.623465e-008,0.86834198};
+		pos[]={3112.2734,22.332581,6415.9482};
+		dir[]={0.16569348,-0.39686242,-0.90280724};
+		up[]={0.071647301,0.91785854,-0.39038154};
+		aside[]={-0.98357868,-4.0033774e-007,-0.18051696};
 	};
 };
 binarizationWanted=0;
@@ -275,24 +275,23 @@ class Mission
 		class Item1
 		{
 			dataType="Marker";
-			position[]={2952.366,12.291,6206.0332};
+			position[]={2983.2876,4.4208336,5940.2842};
 			name="TECHLAB1";
-			text="Church (Tech Lab)";
+			text="Desert High (Tech Lab)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
-			atlOffset=-16.044489;
+			atlOffset=0.93083358;
 		};
 		class Item2
 		{
 			dataType="Marker";
-			position[]={2824.616,-1.725,6121.4829};
+			position[]={2824.4502,2.4902391,6119.5371};
 			name="TECHLAB3";
-			text="Marina (Tech Lab)";
+			text="Agia Marina (Tech Lab)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=4;
-			atlOffset=-4.9540386;
 		};
 		class Item3
 		{
@@ -319,24 +318,24 @@ class Mission
 		class Item5
 		{
 			dataType="Marker";
-			position[]={3267.502,45.557434,5836.1816};
+			position[]={3266.4133,66.372742,5784.2534};
 			name="FACTORY1";
 			text="Military Range (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=8;
-			atlOffset=41.566776;
+			atlOffset=60.948776;
 		};
 		class Item6
 		{
 			dataType="Marker";
-			position[]={3037.0391,82.774002,5879.8809};
+			position[]={3056.1487,90.472557,6076.2285};
 			name="FACTORY2";
-			text="Rogain's Industry Inc (Factory)";
+			text="Camp Rogain (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=78.337036;
+			atlOffset=78.497643;
 		};
 		class Item7
 		{
@@ -351,24 +350,24 @@ class Mission
 		class Item8
 		{
 			dataType="Marker";
-			position[]={2873.02,68.732002,5936.707};
+			position[]={2854.6973,67.758713,5928.7378};
 			name="TECHLAB2";
-			text="Hidden Corner (Tech Lab)";
+			text="Nist's High (Tech Lab)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=14;
-			atlOffset=65.636124;
+			atlOffset=64.905083;
 		};
 		class Item9
 		{
 			dataType="Marker";
-			position[]={3048.084,124.284,6076.625};
+			position[]={3060.7234,86.891281,6008.5};
 			name="FACTORY3";
-			text="Stratis Weaponry Inc (Factory)";
+			text="Stratis Air Base (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=16;
-			atlOffset=112.50826;
+			atlOffset=82.92099;
 		};
 		class Item10
 		{
