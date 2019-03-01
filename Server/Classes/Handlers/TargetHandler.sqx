@@ -78,16 +78,19 @@ namespace Intrusion.Server
 								{
 									// Check if the unit is near its profession vehicle
 									_targetUnitNearItsIntrusionVehicle = false;
+									_targetUnitHasIntrusionVehicle = false;
 									
 									{
 										if (_x.OwnerGroup == _squad.Group) then {
+											_targetUnitHasIntrusionVehicle = true;
+											
 											if (vehicle _targetUnit distance _x.Vehicle < 30 && alive _x.Vehicle) then {
 												_targetUnitNearItsIntrusionVehicle = true;
 											};
 										};
 									} foreach _intrusionVehicles as IntrusionVehicle;
 								
-									if (_targetUnitNearItsIntrusionVehicle) then {
+									if (!_targetUnitHasIntrusionVehicle || _targetUnitNearItsIntrusionVehicle) then {
 										_professionType = _squad.ProfessionType;
 									};
 								}
