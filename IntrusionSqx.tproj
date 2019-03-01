@@ -102,7 +102,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Dialogs" IsExpanded="false" FileName="Client\Classes\Dialogs">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Dialogs" IsExpanded="true" FileName="Client\Classes\Dialogs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MoveBaseDialog.sqx" IsExpanded="false" FileName="Client\Classes\Dialogs\MoveBaseDialog.sqx">
@@ -118,7 +118,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TutorialDialog.sqx" IsExpanded="false" FileName="Client\Classes\Dialogs\TutorialDialog.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>
@@ -533,13 +533,13 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Server" IsExpanded="true" FileName="Server">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Server" IsExpanded="false" FileName="Server">
         <IsSelected>false</IsSelected>
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Server\Classes">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="false" FileName="Server\Classes">
             <IsSelected>false</IsSelected>
             <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="true" FileName="Server\Classes\Configs">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="false" FileName="Server\Classes\Configs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces">
@@ -639,7 +639,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Server\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Server\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Objects\Interfaces">

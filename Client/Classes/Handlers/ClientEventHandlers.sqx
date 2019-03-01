@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Communication;
+using Intrusion.Common;
 
 namespace Intrusion.Client
 {
@@ -24,8 +25,8 @@ namespace Intrusion.Client
 					[gCommonConfig.MapMarkers] call JipService.StartAsync;
 				}
 				else {
-						cutText ["","BLACK IN", 1];
-						
+					cutText ["","BLACK IN", 1];
+					
 					// Show the Welcome tutorial
 					[] spawn {
 						sleep 1;
@@ -42,6 +43,12 @@ namespace Intrusion.Client
 			addMissionEventHandler ["MapSingleClick", {
 				params ["_units" as Array, "_pos" as Array, "_alt" as Boolean, "_shift" as Boolean];
 				[_pos] call gClient.GiveOrderService.SendMapClick;
+			}];
+			
+			player addEventHandler ["Respawn", {
+				params ["_player" as Object, "_corpse"];
+				
+				call IntrusionMenuHandler.ShowAction;
 			}];
 		};
 	};

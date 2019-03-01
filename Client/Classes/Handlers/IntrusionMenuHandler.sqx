@@ -19,6 +19,11 @@ namespace Intrusion.Client
         	call _self.UpdateVisibleOptions;
 			call _self.BuildIntrusionMenu;
 			
+			call _self.ShowAction;
+		};
+		
+		public static method ShowAction()
+		{
 			player addAction ["Open Intrusion Menu", { call IntrusionMenuHandler.Open; }];
 		};
 		
