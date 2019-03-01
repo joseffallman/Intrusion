@@ -99,7 +99,6 @@ namespace Intrusion.Ai
 				player sideChat "less than 12!";
 				
 				_location = ResourceLocationHandler.WinnersLocation;
-				player sideChat str _location;
 				
 				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 					_mResourceLocation = _location;
