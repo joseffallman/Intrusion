@@ -67,7 +67,7 @@ namespace Intrusion.Server
 							// If the profession type is a warrior type, the observing unit is guessing depending on nearby vehicles
 							if (!isNull _squad) then
 							{
-								_profession = [_professionType] call _mProfessionConfig.GetProfession;
+								_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 								
 								_technologyInvented = true;								
 								if (!isNull _profession) then {

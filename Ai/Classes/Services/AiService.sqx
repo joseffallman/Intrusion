@@ -82,7 +82,7 @@ namespace Intrusion.Ai
 					_mSquads pushBack _aiSquad;
 					
 					_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
-					//_professionType = ProfessionType.Motorized;
+					//_professionType = ProfessionType.Armored;
 					[_aiSquad.Group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
