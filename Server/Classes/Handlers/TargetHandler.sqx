@@ -81,7 +81,7 @@ namespace Intrusion.Server
 									
 									{
 										if (_x.OwnerGroup == _squad.Group) then {
-											if (vehicle _targetUnit distance _x.Vehicle < 100 && alive _x.Vehicle) then {
+											if (vehicle _targetUnit distance _x.Vehicle < 30 && alive _x.Vehicle) then {
 												_targetUnitNearItsIntrusionVehicle = true;
 											};
 										};
