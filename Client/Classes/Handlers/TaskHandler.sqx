@@ -67,7 +67,10 @@ namespace Intrusion.Client
 				
 				if (!isNull _orderCollection) then {
 					_order = [group player] call _orderCollection.GetOrderByGroup;
-					[_order] call _self.CreateTaskFromOrder;
+					
+					if (!isNull _order) then {
+						[_order] call _self.CreateTaskFromOrder;
+					};
 				};
 			};
 		};
