@@ -60,6 +60,8 @@ namespace Intrusion.Client
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 			
 			if (_player == player) then {
+				ClientState.MyGroup = _newGroup;
+				ClientState.IsSquadLeader = false;
 				call gClient.TaskHandler.UpdateWithGroupTask;
 			};
 		};
@@ -71,6 +73,8 @@ namespace Intrusion.Client
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 			
 			if (_player == player) then {
+				ClientState.MyGroup = group player;
+				ClientState.IsSquadLeader = true;
 				call gClient.TaskHandler.DeleteAllTasksAndReset;
 			};
 		};
@@ -107,9 +111,6 @@ namespace Intrusion.Client
 			
 			removeAllActions _unit;
 			
-			player sideChat str (_killer == player);
-			player sideChat str ([_side, side _killer] call BIS_fnc_sideIsFriendly);
-			
 			if (_killer == player && [_side, side _killer] call BIS_fnc_sideIsFriendly) then {
 				_prisonService = [1] new PrisonService;
 				call _prisonService.RunAsync;
@@ -129,6 +130,23 @@ namespace Intrusion.Client
 			
 			_resourceReport = [playerSide] call _resourceReportCollection.GetReport;
 			[_resourceReport] call gClient.DisplayHandler.DisplayResourceReport;
+		};
+		
+		public static method OnPlayerRespawn("_player" as Object, "_corpse" as Object)
+		{
+			if (_player == player) then {
+				call IntrusionMenuHandler.ShowAction;
+			
+				if (!isNull ClientState.MyGroup) then {
+					[player] joinSilent ClientState.MyGroup;
+					
+					if (ClientState.IsSquadLeader) then {
+						ClientState.MyGroup selectLeader player;
+					};
+				};
+			};
+		
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
 		};
 	};
 };

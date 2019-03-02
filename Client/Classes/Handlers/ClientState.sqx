@@ -15,10 +15,16 @@ namespace Intrusion.Client
 		{
 			_self.IsOnCorrectSide = true;
 			_self.IsBrigadeLeader = false;
+			_self.IsSquadLeader = true;
+			_self.MyGroup = grpNull;
 		};
 	
-		public static property IsOnCorrectSide { get; set; };
+		public static property Boolean IsOnCorrectSide { get; set; };
 		
-		public static property IsBrigadeLeader { get; set; };
+		public static property Boolean IsBrigadeLeader { get; set; };
+		
+		public static property Boolean IsSquadLeader { get; set; };
+		
+		public static property Group MyGroup { get; set; };
 	};
 };
