@@ -138,6 +138,8 @@ namespace Intrusion.Client
 		public static method OnPlayerRespawn("_player" as Object, "_corpse" as Object)
 		{
 			if (_player == player) then {
+				call IntrusionMenuHandler.ShowAction;
+			
 				if (!isNull ClientState.MyGroup) then {
 					[player] joinSilent ClientState.MyGroup;
 					
