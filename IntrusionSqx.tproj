@@ -232,7 +232,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="DebugConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\DebugConfig.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MapMarkersConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\MapMarkersConfig.sqx">
@@ -501,7 +501,7 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="GameplayTestConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\GameplayTestConfig.sqx">
-                    <IsSelected>true</IsSelected>
+                    <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionVehiclesDevConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx">

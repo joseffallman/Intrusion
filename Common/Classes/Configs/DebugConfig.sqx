@@ -11,7 +11,7 @@ namespace Intrusion.Common
 	public class DebugConfig
 	{
 		public static method Init {
-			_self.Mode = MissionConfigMode.Test;
+			_self.Mode = MissionConfigMode.Production;
 			_self.ShowTutorials = true;
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Warning;
