@@ -13,7 +13,7 @@ using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
-	public class AiService : IService
+	public class AiService : IService, IAiUnitCounter
 	{
 		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig];
@@ -31,6 +31,19 @@ namespace Intrusion.Ai
 		};
 		
 		public property Boolean IsRunning { get; private set; };
+		
+		public method Scalar CountUnits()
+		{
+			private ["_count" as Scalar];
+			
+			_count = 0;
+			
+			{
+				_count = _count + count units _x.Group;
+			} foreach _mSquads as AiSquad;
+			
+			_count
+		};
 		
 		private method Scalar CountExistingAiUnits("_side" as Side)
 		{

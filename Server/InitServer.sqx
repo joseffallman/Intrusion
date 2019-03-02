@@ -69,7 +69,12 @@ else {
 	};
 };
 
-gServer = new IntrusionServer;
+private ["_aiService" as AiService, "_vehicleSpawner" as IVehicleSpawner];
+_vehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
+
+_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, _vehicleSpawner, gCommonConfig.Professions] new AiService;
+
+gServer = [_aiService, _vehicleSpawner] new IntrusionServer;
 
 /* Handlers */
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
@@ -78,10 +83,9 @@ gServer = new IntrusionServer;
 [gServer.TargetHandler] call ObservationService.Init;
 
 /* AI */
-[] spawn {
+[_aiService] spawn {
+	params ["_aiService" as IService];
 	sleep 5;
-	private ["_aiService" as AiService];
-	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions] new AiService;
 	call _aiService.RunAsync;
 };
 

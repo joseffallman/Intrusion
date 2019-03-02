@@ -9,18 +9,19 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Ai;
 
 namespace Intrusion.Server
 {
 	public class IntrusionServer
 	{
 		// Creates a IntrusionClient object.
-		public constructor() {
+		public constructor("_aiUnitCounter" as IAiUnitCounter, "_vehicleSpawner" as IVehicleSpawner) {
 			_self.MessageHandler = new MessageHandler;
-			_self.VehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
+			_self.VehicleSpawner = _vehicleSpawner;
 			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
 			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
-			_self.UnitCounter = [gServerConfig.Gameplay] new UnitCounter;
+			_self.UnitCounter = [gServerConfig.Gameplay, _aiUnitCounter] new UnitCounter;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };

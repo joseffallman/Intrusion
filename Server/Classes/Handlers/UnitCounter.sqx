@@ -7,13 +7,20 @@
  * Description:
  * A class that counts units (players and AI bots) in play.
  */
+
+using Intrusion.Ai;
+
 namespace Intrusion.Server
 {
 	public class UnitCounter : IUnitCounter
 	{
-		public constructor("_gameplayConfig" as IGameplayConfig)
+		private fields ["_mAiUnitCounter" as IAiUnitCounter];
+		
+		public constructor("_gameplayConfig" as IGameplayConfig, "_aiUnitCounter" as IAiUnitCounter)
 		{
 			private ["_lobbySlotsCount" as Scalar];
+			
+			_mAiUnitCounter = _aiUnitCounter;
 		
 			_lobbySlotsCount = 0;
 			
@@ -26,7 +33,9 @@ namespace Intrusion.Server
 	
 		public method Scalar CountUnitsInPlay()
 		{
-			count call BIS_fnc_listPlayers
+			private no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
+			player sideChat str no;
+			no
 		};
 		
 		public property Scalar LobbySlotsCount { get; private set; };
