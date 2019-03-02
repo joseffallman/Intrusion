@@ -1,0 +1,18 @@
+/*
+ * Name:	IUnitCounter
+ * Date:	2019-03-02
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that counts units (players and AI bots) in play.
+ */
+namespace Intrusion.Server
+{
+	public interface IUnitCounter
+	{
+		method Scalar CountUnitsInPlay();
+		
+		property Scalar LobbySlotsCount { get; };
+	};
+};

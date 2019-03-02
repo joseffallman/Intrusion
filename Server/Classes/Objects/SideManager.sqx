@@ -29,12 +29,13 @@ namespace Intrusion.Server
 			"_vehicleSpawner" as IVehicleSpawner, 
 			"_squadHandler" as ISquadHandler, 
 			"_messageHandler" as IMessageHandler, 
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_unitCounter" as IUnitCounter)
 		{
             _self.Side = _side;
             
             _mResourceBook = new ResourceBook;
-            _mResourceCollector = [_serverConfig.Gameplay, _side, _mResourceBook] new ResourceCollector;
+            _mResourceCollector = [_serverConfig.Gameplay, _side, _mResourceBook, _unitCounter] new ResourceCollector;
             _mScientist = [_side, _mResourceBook, _commonConfig.Technology, _messageHandler, _inventedTechnologiesCollection] new Scientist;
             _mProductionManager = [_serverConfig.ProfessionVehicles, _serverConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions] new ProductionManager;
 		};

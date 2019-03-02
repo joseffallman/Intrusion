@@ -19,8 +19,8 @@ namespace Intrusion.Server
 		{
 			_self.CompetingSides = [east, west];
 			_self.MatchLengthMinutes = 15;
-			_self.TotalProduction = 10000;
-			_self.TotalResearch = 10000;
+			_self.TotalProduction = 60000;
+			_self.TotalResearch = 2000;
 			_self.MaxFreeVehiclesAtBase = 3;
 		};
 		

@@ -60,6 +60,8 @@ namespace Intrusion.Client
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 			
 			if (_player == player) then {
+				ClientState.MyGroup = _newGroup;
+				ClientState.IsSquadLeader = false;
 				call gClient.TaskHandler.UpdateWithGroupTask;
 			};
 		};
@@ -71,6 +73,8 @@ namespace Intrusion.Client
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 			
 			if (_player == player) then {
+				ClientState.MyGroup = group player;
+				ClientState.IsSquadLeader = true;
 				call gClient.TaskHandler.DeleteAllTasksAndReset;
 			};
 		};
@@ -130,6 +134,18 @@ namespace Intrusion.Client
 		
 		public static method OnPlayerRespawn("_player" as Object, "_corpse" as Object)
 		{
+			if (_player == player) then {
+				call IntrusionMenuHandler.ShowAction;
+			
+				if (!isNull ClientState.MyGroup) then {
+					[player] joinSilent ClientState.MyGroup;
+					
+					if (ClientState.IsSquadLeader) then {
+						ClientState.MyGroup selectLeader player;
+					};
+				};
+			};
+		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 		};
 	};
