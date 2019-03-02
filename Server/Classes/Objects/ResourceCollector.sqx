@@ -11,14 +11,15 @@ namespace Intrusion.Server
 {
 	public class ResourceCollector
 	{
-		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceBook" as ResourceBook];
+		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
 		private fields ["_mLastAquireTime" as Scalar, "_mSecondsSinceLastAquire" as Scalar];
 	
 		// Creates a ResourceCollector object.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_side" as Side, "_resourceBook" as ResourceBook) {
+		public constructor("_gameplayConfig" as IGameplayConfig, "_side" as Side, "_resourceBook" as ResourceBook, "_unitCounter" as IUnitCounter) {
 			_mGameplayConfig = _gameplayConfig;
 			_self.Side = _side;
 			_mResourceBook = _resourceBook;
+			_mUnitCounter = _unitCounter;
 			
 			_mLastAquireTime = time;
 			_mSecondsSinceLastAquire = 0;
@@ -30,11 +31,17 @@ namespace Intrusion.Server
 		// Calculates how much production has been generated since last aquire.
 		// Returns (Scalar): Amount of production.
 		private method Scalar AquireProduction {
+			private ["_playingUnitsCount" as Scalar];
+		
 			private _pointsPerFacility = (_mGameplayConfig.TotalProduction / ResourceLocationHandler.FactoryLocationsCount) * (_mSecondsSinceLastAquire / (_mGameplayConfig.MatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call ResourceLocationHandler.GetFactoriesCountBySide;
 			private _ourCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
 			
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
+			
+			// Balance up for missing units
+			_playingUnitsCount = call _mUnitCounter.CountUnitsInPlay;
+			_points = _points - (_points * (1 - (_playingUnitsCount / _mUnitCounter.LobbySlotsCount)));
 			
 			_points
 		};

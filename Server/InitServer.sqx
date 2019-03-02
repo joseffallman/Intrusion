@@ -38,6 +38,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
 using Intrusion.Common;
