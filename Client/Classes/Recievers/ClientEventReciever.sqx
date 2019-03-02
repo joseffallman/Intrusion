@@ -130,5 +130,10 @@ namespace Intrusion.Client
 			_resourceReport = [playerSide] call _resourceReportCollection.GetReport;
 			[_resourceReport] call gClient.DisplayHandler.DisplayResourceReport;
 		};
+		
+		public static method OnPlayerRespawn("_player" as Object, "_corpse" as Object)
+		{
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
+		};
 	};
 };
