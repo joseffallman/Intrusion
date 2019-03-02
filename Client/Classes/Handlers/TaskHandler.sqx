@@ -60,11 +60,16 @@ namespace Intrusion.Client
 		{
 			private ["_orderCollection" as OrderCollection, "_order" as Order];
 			
-			_orderCollection = call PublicVariableHandler.GetOrderCollection;
-			
-			_order = [group player] call _orderCollection.GetOrderByGroup;
-			
-			[_order] call _self.CreateTaskFromOrder;
+			// If order collection is NULL, then there are yet no brigade leader.
+			if (call PublicVariableHandler.OrderCollectionHasValue) then
+			{
+				_orderCollection = call PublicVariableHandler.GetOrderCollection;
+				
+				if (!isNull _orderCollection) then {
+					_order = [group player] call _orderCollection.GetOrderByGroup;
+					[_order] call _self.CreateTaskFromOrder;
+				};
+			};
 		};
 		
 		// Resets the task handler and removes all tasks.
