@@ -73,6 +73,7 @@ class ScenarioData
 	respawn=3;
 	class Header
 	{
+		gameType="SC";
 		minPlayers=1;
 		maxPlayers=60;
 	};
