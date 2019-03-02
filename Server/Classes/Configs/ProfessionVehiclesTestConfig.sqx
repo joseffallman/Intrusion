@@ -18,15 +18,15 @@ namespace Intrusion.Server
 		// Creates a ProVehiclesConfig object.
 		public constructor {
 			_mProVehicles = [
-				[ProfessionType.Transport, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Fuel, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Ammo, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Motorized, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
-				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Armored, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Transport, 100] new ProfessionVehicleInfo,
+				[ProfessionType.Fuel, 100] new ProfessionVehicleInfo,
+				[ProfessionType.Ammo, 100] new ProfessionVehicleInfo,
+				[ProfessionType.Repair, 100] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 350] new ProfessionVehicleInfo,
+				[ProfessionType.Mortars, 300] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 400] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 300] new ProfessionVehicleInfo,
+				[ProfessionType.Armored, 450] new ProfessionVehicleInfo,
 			];
 		};
 		

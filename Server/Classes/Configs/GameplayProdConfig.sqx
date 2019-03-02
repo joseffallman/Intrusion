@@ -18,9 +18,9 @@ namespace Intrusion.Server
 		public constructor()
 		{
 			_self.CompetingSides = [east, west];
-			_self.MatchLengthMinutes = 120;
-			_self.TotalProduction = 20000;
-			_self.TotalResearch = 20000;
+			_self.MatchLengthMinutes = 80;
+			_self.TotalProduction = 60000;
+			_self.TotalResearch = 2000;
 			_self.MaxFreeVehiclesAtBase = 3;
 		};
 		
