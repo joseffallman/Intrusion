@@ -47,8 +47,7 @@ namespace Intrusion.Client
 			
 			player addEventHandler ["Respawn", {
 				params ["_player" as Object, "_corpse"];
-				
-				call IntrusionMenuHandler.ShowAction;
+				["ClientEventReciever.OnPlayerRespawn", [_player, _corpse]] call Remote.Invoke;
 			}];
 		};
 	};

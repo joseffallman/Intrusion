@@ -65,6 +65,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnPlayerDisconnected": { _parameters spawn ClientEventReciever.OnPlayerDisconnected; };
 					case "ClientEventReciever.OnResourceReportCollectionUpdated": { _parameters spawn ClientEventReciever.OnResourceReportCollectionUpdated; };
 					case "ClientEventReciever.OnBrigadeLeaderGivingOrder": { _parameters spawn ClientEventReciever.OnBrigadeLeaderGivingOrder; };
+					case "ClientEventReciever.OnPlayerRespawn": { _parameters spawn ClientEventReciever.OnPlayerRespawn; };
 				};
 			};
 		};

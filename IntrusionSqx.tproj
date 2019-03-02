@@ -102,7 +102,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Dialogs" IsExpanded="true" FileName="Client\Classes\Dialogs">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Dialogs" IsExpanded="false" FileName="Client\Classes\Dialogs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MoveBaseDialog.sqx" IsExpanded="false" FileName="Client\Classes\Dialogs\MoveBaseDialog.sqx">
@@ -205,7 +205,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Recievers" IsExpanded="false" FileName="Client\Classes\Recievers">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Recievers" IsExpanded="true" FileName="Client\Classes\Recievers">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ClientEventReciever.sqx" IsExpanded="false" FileName="Client\Classes\Recievers\ClientEventReciever.sqx">
@@ -264,7 +264,7 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="true" FileName="Common">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Common" IsExpanded="false" FileName="Common">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Common\Classes">
@@ -478,7 +478,7 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" IsExpanded="false" FileName="Communication">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" IsExpanded="true" FileName="Communication">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommunication.sqx" IsExpanded="false" FileName="Communication\InitCommunication.sqx">
@@ -486,7 +486,7 @@
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Remote.sqx" IsExpanded="false" FileName="Communication\Remote.sqx">
-            <IsSelected>false</IsSelected>
+            <IsSelected>true</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RemoteTargetOptions.sqx" IsExpanded="false" FileName="Communication\RemoteTargetOptions.sqx">
