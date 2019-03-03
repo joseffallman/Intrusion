@@ -17,10 +17,18 @@ namespace Intrusion.Common
 		Maintenance = 3,
 		Launchers = 4,
 		Motorized = 5,
-		Artillery = 6,
-		AntiArmor = 7,
-		Mechanized = 8,
-		Armored = 9,
-		EndOfTechnologies = 10
+		LightArmor = 6,
+		Artillery = 7,
+		HeavyArmor = 8
+	};
+	
+	public class TechnologyMeta
+	{
+		public static method Init()
+		{
+			_self.LastTechnology = Technology.HeavyArmor;
+		};
+		
+		public static property Technology LastTechnology { get; private set; };
 	};
 };

@@ -32,6 +32,9 @@ using Intrusion.Common;
 
 #region Common Objects
 
+// Enum Metas
+call TechnologyMeta.Init;
+
 // Configs
 call DebugConfig.Init;
 call ProfessionTypeMeta.Init;

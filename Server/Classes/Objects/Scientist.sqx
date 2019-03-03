@@ -44,13 +44,12 @@ namespace Intrusion.Server
 			["Your side has established '" + _self.CurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
 			
 			// Get next technology to research
-			_technology = (_self.CurrentTechnology.Technology as Scalar) + 1 as Technology;
-
-			if (_technology == Technology.EndOfTechnologies) then {
-				_mAllTechnologiesInvented = true;
+			if (_self.CurrentTechnology.Technology != TechnologyMeta.LastTechnology) then {
+				_technology = (_self.CurrentTechnology.Technology as Scalar) + 1 as Technology;
+				_self.CurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
 			}
 			else {
-				_self.CurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
+				_mAllTechnologiesInvented = true;
 			};
 		};
 		
