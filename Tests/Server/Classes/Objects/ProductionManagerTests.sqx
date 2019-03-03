@@ -67,7 +67,7 @@ namespace Intrusion.Tests.Server
 			_mScientist = new TestScientist;
 			_mMessageHandler = new TestMessageHandler;
 			_mProfessionConfig = new TestProfessionConfig;
-			[Professiontype.Armored, "Armored Forces", Technology.Armored, 1, 1, 9, 3, true, "", ""] call _mProfessionConfig.AddProfession;
+			[Professiontype.Armored, "Armored Forces", Technology.HeavyArmor, 1, 1, 9, 3, true, "", ""] call _mProfessionConfig.AddProfession;
 			
 			_mGroup = [1] call TestActions.CreatePopulatedGroup;
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
@@ -99,7 +99,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -119,7 +119,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[100] call _mResourceBook.DepositProduction;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -143,7 +143,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -172,7 +172,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -308,7 +308,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -331,7 +331,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.Armored] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -371,7 +371,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.Mechanized] call _mScientist.AddInventedTechnology;
+			[Technology.LightArmor] call _mScientist.AddInventedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
