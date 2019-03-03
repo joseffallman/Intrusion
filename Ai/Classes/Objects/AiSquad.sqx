@@ -43,6 +43,10 @@ namespace Intrusion.Ai
 			for "_i" from 1 to _noOfUnits do {
 				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 			};
+			
+			{
+				_x setVariable ["IsAiUnit", true];
+			} foreach units _self.Group;
 		};
 		
 		// Gets the AI squad's group.
@@ -459,10 +463,15 @@ namespace Intrusion.Ai
 				};
 				
 				{
-					_x setDamage 1
+					_x setDamage 1;
+					_x setVariable ["IsAiUnit", false];
 				} foreach _oldUnits;
 				
 				(_oldUnits) joinSilent grpNull;
+				
+				{
+					_x setVariable ["IsAiUnit", true];
+				} foreach units _self.Group;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				_mState = AiSquadState.Idle;

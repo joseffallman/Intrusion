@@ -44,6 +44,7 @@ call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\FourEastAiUnitCounterConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
 using Intrusion.Common;
@@ -69,12 +70,7 @@ else {
 	};
 };
 
-private ["_aiService" as AiService, "_vehicleSpawner" as IVehicleSpawner];
-_vehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
-
-_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, _vehicleSpawner, gCommonConfig.Professions] new AiService;
-
-gServer = [_aiService, _vehicleSpawner] new IntrusionServer;
+gServer = [new AiUnitCounter] new IntrusionServer;
 
 /* Handlers */
 [gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
@@ -83,8 +79,9 @@ gServer = [_aiService, _vehicleSpawner] new IntrusionServer;
 [gServer.TargetHandler] call ObservationService.Init;
 
 /* AI */
-[_aiService] spawn {
-	params ["_aiService" as IService];
+[] spawn {
+	private ["_aiService" as IService];
+	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions] new AiService;
 	sleep 5;
 	call _aiService.RunAsync;
 };

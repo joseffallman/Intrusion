@@ -1,0 +1,33 @@
+/*
+ * Name:	AiUnitCounter
+ * Date:	2019-03-03
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that counts the playing AI units.
+ */
+namespace Intrusion.Ai
+{
+	public class AiUnitCounter : IAiUnitCounter
+	{
+		// Creates a AiUnitCounter object.
+		public constructor {
+		};
+		
+		public method Scalar CountUnits()
+		{
+			private ["_count" as Scalar];
+			
+			_count = 0;
+			
+			{
+				if (_x getVariable ["IsAiUnit", false]) then {
+					_count = _count + 1;
+				};
+			} foreach allUnits as Object;
+			
+			_count
+		};
+	};
+};

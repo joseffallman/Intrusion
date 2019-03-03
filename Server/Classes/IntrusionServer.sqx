@@ -15,10 +15,10 @@ namespace Intrusion.Server
 {
 	public class IntrusionServer
 	{
-		// Creates a IntrusionClient object.
-		public constructor("_aiUnitCounter" as IAiUnitCounter, "_vehicleSpawner" as IVehicleSpawner) {
+		// Creates a IntrusionServer object.
+		public constructor("_aiUnitCounter" as IAiUnitCounter) {
 			_self.MessageHandler = new MessageHandler;
-			_self.VehicleSpawner = _vehicleSpawner;
+			_self.VehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
 			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
 			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
 			_self.UnitCounter = [gServerConfig.Gameplay, _aiUnitCounter] new UnitCounter;
