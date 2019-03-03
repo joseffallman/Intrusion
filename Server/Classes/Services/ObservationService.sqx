@@ -27,7 +27,7 @@ namespace Intrusion.Server
 		// Marks all observations in the observation collection as deleted.
 		private static method MarkObservationsAsDeleted() {
 			{
-				if (call Functions.Time > _x.Time + 25) then {
+				if (call Functions.Time > _x.Time + 45) then {
 					_x.MarkedAsDeleted = true;
 				};
 			} foreach _mObservations as Observation;
@@ -76,7 +76,7 @@ namespace Intrusion.Server
 				scopeName "loop";
 				
 				if (_x.ObservingSide == _target.ObservingSide) then {
-					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 300) then {
+					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 100) then {
 						_observation = _x;
 					
 						breakOut "loop";
