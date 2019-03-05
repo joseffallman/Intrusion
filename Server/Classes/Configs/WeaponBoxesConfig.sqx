@@ -25,8 +25,8 @@ namespace Intrusion.Server
 				[east, WeaponBoxType.Grenades, "Box_East_Grenades_F", Technology.None] new WeaponBoxInfo,
 				[west, WeaponBoxType.Launchers, "Box_NATO_WpsLaunch_F", Technology.Launchers] new WeaponBoxInfo,
 				[east, WeaponBoxType.Launchers, "Box_East_WpsLaunch_F", Technology.Launchers] new WeaponBoxInfo,
-				[west, WeaponBoxType.Ordnance, "Box_NATO_Wps_F", Technology.Launchers] new WeaponBoxInfo,
-				[east, WeaponBoxType.Ordnance, "Box_East_Wps_F", Technology.Launchers] new WeaponBoxInfo,
+				[west, WeaponBoxType.Ordnance, "Box_NATO_AmmoOrd_F", Technology.Ordnance] new WeaponBoxInfo,
+				[east, WeaponBoxType.Ordnance, "Box_East_AmmoOrd_F", Technology.Ordnance] new WeaponBoxInfo,
 			];
 		};
 		

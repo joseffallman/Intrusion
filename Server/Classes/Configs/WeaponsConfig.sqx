@@ -35,6 +35,10 @@ namespace Intrusion.Server
 
 				[west, WeaponBoxType.Launchers, "launch_NLAW_F", ["NLAW_F"]] new WeaponInfo,
 
+				[west, WeaponBoxType.Ordnance, "", ["ATMine_Range_Mag"]] new WeaponInfo,
+				[west, WeaponBoxType.Ordnance, "", ["APERSMine_Range_Mag"]] new WeaponInfo,
+				[west, WeaponBoxType.Ordnance, "", ["APERSTripMine_Wire_Mag"]] new WeaponInfo,
+
 				[east, WeaponBoxType.Basic, "arifle_Katiba_F", ["30Rnd_65x39_caseless_mag"]] new WeaponInfo,
 				[east, WeaponBoxType.Basic, "arifle_Katiba_C_F", ["30Rnd_65x39_caseless_mag"]] new WeaponInfo,
 				[east, WeaponBoxType.Basic, "arifle_Katiba_GL_F", ["30Rnd_65x39_caseless_mag"]] new WeaponInfo,
@@ -53,7 +57,11 @@ namespace Intrusion.Server
 				[east, WeaponBoxType.Grenades, "", ["1Rnd_SmokeGreen_Grenade_shell"]] new WeaponInfo,
 				[east, WeaponBoxType.Grenades, "", ["1Rnd_SmokeBlue_Grenade_shell"]] new WeaponInfo,
 
-				[east, WeaponBoxType.Launchers, "launch_RPG32_F", ["RPG32_F"]] new WeaponInfo
+				[east, WeaponBoxType.Launchers, "launch_RPG32_F", ["RPG32_F"]] new WeaponInfo,
+				
+				[east, WeaponBoxType.Ordnance, "", ["ATMine_Range_Mag"]] new WeaponInfo,
+				[east, WeaponBoxType.Ordnance, "", ["APERSMine_Range_Mag"]] new WeaponInfo,
+				[east, WeaponBoxType.Ordnance, "", ["APERSTripMine_Wire_Mag"]] new WeaponInfo
 			];
 		};
 		

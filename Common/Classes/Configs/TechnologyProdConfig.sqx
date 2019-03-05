@@ -20,6 +20,7 @@ namespace Intrusion.Common
 				[Technology.Services, "Services", 50] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 75] new TechnologyInfo,
 				[Technology.Launchers, "Launchers", 200] new TechnologyInfo,
+				[Technology.Ordnance, "Ordnance", 275] new TechnologyInfo,
 				[Technology.Motorized, "Motorized Vehicles", 350] new TechnologyInfo,
 				[Technology.LightArmor, "Light Armor", 500] new TechnologyInfo,
 				[Technology.Artillery, "Artillery", 600] new TechnologyInfo,
