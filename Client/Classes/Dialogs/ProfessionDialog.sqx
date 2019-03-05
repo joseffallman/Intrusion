@@ -39,7 +39,7 @@ namespace Intrusion.Client
 			
 			_mOptions select _selectedIndex
 		};
-		
+/*		
 		// Adds all currently available professions to the combo box.
 		private static method AddAvailableProfessions {
 			private ["_profession" as Profession, "_squads" as SquadCollection, "_options" as Array, "_playersInGroup" as Scalar];
@@ -72,6 +72,20 @@ namespace Intrusion.Client
             
             _mOptions = _options;
 		};
+*/
+		// Adds all professions to the combo box.
+		private static method AddProfessions {
+			private ["_options" as Array];
+			
+            _options = [];
+            
+			{
+				lbAdd [DialogControl.GroupProfessionCombo, (_x.Name + " (" + str _x.MinGroupSize + "-" + str _x.MaxGroupSize + " members, max " + str _x.MaxGroupsCount + " group(s))")];
+				_options pushBack _x.Type;
+			} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
+            
+            _mOptions = _options;
+		};
 	
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
@@ -81,7 +95,7 @@ namespace Intrusion.Client
 			// Create the dialog
             createDialog "IntProfessionDialog";
 			
-			call _self.AddAvailableProfessions;
+			call _self.AddProfessions;
 			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
 			
 			_self.IsOpen = true;
