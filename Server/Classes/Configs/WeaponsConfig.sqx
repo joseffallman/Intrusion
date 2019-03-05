@@ -27,6 +27,7 @@ namespace Intrusion.Server
 				[west, WeaponBoxType.Basic, Technology.None, "hgun_P07_F", ["16Rnd_9x21_Mag"]] new WeaponInfo,
 				
 				[west, WeaponBoxType.Basic, Technology.Ordnance, "srifle_LRR_LRPS_F", ["7Rnd_408_Mag"]] new WeaponInfo,
+				[west, WeaponBoxType.Basic, Technology.Ordnance, "", ["RangeFinder"]] new WeaponInfo,
 				
 				[west, WeaponBoxType.Grenades, Technology.None, "", ["HandGrenade"]] new WeaponInfo,
 				[west, WeaponBoxType.Grenades, Technology.None, "", ["SmokeShell"]] new WeaponInfo,
@@ -52,6 +53,7 @@ namespace Intrusion.Server
 				[east, WeaponBoxType.Basic, Technology.None, "hgun_Rook40_F", ["16Rnd_9x21_Mag"]] new WeaponInfo,
 				
 				[east, WeaponBoxType.Basic, Technology.Ordnance, "srifle_GM6_camo_LRPS_F", ["5Rnd_127x108_Mag"]] new WeaponInfo,
+				[east, WeaponBoxType.Basic, Technology.Ordnance, "", ["RangeFinder"]] new WeaponInfo,
 
 				[east, WeaponBoxType.Grenades, Technology.None, "", ["HandGrenade"]] new WeaponInfo,
 				[east, WeaponBoxType.Grenades, Technology.None, "", ["SmokeShell"]] new WeaponInfo,
