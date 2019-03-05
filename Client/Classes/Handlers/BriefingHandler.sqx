@@ -12,6 +12,7 @@ namespace Intrusion.Client
 	{
         // Creates the briefing texts for the player.
         public static method CreateBriefing {
+/*
 			player createDiaryRecord ["Diary", ["Mission Mechanics *IMPORTANT*", "GROUPS<br /><br />" + 
 			"Players can arrange their groups by themselves. A player who invites another player to his/her group becomes the group leader. To invite another alone player, move near him and use action command Invite.<br /><br />" + 
 			"GROUP PROFESSION<br /><br />" +
@@ -40,6 +41,7 @@ namespace Intrusion.Client
 			player createDiaryRecord ["Diary", ["Situation", "The action right now will go to history as the War of The Islands. It rages on several fronts with important land areas as its stakes. The few weeks ahead will indeed become a tense time for Highest Command, who has many difficult decisions to make in deciding how to distribute army's resources and to send the correct equipment to correct places."]];
 			
 			player createDiaryRecord ["Diary", ["Background", "The Great Economy Collapse has lead the world into several global armed conflicts. Russias many years of rearmament has again lead the country to one of the world's major military power. Thus, the old actors of The Cold War with their allies are back as two great antipoles in the World Community, and they are again fighting a tense war that every now and then spark infected battles about strategic and resource heavy land areas."]];
+*/
 		};
 	};
 };

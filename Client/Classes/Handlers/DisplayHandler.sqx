@@ -45,7 +45,7 @@ namespace Intrusion.Client
 			}
 			else {
 				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
-					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Research: %2 (No more technologies)</t>",
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Administration: %2 (all done)</t>",
 					str floor _resourceReport.Production, str floor _resourceReport.Research;
 				];
 			};

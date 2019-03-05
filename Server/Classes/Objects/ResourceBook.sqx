@@ -55,7 +55,7 @@ namespace Intrusion.Server
 		// Prints the resource book to a readable text.
 		// Retursn (String): A text string.
 		public method String ToString {
-			"Production: " + str _self.TotalProduction + ", Technology: " + str _self.TotalResearch
+			"Production: " + str _self.TotalProduction + ", Administraton: " + str _self.TotalResearch
 		};
 	};
 };

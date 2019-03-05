@@ -277,8 +277,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2983.2876,4.4208336,5940.2842};
-			name="TECHLAB1";
-			text="Desert High (Tech Lab)";
+			name="OFFICE1";
+			text="Desert High (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
@@ -288,8 +288,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2824.4502,2.4902391,6119.5371};
-			name="TECHLAB3";
-			text="Agia Marina (Tech Lab)";
+			name="OFFICE3";
+			text="Agia Marina (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=4;
@@ -352,8 +352,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2854.6973,67.758713,5928.7378};
-			name="TECHLAB2";
-			text="Nist's High (Tech Lab)";
+			name="OFFICE2";
+			text="Nist's High (Office)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=14;
