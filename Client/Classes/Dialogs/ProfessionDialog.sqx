@@ -75,12 +75,22 @@ namespace Intrusion.Client
 */
 		// Adds all professions to the combo box.
 		private static method AddProfessions {
-			private ["_options" as Array];
+			private ["_options" as Array, "_sGroupSize" as String, "_sMaxGroupsCount" as String];
 			
             _options = [];
             
 			{
-				lbAdd [DialogControl.GroupProfessionCombo, (_x.Name + " (" + str _x.MinGroupSize + "-" + str _x.MaxGroupSize + " members, max " + str _x.MaxGroupsCount + " group(s))")];
+				_sGroupSize = str _x.MinGroupSize + "-" + str _x.MaxGroupSize;
+				if (_x.MinGroupSize == _x.MaxGroupSize) then {
+					_sGroupSize = str _x.MinGroupSize;
+				};
+				
+				_sMaxGroupsCount = "";
+				if (_x.MaxGroupsCount >= 0) then {
+					_sMaxGroupsCount = ", max " + str _x.MaxGroupsCount + " groups";
+				};
+				
+				lbAdd [DialogControl.GroupProfessionCombo, (_x.Name + " (" + _sGroupSize + " members" + _sMaxGroupsCount + ")")];
 				_options pushBack _x.Type;
 			} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             
