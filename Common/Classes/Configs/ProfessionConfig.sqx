@@ -24,6 +24,7 @@ namespace Intrusion.Common
 			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, 1, 1, 2, 2, true, "b_service", "o_service"] new Profession,
 			    [ProfessionType.Repair, "Repair Service", Technology.Services, 1, 1, 2, 2, true, "b_maint", "o_maint"] new Profession,
 			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf"] new Profession,
+			    [ProfessionType.Sniper, "Sniper", Technology.Ordnance, 1, 2, 2, 2, false, "b_support", "o_support"] new Profession,
 			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, 1, 1, 2, 2, false, "b_art", "o_art"] new Profession,
 			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, 2, 1, 2, 4, false, "b_support", "o_support"] new Profession,
 			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, 2, 3, 10, 10, true, "b_mech_inf", "o_mech_inf"] new Profession,

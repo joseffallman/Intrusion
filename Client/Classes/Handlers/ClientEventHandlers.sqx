@@ -49,6 +49,27 @@ namespace Intrusion.Client
 				params ["_player" as Object, "_corpse"];
 				["ClientEventReciever.OnPlayerRespawn", [_player, _corpse]] call Remote.Invoke;
 			}];
+			
+			player addEventHandler ["Take", {
+				params ["_unit" as Object, "_container", "_item" as Object, "_squadCollection" as SquadCollection, "_squad" as Squad];
+				
+				if (_unit == player) then {
+					private ["_hasSniperRifle" as Boolean];
+					
+					_hasSniperRifle = ( _item call BIS_fnc_itemtype ) select 1 == "SniperRifle";
+					
+					if (_hasSniperRifle && call PublicVariableHandler.SquadsHasValue) then {
+						_squadCollection = call PublicVariableHandler.GetSquads;
+						
+						_squad = [group player] call _squadCollection.GetSquadByGroup;
+						
+						if (_squad.ProfessionType != ProfessionType.Sniper) then {
+							player removeWeapon vehicleVarName _item;
+							["Only sniper teams are allowed to have a sniper rifle.", player] call ClientMessageHandler.ShowMessage;
+						};
+					};
+				};
+			}];
 		};
 	};
 };

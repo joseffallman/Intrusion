@@ -102,17 +102,21 @@ namespace Intrusion.Server
 								private ["_weaponInfo" as WeaponInfo];
 								_weaponInfo = _x;
 								
-								if (_weaponInfo.ClassName != "") then {
-									_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
-									
-									{
-										_weaponBox.Object addItemCargoGlobal [_x, 300];
-									} foreach _weaponInfo.Magazines as String;
-								}
-								else {
-									{
-										_weaponBox.Object addItemCargoGlobal [_x, 300];
-									} foreach _weaponInfo.Magazines as String;
+								// If the required technology for the weapon is invented
+								if ([_side, _weaponInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
+								{
+									if (_weaponInfo.ClassName != "") then {
+										_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+										
+										{
+											_weaponBox.Object addItemCargoGlobal [_x, 300];
+										} foreach _weaponInfo.Magazines as String;
+									}
+									else {
+										{
+											_weaponBox.Object addItemCargoGlobal [_x, 300];
+										} foreach _weaponInfo.Magazines as String;
+									};
 								};
 								
 							} foreach ([_side, _weaponBoxType] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;

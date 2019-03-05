@@ -24,6 +24,7 @@ namespace Intrusion.Server
 			private _westRepairCarTypes = ["B_Truck_01_Repair_F"];
 			private _westMotorizedVehicleTypes = ["B_MRAP_01_gmg_F", "B_MRAP_01_hmg_F"];
 			private _westMortarsVehicleTypes = ["B_MRAP_01_F"];
+			private _westSniperVehicleTypes = ["B_Quadbike_01_F"];
 			private _westAntiArmorVehicleTypes = ["B_MRAP_01_F"];
 			private _westMechanizedVehicleTypes = ["B_APC_Wheeled_01_cannon_F", "B_APC_Tracked_01_rcws_F", "B_APC_Tracked_01_CRV_F"];
 			private _westArmorVehicleTypes = ["B_APC_Tracked_01_AA_F", "B_MBT_01_cannon_F"];
@@ -35,6 +36,7 @@ namespace Intrusion.Server
 			private _eastRepairCarTypes = ["O_Truck_02_box_F"];
 			private _eastMotorizedVehicleTypes = ["O_MRAP_02_gmg_F", "O_MRAP_02_hmg_F"];
 			private _eastMortarsVehicleTypes = ["O_MRAP_02_F"];
+			private _eastSniperVehicleTypes = ["O_Quadbike_01_F"];
 			private _eastAntiArmorVehicleTypes = ["O_MRAP_02_F"];
 			private _eastMechanizedVehicleTypes = ["O_APC_Tracked_02_cannon_F", "O_APC_Wheeled_02_rcws_F"];
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
@@ -47,6 +49,7 @@ namespace Intrusion.Server
 				[west, ProfessionType.Repair, _westRepairCarTypes, []] new ProVehicleClassNamesInfo,
 				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, ["B_Mortar_01_support_F", "B_Mortar_01_weapon_F"]] new ProVehicleClassNamesInfo,
+				[west, ProfessionType.Sniper, _westSniperVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, ["B_AT_01_weapon_F", "B_HMG_01_support_F"]] new ProVehicleClassNamesInfo,
 				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[west, ProfessionType.Armored, _westArmorVehicleTypes, []] new ProVehicleClassNamesInfo,
@@ -58,6 +61,7 @@ namespace Intrusion.Server
 				[east, ProfessionType.Repair, _eastRepairCarTypes, []] new ProVehicleClassNamesInfo,
 				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, ["O_Mortar_01_support_F", "O_Mortar_01_weapon_F"]] new ProVehicleClassNamesInfo,
+				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, ["O_AT_01_weapon_F", "O_HMG_01_support_F"]] new ProVehicleClassNamesInfo,
 				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes, []] new ProVehicleClassNamesInfo,
 				[east, ProfessionType.Armored, _eastArmorVehicleTypes, []] new ProVehicleClassNamesInfo,
