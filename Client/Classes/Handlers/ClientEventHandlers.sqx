@@ -51,20 +51,25 @@ namespace Intrusion.Client
 			}];
 			
 			player addEventHandler ["Take", {
-				params ["_unit" as Object, "_container" as Object, "_item" as Object, "_squadCollection" as SquadCollection, "_squad" as Squad, "_itemIsRangeSniperRifle" as Boolean];
+				params ["_unit" as Object, "_container" as Object, "_item" as Object];
+				private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_itemIsRangeSniperRifle" as Boolean, "_itemIsRangeFinder" as Boolean];
 				
 				if (_unit == player) then
 				{
 					_itemIsRangeSniperRifle = (_item call BIS_fnc_itemtype) select 1 == "SniperRifle";
+					_itemIsRangeFinder = "RangeFinder" in  (vestItems player + uniformItems player + backpackItems player + assignedItems player);
 					
-					if ((typeOf _item == "RangeFinder" || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadsHasValue) then
+					if ((_itemIsRangeFinder || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadsHasValue) then
 					{
 						_squadCollection = call PublicVariableHandler.GetSquads;
 						_squad = [group player] call _squadCollection.GetSquadByGroup;
 						
-						if (_squad.ProfessionType != ProfessionType.Sniper) then {
-							player removeWeapon vehicleVarName _item;
-							["Only sniper teams are allowed to have a sniper rifle.", player] call ClientMessageHandler.ShowMessage;
+						if (isNull _squad || {_squad.ProfessionType != ProfessionType.Sniper}) then {
+							player removeWeapon primaryWeapon player;
+							
+							removeGoggles player;
+							
+							["Only sniper teams are allowed to have that item.", player] call ClientMessageHandler.ShowMessage;
 						};
 					};
 				};

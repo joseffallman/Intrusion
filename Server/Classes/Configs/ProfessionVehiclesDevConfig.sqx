@@ -23,6 +23,7 @@ namespace Intrusion.Server
 				[ProfessionType.Ammo, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Motorized, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Sniper, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
 				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,
