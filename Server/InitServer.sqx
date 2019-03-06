@@ -1,3 +1,4 @@
+call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";

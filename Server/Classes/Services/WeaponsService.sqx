@@ -14,7 +14,7 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mWeaponBoxTypes" as Array /* of WeaponBoxType */, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 		
 		private static method WeaponBox GetWeaponBox("_side" as Side, "_weaponBoxType" as WeaponBoxType)
 		{
@@ -77,9 +77,9 @@ namespace Intrusion.Server
 
 					// Create the weapon boxes if it is not already there
 					
-					{
+					for "_i" from (WeaponBoxType.Basic as Scalar) to (WeaponBoxTypeMeta.LastWeaponBoxType as Scalar)  do {
 						private ["_weaponBoxType" as WeaponBoxType];
-						_weaponBoxType = _x;
+						_weaponBoxType = _i as WeaponBoxType;
 						
 						_weaponBox = [_side, _weaponBoxType] call _self.GetWeaponBox;
 						_weaponBoxInfo = [_weaponBoxType] call WeaponBoxesConfig.GetWeaponBoxInfo;
@@ -121,7 +121,7 @@ namespace Intrusion.Server
 								
 							} foreach ([_side, _weaponBoxType] call WeaponsConfig.GetWeaponsBySideAndBoxType) as WeaponInfo;
 						};
-					} foreach _mWeaponBoxTypes as WeaponBoxType;
+					};
 	        	} foreach _mGameplayConfig.CompetingSides as Side;
 				
 				sleep 60;
@@ -131,12 +131,6 @@ namespace Intrusion.Server
 		// Starts the weapons service.
 		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
-			_mWeaponBoxTypes = [
-				WeaponBoxType.Basic,
-				WeaponBoxType.Grenades,
-				WeaponBoxType.Launchers
-			];
-			
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
