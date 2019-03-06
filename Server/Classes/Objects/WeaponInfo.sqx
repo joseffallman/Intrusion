@@ -16,13 +16,14 @@ namespace Intrusion.Server
 	{
 		// Creates a WeaponInfo object.
 		public constructor {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_requiredTechnology" as Technology, "_className" as String, "_magazines" as Array];
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_requiredTechnology" as Technology, "_className" as String, "_magazines" as Array, "_itemType" as CrateItemType];
 			
 			_self.Side = _side;
 			_self.WeaponBoxType = _weaponBoxType;
 			_self.RequiredTechnology = _requiredTechnology;
 			_self.ClassName = _className;
 			_self.Magazines = _magazines;
+			_self.ItemType = _itemType;
 		};
 		
 		// Gets the weapon's side.
@@ -39,5 +40,8 @@ namespace Intrusion.Server
 		
 		// Gets the weapon's possible magazine's class names as an array of String. 
 		public property Array Magazines { get; private set; };
+		
+		// Gets the items item type.
+		public property CrateItemType ItemType { get; private set; };
 	};
 };

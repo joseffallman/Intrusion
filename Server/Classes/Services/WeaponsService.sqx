@@ -105,17 +105,23 @@ namespace Intrusion.Server
 								// If the required technology for the weapon is invented
 								if ([_side, _weaponInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
 								{
-									if (_weaponInfo.ClassName != "") then {
-										_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
-										
-										{
-											_weaponBox.Object addItemCargoGlobal [_x, 300];
-										} foreach _weaponInfo.Magazines as String;
-									}
-									else {
-										{
-											_weaponBox.Object addItemCargoGlobal [_x, 300];
-										} foreach _weaponInfo.Magazines as String;
+									if (_weaponInfo.ItemType == CrateItemType.Weapon) then {
+										if (_weaponInfo.ClassName != "") then {
+											_weaponBox.Object addWeaponCargoGlobal [_weaponInfo.ClassName, 30];
+											
+											{
+												_weaponBox.Object addItemCargoGlobal [_x, 300];
+											} foreach _weaponInfo.Magazines as String;
+										}
+										else {
+											{
+												_weaponBox.Object addItemCargoGlobal [_x, 300];
+											} foreach _weaponInfo.Magazines as String;
+										};
+									};
+									
+									if (_weaponInfo.ItemType == CrateItemType.Backpack) then {
+										_weaponBox.Object addBackpackCargoGlobal [_weaponInfo.ClassName, 3];
 									};
 								};
 								
