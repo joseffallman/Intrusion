@@ -47,6 +47,9 @@ using Intrusion.Server;
 
 #region Server Classes
 
+/* Metas */
+call WeaponBoxTypeMeta.Init;
+
 /* Configs */
 call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
