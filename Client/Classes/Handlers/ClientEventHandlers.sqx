@@ -94,6 +94,20 @@ namespace Intrusion.Client
 					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
 				};
 			}];
+			
+			player addEventHandler ["AnimStateChanged", {
+				params ["_unit" as Object, "_anim" as String];
+
+				if (_anim == "unconsciousrevivedefault" && !isNull ClientState.LastInstigator) then {
+					["ClientEventReciever.OnPlayerKilled", [player, ClientState.LastInstigator, ClientState.LastInstigator, false, playerSide]] call Remote.Invoke;
+		    	};
+			}];
+			
+			player addEventHandler ["Hit", {
+				params ["_unit", "_source", "_damage", "_instigator"];
+				
+				ClientState.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
+			}];
 		};
 	};
 };

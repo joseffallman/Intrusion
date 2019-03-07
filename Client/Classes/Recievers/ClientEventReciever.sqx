@@ -108,15 +108,13 @@ namespace Intrusion.Client
 		public static method OnPlayerKilled("_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean, "_side" as Side, "_nearestMine" as Object)
 		{
 			private ["_prisonService" as PrisonService];
-			
-			removeAllActions _unit;
-			
+
 			if (_unit != _killer && _killer == player && [_side, side _killer] call BIS_fnc_sideIsFriendly) then {
 			
 				// Do not start prison if player was killed by mines
 				_nearestMine = [getPos player] call Functions.GetNearestMine;
 				
-				if (!isNull _nearestMine && {_unit distance _nearestMine > 10}) then {
+				if (isNull _nearestMine || {_unit distance _nearestMine > 10}) then {
 					_prisonService = [1] new PrisonService;
 					call _prisonService.RunAsync;
 				};
