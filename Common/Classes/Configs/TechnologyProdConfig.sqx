@@ -1,5 +1,5 @@
 /*
- * Name:	TechnologyConfig
+ * Name:	TechnologyProdConfig
  * Date:	2018-12-17
  * Version: 1.0
  * Author:  Engima
@@ -19,12 +19,12 @@ namespace Intrusion.Common
 				[Technology.Transport, "Transport", 25] new TechnologyInfo,
 				[Technology.Services, "Services", 50] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 75] new TechnologyInfo,
-				[Technology.Launchers, "Launchers", 100] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 200] new TechnologyInfo,
-				[Technology.AntiArmor, "Anti Armor", 250] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized Vehicles", 350] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 400] new TechnologyInfo,
-				[Technology.Armored, "Armored Vehicles", 500] new TechnologyInfo,
+				[Technology.Ordnance, "Ordnance", 200] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 300] new TechnologyInfo,
+				[Technology.Launchers, "Launchers", 400] new TechnologyInfo,
+				[Technology.LightArmor, "Light Armor", 500] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 600] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 750] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;

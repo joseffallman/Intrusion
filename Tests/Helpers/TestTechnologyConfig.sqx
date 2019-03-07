@@ -20,7 +20,7 @@ namespace Intrusion.Tests.Helpers
 			_self.Technologies = [
 				[Technology.Transport, "Transport", 1000] new TechnologyInfo,
 				[Technology.Motorized, "Motorized", 2000] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized", 3000] new TechnologyInfo
+				[Technology.LightArmor, "Mechanized", 3000] new TechnologyInfo
 			];
 		};
 		

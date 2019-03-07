@@ -15,12 +15,21 @@ namespace Intrusion.Common
 		Transport = 1,
 		Services = 2,
 		Maintenance = 3,
-		Launchers = 4,
-		Motorized = 5,
-		Artillery = 6,
-		AntiArmor = 7,
-		Mechanized = 8,
-		Armored = 9,
-		EndOfTechnologies = 10
+		Motorized = 4,
+		Launchers = 5,
+		Ordnance = 6,
+		LightArmor = 7,
+		Artillery = 8,
+		HeavyArmor = 9
+	};
+	
+	public class TechnologyMeta
+	{
+		public static method Init()
+		{
+			_self.LastTechnology = Technology.HeavyArmor;
+		};
+		
+		public static property Technology LastTechnology { get; private set; };
 	};
 };

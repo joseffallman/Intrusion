@@ -48,9 +48,9 @@ namespace Intrusion.Server
 			
 			// Find all techlab locations
 			_number = 1;
-			while { ["TechLab" + str _number] call MarkerHelper.MarkerExists } do
+			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
 			{
-				[["TechLab" + str _number, ResourceFacility.TechLab] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+				[["Office" + str _number, ResourceFacility.TechLab] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			

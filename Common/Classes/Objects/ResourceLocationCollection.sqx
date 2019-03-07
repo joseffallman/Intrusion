@@ -48,9 +48,9 @@ namespace Intrusion.Common
 			_count
 		};
 		
-		// Get the number of tech labs ownd by a side.
+		// Get the number of offices owned by a side.
 		// _side (Side): The side that is asked for.
-		// Returns (Scalar): The number of tech labs owned by the side.
+		// Returns (Scalar): The number of offices owned by the side.
 		public method Scalar GetTechLabsCountBySide {
 			params ["_side" as Side];
 			private ["_count" as Scalar, "_location" as ResourceLocation];

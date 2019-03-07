@@ -30,10 +30,10 @@ namespace Intrusion.Server
 		// Gets the length of a game round in minutes.
 		public property Scalar MatchLengthMinutes { get; private set; };
 		
-		// Gets the total production that will be assigned the sides during a game round.
+		// Gets the total production that will be shared by both sides during a game (if there are 60 players and the game is one hour long).
 		public property Scalar TotalProduction { get; private set; };
 		
-		// Gets the total technology that will be assigned the sides during a game round.
+		// Gets the total technology that will be shared by both sides during a game.
 		public property Scalar TotalResearch { get; private set; };
 		
 		// Get the maximun number of free vehicles at base.

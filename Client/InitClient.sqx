@@ -40,7 +40,7 @@ waitUntil { player == player };
 call TutorialConfig.Init;
 
 // Handlers
-call ClientEventHandlers.Init();
+call ClientEventHandlers.Init;
 call ClientState.Init;
 call TutorialHandler.Init;
 call RadioTriggerHandler.Init;

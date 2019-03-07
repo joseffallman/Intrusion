@@ -11,9 +11,19 @@ namespace Intrusion.Server
 {
 	public enum WeaponBoxType
 	{
-		Basic,
-		Grenades,
-		Launchers,
-		Ordnance
+		Basic = 1,
+		Grenades = 2,
+		Launchers = 3,
+		Ordnance = 4
+	};
+	
+	public class WeaponBoxTypeMeta
+	{
+		public static method Init()
+		{
+			_self.LastWeaponBoxType = WeaponBoxType.Ordnance;
+		};
+	
+		public static property LastWeaponBoxType { get; private set; };
 	};
 };

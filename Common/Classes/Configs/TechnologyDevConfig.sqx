@@ -1,5 +1,5 @@
 /*
- * Name:	TechnologyConfig
+ * Name:	TechnologyDevConfig
  * Date:	2018-12-17
  * Version: 1.0
  * Author:  Engima
@@ -16,15 +16,15 @@ namespace Intrusion.Common
 		// Creates a TechnologyConfig object.
 		public constructor {
 			_mTechnologies = [
-				[Technology.Transport, "Transport", 100] new TechnologyInfo,
-				[Technology.Services, "Services", 200] new TechnologyInfo,
-				[Technology.Maintenance, "Maintenance", 300] new TechnologyInfo,
-				[Technology.Launchers, "Launchers", 400] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 500] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 600] new TechnologyInfo,
-				[Technology.AntiArmor, "Anti Armor", 700] new TechnologyInfo,
-				[Technology.Mechanized, "Mechanized Vehicles", 800] new TechnologyInfo,
-				[Technology.Armored, "Armored Vehicles", 900] new TechnologyInfo,
+				[Technology.Transport, "Transport", 10] new TechnologyInfo,
+				[Technology.Services, "Services", 20] new TechnologyInfo,
+				[Technology.Maintenance, "Maintenance", 30] new TechnologyInfo,
+				[Technology.Ordnance, "Ordnance", 40] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 50] new TechnologyInfo,
+				[Technology.Launchers, "Launchers", 60] new TechnologyInfo,
+				[Technology.LightArmor, "Light Armor", 70] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 80] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 90] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;

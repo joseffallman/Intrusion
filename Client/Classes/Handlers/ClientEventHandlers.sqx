@@ -49,6 +49,65 @@ namespace Intrusion.Client
 				params ["_player" as Object, "_corpse"];
 				["ClientEventReciever.OnPlayerRespawn", [_player, _corpse]] call Remote.Invoke;
 			}];
+			
+			player addEventHandler ["Take", {
+				params ["_unit" as Object, "_container" as Object, "_item" as Object];
+				private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_itemIsRangeSniperRifle" as Boolean, "_itemIsRangeFinder" as Boolean];
+				
+				if (_unit == player) then
+				{
+					_itemIsRangeSniperRifle = (_item call BIS_fnc_itemtype) select 1 == "SniperRifle";
+					_itemIsRangeFinder = "RangeFinder" in  (vestItems player + uniformItems player + backpackItems player + assignedItems player);
+					
+					if ((_itemIsRangeFinder || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadsHasValue) then
+					{
+						_squadCollection = call PublicVariableHandler.GetSquads;
+						_squad = [group player] call _squadCollection.GetSquadByGroup;
+						
+						if (isNull _squad || {_squad.ProfessionType != ProfessionType.Sniper}) then {
+							player removeWeapon primaryWeapon player;
+							
+							removeGoggles player;
+							
+							["Only sniper teams are allowed to have that item.", player] call ClientMessageHandler.ShowMessage;
+						};
+					};
+				};
+			}];
+			
+			player addEventHandler ["GetInMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				//private ["_resourceLocationCollection" as ResourceLocationCollection] // SQX TODO: Why is this "never used"?
+				
+				if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
+					private _resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
+				};
+			}];
+			
+			player addEventHandler ["GetOutMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				//private ["_resourceLocationCollection" as ResourceLocationCollection]
+				
+				if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
+					private _resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
+				};
+			}];
+			
+			player addEventHandler ["AnimStateChanged", {
+				params ["_unit" as Object, "_anim" as String];
+
+				if (_anim == "unconsciousrevivedefault" && !isNull ClientState.LastInstigator) then {
+					["ClientEventReciever.OnPlayerKilled", [player, ClientState.LastInstigator, ClientState.LastInstigator, false, playerSide]] call Remote.Invoke;
+		    	};
+			}];
+			
+			player addEventHandler ["Hit", {
+				params ["_unit", "_source", "_damage", "_instigator"];
+				
+				ClientState.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
+			}];
 		};
 	};
 };
