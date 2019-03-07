@@ -71,12 +71,10 @@ if (ENGIMA_REVIVEFIX_alwaysUnconscious) then {
 					
 					player allowDamage true;
 					ENGINA_RESPAWNFIX_PlayerIsIncapacitated = false;
-					player sideChat "beatable again";
 				};
 			};
 		};
 		
-		player sideChat str _damage;
 		_damage
 	}];
 };
