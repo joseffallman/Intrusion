@@ -95,6 +95,9 @@ namespace Intrusion.Server
 				["ClientEventReciever.OnResourceReportCollectionUpdated", [_resourceReportCollection]] call Remote.Invoke;
 				
 				sleep 3;
+				
+				_nearestMine = [getPos player] call Functions.GetNearestMine;
+				player sideChat str (player distance _nearestMine);
 			};
 		};
 		

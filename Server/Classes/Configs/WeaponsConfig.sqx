@@ -44,7 +44,7 @@ namespace Intrusion.Server
 
 				[west, WeaponBoxType.Ordnance, Technology.None, "", ["ATMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				[west, WeaponBoxType.Ordnance, Technology.None, "", ["APERSMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
-				[west, WeaponBoxType.Ordnance, Technology.None, "", ["APERSTripMine_Wire_Mag"], CrateItemType.Weapon] new WeaponInfo,
+				//[west, WeaponBoxType.Ordnance, Technology.None, "", ["APERSTripMine_Wire_Mag"], CrateItemType.Weapon] new WeaponInfo, // Not found in allMines
 				[west, WeaponBoxType.Ordnance, Technology.None, "", ["SatchelCharge_Remote_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				[west, WeaponBoxType.Ordnance, Technology.None, "B_Kitbag_cbr", [], CrateItemType.Backpack] new WeaponInfo,
 
@@ -72,7 +72,7 @@ namespace Intrusion.Server
 				
 				[east, WeaponBoxType.Ordnance, Technology.None, "", ["ATMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				[east, WeaponBoxType.Ordnance, Technology.None, "", ["APERSMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
-				[east, WeaponBoxType.Ordnance, Technology.None, "", ["APERSTripMine_Wire_Mag"], CrateItemType.Weapon] new WeaponInfo,
+				//[east, WeaponBoxType.Ordnance, Technology.None, "", ["APERSTripMine_Wire_Mag"], CrateItemType.Weapon] new WeaponInfo, // Not found in allMines
 				[east, WeaponBoxType.Ordnance, Technology.None, "", ["SatchelCharge_Remote_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				[east, WeaponBoxType.Ordnance, Technology.None, "B_Kitbag_cbr", [], CrateItemType.Backpack] new WeaponInfo,
 			];
