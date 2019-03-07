@@ -74,6 +74,26 @@ namespace Intrusion.Client
 					};
 				};
 			}];
+			
+			player addEventHandler ["GetInMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				//private ["_resourceLocationCollection" as ResourceLocationCollection] // SQX TODO: Why is this "never used"?
+				
+				if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
+					private _resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
+				};
+			}];
+			
+			player addEventHandler ["GetOutMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				//private ["_resourceLocationCollection" as ResourceLocationCollection]
+				
+				if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
+					private _resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
+				};
+			}];
 		};
 	};
 };
