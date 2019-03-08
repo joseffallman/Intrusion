@@ -6,6 +6,14 @@
  * Description:
  * An enum with profession types.
  */
+
+/*
+  This is how you add a new profession:
+  1. Add the profession in the enum below.
+  2. Add info to class ProfessionConfig.
+  3. Add info to class ProfessionVehiclesProdConfig.
+  4. Add info to class VehicleClassNamesConfig.
+*/
 namespace Intrusion.Common
 {
 	public enum ProfessionType
@@ -17,10 +25,11 @@ namespace Intrusion.Common
 		Repair = 4,
 		Infantry = 5,
 		Motorized = 6,
-		Mortars = 7,
-		AntiArmor = 8,
-		Mechanized = 9,
-		Armored = 10,
+		Sniper = 7,
+		Mortars = 8,
+		AntiArmor = 9,
+		Mechanized = 10,
+		Armored = 11,
 	};
 	
 	public class ProfessionTypeMeta
@@ -37,6 +46,7 @@ namespace Intrusion.Common
 			_self.WarriorTypes = [
 				ProfessionType.Infantry,
 				ProfessionType.Motorized,
+				ProfessionType.Sniper,
 				ProfessionType.Mortars,
 				ProfessionType.AntiArmor,
 				ProfessionType.Mechanized,

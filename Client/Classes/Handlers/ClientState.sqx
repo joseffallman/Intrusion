@@ -17,6 +17,7 @@ namespace Intrusion.Client
 			_self.IsBrigadeLeader = false;
 			_self.IsSquadLeader = true;
 			_self.MyGroup = grpNull;
+			_self.LastInstigator = objNull;
 		};
 	
 		public static property Boolean IsOnCorrectSide { get; set; };
@@ -26,5 +27,7 @@ namespace Intrusion.Client
 		public static property Boolean IsSquadLeader { get; set; };
 		
 		public static property Group MyGroup { get; set; };
+
+		public static property Object LastInstigator { get; private set; };
 	};
 };

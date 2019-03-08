@@ -34,7 +34,7 @@ class IntProfessionDialog
 			idc = 2100;
 			x = 1.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 5.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 19 * GUI_GRID_W;
+			w = 25 * GUI_GRID_W;
 			h = 1.5 * GUI_GRID_H;
 		};
     };

@@ -15,11 +15,12 @@ namespace Intrusion.Common
 		Transport = 1,
 		Services = 2,
 		Maintenance = 3,
-		Launchers = 4,
-		Motorized = 5,
-		LightArmor = 6,
-		Artillery = 7,
-		HeavyArmor = 8
+		Motorized = 4,
+		Launchers = 5,
+		Ordnance = 6,
+		LightArmor = 7,
+		Artillery = 8,
+		HeavyArmor = 9
 	};
 	
 	public class TechnologyMeta

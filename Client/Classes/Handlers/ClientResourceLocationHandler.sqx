@@ -41,8 +41,8 @@ namespace Intrusion.Client
 			{
 				removeAllActions _x.Flag;
 				
-				if (_x.Side != playerSide) then {
-					(_x.Flag) addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }]; // TODO SQX (TEST ADDED): addAction command lost in compilation if _x.Flag stands without parenthesis.
+				if (_x.Side != playerSide && vehicle player == player) then {
+					_x.Flag addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }];
 				};
 				
 				[_x.MarkerName, _x.Side] call _self.UpdateMarkerColor;

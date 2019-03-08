@@ -12,10 +12,10 @@ namespace Intrusion.Common
 	public class ResourceReport
 	{
 		// Creates a ResourceReport object.
-		public constructor("_side" as Side, "_factoryCount" as Scalar, "_techLabCount" as Scalar, "_production" as Scalar, "_research" as Scalar) {
+		public constructor("_side" as Side, "_factoryCount" as Scalar, "_officeCount" as Scalar, "_production" as Scalar, "_research" as Scalar) {
 			_self.Side = _side;
 			_self.FactoryCount = _factoryCount;
-			_self.TechLabCount = _techLabCount;
+			_self.OfficeCount = _officeCount;
 			_self.Production = _production;
 			_self.Research = _research;
 		};
@@ -24,7 +24,7 @@ namespace Intrusion.Common
 		
 		public property Scalar FactoryCount { get; private set; };
 		
-		public property Scalar TechLabCount { get; private set; };
+		public property Scalar OfficeCount { get; private set; };
 		
 		public property Scalar Production { get; private set; };
 		

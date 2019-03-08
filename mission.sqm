@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={3104.9194,22.332581,6424.0991};
-		dir[]={0.36899057,-0.44297221,-0.81711441};
-		up[]={0.18233319,0.89650458,-0.4037697};
-		aside[]={-0.91140467,-7.628114e-008,-0.41157031};
+		dir[]={0.4288868,-0.39834851,-0.81082243};
+		up[]={0.18628493,0.91720617,-0.35217702};
+		aside[]={-0.88397986,-1.8297578e-007,-0.46758407};
 	};
 };
 binarizationWanted=0;
@@ -277,8 +277,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2983.2876,4.4208336,5940.2842};
-			name="TECHLAB1";
-			text="Desert High (Tech Lab)";
+			name="OFFICE1";
+			text="Desert High (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
@@ -288,8 +288,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2824.4502,2.4902391,6119.5371};
-			name="TECHLAB3";
-			text="Agia Marina (Tech Lab)";
+			name="OFFICE3";
+			text="Agia Marina (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=4;
@@ -352,8 +352,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={2854.6973,67.758713,5928.7378};
-			name="TECHLAB2";
-			text="Nist's High (Tech Lab)";
+			name="OFFICE2";
+			text="Nist's High (Office)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=14;

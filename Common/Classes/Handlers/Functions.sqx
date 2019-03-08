@@ -1,4 +1,4 @@
-/*
+/*9
  * Name:	Functions
  * Date:	2019-03-01
  * Version: 1.0
@@ -22,6 +22,33 @@ namespace Intrusion.Common
 			};
 			
 			_time
+		};
+		
+		// Gets the nearest mine.
+		// _pos (Array): The reference position.
+		// Returns (Object): The closest mine.
+		public static method Object GetNearestMine("_pos" as Array)
+		{
+			private ["_closestDistance" as Scalar, "_closestMine" as Object, "_closestTripwireMine" as Object];
+			
+			_closestMine = objNull;
+			_closestDistance = 999999999;
+			
+			{
+				if (_x distance _pos < _closestDistance) then {
+					_closestMine = _x;
+					_closestDistance = _x distance _pos;
+				};
+			} foreach allMines as Object;
+			
+			// Tripwires are not found above
+			_closestTripwireMine = nearestObject [_pos, "APERSTripMine_Wire_Ammo"];
+			if (_pos distance _closestTripwireMine < _closestDistance) then {
+				_closestDistance = _pos distance _closestTripwireMine;
+				_closestMine = _closestTripwireMine;
+			};
+			
+			_closestMine
 		};
 	};
 };

@@ -1,0 +1,18 @@
+/*
+ * Name:	CrateItemType
+ * Date:	2019-03-06
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Describes different types of items in a crate.
+ */
+namespace Intrusion.Server
+{
+	public enum CrateItemType
+	{
+		Weapon,
+		Backpack
+	};
+};
+

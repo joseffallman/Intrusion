@@ -7,18 +7,23 @@
  * Description:
  * Models a weapon and its possible magazines and other attributes.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class WeaponInfo
 	{
 		// Creates a WeaponInfo object.
 		public constructor {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_className" as String, "_magazines" as Array];
+			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType, "_requiredTechnology" as Technology, "_className" as String, "_magazines" as Array, "_itemType" as CrateItemType];
 			
 			_self.Side = _side;
 			_self.WeaponBoxType = _weaponBoxType;
+			_self.RequiredTechnology = _requiredTechnology;
 			_self.ClassName = _className;
 			_self.Magazines = _magazines;
+			_self.ItemType = _itemType;
 		};
 		
 		// Gets the weapon's side.
@@ -27,10 +32,16 @@ namespace Intrusion.Server
 		// Gets the type of box that the weapon should be in.
 		public property WeaponBoxType WeaponBoxType { get; private set; };
 		
+		// Gets the required technology for this weapon to show up in the ammo box.
+		public property Technology RequiredTechnology { get; private set; };
+		
 		// Gets the weapon's class name.
 		public property String ClassName { get; private set; };
 		
 		// Gets the weapon's possible magazine's class names as an array of String. 
 		public property Array Magazines { get; private set; };
+		
+		// Gets the items item type.
+		public property CrateItemType ItemType { get; private set; };
 	};
 };

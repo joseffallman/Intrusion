@@ -1,3 +1,4 @@
+call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
@@ -52,6 +53,9 @@ using Intrusion.Server;
 using Intrusion.Ai;
 
 #region Server Classes
+
+/* Metas */
+call WeaponBoxTypeMeta.Init;
 
 /* Configs */
 call WeaponsConfig.Init;
