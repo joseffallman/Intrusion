@@ -553,7 +553,16 @@
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Engima" IsExpanded="false" FileName="Engima">
         <IsSelected>false</IsSelected>
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="ReviveFix" IsExpanded="false" FileName="Engima\ReviveFix">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="CommonLib" IsExpanded="true" FileName="Engima\CommonLib">
+            <IsSelected>false</IsSelected>
+            <SubNodes>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonLib.sqf" IsExpanded="false" FileName="Engima\CommonLib\CommonLib.sqf">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
+            </SubNodes>
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="ReviveFix" IsExpanded="true" FileName="Engima\ReviveFix">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Code" IsExpanded="true" FileName="Engima\ReviveFix\Code">
@@ -579,9 +588,18 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="SearchPatrol" IsExpanded="true" FileName="Engima\SearchPatrol">
+            <IsSelected>false</IsSelected>
+            <SubNodes>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SearchPatrol.sqf" IsExpanded="false" FileName="Engima\SearchPatrol\SearchPatrol.sqf">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
+            </SubNodes>
+          </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Server" IsExpanded="false" FileName="Server">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Server" IsExpanded="true" FileName="Server">
         <IsSelected>false</IsSelected>
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Server\Classes">
@@ -590,7 +608,7 @@
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="false" FileName="Server\Classes\Configs">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
-                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces">
+                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="true" FileName="Server\Classes\Configs\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IGameplayConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces\IGameplayConfig.sqx">
@@ -719,6 +737,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionParameters.sqx" IsExpanded="false" FileName="Server\Classes\Objects\MissionParameters.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Observation.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Observation.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -798,7 +820,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="true" FileName="Server\Classes\Services">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Server\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="FreeVehiclesService.sqx" IsExpanded="false" FileName="Server\Classes\Services\FreeVehiclesService.sqx">
@@ -872,7 +894,7 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Markers" IsExpanded="false" FileName="Sqx\Markers">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Markers" IsExpanded="true" FileName="Sqx\Markers">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="init.sqx" IsExpanded="false" FileName="Sqx\Markers\init.sqx">
@@ -1041,7 +1063,7 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="init.sqf" IsExpanded="false" FileName="init.sqf">
-        <IsSelected>false</IsSelected>
+        <IsSelected>true</IsSelected>
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="init.sqx" IsExpanded="false" FileName="init.sqx">

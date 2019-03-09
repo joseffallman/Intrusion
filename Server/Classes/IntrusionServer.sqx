@@ -22,6 +22,7 @@ namespace Intrusion.Server
 			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
 			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
 			_self.UnitCounter = [gServerConfig.Gameplay, _aiUnitCounter] new UnitCounter;
+			_self.MissionParameters = [true] new MissionParameters;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -29,5 +30,6 @@ namespace Intrusion.Server
 		public property TargetHandler TargetHandler { get; private set; };
 		public property InventedTechnologiesCollection InventedTechnologiesCollection { get; private set; };
 		public property IUnitCounter UnitCounter { get; private set; };
+		public property MissionParameters MissionParameters { get; private set; };
 	};
 };
