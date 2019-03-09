@@ -20,12 +20,16 @@ namespace Intrusion.Server
 		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_missionParameters" as MissionParameters) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
+			
+			if (_missionParameters.ResourceLocationsInitiallyGuardedByGuerilla) then {
+				call _self.CreateGuerillaUnits;
+			};
 		};
 		
 		// Gets the location selected as the Winner's location.
@@ -136,6 +140,44 @@ namespace Intrusion.Server
 		public static method Scalar GetTechLabsCountBySide("_side" as Side)
 		{
 			[_side] call _mResourceLocationCollection.GetTechLabsCountBySide
+		};
+		
+		// Creates guarding guerilla units on all resource locations.
+		private static method CreateGuerillaUnits()
+		{
+			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_marker" as String, "_i" as Scalar, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
+			
+			_resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
+			_i = 0;
+			
+			{
+				_location = _x;
+				_i = _i + 1;
+				
+				// Create a marker
+				
+				_pos = getMarkerPos _location.MarkerName;
+				
+				_marker = createMarkerLocal ["GuerillaGuardMarker" + str _i, _pos];
+				_marker setMarkerAlpha 1;
+				_marker setMarkerSizeLocal [40, 40];
+				
+				// Create a group
+				
+				_group = createGroup [independent, true];
+				_noOfUnits = (floor random 3) + 1;
+				_roadSegments = _pos nearRoads 50;
+				
+				if (count _roadSegments > 0) then {
+					_pos = getPos (selectRandom _roadSegments);
+				};
+				
+				for "_i" from 1 to _noOfUnits do {
+					"I_soldier_F" createUnit [_pos, _group];
+				};
+				
+				[_group, _marker, [0,0,0], true] execVM "Engima\SearchPatrol\SearchPatrol.sqf";
+			} foreach _resourceLocations as ResourceLocation;
 		};
 	};
 };
