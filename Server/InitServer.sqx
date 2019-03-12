@@ -70,7 +70,7 @@ else {
 gServer = new IntrusionServer;
 
 /* Handlers */
-[gCommonConfig.MapMarkers, gServer.MissionParameters] call ResourceLocationHandler.Init;
+[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.GuerillaGuardingResourceLocations] call ResourceLocationHandler.Init;
 
 /* Services */
 [gServer.TargetHandler] call ObservationService.Init;

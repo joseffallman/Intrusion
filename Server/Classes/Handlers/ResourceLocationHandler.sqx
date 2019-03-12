@@ -20,14 +20,14 @@ namespace Intrusion.Server
 		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_missionParameters" as MissionParameters) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_guerillaGuardingResourceLocations" as Boolean) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
 			
-			if (_missionParameters.ResourceLocationsInitiallyGuardedByGuerilla) then {
+			if (_guerillaGuardingResourceLocations) then {
 				call _self.CreateGuerillaUnits;
 			};
 		};
