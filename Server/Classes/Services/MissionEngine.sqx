@@ -17,16 +17,6 @@ namespace Intrusion.Server
 	{
 		private static fields ["_mServer" as IntrusionServer, "_mServerConfig" as IServerConfig, "_mCommonConfig" as ICommonConfig];
 	
-		#region Handlers
-		
-		// Gets the mission's squad handler.
-		public static property SquadHandler SquadHandler { get; private set; };
-		
-		// Gets the mission's brigade leadership handler.
-		public static property BrigadeLeadershipHandler BrigadeLeadershipHandler { get; private set; };
-		
-		#endregion
-	
 		// Initializes and broadcasts the player info collection
 		private static method InitPlayerInfoCollection {
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_allPlayers" as Array, "_player" as Object];
@@ -51,10 +41,6 @@ namespace Intrusion.Server
         	// Create collections
         	_resourceReportCollection = new ResourceReportCollection;
         	
-        	// Create handlers
-        	_self.SquadHandler = [_mServer.VehicleSpawner] new SquadHandler;
-        	_self.BrigadeLeadershipHandler = [_mServer.MessageHandler] new BrigadeLeadershipHandler;
-        	
         	// Initialize the player info collection
         	call _self.InitPlayerInfoCollection;
         	
@@ -62,7 +48,7 @@ namespace Intrusion.Server
         	call ResourceLocationHandler.AquireAllResourceLocations;
         	
         	// Start the mission counter.
-        	[_mServerConfig.Gameplay] call MissionCounterService.RunAsync;
+        	[gCommon.MissionParametersHandler.MatchLengthMinutes] call MissionCounterService.RunAsync;
         	
         	// Start the weapon service
         	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, gServer.InventedTechnologiesCollection] call WeaponsService.RunAsync;
@@ -74,7 +60,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, _self.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, gServer.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter, gCommon.MissionParametersHandler.MatchLengthMinutes] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service

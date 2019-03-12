@@ -62,7 +62,7 @@ namespace Intrusion.Tests.Server
 			
 			if (count _mMessageHandler.Messages > 0) then {
 				_message = _mMessageHandler.Messages select 0;
-				["Your side has invented 'Transport'", _message.Text] call Assert.AreEqual;
+				["Your side has established 'Transport'", _message.Text] call Assert.AreEqual;
 				[west, _message.Address, "Message sent to wrong address."] call Assert.AreEqual;
 				[MessageType.Hint, _message.MessageType, "Message had wrong type."] call Assert.AreEqual;
 			};

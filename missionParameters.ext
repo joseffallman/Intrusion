@@ -1,0 +1,29 @@
+class Params
+{
+    class MatchLengthMinutes
+    {
+		//paramsArray[0]
+        title = "Game Length Minutes";
+        values[] = {30, 45, 60, 75, 90, 120, 180};
+        texts[] = {"30 minutes", "45 minutes", "60 minutes", "75 minutes", "90 minutes", "120 minutes", "180 minutes"};
+        default = 60;
+	};
+	
+	class UseTeamKillPrison
+	{
+		// paramsArray[1]
+		title="Team Kill Prison";
+		values[]={1, 0};
+		texts[]={"Enabled", "Disabled"};
+		default = true;
+	};
+	
+	class GuerillaGuardingResourceLocations
+	{
+		// paramsArray[2]
+		title="Guerilla guarding resource locations";
+		values[]={1, 0};
+		texts[]={"Yes", "No"};
+		default = true;
+	};
+};
