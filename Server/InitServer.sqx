@@ -26,10 +26,12 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -38,15 +40,13 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationServi
 call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\FourEastAiUnitCounterConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -83,9 +83,10 @@ gServer = [new AiUnitCounter] new IntrusionServer;
 [gServer.TargetHandler] call ObservationService.Init;
 
 /* AI */
+
 [] spawn {
 	private ["_aiService" as IService];
-	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions] new AiService;
+	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler] new AiService;
 	sleep 5;
 	call _aiService.RunAsync;
 };

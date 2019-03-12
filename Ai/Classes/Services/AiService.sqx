@@ -16,10 +16,10 @@ namespace Intrusion.Ai
 	public class AiService : IService
 	{
 		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig];
+		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler];
 		
 		// Creates a AiService object.
-		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig)
+		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler)
 		{
 			_mUnitCounterConfig = _unitCounterConfig;
 			_mGameplayConfig = _gameplayConfig;
@@ -92,7 +92,7 @@ namespace Intrusion.Ai
 					
 					_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
 					//_professionType = ProfessionType.Armored;
-					[_aiSquad.Group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
+					[_aiSquad.Group, _professionType] call _mSquadHandler.SetSquadProfession;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
 		};
