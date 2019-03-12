@@ -20,16 +20,12 @@ namespace Intrusion.Server
 		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_guerillaGuardingResourceLocations" as Boolean) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
 			_self.TechLabLocationsCount = 0;
-			
-			if (_guerillaGuardingResourceLocations) then {
-				call _self.CreateGuerillaUnits;
-			};
 		};
 		
 		// Gets the location selected as the Winner's location.
@@ -143,9 +139,9 @@ namespace Intrusion.Server
 		};
 		
 		// Creates guarding guerilla units on all resource locations.
-		private static method CreateGuerillaUnits()
+		public static method CreateGuerillaUnits()
 		{
-			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_marker" as String, "_i" as Scalar, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
+			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_waypoint" as Array, "_i" as Scalar, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
 			
 			_resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
 			_i = 0;
@@ -158,15 +154,21 @@ namespace Intrusion.Server
 				
 				_pos = getMarkerPos _location.MarkerName;
 				
+				/*
 				_marker = createMarkerLocal ["GuerillaGuardMarker" + str _i, _pos];
-				_marker setMarkerAlpha 1;
-				_marker setMarkerSizeLocal [40, 40];
+				_marker setMarkerShapeLocal "RECTANGLE";
+				_marker setMarkerAlphaLocal 0;
+				_marker setMarkerSizeLocal [20, 20];
+				*/
 				
 				// Create a group
 				
 				_group = createGroup [independent, true];
 				_noOfUnits = (floor random 3) + 1;
 				_roadSegments = _pos nearRoads 50;
+				
+				_waypoint = _group addWaypoint [_pos, 25];
+				_waypoint setWaypointType "GUARD";
 				
 				if (count _roadSegments > 0) then {
 					_pos = getPos (selectRandom _roadSegments);
@@ -176,7 +178,7 @@ namespace Intrusion.Server
 					"I_soldier_F" createUnit [_pos, _group];
 				};
 				
-				[_group, _marker, [0,0,0], true] execVM "Engima\SearchPatrol\SearchPatrol.sqf";
+				//[_group, _marker, [0,0,0], true] execVM "Engima\SearchPatrol\SearchPatrol.sqf";
 			} foreach _resourceLocations as ResourceLocation;
 		};
 	};
