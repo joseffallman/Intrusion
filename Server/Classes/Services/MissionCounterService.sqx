@@ -51,7 +51,7 @@ namespace Intrusion.Server
 						_lastReportMinute = _self.RemainingMinutes;
 					};
 				};
-				player sideChat str _remainingMinutes;
+
 				sleep 5;
 			};
 			

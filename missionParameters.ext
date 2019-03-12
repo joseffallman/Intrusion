@@ -15,7 +15,7 @@ class Params
 		title="Team Kill Prison";
 		values[]={1, 0};
 		texts[]={"Enabled", "Disabled"};
-		default = true;
+		default = 1;
 	};
 	
 	class GuerillaGuardingResourceLocations
@@ -24,6 +24,6 @@ class Params
 		title="Guerilla guarding resource locations";
 		values[]={1, 0};
 		texts[]={"Yes", "No"};
-		default = true;
+		default = 1;
 	};
 };

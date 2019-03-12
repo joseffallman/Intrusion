@@ -46,7 +46,11 @@ namespace Intrusion.Server
         	
         	// Aquire resource collections
         	call ResourceLocationHandler.AquireAllResourceLocations;
-        	
+			
+			if (gCommon.MissionParametersHandler.GuerillaGuardingResourceLocations) then {
+				call ResourceLocationHandler.CreateGuerillaUnits;
+			};
+			
         	// Start the mission counter.
         	[gCommon.MissionParametersHandler.MatchLengthMinutes] call MissionCounterService.RunAsync;
         	
