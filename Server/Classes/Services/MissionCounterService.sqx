@@ -49,7 +49,7 @@ namespace Intrusion.Server
 						_lastReportMinute = _remainingMinutes;
 					};
 				};
-				player sideChat str _remainingMinutes;
+
 				sleep 5;
 			};
 			
