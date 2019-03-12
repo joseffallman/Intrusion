@@ -14,14 +14,15 @@ namespace Intrusion.Server
 {
 	public class IntrusionServer
 	{
-		// Creates a IntrusionClient object.
+		// Creates a IntrusionServer object.
 		public constructor() {
 			_self.MessageHandler = new MessageHandler;
 			_self.VehicleSpawner = [gServerConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
 			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
 			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
 			_self.UnitCounter = [gServerConfig.Gameplay] new UnitCounter;
-			_self.MissionParameters = [true] new MissionParameters;
+			_self.SquadHandler = [_self.VehicleSpawner, gCommonConfig.Professions] new SquadHandler;
+			_self.BrigadeLeadershipHandler = [_self.MessageHandler] new BrigadeLeadershipHandler;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -29,6 +30,7 @@ namespace Intrusion.Server
 		public property TargetHandler TargetHandler { get; private set; };
 		public property InventedTechnologiesCollection InventedTechnologiesCollection { get; private set; };
 		public property IUnitCounter UnitCounter { get; private set; };
-		public property MissionParameters MissionParameters { get; private set; };
+		public property SquadHandler SquadHandler { get; private set; };
+		public property BrigadeLeadershipHandler BrigadeLeadershipHandler { get; private set; };
 	};
 };

@@ -16,13 +16,14 @@ namespace Intrusion.Server
 	public class SquadHandler : ISquadHandler
 	{
 		private fields ["_mSquadCollection" as SquadCollection, "_mVehicleSpawner" as IVehicleSpawner];
-		private static fields ["_mProfessionChangeListeners" as Array /* of Code */];
+		private static fields ["_mProfessionChangeListeners" as Array /* of Code */, "_mProfessionConfig" as IProfessionConfig];
 		
 		// Creates a SquadHandler object.
-		public constructor("_vehicleSpawner" as IVehicleSpawner) {
+		public constructor("_vehicleSpawner" as IVehicleSpawner, "_professionConfig" as IProfessionConfig) {
 			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadCollection = new SquadCollection;
 			_mProfessionChangeListeners = [];
+			_mProfessionConfig = _professionConfig;
 			
 			[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
 		};
@@ -61,36 +62,51 @@ namespace Intrusion.Server
 		// _professionName (String): The name of the new profession.
 		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
-			private ["_squad" as Squad];
+			private ["_squad" as Squad, "_profession" as Profession];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 			
-			// Create a new squad and add (or update) it to the list of squads.
-			if ([side _group, _professionType] call _mSquadCollection.ProfessionTypeAvailable) then {
-				call _mSquadCollection.AquireLock;
-				
-				_squad = [_group, _professionType] new Squad;
-				[_squad] call _mSquadCollection.AddOrUpdateSquad;
-				
-				call _self.RemoveEmptySquads;
-				
-				// Notify all local group change profession listeners of the current side.
-				{
-					if (_x.Side == side _group) then {
-						[_group, _professionType] call _x.OnGroupChangingProfession;
-					};
-				} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
-				
-				[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
-				
-				// Tell the clients about the change
-				["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
-				
-				call _mSquadCollection.ReleaseLock;
-			}
-			else {
-				// Tell the clients that the change was rejected
-				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is not available."]] call Remote.Invoke;
+			scopeName "main";
+
+			// Check if profession type is available (if not all taken by other squads).
+			if (!([side _group, _professionType] call _mSquadCollection.ProfessionTypeAvailable)) then {
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is already occupied."]] call Remote.Invoke;
+				breakOut "main";
 			};
+			
+			_profession = [_professionType] call _mProfessionConfig.GetProfession;
+			
+			if (count units _group < _profession.MinGroupSize) then {
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Your gruop is two small. You will need no less than " + str _profession.MinGroupSize + " members to play this profession."]] call Remote.Invoke;
+				breakOut "main";
+			};
+			
+			if (count units _group > _profession.MaxGroupSize) then {
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Too many in your group. You will need no more than " + str _profession.MaxGroupSize + " members to play this profession."]] call Remote.Invoke;
+				breakOut "main";
+			};
+			
+			// All clear, set the profession!
+
+			call _mSquadCollection.AquireLock;
+			
+			_squad = [_group, _professionType] new Squad;
+			[_squad] call _mSquadCollection.AddOrUpdateSquad;
+			
+			call _self.RemoveEmptySquads;
+			
+			// Notify all local group change profession listeners of the current side.
+			{
+				if (_x.Side == side _group) then {
+					[_group, _professionType] call _x.OnGroupChangingProfession;
+				};
+			} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
+			
+			[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
+			
+			// Tell the clients about the change
+			["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;
+			
+			call _mSquadCollection.ReleaseLock;
 		};
 		
 		// Gets a squad by group.

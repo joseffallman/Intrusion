@@ -22,7 +22,7 @@ namespace Intrusion.Server
 		{
 			[str _this + "SquadHandlerReciever.SetSquadProfession"] call LogHandler.Debug;
 			
-			[_group, _professionType] call MissionEngine.SquadHandler.SetSquadProfession;
+			[_group, _professionType] call gServer.SquadHandler.SetSquadProfession;
 		};
 	};
 };

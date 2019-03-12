@@ -18,14 +18,14 @@ namespace Intrusion.Server
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
 		public static method OnPlayerClaimBrigadeLeadership("_playerUid" as String, "_side" as Side) {
-			[_playerUid, _side] call MissionEngine.BrigadeLeadershipHandler.TrySetBrigadeLeader;
+			[_playerUid, _side] call gServer.BrigadeLeadershipHandler.TrySetBrigadeLeader;
 		};
 		
 		// Called when a player quits brigade leadership.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
 		public static method OnPlayerQuitBrigadeLeadership("_playerUid" as String) {
-			[_playerUid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+			[_playerUid] call gServer.BrigadeLeadershipHandler.QuitBrigadeLeadership;
 		};
 		
 		public static method OnLeaderMoveBase("_leader" as Object, "_baseLayout" as BaseLayout)
@@ -40,7 +40,7 @@ namespace Intrusion.Server
 		public static method OnPlayerJoinedGroup("_player" as Object, "_oldGroup" as Group, "_newGroup" as Group)
 		{
 			if (count units _oldGroup == 0) then {
-				call MissionEngine.SquadHandler.RemoveEmptySquads;
+				call gServer.SquadHandler.RemoveEmptySquads;
 			};
 		};
 	};

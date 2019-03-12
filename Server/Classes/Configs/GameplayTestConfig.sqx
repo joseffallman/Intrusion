@@ -18,7 +18,6 @@ namespace Intrusion.Server
 		public constructor()
 		{
 			_self.CompetingSides = [east, west];
-			_self.MatchLengthMinutes = 15;
 			_self.TotalProduction = 60000;
 			_self.TotalResearch = 2000;
 			_self.MaxFreeVehiclesAtBase = 3;
@@ -26,9 +25,6 @@ namespace Intrusion.Server
 		
 		// Gets the competing sides in the mission.
 		public property Array CompetingSides { get; private set; };
-		
-		// Gets the length of a game round in minutes.
-		public property Scalar MatchLengthMinutes { get; private set; };
 		
 		// Gets the total production that will be assigned the sides during a game round.
 		public property Scalar TotalProduction { get; private set; };
