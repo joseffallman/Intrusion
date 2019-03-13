@@ -26,4 +26,31 @@ class Params
 		texts[]={"Yes", "No"};
 		default = 1;
 	};
+	
+	class AiWest
+	{
+		// paramsArray[3]
+		title="AI Units West Frequency";
+		values[]={0, 1, 2, 3};
+		texts[]={"None", "Same as humans", "50% more than humans", "100% more than humans"};
+		default = 0;
+	};
+	
+	class AiEast
+	{
+		// paramsArray[3]
+		title="AI Units East Frequency";
+		values[]={0, 1, 2, 3};
+		texts[]={"None", "Same as humans", "50% more than humans", "100% more than humans"};
+		default = 0;
+	};
+	
+	class AiSkill
+	{
+		// paramsArray[3]
+		title="AI Skill";
+		values[]={0, 1, 2, 3, 5};
+		texts[]={"Sucks", "Bad", "Normal", "Good", "Elite"};
+		default = 2;
+	};
 };

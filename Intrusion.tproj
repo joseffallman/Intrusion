@@ -848,7 +848,7 @@
             </SubNodes>
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitServer.sqx" IsExpanded="false" FileName="Server\InitServer.sqx">
-            <IsSelected>true</IsSelected>
+            <IsSelected>false</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
         </SubNodes>
@@ -1038,7 +1038,7 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="missionParameters.ext" IsExpanded="false" FileName="missionParameters.ext">
-        <IsSelected>false</IsSelected>
+        <IsSelected>true</IsSelected>
         <SubNodes />
       </ProjectNodeViewModel>
     </SubNodes>
