@@ -33,9 +33,8 @@ namespace Intrusion.Server
 	
 		public method Scalar CountUnitsInPlay()
 		{
-			private no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
-			player sideChat str no;
-			no
+			private _no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
+			_no
 		};
 		
 		public property Scalar LobbySlotsCount { get; private set; };

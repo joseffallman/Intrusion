@@ -1855,8 +1855,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={3124.0823,1.7214174,6393.106};
-						angles[]={6.1983895,4.4802265,0.0024897563};
+						position[]={3123.3997,1.7954257,6394.4028};
+						angles[]={6.1983895,4.4802265,0.059928458};
 					};
 					side="West";
 					flags=6;
