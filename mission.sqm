@@ -276,23 +276,24 @@ class Mission
 		class Item1
 		{
 			dataType="Marker";
-			position[]={2983.2876,4.4208336,5940.2842};
+			position[]={2983.2881,4.421,5940.2842};
 			name="OFFICE1";
-			text="Desert High (Office)";
+			text="Cinema (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
-			atlOffset=0.93083358;
+			atlOffset=0.93099999;
 		};
 		class Item2
 		{
 			dataType="Marker";
-			position[]={2824.4502,2.4902391,6119.5371};
+			position[]={2824.45,2.49,6119.5371};
 			name="OFFICE3";
-			text="Agia Marina (Office)";
+			text="Marina (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=4;
+			atlOffset=-0.00023913383;
 		};
 		class Item3
 		{
@@ -330,13 +331,13 @@ class Mission
 		class Item6
 		{
 			dataType="Marker";
-			position[]={3056.1487,90.472557,6076.2285};
+			position[]={3056.1489,90.473,6076.229};
 			name="FACTORY2";
-			text="Camp Rogain (Factory)";
+			text="TE Transports Inc (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=78.497643;
+			atlOffset=78.498077;
 		};
 		class Item7
 		{
@@ -351,24 +352,24 @@ class Mission
 		class Item8
 		{
 			dataType="Marker";
-			position[]={2854.6973,67.758713,5928.7378};
+			position[]={2854.697,67.759003,5928.7378};
 			name="OFFICE2";
-			text="Nist's High (Office)";
+			text="The Corner (Office)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=14;
-			atlOffset=64.905083;
+			atlOffset=64.905373;
 		};
 		class Item9
 		{
 			dataType="Marker";
-			position[]={3060.7234,86.891281,6008.5};
+			position[]={3060.7229,86.890999,6008.5};
 			name="FACTORY3";
-			text="Stratis Air Base (Factory)";
+			text="Watchborder Inc (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=16;
-			atlOffset=82.92099;
+			atlOffset=82.920715;
 		};
 		class Item10
 		{
