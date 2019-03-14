@@ -15,8 +15,12 @@ namespace Intrusion.Client
 {
 	public class ClientEventHandlers
 	{
+		public static property Object LastInstigator { get; private set; };
+		
 		public static method Init()
 		{
+			_self.LastInstigator = objNull;
+			
 			// Fires when preload finishes.
 			["ClientEventHandlerId_01", "onPreloadFinished",
 			{ 
@@ -98,15 +102,15 @@ namespace Intrusion.Client
 			player addEventHandler ["AnimStateChanged", {
 				params ["_unit" as Object, "_anim" as String];
 
-				if (_anim == "unconsciousrevivedefault" && !isNull ClientState.LastInstigator) then {
-					["ClientEventReciever.OnPlayerKilled", [player, ClientState.LastInstigator, ClientState.LastInstigator, false, playerSide]] call Remote.Invoke;
+				if (_anim == "unconsciousrevivedefault" && !isNull _self.LastInstigator) then {
+					["ClientEventReciever.OnPlayerKilled", [player, _self.LastInstigator, _self.LastInstigator, false, playerSide]] call Remote.Invoke;
 		    	};
 			}];
 			
 			player addEventHandler ["Hit", {
-				params ["_unit", "_source", "_damage", "_instigator"];
+				params ["_unit" as Object, "_source", "_damage", "_instigator" as Object];
 				
-				ClientState.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
+				_self.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
 			}];
 		};
 	};
