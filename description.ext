@@ -27,6 +27,7 @@ author = "Engima";
 
 disabledAI = 1;
 
+respawn = "BASE";
 
 //#include "Description\TutorialDialog.ext"
 
