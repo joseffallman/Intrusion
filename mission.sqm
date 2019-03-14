@@ -57,6 +57,7 @@ randomSeed=9380854;
 class ScenarioData
 {
 	author="Engima";
+	respawn=3;
 };
 class CustomAttributes
 {
@@ -111,7 +112,7 @@ class CustomAttributes
 										"STRING"
 									};
 								};
-								value="None";
+								value="Counter";
 							};
 						};
 					};
@@ -163,6 +164,7 @@ class Mission
 {
 	class Intel
 	{
+		resistanceWest=0;
 		timeOfChanges=1800.0002;
 		startWeather=0.30000001;
 		startWind=0.1;
