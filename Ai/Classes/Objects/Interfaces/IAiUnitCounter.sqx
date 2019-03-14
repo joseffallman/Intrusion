@@ -12,6 +12,8 @@ namespace Intrusion.Ai
 	public interface IAiUnitCounter
 	{
 		method Scalar CountUnits();
+		
+		method Scalar CountUnitsSide("_side" as Side);
 	};
 };
 

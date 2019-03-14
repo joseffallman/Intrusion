@@ -13,6 +13,8 @@ namespace Intrusion.Server
 	{
 		method Scalar CountUnitsInPlay();
 		
+		method Scalar CountUnitsInPlaySide("_side" as Side);
+		
 		property Scalar LobbySlotsCount { get; };
 	};
 };

@@ -15,18 +15,19 @@ namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{
-		private fields ["_mUnitCounterConfig" as IAiUnitCounterConfig, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
 		
 		// Creates a AiService object.
-		public constructor("_unitCounterConfig" as IAiUnitCounterConfig, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler)
+		public constructor("_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel)
 		{
-			_mUnitCounterConfig = _unitCounterConfig;
+			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
 			_mUnitsConfig = _unitsConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mProfessinConfig = _professinConfig;
+			_mSkillLevel = _skillLevel;
 			_mSquads = [];
 			
 			_self.AiWarriorTypes = [
@@ -80,14 +81,14 @@ namespace Intrusion.Ai
 		private method CreateNewSquads()
 		{
 			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquad, "_professionType" as ProfessionType];
-			
+
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
-				_maxUnitsCount = [_x] call _mUnitCounterConfig.GetAllowedUnitCount;
+				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
 				_unitCount = (floor random 2) + 1;
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
-					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount] new AiSquad;
+					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
 					_mSquads pushBack _aiSquad;
 					
 					_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
@@ -106,8 +107,8 @@ namespace Intrusion.Ai
 				{
 					call _x.Act;
 					sleep 0.1;
-				} foreach _mSquads as AiSquad
-
+				} foreach _mSquads as AiSquad;
+				
 				sleep 1;
 			};
 			

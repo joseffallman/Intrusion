@@ -20,7 +20,7 @@ namespace Intrusion.Common
 			_self.GuerillaGuardingResourceLocations = if (paramsArray select 2 == 1) then { true } else { false };
 			_self.AiWestFrequency = (paramsArray select 3) as AiFrequency;
 			_self.AiEastFrequency = (paramsArray select 4) as AiFrequency;
-			_self.AiSkill = (paramsArray select 5) as Skill;
+			_self.AiSkillLevel = (paramsArray select 5) as SkillLevel;
 		};
 		
 		public property Scalar MatchLengthMinutes { get; private set; };
@@ -33,7 +33,7 @@ namespace Intrusion.Common
 		
 		public property AiFrequency AiEastFrequency { get; private set; };
 		
-		public property Skill AiSkill { get; private set; };
+		public property SkillLevel AiSkillLevel { get; private set; };
 		
 		public method SetDefaultValuesIfSinglePlayer()
 		{

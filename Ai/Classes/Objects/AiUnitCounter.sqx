@@ -29,5 +29,20 @@ namespace Intrusion.Ai
 			
 			_count
 		};
+		
+		public method Scalar CountUnitsSide("_side" as Side)
+		{
+			private ["_count" as Scalar];
+			
+			_count = 0;
+			
+			{
+				if (side _x == _side && {_x getVariable ["IsAiUnit", false]}) then {
+					_count = _count + 1;
+				};
+			} foreach allUnits as Object;
+			
+			_count
+		};
 	};
 };

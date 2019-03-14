@@ -9,10 +9,9 @@
  */
 namespace Intrusion.Ai
 {
-	public interface IAiUnitCounterConfig
+	public interface IAiUnitBalancer
 	{
 		// Gets the number of AI units allowed for a side.
 		method Scalar GetAllowedUnitCount("_side" as Side);
 	};
 };
-

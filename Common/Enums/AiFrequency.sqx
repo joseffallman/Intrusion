@@ -15,7 +15,7 @@ namespace Intrusion.Common
 		Ten = 10,
 		Twenty = 20,
 		Thirty = 30,
-		Same = 1001,
+		Same = 1001, // Important that all absolute options have a value below 1000, and that all relative options have a value above 1000.
 		More50Percent = 1002,
 		More100Percent = 1003,
 	};

@@ -1,0 +1,40 @@
+/*
+ * Name:	Skill
+ * Date:	2019-03-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * An enum describing some skills.
+ */
+namespace Intrusion.Common
+{
+	public enum SkillLevel
+	{
+		Sucks = 0, // Must be the same values that are in the parameters.
+		Bad = 1,
+		Good = 2,
+		Outstanding = 3,
+		Elite = 4
+	};
+
+	public class SkillLevelMeta
+	{
+		public static method Scalar SkillToScalar("_skill" as SkillLevel)
+		{
+			private ["_skillScalar" as Scalar];
+			
+			_skillScalar = 0.5; // Middle default falue
+			
+			switch (_skill) do {
+				case SkillLevel.Sucks: { _skillScalar = 0 + random 0.2 };
+				case SkillLevel.Bad: { _skillScalar = 0.2 + random 0.2 };
+				case SkillLevel.Good: { _skillScalar = 0.4 + random 0.2 };
+				case SkillLevel.Outstanding: { _skillScalar = 0.6 + random 0.2 };
+				case SkillLevel.Elite: { _skillScalar = 0.8 + random 0.2 };
+			};
+			
+			_skillScalar
+		};
+	};
+};

@@ -16,12 +16,13 @@ namespace Intrusion.Server
 {
 	public class ResourceLocationHandler
 	{
-		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig];
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mAiSkillLevel" as SkillLevel];
 		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_aiSkillLevel" as SkillLevel) {
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mAiSkillLevel = _aiSkillLevel;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
@@ -177,6 +178,10 @@ namespace Intrusion.Server
 				for "_i" from 1 to _noOfUnits do {
 					"I_soldier_F" createUnit [_pos, _group];
 				};
+				
+				{
+					_x setSkill ([_mAiSkillLevel] call SkillLevelMeta.SkillToScalar);
+				} foreach units _group;
 				
 				//[_group, _marker, [0,0,0], true] execVM "Engima\SearchPatrol\SearchPatrol.sqf";
 			} foreach _resourceLocations as ResourceLocation;

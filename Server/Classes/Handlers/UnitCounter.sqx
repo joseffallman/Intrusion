@@ -30,11 +30,16 @@ namespace Intrusion.Server
 			
 			_self.LobbySlotsCount = _lobbySlotsCount;
 		};
-	
+
 		public method Scalar CountUnitsInPlay()
 		{
 			private _no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
-			player sideChat str _no;
+			_no
+		};
+		
+		public method Scalar CountUnitsInPlaySide("_side" as Side)
+		{
+			private _no = ({side _x == _side} count (call BIS_fnc_listPlayers)) + ([_side] call _mAiUnitCounter.CountUnitsSide);
 			_no
 		};
 		

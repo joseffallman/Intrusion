@@ -41,10 +41,10 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Configs\FourEastAiUnitCounterConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiUnitBalancer.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
@@ -77,7 +77,7 @@ else {
 gServer = [new AiUnitCounter] new IntrusionServer;
 
 /* Handlers */
-[gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
+[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
 [gServer.TargetHandler] call ObservationService.Init;
@@ -85,8 +85,10 @@ gServer = [new AiUnitCounter] new IntrusionServer;
 /* AI */
 
 [] spawn {
-	private ["_aiService" as IService];
-	_aiService = [new FourEastAiUnitCounterConfig, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler] new AiService;
+	private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
+	
+	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel] new AiService;
 	sleep 5;
 	call _aiService.RunAsync;
 };
