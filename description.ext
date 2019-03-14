@@ -1,4 +1,4 @@
-#include "missionParameters.ext"
+#include "Description\MissionParameters.ext"
 #include "Dialogs\Defines.hpp"
 #include "Dialogs\DialogControls.hpp"
 #include "Dialogs\TutorialDialog.hpp"
@@ -31,3 +31,6 @@ disabledAI = 1;
 //#include "Description\TutorialDialog.ext"
 
 #include "Description\RemoteExec.ext"
+
+// Revive settings
+#include "Description\Revive.ext"
