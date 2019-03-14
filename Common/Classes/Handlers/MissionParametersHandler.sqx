@@ -18,6 +18,9 @@ namespace Intrusion.Common
 			_self.MatchLengthMinutes = paramsArray select 0;
 			_self.UseTeamKillPrison = if (paramsArray select 1 == 1) then { true } else { false };
 			_self.GuerillaGuardingResourceLocations = if (paramsArray select 2 == 1) then { true } else { false };
+			_self.AiWestFrequency = (paramsArray select 3) as AiFrequency;
+			_self.AiEastFrequency = (paramsArray select 4) as AiFrequency;
+			_self.AiSkill = (paramsArray select 5) as Skill;
 		};
 		
 		public property Scalar MatchLengthMinutes { get; private set; };
@@ -25,6 +28,12 @@ namespace Intrusion.Common
 		public property Boolean UseTeamKillPrison { get; private set; };
 		
 		public property Boolean GuerillaGuardingResourceLocations { get; private set; };
+		
+		public property AiFrequency AiWestFrequency { get; private set; };
+		
+		public property AiFrequency AiEastFrequency { get; private set; };
+		
+		public property Skill AiSkill { get; private set; };
 		
 		public method SetDefaultValuesIfSinglePlayer()
 		{

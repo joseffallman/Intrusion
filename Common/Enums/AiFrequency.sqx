@@ -1,0 +1,22 @@
+/*
+ * Name:	AiFrequency
+ * Date:	2019-03-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum that describes how the AI units will be balanced during a mission.
+ */
+namespace Intrusion.Common
+{
+	public enum AiFrequency
+	{
+		None = 0, // Must be the same values that are in the parameters.
+		Ten = 10,
+		Twenty = 20,
+		Thirty = 30,
+		Same = 1001,
+		More50Percent = 1002,
+		More100Percent = 1003,
+	};
+};

@@ -1,0 +1,20 @@
+/*
+ * Name:	Skill
+ * Date:	2019-03-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * An enum describing some skills.
+ */
+namespace Intrusion.Common
+{
+	public enum Skill
+	{
+		Sucks = 0, // Must be the same values that are in the parameters.
+		Bad = 1,
+		Good = 2,
+		Outstanding = 3,
+		Elite = 4
+	};
+};
