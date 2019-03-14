@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProjectRootNode Name="Intrusion" IsExpanded="true" FileName="">
+  <ProjectRootNode Name="Intrusion" IsExpanded="false" FileName="">
     <IsSelected>true</IsSelected>
     <SubNodes>
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Ai" IsExpanded="false" FileName="Ai">
@@ -550,15 +550,6 @@
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Engima" IsExpanded="false" FileName="Engima">
         <IsSelected>false</IsSelected>
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="CommonLib" IsExpanded="false" FileName="Engima\CommonLib">
-            <IsSelected>false</IsSelected>
-            <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonLib.sqf" IsExpanded="false" FileName="Engima\CommonLib\CommonLib.sqf">
-                <IsSelected>false</IsSelected>
-                <SubNodes />
-              </ProjectNodeViewModel>
-            </SubNodes>
-          </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="ReviveFix" IsExpanded="false" FileName="Engima\ReviveFix">
             <IsSelected>false</IsSelected>
             <SubNodes>
@@ -580,15 +571,6 @@
                 </SubNodes>
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Config.sqf" IsExpanded="false" FileName="Engima\ReviveFix\Config.sqf">
-                <IsSelected>false</IsSelected>
-                <SubNodes />
-              </ProjectNodeViewModel>
-            </SubNodes>
-          </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="SearchPatrol" IsExpanded="false" FileName="Engima\SearchPatrol">
-            <IsSelected>false</IsSelected>
-            <SubNodes>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SearchPatrol.sqf" IsExpanded="false" FileName="Engima\SearchPatrol\SearchPatrol.sqf">
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>

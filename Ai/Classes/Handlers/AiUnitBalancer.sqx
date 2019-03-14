@@ -63,7 +63,6 @@ namespace Intrusion.Ai
 				_ourUnitCountAllowed = floor (_theirUnitsInCount * _factor);
 			};
 			
-			player sideChat (str _side) + ": " + str _ourUnitCountAllowed;
 			_ourUnitCountAllowed
 		};
 	};
