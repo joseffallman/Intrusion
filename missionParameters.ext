@@ -1,0 +1,56 @@
+class Params
+{
+    class MatchLengthMinutes
+    {
+		//paramsArray[0]
+        title = "Game Length Minutes";
+        values[] = {30, 45, 60, 75, 90, 120, 180};
+        texts[] = {"30 minutes", "45 minutes", "60 minutes", "75 minutes", "90 minutes", "120 minutes", "180 minutes"};
+        default = 60;
+	};
+	
+	class UseTeamKillPrison
+	{
+		// paramsArray[1]
+		title="Team Kill Prison";
+		values[]={1, 0};
+		texts[]={"Enabled", "Disabled"};
+		default = 1;
+	};
+	
+	class GuerillaGuardingResourceLocations
+	{
+		// paramsArray[2]
+		title="Guerilla guarding resource locations";
+		values[]={1, 0};
+		texts[]={"Yes", "No"};
+		default = 1;
+	};
+	
+	class AiWest
+	{
+		// paramsArray[3]
+		title="AI Units West Frequency";
+		values[]={0, 10, 20, 30, 1001, 1002, 1003};
+		texts[]={"None", 10, 20, 30, "Same as eastly units (humans and ai)", "50% more than eastly units (humans and ai)", "100% more than eastly units (humans and ai)"};
+		default = 0;
+	};
+	
+	class AiEast
+	{
+		// paramsArray[4]
+		title="AI Units East Frequency";
+		values[]={0, 10, 20, 30, 1001, 1002, 1003};
+		texts[]={"None", 10, 20, 30, "Same as westly units (humans and ai)", "50% more than westly units (humans and ai)", "100% more than westly units (humans and ai)"};
+		default = 0;
+	};
+	
+	class AiSkill
+	{
+		// paramsArray[5]
+		title="AI Skill";
+		values[]={0, 1, 2, 3, 5};
+		texts[]={"Sucks", "Bad", "Good", "Outstanding", "Elite"};
+		default = 2;
+	};
+};

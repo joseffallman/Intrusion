@@ -1,0 +1,27 @@
+/*
+ * Name:	AiUnitInfo
+ * Date:	2019-02-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Config information about an AI unit.
+ */
+namespace Intrusion.Ai
+{
+	public class AiUnitInfo
+	{
+		// Creates a AiUnitInfo object.
+		public constructor("_side" as Side, "_unitClassName" as String) {
+			_self.Side = _side;
+			_self.UnitClassName = _unitClassName;
+		};
+		
+		// Gets the AI unit information's side.
+		public property Side Side { get; private set; };
+		
+		// Gets the AI unit information's class name.
+		public property String UnitClassName { get; private set; };
+	};
+};
+

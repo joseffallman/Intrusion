@@ -26,10 +26,12 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -38,12 +40,25 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationServi
 call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiUnitBalancer.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
 using Intrusion.Common;
 using Intrusion.Server;
+using Intrusion.Ai;
+
+			
+// Make resistance enemy to all both east and west.
+
+resistance setFriend [west, 0];
+west setFriend [resistance, 0];
+resistance setFriend [east, 0];
+east setFriend [resistance, 0];
 
 #region Server Classes
 
@@ -67,12 +82,23 @@ else {
 	};
 };
 
-gServer = new IntrusionServer;
+gServer = [new AiUnitCounter] new IntrusionServer;
 
 /* Handlers */
-[gCommonConfig.MapMarkers] call ResourceLocationHandler.Init;
+[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
 [gServer.TargetHandler] call ObservationService.Init;
+
+/* AI */
+
+[] spawn {
+	private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
+	
+	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel] new AiService;
+	sleep 5;
+	call _aiService.RunAsync;
+};
 
 #endregion

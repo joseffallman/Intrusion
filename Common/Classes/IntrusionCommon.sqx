@@ -1,0 +1,22 @@
+/*
+ * Name:	IntrusionCommon
+ * Date:	2019-03-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains "global" common objects and services.
+ */
+
+namespace Intrusion.Common
+{
+	public class IntrusionCommon
+	{
+		// Creates a IntrusionCommon object.
+		public constructor() {
+			_self.MissionParametersHandler = new MissionParametersHandler;
+		};
+	
+		public property MissionParametersHandler MissionParametersHandler { get; private set; };
+	};
+};

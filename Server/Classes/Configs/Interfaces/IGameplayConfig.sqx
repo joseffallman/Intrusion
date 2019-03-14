@@ -16,9 +16,6 @@ namespace Intrusion.Server
 		// Gets the competing sides in the mission.
 		property Array CompetingSides { get; private set; };
 		
-		// Gets the length of a game round in minutes.
-		property Scalar MatchLengthMinutes { get; private set; };
-		
 		// Gets the total production that will be assigned the sides during a game round.
 		property Scalar TotalProduction { get; private set; };
 		

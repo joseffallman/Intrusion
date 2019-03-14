@@ -31,7 +31,7 @@ namespace Intrusion.Server
 			addMissionEventHandler ["PlayerDisconnected", {
 				params ["_id" as Scalar, "_uid" as String, "_name" as String, "_jip" as Boolean, "_owner" as Scalar];
 				
-				[_uid] call MissionEngine.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+				[_uid] call gServer.BrigadeLeadershipHandler.QuitBrigadeLeadership;
 			}];
 			
 			// Fired when a player leaves the MP game.

@@ -1,0 +1,48 @@
+/*
+ * Name:	ValuedObject
+ * Date:	2019-02-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A general object used to compare other objects regarding values, e.g. distances.
+ */
+
+using Sqx.Collections;
+
+namespace Intrusion.Common
+{
+	public class ValuedObject : IComparer
+	{
+		// Creates a ValuedObject object.
+		public constructor("_object" as Any, "_value" as Scalar)
+		{
+			_self.Object = _object;
+			_self.Value = _value;
+		};
+		
+		public property Any Object { get; private set; };
+		
+		public property Scalar Value { get; private set; };
+		
+		public method Scalar Compare("_otherObject" as IComparer)
+		{
+			private ["_result" as Scalar, "_otherValuedObject" as ValuedObject];
+			
+			_otherValuedObject = _otherObject as ValuedObject;
+			
+			_result = 0;
+			
+			if (_self.Value > _otherValuedObject.Value) then {
+				_result = 1;
+			}
+			else {
+				if (_self.Value < _otherValuedObject.Value) then {
+					_result = -1;
+				};
+			};
+			
+			_result
+		};
+	};
+};

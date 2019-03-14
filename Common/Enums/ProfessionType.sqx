@@ -19,16 +19,47 @@ namespace Intrusion.Common
 	public enum ProfessionType
 	{
 		Undefined = 0, // Important: Undefined must be the option with lowest number
-		Infantry = 10, // Important: First non warrior type
-		Transport = 20,
-		Fuel = 30,
-		Ammo = 40,
-		Repair = 50, // Important: First warrior type
-		Motorized = 60,
-		Sniper = 70,
-		Mortars = 80,
-		AntiArmor = 90,
-		Mechanized = 100,
-		Armored = 110,
+		Transport = 1,
+		Fuel = 2,
+		Ammo = 3,
+		Repair = 4,
+		Infantry = 5,
+		Motorized = 6,
+		Sniper = 7,
+		Mortars = 8,
+		AntiArmor = 9,
+		Mechanized = 10,
+		Armored = 11,
+	};
+	
+	public class ProfessionTypeMeta
+	{
+		public static method Init()
+		{
+			_self.NonWarriorTypes = [
+				ProfessionType.Transport,
+				ProfessionType.Fuel,
+				ProfessionType.Ammo,
+				ProfessionType.Repair
+			];
+			
+			_self.WarriorTypes = [
+				ProfessionType.Infantry,
+				ProfessionType.Motorized,
+				ProfessionType.Sniper,
+				ProfessionType.Mortars,
+				ProfessionType.AntiArmor,
+				ProfessionType.Mechanized,
+				ProfessionType.Armored,
+			];
+			
+			_self.LastValue = ProfessionType.Armored;
+			_self.ProfessionTypeCount = _self.LastValue as Scalar;
+		};
+
+		public static property Array NonWarriorTypes { get; private set; };
+		public static property Array WarriorTypes { get; private set; };		
+		public static property ProfessionType LastValue { get; private set; };		
+		public static property Scalar ProfessionTypeCount { get; private set; };
 	};
 };

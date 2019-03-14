@@ -123,6 +123,7 @@ namespace Intrusion.Server
 		public method PerformProduction {
 			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
 			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
+			[str _this + " ProductionManager.PerformProduction"] call LogHandler.Debug;
 
 			_tryOneMore = true;
 
@@ -148,19 +149,31 @@ namespace Intrusion.Server
 							_vehiclesCount = ceil ((count units _squad.Group) / (_profession.MaxUnitsPerVehicle));
 						};
 	
-						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then {
+						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then
+						{
 							// Create the vehicle(s)
-							for "_i" from 1 to _vehiclesCount do {
+							for "_i" from 1 to _vehiclesCount do
+							{
 								[_squad.Group, _squad.ProfessionType, _mReservationQueue.CurrentReservation.VehicleClassName, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
+								
+								["Spawned intrusion vehicle for group " + name leader _squad.Group] call LogHandler.Debug;
+								["_totalProduction = " + str _totalProduction] call LogHandler.Debug;
+								["_cost = " + str _cost] call LogHandler.Debug;
+								["_vehiclesCount = " + str _vehiclesCount] call LogHandler.Debug;
+								["_vehiclesCount = " + str _vehiclesCount] call LogHandler.Debug;
+								["_mReservationQueue = " + str _mReservationQueue] call LogHandler.Debug;
+								
 								[_cost] call _mResourceBook.WithdrawProduction;
 							};
-							
+
 							// Tell the group
 							["Your squad's vehicle is ready and waiting for you at the base.", _mReservationQueue.CurrentReservation.Group] call _mMessageHandler.ShowMessage;
 							
 							// Remove the reservation
 							call _mReservationQueue.RemoveCurrentReservation;
 
+							["_mReservationQueue after deletion = " + str _mReservationQueue] call LogHandler.Debug;
+							
 							// Tell the next squad that their vehicle is being produced.
 							if (call _mReservationQueue.Count > 0) then {
 								[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
