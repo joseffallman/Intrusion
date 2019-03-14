@@ -52,6 +52,14 @@ using Intrusion.Common;
 using Intrusion.Server;
 using Intrusion.Ai;
 
+			
+// Make resistance enemy to all both east and west.
+
+resistance setFriend [west, 0];
+west setFriend [resistance, 0];
+resistance setFriend [east, 0];
+east setFriend [resistance, 0];
+
 #region Server Classes
 
 /* Metas */
