@@ -203,12 +203,12 @@ class Mission
 		class Item0
 		{
 			dataType="Marker";
-			position[]={11844.667,72.536987,4651.7808};
+			position[]={11840.615,72.536987,4651.1738};
 			name="respawn_west";
 			type="Empty";
-			angle=151.24872;
+			angle=151.24873;
 			id=0;
-			atlOffset=61.357567;
+			atlOffset=60.600624;
 		};
 		class Item1
 		{
@@ -279,12 +279,12 @@ class Mission
 		class Item7
 		{
 			dataType="Marker";
-			position[]={11838.248,69.06897,4652.8281};
+			position[]={11834.805,69.06897,4652.3223};
 			name="INT_WeaponDepotMarkerWest";
 			type="Empty";
 			angle=190.7982;
 			id=7;
-			atlOffset=56.610008;
+			atlOffset=56.109867;
 		};
 		class Item8
 		{
@@ -1317,7 +1317,7 @@ class Mission
 		class Item40
 		{
 			dataType="Marker";
-			position[]={9473.4785,3.1160707e+015,3300.9016};
+			position[]={9468.6738,3.1160707e+015,3295.6746};
 			name="INT_WeaponDepotMarkerEast";
 			type="Empty";
 			angle=87.837372;
@@ -1331,7 +1331,7 @@ class Mission
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=182.64034;
+			angle=182.64035;
 			drawBorder=1;
 			id=72;
 			atlOffset=-1.3137474;
