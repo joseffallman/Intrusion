@@ -27,6 +27,7 @@ namespace Intrusion.Ai
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mProfessinConfig = _professinConfig;
+			_mSquadHandler = _squadHandler;
 			_mSkillLevel = _skillLevel;
 			_mSquads = [];
 			
@@ -85,14 +86,15 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
-				_unitCount = (floor random 2) + 1;
+				_unitCount = selectRandom [1, 2, 2, 2];
 			
-				if (_existingUnitsCount < _maxUnitsCount) then {
+				if (_existingUnitsCount <= _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
 					_mSquads pushBack _aiSquad;
 					
 					_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
 					//_professionType = ProfessionType.Armored;
+
 					[_aiSquad.Group, _professionType] call _mSquadHandler.SetSquadProfession;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
