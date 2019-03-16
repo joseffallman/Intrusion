@@ -14,8 +14,8 @@ namespace Intrusion.Client
 		// Creates a ClassNamesConfig object.
 		public constructor {
 			_self.BaseRadius = 75;
-			_self.BeamToBaseEnemiesMinDistance = 500;
-			_self.BeamToBaseGroupMembersMaxDistance = 100;
+			_self.BeamToBaseEnemiesMinDistance = 250;
+			_self.BeamToBaseGroupMembersMaxDistance = 50;
 			_self.MoveBaseRespawnArrowClassName = "Sign_Arrow_Large_Blue_F";
 			_self.MoveBaseVehiclesArrowClassName = "Sign_Arrow_Large_F";
 			_self.MoveBaseWeaponsArrowClassName = "Sign_Arrow_Large_Green_F";
