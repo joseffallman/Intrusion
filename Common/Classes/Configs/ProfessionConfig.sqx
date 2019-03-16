@@ -50,9 +50,8 @@ namespace Intrusion.Common
 		// Gets a profession.
 		// _professionType (ProfessionType): The profession type.
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
-		public method Profession GetProfession("_professionType" as ProfessionType) {
-			[(str _this) + " ProfessionConfig.GetProfession"] call LogHandler.Debug;
-
+		public method Profession GetProfession("_professionType" as ProfessionType)
+		{
 			scopeName "main";
 			
 			{
