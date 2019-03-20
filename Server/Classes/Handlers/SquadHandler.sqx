@@ -63,7 +63,6 @@ namespace Intrusion.Server
 		public method SetSquadProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
 			private ["_squad" as Squad, "_profession" as Profession];
-			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
 
 			scopeName "main";
 
@@ -130,7 +129,6 @@ namespace Intrusion.Server
 		
 		public method RemoveEmptySquads()
 		{
-			[str _this + "SquadHandler.RemoveEmptySquads"] call LogHandler.Debug;
 			private ["_removedSquads" as Array /* of Squad */];
 			
 			_removedSquads = call _mSquadCollection.RemoveEmptySquads;

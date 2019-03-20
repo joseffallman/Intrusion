@@ -51,7 +51,6 @@ namespace Intrusion.Server
 		// _group (Group): The group to add.
 		public method PutReservation("_reservation" as Reservation)
 		{
-		    [str _this + " ReservationQueue.PutReservation"] call LogHandler.Debug;
 			_mReservations pushBack _reservation;
 			
 			if (count _mReservations == 1) then {
