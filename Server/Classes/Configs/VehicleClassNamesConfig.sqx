@@ -72,9 +72,8 @@ namespace Intrusion.Server
 		// _side (Side): Side.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Array): An array with vehicle class names. An empty array if no class names were found.
-		public method ProVehicleClassNamesInfo GetProVehiclesClassNameInfo("_side" as Side, "_professionType" as ProfessionType) {
-			[str _this + " VehicleClassNamesConfig.GetProVehiclesClassNameInfo"] call LogHandler.Debug;
-			
+		public method ProVehicleClassNamesInfo GetProVehiclesClassNameInfo("_side" as Side, "_professionType" as ProfessionType)
+		{
 			scopeName "main";
 			
 			{

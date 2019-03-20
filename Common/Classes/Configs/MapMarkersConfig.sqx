@@ -34,7 +34,6 @@ namespace Intrusion.Common
 		// Returns (MissionSideInfo): A mission side config object.
 		public method GetMapMarkerInfo("_side" as Side) {
 			private ["_info" as MapMarkerInfo];
-			[str _this + " MapMarkersInfo.GetMapMarkerInfo"] call LogHandler.Debug;
 
 			scopeName "main";
 			_info = classNull;

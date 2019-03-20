@@ -79,7 +79,6 @@ namespace Intrusion.Server
 		public method OnGroupChangingProfession("_group" as Group, "_professionType" as ProfessionType)
 		{
 			private ["_cost" as Scalar];
-		    [str _this + " ProductionManager.OnGroupChangingProfession"] call LogHandler.Debug;
 			
 			// Delete the group's eventual existing vehicle and return its production value.
 			_cost = [_group] call _mVehicleSpawner.DeleteProfessionVehicles;
@@ -123,7 +122,6 @@ namespace Intrusion.Server
 		public method PerformProduction {
 			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
 			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
-			[str _this + " ProductionManager.PerformProduction"] call LogHandler.Debug;
 
 			_tryOneMore = true;
 
