@@ -22,9 +22,9 @@ namespace Intrusion.Client
 		};
 	
         // Adds 'Invite player to group' actions to every single member group leader.
-        public static method UpdateAllInvitePlayerActions {
+        public static method UpdateAllInvitePlayerActions()
+        {
         	private ["_playableUnits" as Array];
-        	["GroupActionHandler.UpdateAllInvitePlayerActions"] call LogHandler.Debug;
         	
         	_playableUnits = [switchableUnits, playableUnits] select isMultiplayer;
         	
@@ -51,7 +51,6 @@ namespace Intrusion.Client
 		private static method InviteOtherPlayerToGroup("_otherPlayer" as Object)
 		{
 			private ["_previousGroup" as Group, "_squadCollection" as SquadCollection, "_mySquad" as Squad, "_profession" as Profession, "_maxPlayers" as Scalar];
-			[str _this + "GroupActionHandler.InviteOtherPlayerToGroup"] call LogHandler.Debug;
 			
 			_maxPlayers = 0;
 			_squadCollection = call PublicVariableHandler.GetSquads;

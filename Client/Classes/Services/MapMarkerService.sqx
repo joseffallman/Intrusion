@@ -188,7 +188,6 @@ namespace Intrusion.Client
 		private static method UpdateAlliedBaseMarker()
 		{
 			private ["_markerInfo" as MapMarkerInfo];
-			[str _this + " MapMarkerService.UpdateAlliedBaseMarker"] call LogHandler.Debug;
 			
 			_markerInfo = [playerSide] call _mMapMarkersConfig.GetMapMarkerInfo;
 			

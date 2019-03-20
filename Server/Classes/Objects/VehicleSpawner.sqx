@@ -28,9 +28,9 @@ namespace Intrusion.Server
 		// _markPos (Array): The position where to find a free spawn position.
 		// _initialRadius (Scalar): Optional. The initial radius how far from the position that is ok. This
 		// value will expand until a position is found.
-		private static method FindSpawnPos("_markPos" as Array, ["_initialRadius" as Scalar, 0]) {
+		private static method FindSpawnPos("_markPos" as Array, ["_initialRadius" as Scalar, 0])
+		{
 			private ["_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_danger", "_foundIt", "_tries"];
-			[str _this + " VehicleHandler.FindSpawnPos"] call LogHandler.Debug;
 			
 			_spawnpos = [];
 			_foundIt = false;
@@ -94,7 +94,6 @@ namespace Intrusion.Server
 		// Returns (IntrusionVehicle): The intrusion vehicle that was spawned.
 		private method IntrusionVehicle SpawnIntrusionVehicle("_side" as Side, "_professionType" as ProfessionType, ["_explicitClassName" as String, ""], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
 		{
-			[str _this + " VehicleSpawner.SpawnIntrusionVehicle"] call LogHandler.Debug;
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
@@ -148,7 +147,6 @@ namespace Intrusion.Server
 		public method IntrusionVehicle SpawnProfessionVehicle("_group" as Group, "_professionType" as ProfessionType, "_vehicleClass" as String, "_cost" as Scalar)
 		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
-		    [str _this + " VehicleSpawner.SpawnProfessionVehicle"] call LogHandler.Debug;
 
 		    _intrusionVehicle = [side _group, _professionType, _vehicleClass, _group, _cost] call _self.SpawnIntrusionVehicle;
         	
@@ -200,7 +198,6 @@ namespace Intrusion.Server
 		// Returns (Scalar): The production cost of the vehicle.
 		public method Scalar DeleteProfessionVehicles("_group" as Group)
 		{
-			[str _this + "VehicleSpawner.DeleteProfessionVehicles"] call LogHandler.Debug;
 			private ["_intrusionVehiclesToKeep" as Array, "_totalCost" as Scalar, "_vehicleCount" as Scalar, "_totalVehicleDamage" as Scalar];
 			private ["_returnedCost" as Scalar];
 			
