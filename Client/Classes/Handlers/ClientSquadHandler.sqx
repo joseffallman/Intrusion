@@ -26,8 +26,6 @@ namespace Intrusion.Client
 		// _professionType (ProfessionType): The new profession type.
 		public static method OnGroupProfessionChanged("_group" as Group, "_professionType" as ProfessionType)
 		{
-			[(str _this) + " ClientSquadHandler.OnGroupProfessionChanged"] call LogHandler.Debug;
-			
 			if (_group == group player) then {
 				call ProfessionDialog.CloseDialog;
 				["Your group now belongs to the brigade's " + ([_professionType] call _mProfessionConfig.GetProfession).Name] call ClientMessageHandler.ShowMessage;
@@ -40,8 +38,6 @@ namespace Intrusion.Client
 		// _reason (String): The reason that the group profession was now changed.
 		public static method OnGroupProfessionChangeRejected("_group" as Group, "_reason" as String)
 		{
-			[(str _this) + " ClientSquadHandler.OnGroupProfessionChangeRejected"] call LogHandler.Debug;
-			
 			if (_group == group player) then {
 				[_reason] call ClientMessageHandler.ShowMessage;
 			};

@@ -18,7 +18,6 @@ namespace Intrusion.Communication
 	{
 		public static method Invoke {
 			params ["_methodFullName" as String, ["_parameter" as Any, []]];
-        	["Remote.Invoke"] call LogHandler.Debug;
 
 			[_methodFullName, _parameter] remoteExec ["Intrusion_Communication_Remote_Recieve", RemoteTargetOptions.All];
 		};

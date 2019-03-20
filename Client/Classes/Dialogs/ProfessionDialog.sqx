@@ -34,47 +34,16 @@ namespace Intrusion.Client
 		
 		// Reads the selected profession type from the combo box
 		// Returns (Profession): The selected profession. classNull if no profession is selected.
-		private static method ProfessionType GetSelectedProfessionTypeFromCombo {
+		private static method ProfessionType GetSelectedProfessionTypeFromCombo()
+		{
 			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
 			
 			_mOptions select _selectedIndex
 		};
-/*		
-		// Adds all currently available professions to the combo box.
-		private static method AddAvailableProfessions {
-			private ["_profession" as Profession, "_squads" as SquadCollection, "_options" as Array, "_playersInGroup" as Scalar];
-			
-            // Add all available professions
-            _options = [];
-			_playersInGroup = count units group player;
-            
-            if (call PublicVariableHandler.SquadsHasValue) then {
-				_squads = call PublicVariableHandler.GetSquads;
-		
-				{
-					_profession = _x;
-					
-					// If profession is available, and if the group has a good size
-					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
-						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-						_options pushBack _profession.Type;
-					};
-				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
-            }
-            else {
-				{
-					if (_playersInGroup >= _x.MinGroupSize && _playersInGroup <= _x.MaxGroupSize) then {
-						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
-						_options pushBack _x.Type;
-					};
-				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
-            };
-            
-            _mOptions = _options;
-		};
-*/
+
 		// Adds all professions to the combo box.
-		private static method AddProfessions {
+		private static method AddProfessions()
+		{
 			private ["_options" as Array, "_sGroupSize" as String, "_sMaxGroupsCount" as String];
 			
             _options = [];
@@ -99,7 +68,8 @@ namespace Intrusion.Client
 	
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
-		public static method DialogResult ShowDialog {
+		public static method DialogResult ShowDialog()
+		{
 			waitUntil { !dialog };
 			
 			// Create the dialog
@@ -118,7 +88,8 @@ namespace Intrusion.Client
 		};
 		
 		// Closes the dialog if it is open.
-		public static method CloseDialog {
+		public static method CloseDialog()
+		{
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
@@ -126,16 +97,15 @@ namespace Intrusion.Client
 		
 		// Sends the group's selected profession to the server.
 		// Called by the .hpp-dialog when the OK button is pressed.
-		public static method OnOkButtonPressed {
-			[(str _this) + " ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
-			
-			["ProfessionDialog.OnOkButtonPressed"] call LogHandler.Debug;
+		public static method OnOkButtonPressed()
+		{
 			ProfessionDialog.SelectedProfession = call _self.GetSelectedProfessionTypeFromCombo;
 			["SquadHandlerReciever.SetSquadProfession", [group player, ProfessionDialog.SelectedProfession]] call Remote.Invoke;
 		};		
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.
-		public static method OnCancelButtonPressed {
+		public static method OnCancelButtonPressed()
+		{
 			call _self.CloseDialog;
 		};		
 	};
