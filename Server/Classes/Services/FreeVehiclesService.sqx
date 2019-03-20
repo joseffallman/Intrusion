@@ -17,7 +17,6 @@ namespace Intrusion.Server
 		// Starts the thread that runs though whole of the mission and assigns free vehicles to all sides.
 		private static method Run {
 		    private ["_vehiclesAtBaseCount" as Scalar];
-		    [str _this + " FreeVehiclesService.Run"] call LogHandler.Debug;
 
 		    while { true } do {
 		    	{

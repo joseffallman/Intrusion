@@ -17,8 +17,6 @@ namespace Intrusion.Client
 	{
 		// Called locally when a player captures a flag.
 		private static method OnActionCaptureFlag("_flag" as Object) {
-			[str _this + " ClientResourceLocationHandler.OnActionCaptureFlag"] call LogHandler.Debug;
-			
 			private _markerName = _flag getVariable ["MarkerName", ""];
 			
 			["ResourceLocationHandler.SetNewFlagOwner", [_markerName, playerSide]] call Remote.Invoke;
@@ -34,7 +32,6 @@ namespace Intrusion.Client
 		public static method UpdateResourceLocations("_resourceLocationCollection" as ResourceLocationCollection)
 		{
 			private ["_resourceLocations" as Array /* of ResourceLocation */];
-			[str _this + " ClientResourceLocationHandler.UpdateResourceLocations"] call LogHandler.Debug;
 			
 			_resourceLocations = call _resourceLocationCollection.GetResourceLocations;
 			
@@ -51,7 +48,6 @@ namespace Intrusion.Client
 		
 		// Initializes the resource location actions for the first time.
 		private static method DoInitResourceLocations {
-			["ClientResourceLocationHandler.DoInitResourceLocations"] call LogHandler.Debug;
 			waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
 			[call PublicVariableHandler.GetResourceLocationCollection] call _self.UpdateResourceLocations;
 		};
@@ -59,9 +55,8 @@ namespace Intrusion.Client
 		// Updates the marker color with the color reflecting the current side.
 		// _markerName (String): The name of the flag marker.
 		// _ownerSide (Side): The side owning the marker.
-		private static method UpdateMarkerColor("_markerName" as String, "_ownerSide" as Side) {
-			[str _this + " ClientResourceLocationHandler.UpdateMarkerColor"] call LogHandler.Debug;
-			
+		private static method UpdateMarkerColor("_markerName" as String, "_ownerSide" as Side)
+		{
 			if (_ownerSide == playerSide) then {
 				_markerName setMarkerColorLocal "ColorWest";
 			}

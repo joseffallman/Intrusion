@@ -70,7 +70,6 @@ namespace Intrusion.Common
 		// _professionType (ProfessionType): The profession type to count.
 		public method CountByProfessionType("_side" as Side, "_professionType" as ProfessionType)
 		{
-			[(str _this) + " SquadCollection.CountByProfessionType"] call LogHandler.Debug;
 			{ side _x.Group == _side && _x.ProfessionType == _professionType } count (_self.Squads) as Squad;
 		};
 		
@@ -82,7 +81,6 @@ namespace Intrusion.Common
 		public method Boolean ProfessionTypeAvailable("_side" as Side, "_professionType" as ProfessionType)
 		{
 			private ["_assignedSquadsCount" as Scalar, "_profession" as Profession];
-			[(str _this) + " SquadCollection.ProfessionTypeAvailable"] call LogHandler.Debug;
 			
 			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
 			_profession = [_professionType] call gCommonConfig.Professions.GetProfession;

@@ -98,7 +98,6 @@ namespace Intrusion.Client
 		public static method UpdateMap("_mapObservations" as Array)
 		{
 			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];
-			[(str _this) + " MapObservationsHandler.UpdateMap"] call LogHandler.Debug;
 			
 			_newMapObservationIds = [];
 			

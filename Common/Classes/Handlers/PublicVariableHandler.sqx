@@ -40,8 +40,6 @@ namespace Intrusion.Common
 		// _squads (Array): An array of squads.
 		public static method BroadcastSquads("_squads" as SquadCollection)
 		{
-			[(str _this) + " PublicVariableHandler.BroadcastSquads"] call LogHandler.Debug;
-			
 			INT_Public_squads = _squads;
 			publicVariable "INT_Public_squads";
 		};
@@ -60,8 +58,6 @@ namespace Intrusion.Common
 		// _playerInfoCollection (PlayerInfoCollection): A collection of player infos.
 		public static method BroadcastPlayerInfoCollection("_playerInfoCollection" as PlayerInfoCollection)
 		{
-			[(str _this) + " PublicVariableHandler.BroadcastPlayerInfoCollection"] call LogHandler.Debug;
-			
 			INT_Public_playerInfoCollection = _playerInfoCollection;
 			publicVariable "INT_Public_playerInfoCollection";
 		};
@@ -80,8 +76,6 @@ namespace Intrusion.Common
 		// _orderCollection (OrderCollection): A collection of orders.
 		public static method BroadcastOrderCollection("_orderCollection" as OrderCollection)
 		{
-			[(str _this) + " PublicVariableHandler.BroadcastOrderCollection"] call LogHandler.Debug;
-			
 			INT_Public_orderCollection = _orderCollection;
 			publicVariable "INT_Public_orderCollection";
 		};
@@ -100,8 +94,6 @@ namespace Intrusion.Common
 		// _squads (Array): An array of all intrusion vehicles.
 		public static method BroadcastIntrusionVehicles("_intrusionVehicles" as Array)
 		{
-			[(str _this) + " PublicVariableHandler.BroadcastIntrusionVehicles"] call LogHandler.Debug;
-			
 			INT_Public_intrusionVehicles = _intrusionVehicles;
 			publicVariable "INT_Public_intrusionVehicles";
 		};
