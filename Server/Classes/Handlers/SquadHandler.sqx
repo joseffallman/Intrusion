@@ -64,7 +64,7 @@ namespace Intrusion.Server
 		{
 			private ["_squad" as Squad, "_profession" as Profession];
 			[(str _this) + " SquadHandler.SetSquadProfession"] call LogHandler.Debug;
-			
+
 			scopeName "main";
 
 			// Check if profession type is available (if not all taken by other squads).

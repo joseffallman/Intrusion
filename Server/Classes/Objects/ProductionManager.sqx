@@ -52,7 +52,7 @@ namespace Intrusion.Server
 		private method CreateReservation("_group" as Group, "_professionType" as ProfessionType)
 		{
 			private ["_reservation" as Reservation, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
-			
+
 			// Remove the group's eventual existing reservations.
 			[_group] call _mReservationQueue.RemoveReservationsByGroup;
 			
@@ -104,7 +104,7 @@ namespace Intrusion.Server
 			
 			{
 				_squad = _x;
-				
+
 				if (side _squad.Group == _self.Side) then {
 					_reservation = [_squad.Group] call _mReservationQueue.GetReservationByGroup;
 					

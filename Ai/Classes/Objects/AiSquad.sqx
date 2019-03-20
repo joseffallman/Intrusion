@@ -68,7 +68,7 @@ namespace Intrusion.Ai
 			if (time > _mLastPosTime + 60) then {
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				[AiSquadState.Idle, 0] call _self.SetState;
-				player sideChat "Movement timeout. Idle...";
+//				player sideChat "Movement timeout. Idle...";
 			};
 		};
 		
@@ -101,7 +101,7 @@ namespace Intrusion.Ai
 			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 
 			if (MissionCounterService.RemainingMinutes <= 12) then {
-				player sideChat "less than 12!";
+//				player sideChat "less than 12!";
 				
 				_location = ResourceLocationHandler.WinnersLocation;
 				
@@ -110,7 +110,7 @@ namespace Intrusion.Ai
 					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
 					//_mOrderTime = time;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-					player sideChat "End location order!";
+//					player sideChat "End location order!";
 				};
 			}
 			else {
@@ -197,7 +197,7 @@ namespace Intrusion.Ai
 		{
 			if (_mState != AiSquadState.Idle && time > _mCurrentActionTimeoutTime) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
-				player sideChat "Timeout. Idle...";
+//				player sideChat "Timeout. Idle...";
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			};
 		};
@@ -255,7 +255,7 @@ namespace Intrusion.Ai
 					if (_seeEnemies) then {
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 						[AiSquadState.ExitingVehicle, 20] call _self.SetState;
-						player sideChat "Exiting vehicle #3";
+//						player sideChat "Exiting vehicle #3";
 						breakOut "main";
 					};
 				};
@@ -275,14 +275,14 @@ namespace Intrusion.Ai
 						if (vehicle _mUnit != _mUnit) then {
 							[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 							[AiSquadState.ExitingVehicle, 20] call _self.SetState;
-							player sideChat "Exiting vehicle #1";
+//							player sideChat "Exiting vehicle #1";
 						};
 					};
 					
 					_mUnit doMove getPos _mResourceLocation.Flag;
 					_mUnit setBehaviour "AWARE";
 					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
-					player sideChat "SingleUnitGettingFlag";
+//					player sideChat "SingleUnitGettingFlag";
 					
 					[_mUnit, getMarkerPos _mResourceLocation.MarkerName] spawn {
 						params ["_unit" as Object, "_pos" as Array];
@@ -305,7 +305,7 @@ namespace Intrusion.Ai
 					if ([_mVehicle] call _self.GroupFitInVehicle) then {
 						[_mVehicle] call _self.EnterVehicle;
 						[AiSquadState.BoardingVehicle, 30] call _self.SetState;
-						player sideChat "Entering vehicle";
+//						player sideChat "Entering vehicle";
 						breakOut "main";
 					};
 				};
@@ -317,7 +317,7 @@ namespace Intrusion.Ai
 					{
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 						[AiSquadState.ExitingVehicle, 20] call _self.SetState;
-						player sideChat "Exiting vehicle #2";
+//						player sideChat "Exiting vehicle #2";
 						breakOut "main";
 					};
 				};
@@ -332,7 +332,7 @@ namespace Intrusion.Ai
 					_waypoint setWaypointType "HOLD";
 					_self.Group setSpeedMode "LIMITED";
 					[AiSquadState.Moving, 120] call _self.SetState;
-					player sideChat "Moving";
+//					player sideChat "Moving";
 					breakOut "main";
 				};
 				
@@ -345,7 +345,7 @@ namespace Intrusion.Ai
 						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {
 							[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
 							[AiSquadState.BoardingVehicle, 60] call _self.SetState;
-							player sideChat "BoardingVehicle";
+//							player sideChat "BoardingVehicle";
 							breakOut "main";
 						};
 					};
@@ -361,7 +361,7 @@ namespace Intrusion.Ai
 					_waypoint setWaypointType "HOLD";
 					_self.Group setSpeedMode "NORMAL";
 					[AiSquadState.Moving, 600] call _self.SetState;
-					player sideChat "Moving #3";
+//					player sideChat "Moving #3";
 					breakOut "main";
 				};
 				
@@ -373,7 +373,7 @@ namespace Intrusion.Ai
 				_waypoint setWaypointType "HOLD";
 				_self.Group setSpeedMode "NORMAL";
 				[AiSquadState.Moving, 120] call _self.SetState;
-				player sideChat "Moving #2";
+//				player sideChat "Moving #2";
 				breakOut "main";
 			};
 		};
@@ -401,7 +401,7 @@ namespace Intrusion.Ai
 					};
 					
 					[AiSquadState.Idle, 0] call _self.SetState;
-					player sideChat "Idle";
+//					player sideChat "Idle";
 				};
 			} foreach units _self.Group;
 		};
@@ -420,7 +420,7 @@ namespace Intrusion.Ai
 		
 			if (vehicle _mUnit distance _mMovingToPos < _targetDistance) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
-				player sideChat "Finished moving. Idle...";
+//				player sideChat "Finished moving. Idle...";
 			};
 		};
 		
@@ -534,7 +534,7 @@ namespace Intrusion.Ai
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 					[AiSquadState.BoardingVehicle, 90] call _self.SetState;
 					call _self.CreateOrderOnOwnInitiative;
-					player sideChat "Beaming. Idle...";
+//					player sideChat "Beaming. Idle...";
 				};
 			};
 		};
@@ -547,13 +547,13 @@ namespace Intrusion.Ai
 			else {
 				if (isNull _mCurrentOrder) then {
 					call _self.CreateOrderOnOwnInitiative;
-					player sideChat "new order #1.";
+//					player sideChat "new order #1.";
 				}
 				else {
 					// If flag at order target location is friendly, set a new order
 					if (_mResourceLocation.Side == side _self.Group) then {
 						call _self.CreateOrderOnOwnInitiative;
-						player sideChat "new order #2.";
+//						player sideChat "new order #2.";
 					}
 				};
 			};
