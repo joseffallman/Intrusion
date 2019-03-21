@@ -24,7 +24,7 @@ namespace Intrusion.Client
 		
 		public static method ShowAction()
 		{
-			player addAction ["Open Intrusion Menu", { call IntrusionMenuHandler.Open; }];
+			player addAction ["<t color='#AAAAFF'>Open Intrusion Menu</t>", { call IntrusionMenuHandler.Open; }];
 		};
 		
 		#region Option Properties

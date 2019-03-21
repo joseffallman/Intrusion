@@ -64,7 +64,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, gServer.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter, gCommon.MissionParametersHandler.MatchLengthMinutes] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, gServer.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter, gCommonConfig.Professions, gCommon.MissionParametersHandler.MatchLengthMinutes] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service

@@ -22,9 +22,9 @@ namespace Intrusion.Client
 			_mBrigadeInfoCtrl = controlNull;
 		};
 		
-		public method DisplayResourceReport("_resourceReport" as ResourceReport)
+		public method DisplayResourceReport("_report" as ResourceReport)
 		{
-			private ["_technologyInfo" as TechnologyInfo];
+			private ["_technologyInfo" as TechnologyInfo, "_text" as String];
 			
 			waitUntil {!isNull findDisplay 46};
 			disableSerialization;
@@ -35,20 +35,40 @@ namespace Intrusion.Client
 				_mBrigadeInfoCtrl ctrlCommit 0;
 			};
 
-			_technologyInfo = [_resourceReport.Research] call _mTechnologyConfig.GetNextTechnology;
+			_technologyInfo = [_report.Research] call _mTechnologyConfig.GetNextTechnology;
 			
+			_text = "Production: " + str floor _report.Production;
+			
+			if (_report.NextVehicleGroup == group player) then {
+				_text = _text + " (Vehicle at " + str _report.NextVehicleCost + ")";
+			};
+			
+			_text = _text + ", Administration: " + str floor _report.Research + " ";
+			
+			if (isNull _technologyInfo) then {
+				_text = _text + "(all done)";
+			}
+			else {
+				_text = _text + "(" + _technologyInfo.Name + " at " + str _technologyInfo.RequiredResearch + ")";
+			};
+			
+			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
+				"<t color='#ffffff' align='left' size='1.4'>" + _text + "</t>";
+			];
+/*
 			if (!isNull _technologyInfo) then {
 				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
-					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Research: %2 (%3 at %4)</t>",
-					str floor _resourceReport.Production, str floor _resourceReport.Research, _technologyInfo.Name, str _technologyInfo.RequiredResearch;
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Administration: %2 (%3 at %4)</t>",
+					str floor _report.Production, str floor _report.Research, _technologyInfo.Name, str _technologyInfo.RequiredResearch;
 				];
 			}
 			else {
 				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
 					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Administration: %2 (all done)</t>",
-					str floor _resourceReport.Production, str floor _resourceReport.Research;
+					str floor _report.Production, str floor _report.Research;
 				];
 			};
+*/
 		};
 	};
 };
