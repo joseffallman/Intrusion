@@ -19,7 +19,7 @@ namespace Intrusion.Server
 		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as IProfessionConfig];
 
 		// Creates a ProductionManager object.
-		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as IProfessionConfig, ["_reservationQueue" as ReservationQueue, classNull])
+		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as IProfessionConfig, "_reservationQueue" as ReservationQueue)
 		{
 			_mProfessionVehiclesConfig = _professionVehiclesConfig;
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
@@ -30,9 +30,10 @@ namespace Intrusion.Server
 			_mScientist = _scientist;
 			_mMessageHandler = _messageHandler;
 			_mProfessionConfig = _professionConfig;
-			
 			_mReservationQueue = _reservationQueue;
-			
+			[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
+
+/*
 			// If reservationQueue is null, then we are in production mode (not in unit testing)
 			if (isNull _mReservationQueue) then {
 				_mReservationQueue = new ReservationQueue;
@@ -41,6 +42,7 @@ namespace Intrusion.Server
 				// when groups on the side is changing its profession.
 				[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
 			};
+*/
 		};
 		
 		// Gets the production manager's side.
