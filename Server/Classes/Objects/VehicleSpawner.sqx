@@ -97,6 +97,11 @@ namespace Intrusion.Server
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
+
+			diag_log("_mAllIntrusionVehicles:");
+			{
+				diag_log(str _x);
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
 		    
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
         	_vehicleClassInfo = [_side, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
