@@ -41,6 +41,8 @@ namespace Intrusion.Client
 			if (_playerUid == getPlayerUID player) then {
 				["Your claim for brigade leadership was rejected.", player] call ClientMessageHandler.ShowMessage;
 			};
+			
+			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
 		// Called when a player quits as brigade leader
@@ -56,27 +58,27 @@ namespace Intrusion.Client
 		// Called when a player joined a group
 		public static method OnPlayerJoinedGroup("_player" as Object, "_oldGroup" as Group, "_newGroup" as Group)
 		{
-			call GroupActionHandler.UpdateAllInvitePlayerActions;
-			call IntrusionMenuHandler.UpdateVisibleOptions;
-			
 			if (_player == player) then {
 				ClientState.MyGroup = _newGroup;
 				ClientState.IsSquadLeader = false;
 				call gClient.TaskHandler.UpdateWithGroupTask;
 			};
+			
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
+			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
 		// Called when a player left a group
 		public static method OnPlayerLeftGroup("_player" as Object, "_oldGroup" as Group)
 		{
-			call GroupActionHandler.UpdateAllInvitePlayerActions;
-			call IntrusionMenuHandler.UpdateVisibleOptions;
-			
 			if (_player == player) then {
 				ClientState.MyGroup = group player;
 				ClientState.IsSquadLeader = true;
 				call gClient.TaskHandler.DeleteAllTasksAndReset;
 			};
+			
+			call GroupActionHandler.UpdateAllInvitePlayerActions;
+			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 		
 		// Called when a JIP player has connected.
@@ -102,7 +104,7 @@ namespace Intrusion.Client
 			};
 		};
 		
-		// Called when a player was killed.
+		// Called when a player was killed (or got unconsious).
 		// _unit (Object): The dead body.
 		// _side (Side): The player's side.
 		public static method OnPlayerKilled("_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean, "_side" as Side, "_nearestMine" as Object)
@@ -153,6 +155,7 @@ namespace Intrusion.Client
 			};
 		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
+			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
 	};
 };
