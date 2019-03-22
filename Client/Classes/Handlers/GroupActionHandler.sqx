@@ -20,25 +20,39 @@ namespace Intrusion.Client
 		{
 			_mProfessionConfig = _professionConfig;
 		};
+		
+		private static method RemoveInvitePlayerAction("_unit" as Object)
+		{
+			private ["_menuItemId" as Scalar];
+			
+			_menuItemId = _unit getVariable ["IntrusionInvitePlayerActionItemId", -1];
+			
+			if (_menuItemId >= 0) then {
+				_unit removeAction _menuItemId;
+				_unit setVariable ["IntrusionInvitePlayerActionItemId", -1, false];
+			};
+		};
 	
         // Adds 'Invite player to group' actions to every single member group leader.
         public static method UpdateAllInvitePlayerActions()
         {
-        	private ["_playableUnits" as Array];
+        	private ["_playableUnits" as Array, "_menuItemId" as Scalar];
         	
         	_playableUnits = [switchableUnits, playableUnits] select isMultiplayer;
         	
             {
             	// If the player is not the unit itself
             	if (_x != player) then {
-	            	removeAllActions _x;
+	            	[_x] call _self.RemoveInvitePlayerAction;
 
 	            	// If the players' side are the same
-	            	if (side group _x == side group player) then {
-	            	
+	            	if (side group _x == side group player) then
+	            	{
 		            	// If the player is not already in a group
-		            	if (count units group _x == 1) then {
-			            	_x addAction ["Invite player to group", { [_this select 0] call _self.InviteOtherPlayerToGroup; }];
+		            	if (count units group _x == 1) then
+		            	{
+			            	_menuItemId = _x addAction ["Invite player to group", { [_this select 0] call _self.InviteOtherPlayerToGroup; }];
+							_x setVariable ["IntrusionInvitePlayerActionItemId", _menuItemId, false];
 		            	};
 	            	};
 	            };
