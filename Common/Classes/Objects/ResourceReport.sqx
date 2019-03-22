@@ -12,12 +12,14 @@ namespace Intrusion.Common
 	public class ResourceReport
 	{
 		// Creates a ResourceReport object.
-		public constructor("_side" as Side, "_factoryCount" as Scalar, "_officeCount" as Scalar, "_production" as Scalar, "_research" as Scalar) {
+		public constructor("_side" as Side, "_factoryCount" as Scalar, "_officeCount" as Scalar, "_production" as Scalar, "_research" as Scalar, "_nextVehicleGroup" as Group, "_nextVehicleCost" as Scalar) {
 			_self.Side = _side;
 			_self.FactoryCount = _factoryCount;
 			_self.OfficeCount = _officeCount;
 			_self.Production = _production;
 			_self.Research = _research;
+			_self.NextVehicleGroup = _nextVehicleGroup;
+			_self.NextVehicleCost = _nextVehicleCost;
 		};
 		
 		public property Side Side { get; private set; };
@@ -29,5 +31,10 @@ namespace Intrusion.Common
 		public property Scalar Production { get; private set; };
 		
 		public property Scalar Research { get; private set; };
+		
+		// Gets the next group to have a vehicle. grpNull if the reservation queue is empty.
+		public property Group NextVehicleGroup { get; private set; };
+		
+		public property Scalar NextVehicleCost { get; private set; };
 	};
 };

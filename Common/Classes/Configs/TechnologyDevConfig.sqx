@@ -15,6 +15,7 @@ namespace Intrusion.Common
 		
 		// Creates a TechnologyConfig object.
 		public constructor {
+			// Must match the order in TechnologyEnum.
 			_mTechnologies = [
 				[Technology.Transport, "Transport", 2] new TechnologyInfo,
 				[Technology.Services, "Services", 4] new TechnologyInfo,
