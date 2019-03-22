@@ -9,15 +9,17 @@
  */
 namespace Intrusion.Common
 {
+	// Enumeration of technologies.
+	// Remarks: Must match the order in ITechnologyConfig.
 	public enum Technology
 	{
 		None = 0,
 		Transport = 1,
 		Services = 2,
 		Maintenance = 3,
-		Motorized = 4,
-		Launchers = 5,
-		Ordnance = 6,
+		Ordnance = 4,
+		Motorized = 5,
+		Launchers = 6,
 		LightArmor = 7,
 		Artillery = 8,
 		HeavyArmor = 9
