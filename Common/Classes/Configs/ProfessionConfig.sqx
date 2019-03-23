@@ -29,6 +29,7 @@ namespace Intrusion.Common
 			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.Mechanized, 2, 3, 10, 10, true, "b_mech_inf", "o_mech_inf"] new Profession,
 			    [ProfessionType.Armored, "Armored Troops", Technology.Armored, 1, 2, 9, 3, true, "b_armor", "o_armor"] new Profession
         	];
+        	
 		};
 		
 		// Gets a profession by profession type.

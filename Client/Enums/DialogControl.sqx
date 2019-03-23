@@ -12,5 +12,6 @@ namespace Intrusion.Client
 	public enum DialogControl
 	{
 		GroupProfessionCombo = 2100,
+		GroupProfessionListBox = 2200
 	};
 };

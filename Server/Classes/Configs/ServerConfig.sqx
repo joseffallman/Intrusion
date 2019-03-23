@@ -7,6 +7,9 @@
  * Description:
  * Bundles all server configs together.
  */
+ 
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class ServerConfig : IServerConfig

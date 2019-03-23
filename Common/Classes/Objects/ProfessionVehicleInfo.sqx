@@ -8,9 +8,8 @@
  * A class that contains information about profession vehicles associated with a 
  * profession (but is not side specific).
  */
-using Intrusion.Common;
 
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public class ProfessionVehicleInfo
 	{

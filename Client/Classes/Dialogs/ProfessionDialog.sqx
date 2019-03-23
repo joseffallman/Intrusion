@@ -15,13 +15,14 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig, "_mVehicleClassNamesConfig" as VehicleClassNamesConfig];
 	
 		// Initializes the profession dialog.
 		public static method Init("_professionConfig" as IProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mOptions = [];
+			_mVehicleClassNamesConfig = new VehicleClassNamesConfig;
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
 		};
@@ -35,7 +36,7 @@ namespace Intrusion.Client
 		// Reads the selected profession type from the combo box
 		// Returns (Profession): The selected profession. classNull if no profession is selected.
 		private static method ProfessionType GetSelectedProfessionTypeFromCombo {
-			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
+			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionListBox as Scalar);
 			
 			_mOptions select _selectedIndex
 		};
@@ -56,7 +57,7 @@ namespace Intrusion.Client
 					
 					// If profession is available, and if the group has a good size
 					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
-						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+						lbAdd [DialogControl.GroupProfessionListBox, _x.Name];
 						_options pushBack _profession.Type;
 					};
 				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
@@ -64,7 +65,7 @@ namespace Intrusion.Client
             else {
 				{
 					if (_playersInGroup >= _x.MinGroupSize && _playersInGroup <= _x.MaxGroupSize) then {
-						lbAdd [DialogControl.GroupProfessionCombo, _x.Name];
+						lbAdd [DialogControl.GroupProfessionListBox, _x.Name];
 						_options pushBack _x.Type;
 					};
 				} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
@@ -82,7 +83,10 @@ namespace Intrusion.Client
             createDialog "IntProfessionDialog";
 			
 			call _self.AddAvailableProfessions;
-			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+			
+			// TODO: This should take groups current type and find that index
+			// and select that instead off 0.
+			lbSetCurSel [DialogControl.GroupProfessionListBox, 0]; 
 			
 			_self.IsOpen = true;
 
@@ -98,6 +102,98 @@ namespace Intrusion.Client
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
+		};
+		
+		
+		// Change Image and text when a new selection is made in the listbox.
+		// Called by the .hpp-dialog
+		public static method OnListSelectChanged {
+			private [
+				"_profession" as Profession, 
+				"_vehicles" as ProVehicleClassNamesInfo, 
+				"_technology" as TechnologyInfo,
+				"_vehiclesConfig" as IProfessionVehiclesConfig,
+				"_vehicleInfo" as ProfessionVehicleInfo,
+				"_className" as String
+			];
+			private _model = "";
+			private _vehicleNames = []; 
+			private _ctrlVehicleModel = (findDisplay 2999) displayCtrl 2230;
+			private _ctrlDescription = (findDisplay 2999) displayCtrl 2215;
+			//_profession = call _self.GetSelectedProfessionTypeFromCombo;
+			_profession = [call _self.GetSelectedProfessionTypeFromCombo] call _mProfessionConfig.GetProfession;
+			_vehicles = [side player, _profession.Type] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
+			
+			if (!isNull _vehicles) then {
+				
+				if (count _vehicles.ClassNames > 0) then {
+					_className = _vehicles.ClassNames select ((count _vehicles.ClassNames) - 1);
+					_model = (getText(configFile >> "cfgVehicles" >> _className >> "model"));
+					_ctrlVehicleModel ctrlSetModel _model;
+					_ctrlVehicleModel ctrlShow true;
+				};
+				
+				{
+					_vehicleNames pushBackUnique (getText(configFile >> "cfgVehicles" >> _x >> "displayName"));
+				} foreach (_vehicles.ClassNames);
+			} else {
+				/* Set a empty as vehicle picture */
+				_ctrlVehicleModel ctrlSetModel "\a3\Ui_f\objects\Compass.p3d";
+				_ctrlVehicleModel ctrlShow false;
+			};
+			
+			
+			
+			/*
+	        	_self.Type = _type;
+	        	_self.Name = _name;
+	        	_self.RequiredTechnology = _requiredTechnology;
+	        	_self.MaxGroupsCount = _maxGroupsCount;
+	        	_self.MinGroupSize = _minGroupSize;
+	        	_self.MaxGroupSize = _maxGroupSize;
+	        	_self.MaxUnitsPerVehicle = _maxUnitsPerVehicle;
+	        	_self.VehicleRevealsProfessionType = _vehicleRevealsProfessionType;
+	        	_self.MarkerTypeFriendly = _markerTypeFriendly;
+	        	_self.MarkerTypeEnemy = _markerTypeEnemy;
+			*/
+			
+			_technology = [_profession.RequiredTechnology] call gCommonConfig.Technology.GetTechnology;
+			private _requiredResearch = "";
+			private _cost = "";
+			if (!isNull _technology) then {
+				_requiredResearch = str _technology.RequiredResearch
+			};
+			
+			switch (DebugConfig.Mode) do {
+				case MissionConfigMode.Production:
+				{
+					_vehiclesConfig = new ProfessionVehiclesProdConfig;
+				};
+				case MissionConfigMode.Test:
+				{
+					_vehiclesConfig = new ProfessionVehiclesTestConfig;
+				};
+				case MissionConfigMode.Develop:
+				{
+					_vehiclesConfig = new ProfessionVehiclesDevConfig;
+				};
+			};
+			
+			_vehicleInfo = [_profession.Type] call _vehiclesConfig.GetVehicle;
+			if (!isNull _vehicleInfo) then {
+				_cost = str _vehicleInfo.Cost;
+			};
+			
+			
+			private _description = [
+				"<t size='2.2' underline='true'>" + _profession.Name + "</t>",
+				"Required Research: " + _requiredResearch,
+				"Vehicle: " + (_vehicleNames joinString ", "),
+				"Vehicle cost: " + _cost,
+				"Required units in group (max): " + str _profession.MinGroupSize + " (" + str _profession.MaxGroupSize + ")",
+				"Max groups with this profession: " + str _profession.MaxGroupsCount
+			];
+			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
 		};
 		
 		// Sends the group's selected profession to the server.

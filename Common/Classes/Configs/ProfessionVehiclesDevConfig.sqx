@@ -1,0 +1,48 @@
+/*
+ * Name:	ProVehiclesConfig
+ * Date:	2017-11-24
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains the configs for vehicles belonging to a profession.
+ */
+
+namespace Intrusion.Common
+{
+	public class ProfessionVehiclesDevConfig : IProfessionVehiclesConfig
+	{
+		private fields ["_mProVehicles"];
+	
+		// Creates a ProVehiclesConfig object.
+		public constructor {
+			_mProVehicles = [
+				[ProfessionType.Transport, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Fuel, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Ammo, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Armored, 10] new ProfessionVehicleInfo,
+			];
+		};
+		
+		// Gets a profession vehicle from the list.
+		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
+		//public static method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType) // TODO SQX (TEST ADDED): If method is static it should not count as interface implemented
+		public method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType)
+		{
+			scopeName "main";
+			
+			{
+				if (_professionType == _x.ProfessionType) then {
+					_x breakOut "main";
+				};
+			} foreach _mProVehicles as ProfessionVehicleInfo;
+			
+			classNull
+		};
+	};
+};
