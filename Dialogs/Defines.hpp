@@ -1604,3 +1604,29 @@ class RscControlsGroup
 	shadow = 0;
 	style = 16;
 };
+class RscObject
+{
+	access = 0; 
+	idc = -1;
+	type = 82;
+	model = "\a3\Ui_f\objects\Compass.p3d";
+	scale = 0.5;
+	shadow = 0;
+
+ 	xBack = 0;
+	yBack = 0;
+	zBack = 0;
+	enableZoom = 0;
+	zoomDuration = 0;
+	inBack = 0;
+	direction[] = {1,0,0};
+	up[] = {0,1,0};
+	tooltip = "";
+	tooltipColorShade[] = {0,0,0,1};
+	tooltipColorText[] = {1,1,1,1};
+	tooltipColorBox[] = {1,1,1,1};
+	onMouseMoving = "";
+	onMouseHolding = "";
+	onMouseDown = "";
+
+ };
