@@ -53,7 +53,7 @@ namespace Intrusion.Server
 		// _professionType (ProfessionType): The profession type.
 		private method CreateReservation("_group" as Group, "_professionType" as ProfessionType)
 		{
-			private ["_reservation" as Reservation, "_vehicleClassNamesInfo" as ProVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
+			private ["_reservation" as Reservation, "_vehicleClassNamesInfo" as ProfessionVehicleClassNamesInfo, "_vehicleClassName" as String, "_professionVehicle" as ProfessionVehicleInfo];
 
 			// Remove the group's eventual existing reservations.
 			[_group] call _mReservationQueue.RemoveReservationsByGroup;

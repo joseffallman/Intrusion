@@ -16,8 +16,5 @@ namespace Intrusion.Server
 		
 		// Gets the profession vehicles config.
 		property IProfessionVehiclesConfig ProfessionVehicles { get; };
-		
-		// Gets the vehicle class names config.
-		property IVehicleClassNamesConfig VehicleClassNames { get; };
 	};
 };

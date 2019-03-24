@@ -45,7 +45,7 @@ namespace Intrusion.Server
             _mResourceCollector = [_serverConfig.Gameplay, _matchLengthMinutes, _side, _mResourceBook, _unitCounter] new ResourceCollector;
             _mScientist = [_side, _mResourceBook, _commonConfig.Technology, _messageHandler, _inventedTechnologiesCollection] new Scientist;
             _mReservationQueue = new ReservationQueue;
-            _mProductionManager = [_serverConfig.ProfessionVehicles, _serverConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions, _mReservationQueue] new ProductionManager;
+            _mProductionManager = [_serverConfig.ProfessionVehicles, _commonConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions, _mReservationQueue] new ProductionManager;
 		};
 		
 		// Gets the side of the side handler.

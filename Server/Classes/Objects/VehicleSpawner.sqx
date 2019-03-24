@@ -94,7 +94,7 @@ namespace Intrusion.Server
 		// Returns (IntrusionVehicle): The intrusion vehicle that was spawned.
 		private method IntrusionVehicle SpawnIntrusionVehicle("_side" as Side, "_professionType" as ProfessionType, ["_explicitClassName" as String, ""], ["_group" as Group, grpNull], ["_cost" as Scalar, 0])
 		{
-		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
+		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
 

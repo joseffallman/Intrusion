@@ -7,15 +7,15 @@
  * Description:
  * Bundles all server configs together.
  */
+
 namespace Intrusion.Server
 {
 	public class ServerConfig : IServerConfig
 	{
 		// Creates a ServerConfig object.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehiclesClassNamesConfig" as IVehicleClassNamesConfig) {
+		public constructor("_gameplayConfig" as IGameplayConfig, "_professionVehiclesConfig" as IProfessionVehiclesConfig) {
 			_self.Gameplay = _gameplayConfig;
 			_self.ProfessionVehicles = _professionVehiclesConfig;
-			_self.VehicleClassNames = _vehiclesClassNamesConfig;
 		};
 		
 		// Gets the gameplay configs.
@@ -23,8 +23,5 @@ namespace Intrusion.Server
 		
 		// Gets the profession vehicles config.
 		public property IProfessionVehiclesConfig ProfessionVehicles { get; private set; };
-		
-		// Gets the vehicle class names config.
-		public property IVehicleClassNamesConfig VehicleClassNames { get; private set; };
 	};
 };
