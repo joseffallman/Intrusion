@@ -1,0 +1,33 @@
+/*
+ * Name:	ProVehicleSideInfo
+ * Date:	2017-11-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that contains information about vehicle classnames associated with a side and a profession.
+ */
+namespace Intrusion.Common
+{
+	public class ProfessionVehicleClassNamesInfo
+	{
+		// Creates a ProVehicleInfo object.
+		public constructor {
+			params ["_side" as Side, "_professionType" as ProfessionType, "_classNames" as Array, "_cargoWeapons" as Array];
+			
+			_self.Side = _side;
+			_self.ProfessionType = _professionType;
+			_self.ClassNames = _classNames;
+			_self.CargoWeapons = _cargoWeapons;
+		};
+		
+		public property Side Side { get; private set; };
+		
+		public property ProfessionType ProfessionType { get; private set; };
+		
+		public property Array ClassNames { get; private set; };
+		
+		// Gets the weapon classes for weapons in the cargo space.
+		public property Array CargoWeapons { get; private set; };
+	};
+};
