@@ -1,3 +1,4 @@
+call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\SkillLevel.sqx";
@@ -12,6 +13,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHa
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\MissionParametersHandler.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocationCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\IntrusionVehicle.sqx";
@@ -44,14 +46,14 @@ call DebugConfig.Init;
 call ProfessionTypeMeta.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig] new CommonConfig;
+	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig, new VehicleClassNamesConfig] new CommonConfig;
 }
 else {
 	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig] new CommonConfig;
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig, new VehicleClassNamesConfig] new CommonConfig;
 	}
 	else { // Dev
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig] new CommonConfig;
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig, new VehicleClassNamesConfig] new CommonConfig;
 	};
 };
 

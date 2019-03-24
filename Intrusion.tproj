@@ -315,6 +315,10 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IVehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IVehicleClassNamesConfig.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\CommonConfig.sqx">
@@ -342,6 +346,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyTestConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\TechnologyTestConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\VehicleClassNamesConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -413,6 +421,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Profession.sqx" IsExpanded="false" FileName="Common\Classes\Objects\Profession.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionVehicleClassNamesInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -610,10 +622,6 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IVehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\Interfaces\IVehicleClassNamesConfig.sqx">
-                        <IsSelected>false</IsSelected>
-                        <SubNodes />
-                      </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="GameplayProdConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\GameplayProdConfig.sqx">
@@ -645,10 +653,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponsConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\WeaponsConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleClassNamesConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\VehicleClassNamesConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -729,10 +733,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProductionManager.sqx" IsExpanded="false" FileName="Server\Classes\Objects\ProductionManager.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionVehicleClassNamesInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
