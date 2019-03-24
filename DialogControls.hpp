@@ -39,14 +39,3 @@ class IntBaseDialog_CloseButton : IntBaseDialog_Button
 	h = 2 * GUI_GRID_H;
 	action = " closeDialog 0; ";
 };
-
-class IntBaseDialog_ListBox : RscListBox
-{
-	id = -1;
-	x = 0.5 * GUI_GRID_W + GUI_GRID_X;
-	y = 5.5 * GUI_GRID_H + GUI_GRID_Y;
-	w = 19 * GUI_GRID_W;
-	h = 19 * GUI_GRID_H;
-
- 	onLBSelChanged = "";
-};

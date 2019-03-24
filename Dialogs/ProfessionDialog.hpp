@@ -45,7 +45,7 @@ class IntProfessionDialog
 			text = "Select group's profession.";
 		};
 
-		class IntProfessionDialog_ListBox : IntBaseDialog_ListBox
+		class IntProfessionDialog_ListBox : RscListBox
 		{
 			idc = 2200;
 			x = 28 * GUI_GRID_W + GUI_GRID_X;
