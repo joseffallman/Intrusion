@@ -130,7 +130,7 @@ namespace Intrusion.Server
 					};
 	        	} foreach _mGameplayConfig.CompetingSides as Side;
 				
-				sleep 1;
+				sleep 60;
 			};
 		};
 		
