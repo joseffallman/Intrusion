@@ -1,3 +1,7 @@
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
