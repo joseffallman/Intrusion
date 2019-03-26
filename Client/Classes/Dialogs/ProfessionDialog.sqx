@@ -15,13 +15,20 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig];
+		private static fields [
+			"_mOptions" as Array /* of ProfessionType */,
+			"_mProfessionConfig" as IProfessionConfig,
+			"_mDefaultColor" as Array,
+			"_mDisabledColor" as Array
+		];
 	
 		// Initializes the profession dialog.
 		public static method Init("_professionConfig" as IProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mOptions = [];
+			_mDefaultColor = [1,1,1,1];
+			_mDisabledColor = [0,0,0,0.5];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
 		};
@@ -66,6 +73,43 @@ namespace Intrusion.Client
             
             _mOptions = _options;
 		};
+		
+		// Change color in list.
+		private static method UpdateListBoxItemsColor()
+		{
+			private ["_profession" as Profession, "_squads" as SquadCollection, "_playersInGroup" as Scalar];
+			_playersInGroup = count units group player;
+		
+			if (call PublicVariableHandler.SquadsHasValue) then {
+					_squads = call PublicVariableHandler.GetSquads;					
+				{
+					_profession = [_x] call _mProfessionConfig.GetProfession;
+					// If profession is available, and if the group has a good size
+					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
+					}
+					else {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDisabledColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
+					};
+					
+				} forEach _mOptions as ProfessionType;
+            }
+            else {
+				{
+					_profession = [_x] call _mProfessionConfig.GetProfession;
+					// If the group has a good size
+					if (_playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
+					}
+					else {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDisabledColor];
+					};
+					
+				} forEach _mOptions as ProfessionType;
+            };
+		};
 	
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
@@ -77,8 +121,10 @@ namespace Intrusion.Client
             createDialog "IntProfessionDialog";
 			
 			call _self.AddProfessions;
+			call _self.UpdateListBoxItemsColor;
 			// TODO: This should take groups current type and find that index
 			// and select that instead off 0.
+			// Look into PublicVariableHandler.SquadsHasValue -> PublicVariableHandler.GetSquads -> GetSquadByGroup
 			lbSetCurSel [DialogControl.GroupProfessionListBox, 0]; 
 			
 			_self.IsOpen = true;
@@ -107,7 +153,9 @@ namespace Intrusion.Client
 				"_technology" as TechnologyInfo,
 				"_vehiclesConfig" as IProfessionVehiclesConfig,
 				"_vehicleInfo" as ProfessionVehicleInfo,
-				"_className" as String
+				"_className" as String,
+				"_thisData" as String,
+				"_selectedIndex" as Scalar
 			];
 			private _model = "";
 			private _vehicleNames = []; 
@@ -116,6 +164,20 @@ namespace Intrusion.Client
 			//_profession = call _self.GetSelectedProfessionTypeFromCombo;
 			_profession = [call _self.GetSelectedProfessionTypeFromCombo] call _mProfessionConfig.GetProfession;
 			_vehicles = [side player, _profession.Type] call gCommonConfig.VehicleClassNames.GetProVehiclesClassNameInfo;
+
+			// Disable ok button if profession is unavailable
+			_selectedIndex = _this select 1;
+			_thisData = lbData[DialogControl.GroupProfessionListBox, _selectedIndex];
+			switch (_thisData) do {
+				case "Enabled":
+				{
+					ctrlEnable[DialogControl.GroupProfessionOKButton, true];
+				};
+				case "Disabled":
+				{
+					ctrlEnable[DialogControl.GroupProfessionOKButton, false];
+				};
+			};
 
  			if (!isNull _vehicles) then {
 
@@ -130,7 +192,7 @@ namespace Intrusion.Client
 					_vehicleNames pushBackUnique (getText(configFile >> "cfgVehicles" >> _x >> "displayName"));
 				} foreach (_vehicles.ClassNames);
 			} else {
-				/* Set a empty as vehicle picture */
+				/* Set a compass as vehicle picture and hide it */
 				_ctrlVehicleModel ctrlSetModel "\a3\Ui_f\objects\Compass.p3d";
 				_ctrlVehicleModel ctrlShow false;
 			};
@@ -172,6 +234,8 @@ namespace Intrusion.Client
 				"Max groups with this profession: " + str _profession.MaxGroupsCount
 			];
 			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
+			
+			call _self.UpdateListBoxItemsColor;
 		};
 		
 		// Sends the group's selected profession to the server.

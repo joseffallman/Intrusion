@@ -32,6 +32,7 @@ class IntProfessionDialog
 		};
 
 		class IntProfessionDialog_OkButton : IntBaseDialog_OkButton {
+			idc = 2210;
 			x = 36 * GUI_GRID_W + GUI_GRID_X;
 			y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 3.5 * GUI_GRID_W;
