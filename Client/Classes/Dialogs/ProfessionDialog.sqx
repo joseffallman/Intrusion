@@ -19,7 +19,9 @@ namespace Intrusion.Client
 			"_mOptions" as Array /* of ProfessionType */,
 			"_mProfessionConfig" as IProfessionConfig,
 			"_mDefaultColor" as Array,
-			"_mDisabledColor" as Array
+			"_mDisabledColor" as Array,
+			"_mCurrentColor" as Array,
+			"_mPlayersCurrentProfIndex" as Scalar
 		];
 	
 		// Initializes the profession dialog.
@@ -29,8 +31,10 @@ namespace Intrusion.Client
 			_mOptions = [];
 			_mDefaultColor = [1,1,1,1];
 			_mDisabledColor = [0,0,0,0.5];
+			_mCurrentColor = [0.85,0.4,0,1];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
+			_mPlayersCurrentProfIndex = -1;
 		};
 		
 		// Gets or sets the profession type that the user has selected.
@@ -51,22 +55,12 @@ namespace Intrusion.Client
 		// Adds all professions to the combo box.
 		private static method AddProfessions()
 		{
-			private ["_options" as Array, "_sGroupSize" as String, "_sMaxGroupsCount" as String];
+			private ["_options" as Array];
 			
             _options = [];
             
 			{
-				_sGroupSize = str _x.MinGroupSize + "-" + str _x.MaxGroupSize;
-				if (_x.MinGroupSize == _x.MaxGroupSize) then {
-					_sGroupSize = str _x.MinGroupSize;
-				};
-				
-				_sMaxGroupsCount = "";
-				if (_x.MaxGroupsCount >= 0) then {
-					_sMaxGroupsCount = ", max " + str _x.MaxGroupsCount + " groups";
-				};
-				
-				lbAdd [DialogControl.GroupProfessionCombo, (_x.Name + " (" + _sGroupSize + " members" + _sMaxGroupsCount + ")")];
+				_mPlayersCurrentProfIndex = 0;
 				lbAdd [DialogControl.GroupProfessionListBox, _x.Name];
 				_options pushBack _x.Type;
 			} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
@@ -77,15 +71,27 @@ namespace Intrusion.Client
 		// Change color in list.
 		private static method UpdateListBoxItemsColor()
 		{
-			private ["_profession" as Profession, "_squads" as SquadCollection, "_playersInGroup" as Scalar];
-			_playersInGroup = count units group player;
+			private [
+				"_profession" as Profession,
+				"_squads" as SquadCollection,
+				"_unitsInPlayerGroup" as Scalar,
+				"_playerGroupProfessionType" as ProfessionType,
+				"_playerSquad" as Squad
+			];
+			_unitsInPlayerGroup = count units group player;
+			_playerGroupProfessionType = ProfessionType.Undefined;
 		
 			if (call PublicVariableHandler.SquadsHasValue) then {
-					_squads = call PublicVariableHandler.GetSquads;					
+				_squads = call PublicVariableHandler.GetSquads;
+				_playerSquad = [group player] call _squads.GetSquadByGroup;
+				if (!isNull _playerSquad) then {
+					_playerGroupProfessionType = _playerSquad.ProfessionType;
+				};
+				
 				{
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If profession is available, and if the group has a good size
-					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
+					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
 						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
 						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
 					}
@@ -94,17 +100,26 @@ namespace Intrusion.Client
 						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
 					};
 					
+					// If this is players current profession, change color again and mark button to be disabled.
+					if (_playerGroupProfessionType == _profession.Type) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mCurrentColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
+						_mPlayersCurrentProfIndex = _forEachIndex;
+					};
+					
 				} forEach _mOptions as ProfessionType;
             }
             else {
 				{
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If the group has a good size
-					if (_playersInGroup >= _profession.MinGroupSize && _playersInGroup <= _profession.MaxGroupSize) then {
+					if (_unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
 						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
 					}
 					else {
 						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDisabledColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
 					};
 					
 				} forEach _mOptions as ProfessionType;
@@ -120,12 +135,13 @@ namespace Intrusion.Client
 			// Create the dialog
             createDialog "IntProfessionDialog";
 			
+			// Add professions to list and change there's color
 			call _self.AddProfessions;
 			call _self.UpdateListBoxItemsColor;
-			// TODO: This should take groups current type and find that index
-			// and select that instead off 0.
-			// Look into PublicVariableHandler.SquadsHasValue -> PublicVariableHandler.GetSquads -> GetSquadByGroup
-			lbSetCurSel [DialogControl.GroupProfessionListBox, 0]; 
+			
+			if ( _mPlayersCurrentProfIndex > -1 ) then {
+				lbSetCurSel [DialogControl.GroupProfessionListBox, _mPlayersCurrentProfIndex];
+			};
 			
 			_self.IsOpen = true;
 
