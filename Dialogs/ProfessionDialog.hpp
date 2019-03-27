@@ -57,10 +57,10 @@ class IntProfessionDialog
 			onLBSelChanged = "call Intrusion_Client_ProfessionDialog_OnListSelectChanged;";
 		};
 
-		class RscText_2215: RscStructuredText
+		class IntProfessionDialog_Description : RscStructuredText
 		{
 			idc = 2215;
-			x = 0 * GUI_GRID_W + GUI_GRID_X;
+			x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 11 * GUI_GRID_H + GUI_GRID_Y;
 			w = 27.5 * GUI_GRID_W;
 			h = 13 * GUI_GRID_H;
