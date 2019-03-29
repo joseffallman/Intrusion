@@ -672,13 +672,16 @@ class RscListBox
 	};
 	class ListScrollBar
 	{
-		color[] = 
-		{
-			1,
-			1,
-			1,
-			1
-		};
+		width = 0; // width of ListScrollBar
+		height = 0; // height of ListScrollBar
+		scrollSpeed = 0.01; // scroll speed of ListScrollBar
+
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa"; // Arrow
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa"; // Arrow when clicked on
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa"; // Slider background (stretched vertically)
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa"; // Dragging element (stretched vertically)
+
+		color[] = {1,1,1,1}; // Scrollbar color
 		autoScrollEnabled = 1;
 	};
 	x = 0;
@@ -1604,3 +1607,29 @@ class RscControlsGroup
 	shadow = 0;
 	style = 16;
 };
+class RscObject
+{
+	access = 0; 
+	idc = -1;
+	type = 82;
+	model = "\a3\Ui_f\objects\Compass.p3d";
+	scale = 0.5;
+	shadow = 0;
+
+ 	xBack = 0;
+	yBack = 0;
+	zBack = 0;
+	enableZoom = 0;
+	zoomDuration = 0;
+	inBack = 0;
+	direction[] = {1,0,0};
+	up[] = {0,1,0};
+	tooltip = "";
+	tooltipColorShade[] = {0,0,0,1};
+	tooltipColorText[] = {1,1,1,1};
+	tooltipColorBox[] = {1,1,1,1};
+	onMouseMoving = "";
+	onMouseHolding = "";
+	onMouseDown = "";
+
+ };
