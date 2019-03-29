@@ -22,5 +22,8 @@ namespace Intrusion.Common
 		
 		// Gets the vehicle class names config.
 		property IVehicleClassNamesConfig VehicleClassNames { get; };
+		
+		// Gets the profession vehicles config.
+		property IProfessionVehiclesConfig ProfessionVehicles { get; };
 	};
 };

@@ -7,9 +7,7 @@
  * Description:
  * Contains all relevant and editable settings for a game round.
  */
-using Intrusion.Common;
-
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public interface IProfessionVehiclesConfig
 	{
