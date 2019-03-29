@@ -22,10 +22,9 @@ namespace Intrusion.Common
 				[Technology.Maintenance, "Maintenance", 6] new TechnologyInfo,
 				[Technology.Ordnance, "Ordnance", 8] new TechnologyInfo,
 				[Technology.Motorized, "Motorized Vehicles", 10] new TechnologyInfo,
-				[Technology.Launchers, "Launchers", 12] new TechnologyInfo,
-				[Technology.LightArmor, "Light Armor", 14] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 16] new TechnologyInfo,
-				[Technology.HeavyArmor, "Heavy Armor", 18] new TechnologyInfo,
+				[Technology.LightArmor, "Light Armor", 12] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 14] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 16] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;
