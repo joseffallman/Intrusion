@@ -137,5 +137,26 @@ namespace Intrusion.Server
 				[_x.Group] call _mVehicleSpawner.DeleteProfessionVehicles;
 			} foreach _removedSquads as Squad;
 		};
+		
+		// Adds rating to all squad members of a group.
+		public method AddRatingToSquad("_rating" as Scalar, "_group" as Group)
+		{
+			{
+				_x addRating _rating;
+			} foreach units _group as Object;
+		};
+		
+		// Adds a rating event handler to a player.
+		// _player (Object): The player to add the rating event handler to.
+		public method AddRatingEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["HandleRating", {
+				params ["_unit" as Object, "_rating" as Scalar];
+				
+				[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
+				
+				0
+			}];
+		};
 	};
 };

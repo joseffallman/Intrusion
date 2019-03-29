@@ -43,5 +43,11 @@ namespace Intrusion.Server
 				call gServer.SquadHandler.RemoveEmptySquads;
 			};
 		};
+		
+		// Called when a JIP player entered the game.
+		public static method OnJipPlayerEnteredGame("_player" as Object)
+		{
+			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
+		};
 	};
 };

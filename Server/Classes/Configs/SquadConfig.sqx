@@ -1,0 +1,21 @@
+/*
+ * Name:	SquadConfig
+ * Date:	2019-03-29
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configs about squads.
+ */
+namespace Intrusion.Server
+{
+	public class SquadConfig : ISquadConfig
+	{
+		// Creates a SquadConfig object.
+		public constructor {
+			_self.RatingSquadLeaderMaxDistance = 150;
+		};
+		
+		public property Scalar RatingSquadLeaderMaxDistance { get; private set; };
+	};
+};

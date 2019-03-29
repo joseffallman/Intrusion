@@ -7,6 +7,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehicle
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\SquadConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
