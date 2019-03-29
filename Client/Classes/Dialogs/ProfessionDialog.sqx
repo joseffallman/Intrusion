@@ -18,6 +18,9 @@ namespace Intrusion.Client
 		private static fields [
 			"_mOptions" as Array /* of ProfessionType */,
 			"_mProfessionConfig" as IProfessionConfig,
+			"_mVehiclesConfig" as IProfessionVehiclesConfig,
+			"_mTechnologyConfig" as ITechnologyConfig,
+			"_mVehicleClassNamesConfig" as IVehicleClassNamesConfig,
 			"_mDefaultColor" as Array,
 			"_mDisabledColor" as Array,
 			"_mCurrentColor" as Array,
@@ -25,9 +28,18 @@ namespace Intrusion.Client
 		];
 	
 		// Initializes the profession dialog.
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init(
+			"_professionConfig" as IProfessionConfig,
+			"_technologyConfig" as ITechnologyConfig,
+			"_vehicleClassNamesConfig" as IVehicleClassNamesConfig,
+			"_vehiclesConfig" as IProfessionVehiclesConfig
+		)
 		{
 			_mProfessionConfig = _professionConfig;
+			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
+			_mTechnologyConfig = _technologyConfig;
+			_mVehiclesConfig = _vehiclesConfig;
+			
 			_mOptions = [];
 			_mDefaultColor = [1,1,1,1];
 			_mDisabledColor = [0,0,0,0.5];
@@ -167,7 +179,6 @@ namespace Intrusion.Client
 				"_profession" as Profession, 
 				"_vehicles" as ProfessionVehicleClassNamesInfo, 
 				"_technology" as TechnologyInfo,
-				"_vehiclesConfig" as IProfessionVehiclesConfig,
 				"_vehicleInfo" as ProfessionVehicleInfo,
 				"_className" as String,
 				"_thisData" as String,
@@ -179,7 +190,7 @@ namespace Intrusion.Client
 			private _ctrlDescription = (findDisplay 2999) displayCtrl 2215;
 			//_profession = call _self.GetSelectedProfessionTypeFromCombo;
 			_profession = [call _self.GetSelectedProfessionTypeFromCombo] call _mProfessionConfig.GetProfession;
-			_vehicles = [side player, _profession.Type] call gCommonConfig.VehicleClassNames.GetProVehiclesClassNameInfo;
+			_vehicles = [side player, _profession.Type] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 
 			// Disable ok button if profession is unavailable
 			_selectedIndex = _this select 1;
@@ -213,29 +224,16 @@ namespace Intrusion.Client
 				_ctrlVehicleModel ctrlShow false;
 			};
 
- 			_technology = [_profession.RequiredTechnology] call gCommonConfig.Technology.GetTechnology;
+
+			
+ 			_technology = [_profession.RequiredTechnology] call _mTechnologyConfig.GetTechnology;
 			private _requiredResearch = "";
 			private _cost = "";
 			if (!isNull _technology) then {
 				_requiredResearch = str _technology.RequiredResearch
 			};
 
- 			switch (DebugConfig.Mode) do {
-				case MissionConfigMode.Production:
-				{
-					_vehiclesConfig = new ProfessionVehiclesProdConfig;
-				};
-				case MissionConfigMode.Test:
-				{
-					_vehiclesConfig = new ProfessionVehiclesTestConfig;
-				};
-				case MissionConfigMode.Develop:
-				{
-					_vehiclesConfig = new ProfessionVehiclesDevConfig;
-				};
-			};
-
- 			_vehicleInfo = [_profession.Type] call _vehiclesConfig.GetVehicle;
+ 			_vehicleInfo = [_profession.Type] call _mVehiclesConfig.GetVehicle;
 			if (!isNull _vehicleInfo) then {
 				_cost = str _vehicleInfo.Cost;
 			};
@@ -243,7 +241,7 @@ namespace Intrusion.Client
 
  			private _description = [
 				"<t size='2.2' underline='true'>" + _profession.Name + "</t>",
-				"Required Research: " + _requiredResearch,
+				"Required administration: " + _requiredResearch,
 				"Vehicle: " + (_vehicleNames joinString ", "),
 				"Vehicle cost: " + _cost,
 				"Required units in group (max): " + str _profession.MinGroupSize + " (" + str _profession.MaxGroupSize + ")",

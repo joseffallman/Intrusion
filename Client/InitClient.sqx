@@ -57,7 +57,7 @@ gClient = new IntrusionClient;
 [gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig] call MapMarkerService.Init;
 
 // Dialogs
-[gCommonConfig.Professions] call ProfessionDialog.Init;
+[gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionsVehicles] call ProfessionDialog.Init;
 call MoveBaseDialog.Init;
 
 // Create the briefing
