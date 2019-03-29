@@ -42,7 +42,7 @@ namespace Intrusion.Client
 			
 			_mOptions = [];
 			_mDefaultColor = [1,1,1,1];
-			_mDisabledColor = [0,0,0,0.5];
+			_mDisabledColor = [0.5,0.5,0.5,1];
 			_mCurrentColor = [0.85,0.4,0,1];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
@@ -240,7 +240,8 @@ namespace Intrusion.Client
 
 
  			private _description = [
-				"<t size='2.2' underline='true'>" + _profession.Name + "</t>",
+				"<t size='2.2' underline='false'>" + _profession.Name + "</t>",
+				"",
 				"Required administration: " + _requiredResearch,
 				"Vehicle: " + (_vehicleNames joinString ", "),
 				"Vehicle cost: " + _cost,
