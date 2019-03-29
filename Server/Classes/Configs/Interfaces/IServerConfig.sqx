@@ -15,8 +15,5 @@ namespace Intrusion.Server
 	{
 		// Gets the gameplay configs.
 		property IGameplayConfig Gameplay { get; };
-		
-		// Gets the profession vehicles config.
-		property IProfessionVehiclesConfig ProfessionVehicles { get; };
 	};
 };

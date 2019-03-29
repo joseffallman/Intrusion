@@ -7,7 +7,6 @@
  * Description:
  * Contains the configs for vehicles belonging to a profession.
  */
-
 namespace Intrusion.Common
 {
 	public class ProfessionVehiclesTestConfig : IProfessionVehiclesConfig
