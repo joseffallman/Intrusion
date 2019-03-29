@@ -1,3 +1,7 @@
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
@@ -9,6 +13,9 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
@@ -32,6 +39,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\TechnologyInfo.sq
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Order.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\OrderCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ValuedObject.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 
 using Intrusion.Common;
@@ -46,14 +54,14 @@ call DebugConfig.Init;
 call ProfessionTypeMeta.Init;
 
 if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig, new VehicleClassNamesConfig] new CommonConfig;
+	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig, new VehicleClassNamesConfig, new ProfessionVehiclesProdConfig] new CommonConfig;
 }
 else {
 	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig, new VehicleClassNamesConfig] new CommonConfig;
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig, new VehicleClassNamesConfig, new ProfessionVehiclesTestConfig] new CommonConfig;
 	}
 	else { // Dev
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig, new VehicleClassNamesConfig] new CommonConfig;
+		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig, new VehicleClassNamesConfig, new ProfessionVehiclesDevConfig] new CommonConfig;
 	};
 };
 

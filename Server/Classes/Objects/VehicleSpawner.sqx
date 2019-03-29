@@ -139,7 +139,7 @@ namespace Intrusion.Server
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	
         	if (_professionType != ProfessionType.Undefined) then {
-				["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+				["ClientEventReciever.OnSquadVehiclesSpawned", [_group, _professionType, [_vehicleObj]]] call Remote.Invoke;
         	};
 			
 		    _intrusionVehicle

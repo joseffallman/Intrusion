@@ -7,14 +7,13 @@
  * Description:
  * Bundles all server configs together.
  */
+ using Intrusion.Common;
+ 
 namespace Intrusion.Server
 {
 	public interface IServerConfig
 	{
 		// Gets the gameplay configs.
 		property IGameplayConfig Gameplay { get; };
-		
-		// Gets the profession vehicles config.
-		property IProfessionVehiclesConfig ProfessionVehicles { get; };
 	};
 };

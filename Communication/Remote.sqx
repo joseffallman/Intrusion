@@ -52,7 +52,7 @@ namespace Intrusion.Communication
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
 					case "MissionEndHandler.PlayEndScene": { _parameters spawn MissionEndHandler.PlayEndScene };
 					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
-					case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
+					//case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
 					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };
 					case "ClientEventReciever.OnBrigadeLeaderQuit": { _parameters spawn ClientEventReciever.OnBrigadeLeaderQuit };
@@ -65,6 +65,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnResourceReportCollectionUpdated": { _parameters spawn ClientEventReciever.OnResourceReportCollectionUpdated; };
 					case "ClientEventReciever.OnBrigadeLeaderGivingOrder": { _parameters spawn ClientEventReciever.OnBrigadeLeaderGivingOrder; };
 					case "ClientEventReciever.OnPlayerRespawn": { _parameters spawn ClientEventReciever.OnPlayerRespawn; };
+					case "ClientEventReciever.OnSquadVehiclesSpawned": { _parameters spawn ClientEventReciever.OnSquadVehiclesSpawned; };
 				};
 			};
 		};
