@@ -15,15 +15,38 @@ namespace Intrusion.Client
 {
 	public class ProfessionDialog
 	{
-		private static fields ["_mOptions" as Array /* of ProfessionType */, "_mProfessionConfig" as IProfessionConfig];
+		private static fields [
+			"_mOptions" as Array /* of ProfessionType */,
+			"_mProfessionConfig" as IProfessionConfig,
+			"_mVehiclesConfig" as IProfessionVehiclesConfig,
+			"_mTechnologyConfig" as ITechnologyConfig,
+			"_mVehicleClassNamesConfig" as IVehicleClassNamesConfig,
+			"_mDefaultColor" as Array,
+			"_mDisabledColor" as Array,
+			"_mCurrentColor" as Array,
+			"_mPlayersCurrentProfIndex" as Scalar
+		];
 	
 		// Initializes the profession dialog.
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init(
+			"_professionConfig" as IProfessionConfig,
+			"_technologyConfig" as ITechnologyConfig,
+			"_vehicleClassNamesConfig" as IVehicleClassNamesConfig,
+			"_vehiclesConfig" as IProfessionVehiclesConfig
+		)
 		{
 			_mProfessionConfig = _professionConfig;
+			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
+			_mTechnologyConfig = _technologyConfig;
+			_mVehiclesConfig = _vehiclesConfig;
+			
 			_mOptions = [];
+			_mDefaultColor = [1,1,1,1];
+			_mDisabledColor = [0,0,0,0.5];
+			_mCurrentColor = [0.85,0.4,0,1];
 			_self.IsOpen = false;
 			_self.SelectedProfession = ProfessionType.Undefined;
+			_mPlayersCurrentProfIndex = -1;
 		};
 		
 		// Gets or sets the profession type that the user has selected.
@@ -36,7 +59,7 @@ namespace Intrusion.Client
 		// Returns (Profession): The selected profession. classNull if no profession is selected.
 		private static method ProfessionType GetSelectedProfessionTypeFromCombo()
 		{
-			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionCombo as Scalar);
+			private _selectedIndex = lbCurSel (DialogControl.GroupProfessionListBox as Scalar);
 			
 			_mOptions select _selectedIndex
 		};
@@ -44,26 +67,75 @@ namespace Intrusion.Client
 		// Adds all professions to the combo box.
 		private static method AddProfessions()
 		{
-			private ["_options" as Array, "_sGroupSize" as String, "_sMaxGroupsCount" as String];
+			private ["_options" as Array];
 			
             _options = [];
             
 			{
-				_sGroupSize = str _x.MinGroupSize + "-" + str _x.MaxGroupSize;
-				if (_x.MinGroupSize == _x.MaxGroupSize) then {
-					_sGroupSize = str _x.MinGroupSize;
-				};
-				
-				_sMaxGroupsCount = "";
-				if (_x.MaxGroupsCount >= 0) then {
-					_sMaxGroupsCount = ", max " + str _x.MaxGroupsCount + " groups";
-				};
-				
-				lbAdd [DialogControl.GroupProfessionCombo, (_x.Name + " (" + _sGroupSize + " members" + _sMaxGroupsCount + ")")];
+				_mPlayersCurrentProfIndex = 0;
+				lbAdd [DialogControl.GroupProfessionListBox, _x.Name];
 				_options pushBack _x.Type;
 			} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
             
             _mOptions = _options;
+		};
+		
+		// Change color in list.
+		private static method UpdateListBoxItemsColor()
+		{
+			private [
+				"_profession" as Profession,
+				"_squads" as SquadCollection,
+				"_unitsInPlayerGroup" as Scalar,
+				"_playerGroupProfessionType" as ProfessionType,
+				"_playerSquad" as Squad
+			];
+			_unitsInPlayerGroup = count units group player;
+			_playerGroupProfessionType = ProfessionType.Undefined;
+		
+			if (call PublicVariableHandler.SquadsHasValue) then {
+				_squads = call PublicVariableHandler.GetSquads;
+				_playerSquad = [group player] call _squads.GetSquadByGroup;
+				if (!isNull _playerSquad) then {
+					_playerGroupProfessionType = _playerSquad.ProfessionType;
+				};
+				
+				{
+					_profession = [_x] call _mProfessionConfig.GetProfession;
+					// If profession is available, and if the group has a good size
+					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
+					}
+					else {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDisabledColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
+					};
+					
+					// If this is players current profession, change color again and mark button to be disabled.
+					if (_playerGroupProfessionType == _profession.Type) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mCurrentColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
+						_mPlayersCurrentProfIndex = _forEachIndex;
+					};
+					
+				} forEach _mOptions as ProfessionType;
+            }
+            else {
+				{
+					_profession = [_x] call _mProfessionConfig.GetProfession;
+					// If the group has a good size
+					if (_unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
+					}
+					else {
+						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDisabledColor];
+						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Disabled"];
+					};
+					
+				} forEach _mOptions as ProfessionType;
+            };
 		};
 	
 		// Shows the dialog.
@@ -75,8 +147,13 @@ namespace Intrusion.Client
 			// Create the dialog
             createDialog "IntProfessionDialog";
 			
+			// Add professions to list and change there's color
 			call _self.AddProfessions;
-			lbSetCurSel [DialogControl.GroupProfessionCombo, 0];
+			call _self.UpdateListBoxItemsColor;
+			
+			if ( _mPlayersCurrentProfIndex > -1 ) then {
+				lbSetCurSel [DialogControl.GroupProfessionListBox, _mPlayersCurrentProfIndex];
+			};
 			
 			_self.IsOpen = true;
 
@@ -93,6 +170,86 @@ namespace Intrusion.Client
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
+		};
+		
+ 		// Change Image and text when a new selection is made in the listbox.
+		// Called by the .hpp-dialog
+		public static method OnListSelectChanged {
+			private [
+				"_profession" as Profession, 
+				"_vehicles" as ProfessionVehicleClassNamesInfo, 
+				"_technology" as TechnologyInfo,
+				"_vehicleInfo" as ProfessionVehicleInfo,
+				"_className" as String,
+				"_thisData" as String,
+				"_selectedIndex" as Scalar
+			];
+			private _model = "";
+			private _vehicleNames = []; 
+			private _ctrlVehicleModel = (findDisplay 2999) displayCtrl 2230;
+			private _ctrlDescription = (findDisplay 2999) displayCtrl 2215;
+			//_profession = call _self.GetSelectedProfessionTypeFromCombo;
+			_profession = [call _self.GetSelectedProfessionTypeFromCombo] call _mProfessionConfig.GetProfession;
+			_vehicles = [side player, _profession.Type] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
+
+			// Disable ok button if profession is unavailable
+			_selectedIndex = _this select 1;
+			_thisData = lbData[DialogControl.GroupProfessionListBox, _selectedIndex];
+			switch (_thisData) do {
+				case "Enabled":
+				{
+					ctrlEnable[DialogControl.GroupProfessionOKButton, true];
+				};
+				case "Disabled":
+				{
+					ctrlEnable[DialogControl.GroupProfessionOKButton, false];
+				};
+			};
+
+ 			if (!isNull _vehicles) then {
+
+ 				if (count _vehicles.ClassNames > 0) then {
+					_className = _vehicles.ClassNames select ((count _vehicles.ClassNames) - 1);
+					_model = (getText(configFile >> "cfgVehicles" >> _className >> "model"));
+					_ctrlVehicleModel ctrlSetModel _model;
+					_ctrlVehicleModel ctrlShow true;
+				};
+
+ 				{
+					_vehicleNames pushBackUnique (getText(configFile >> "cfgVehicles" >> _x >> "displayName"));
+				} foreach (_vehicles.ClassNames);
+			} else {
+				/* Set a compass as vehicle picture and hide it */
+				_ctrlVehicleModel ctrlSetModel "\a3\Ui_f\objects\Compass.p3d";
+				_ctrlVehicleModel ctrlShow false;
+			};
+
+
+			
+ 			_technology = [_profession.RequiredTechnology] call _mTechnologyConfig.GetTechnology;
+			private _requiredResearch = "";
+			private _cost = "";
+			if (!isNull _technology) then {
+				_requiredResearch = str _technology.RequiredResearch
+			};
+
+ 			_vehicleInfo = [_profession.Type] call _mVehiclesConfig.GetVehicle;
+			if (!isNull _vehicleInfo) then {
+				_cost = str _vehicleInfo.Cost;
+			};
+
+
+ 			private _description = [
+				"<t size='2.2' underline='true'>" + _profession.Name + "</t>",
+				"Required administration: " + _requiredResearch,
+				"Vehicle: " + (_vehicleNames joinString ", "),
+				"Vehicle cost: " + _cost,
+				"Required units in group (max): " + str _profession.MinGroupSize + " (" + str _profession.MaxGroupSize + ")",
+				"Max groups with this profession: " + str _profession.MaxGroupsCount
+			];
+			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
+			
+			call _self.UpdateListBoxItemsColor;
 		};
 		
 		// Sends the group's selected profession to the server.
