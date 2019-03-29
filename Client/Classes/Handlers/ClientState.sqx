@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * Handles different client states.
+ * Handles different client states. Used to store information about the local player that does not need to be persistent if player looses connection and logs in again.
  */
 namespace Intrusion.Client
 {

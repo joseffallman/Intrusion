@@ -157,5 +157,18 @@ namespace Intrusion.Client
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
 		};
+		
+		// Called when a squad vehicle is spawned.
+		// _group (Group): The owner group of the vehicle.
+		// _professionType (ProfessionType): The profession type of the squad.
+		// _vehicles (Array): A list of the vehicles that was spawned.
+		public static method OnSquadVehiclesSpawned("_group" as Group, "_professionType" as ProfessionType, "_vehicles" as Array)
+		{
+			[_vehicles] call gClient.ClientVehicleHandler.GroupLockVehicles;
+			
+			if (_group == group player) then {
+				[_vehicles] call gClient.ClientVehicleHandler.AddGroupMarkerToVehicles;
+			};
+		};
 	};
 };
