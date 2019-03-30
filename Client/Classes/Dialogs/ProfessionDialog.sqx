@@ -182,7 +182,10 @@ namespace Intrusion.Client
 				"_vehicleInfo" as ProfessionVehicleInfo,
 				"_className" as String,
 				"_thisData" as String,
-				"_selectedIndex" as Scalar
+				"_selectedIndex" as Scalar,
+				"_squadSize" as String,
+				"_maxGroupsCount" as String,
+				"_weaponNames" as String
 			];
 			private _model = "";
 			private _vehicleNames = []; 
@@ -202,10 +205,15 @@ namespace Intrusion.Client
 				};
 				case "Disabled":
 				{
-					ctrlEnable[DialogControl.GroupProfessionOKButton, false];
+					//ctrlEnable[DialogControl.GroupProfessionOKButton, false];
 				};
 			};
 
+
+			// Vehicle Type:
+			// Weapons in trunk:
+			_vehicleNames = "N/A";
+			_weaponNames = "N/A";
  			if (!isNull _vehicles) then {
 
  				if (count _vehicles.ClassNames > 0) then {
@@ -213,11 +221,20 @@ namespace Intrusion.Client
 					_model = (getText(configFile >> "cfgVehicles" >> _className >> "model"));
 					_ctrlVehicleModel ctrlSetModel _model;
 					_ctrlVehicleModel ctrlShow true;
+					
+					_vehicleNames = (getText(configFile >> "cfgVehicles" >> _className >> "displayName"));
 				};
 
- 				{
-					_vehicleNames pushBackUnique (getText(configFile >> "cfgVehicles" >> _x >> "displayName"));
-				} foreach (_vehicles.ClassNames);
+ 				if (count _vehicles.ClassNames > 1) then {
+					_vehicleNames = _vehicleNames + " (or similar)"
+				};
+				
+				
+				if (count _vehicles.CargoWeapons > 0) then {
+					_className = _vehicles.CargoWeapons select 0;
+					_weaponNames = (getText(configFile >> "cfgVehicles" >> _className >> "displayName"));
+				};
+				
 			} else {
 				/* Set a compass as vehicle picture and hide it */
 				_ctrlVehicleModel ctrlSetModel "\a3\Ui_f\objects\Compass.p3d";
@@ -225,17 +242,35 @@ namespace Intrusion.Client
 			};
 
 
-			
+			// Required administration: 
  			_technology = [_profession.RequiredTechnology] call _mTechnologyConfig.GetTechnology;
-			private _requiredResearch = "";
-			private _cost = "";
-			if (!isNull _technology) then {
-				_requiredResearch = str _technology.RequiredResearch
+			private _requiredResearch = "N/A";
+			if (!isNull _technology && { _technology.Technology != Technology.None } ) then {
+				_requiredResearch = _technology.Name + "  (at " + str _technology.RequiredResearch + ")";
 			};
 
+
+			// Vehicle production cost: 
+			private _cost = "N/A";
  			_vehicleInfo = [_profession.Type] call _mVehiclesConfig.GetVehicle;
 			if (!isNull _vehicleInfo) then {
 				_cost = str _vehicleInfo.Cost;
+			};
+
+
+			// Squad size: 
+			_squadSize = "N/A";
+			if (_profession.MinGroupSize == _profession.MaxGroupSize || _profession.MinGroupSize > _profession.MaxGroupSize) then {
+				_squadSize = str _profession.MinGroupSize;
+			} else {
+				_squadSize = str _profession.MinGroupSize + "-" + str _profession.MaxGroupSize;
+			};
+
+
+			// Maximum number of squads
+			_maxGroupsCount = "N/A";
+			if (_profession.MaxGroupsCount > 0) then {
+				_maxGroupsCount = str _profession.MaxGroupsCount;
 			};
 
 
@@ -243,10 +278,11 @@ namespace Intrusion.Client
 				"<t size='2.2' underline='false'>" + _profession.Name + "</t>",
 				"",
 				"Required administration: " + _requiredResearch,
-				"Vehicle: " + (_vehicleNames joinString ", "),
-				"Vehicle cost: " + _cost,
-				"Required units in group (max): " + str _profession.MinGroupSize + " (" + str _profession.MaxGroupSize + ")",
-				"Max groups with this profession: " + str _profession.MaxGroupsCount
+				"Vehicle type: " + _vehicleNames,
+				"Vehicle production cost: " + _cost,
+				"Weapons in trunk: " + _weaponNames,
+				"Squad size: " + _squadSize,
+				"Maximum number of squads: " + _maxGroupsCount
 			];
 			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
 			
