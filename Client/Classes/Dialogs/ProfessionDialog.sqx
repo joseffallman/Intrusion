@@ -205,7 +205,7 @@ namespace Intrusion.Client
 				};
 				case "Disabled":
 				{
-					//ctrlEnable[DialogControl.GroupProfessionOKButton, false];
+					ctrlEnable[DialogControl.GroupProfessionOKButton, true];
 				};
 			};
 

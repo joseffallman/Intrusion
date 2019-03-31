@@ -62,7 +62,7 @@ namespace Intrusion.Client
 			
 			{
 				_vehicleHeight = ((boundingBox _x) select 1) select 2;
-				_groupMarker = "Sign_Arrow_Large_Blue_F" createVehicle [getPosATL _x select 0, getPosATL _x select 1, (getPosATL _x select 2) + _vehicleHeight + 3];
+				_groupMarker = "Sign_Arrow_Large_Blue_F" createVehicleLocal [getPosATL _x select 0, getPosATL _x select 1, (getPosATL _x select 2) + _vehicleHeight + 3];
 				_groupMarker setPosATL [getPosATL _x select 0, getPosATL _x select 1, (getPosATL _x select 2) + _vehicleHeight + 3];
 				_mGroupMarkers pushBack _groupMarker;
 			} foreach _vehicleArray as Object;
