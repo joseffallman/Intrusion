@@ -36,22 +36,19 @@ namespace Intrusion.Client
 		public method DialogResult ShowDialog {
 			private ["_dlgHeader" as Scalar, "_dlgText" as Scalar];
 			
-			if (DebugConfig.ShowTutorials) then {
+			waitUntil { !dialog };
+		
+			_dlgHeader = 43;
+			_dlgText = 44;
 			
-				waitUntil { !dialog };
+            createDialog "IntTutorialDialog";
+
+            ctrlSetText [_dlgHeader, _mTutorial.Header];
+            ctrlSetText [_dlgText, _mTutorial.Text];
+
+			waitUntil { !dialog };
 			
-				_dlgHeader = 43;
-				_dlgText = 44;
-				
-                createDialog "IntTutorialDialog";
-
-                ctrlSetText [_dlgHeader, _mTutorial.Header];
-                ctrlSetText [_dlgText, _mTutorial.Text];
-
-				waitUntil { !dialog };
-				
-				_self.TurnOffTutorials = Intrusion_Client_TutorialDialog_DialogsTurnedOff;
-			};
+			_self.TurnOffTutorials = Intrusion_Client_TutorialDialog_DialogsTurnedOff;
 			
 			DialogResult.Ok
 		};

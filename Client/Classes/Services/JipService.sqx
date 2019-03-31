@@ -61,7 +61,11 @@ namespace Intrusion.Client
 		  		
 				[] spawn {
 				    sleep 1;
-				    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+				    
+					if (ReleaseSettings.ShowTutorials) then {
+					    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+					};
+					
 //				    ["WELCOME"] call dre_fnc_CC_ShowTutorial;
 //		            ["ECONOMY"] call dre_fnc_CC_ShowTutorial;
 				};

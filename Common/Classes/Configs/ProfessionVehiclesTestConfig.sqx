@@ -7,27 +7,25 @@
  * Description:
  * Contains the configs for vehicles belonging to a profession.
  */
-using Intrusion.Common;
-
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
-	public class ProfessionVehiclesDevConfig : IProfessionVehiclesConfig
+	public class ProfessionVehiclesTestConfig : IProfessionVehiclesConfig
 	{
 		private fields ["_mProVehicles"];
 	
 		// Creates a ProVehiclesConfig object.
 		public constructor {
 			_mProVehicles = [
-				[ProfessionType.Transport, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Fuel, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Ammo, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Motorized, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Sniper, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
-				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,
-				[ProfessionType.Armored, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Transport, 150] new ProfessionVehicleInfo,
+				[ProfessionType.Fuel, 150] new ProfessionVehicleInfo,
+				[ProfessionType.Ammo, 150] new ProfessionVehicleInfo,
+				[ProfessionType.Repair, 150] new ProfessionVehicleInfo,
+				[ProfessionType.Motorized, 700] new ProfessionVehicleInfo,
+				[ProfessionType.Sniper, 300] new ProfessionVehicleInfo,
+				[ProfessionType.Mortars, 400] new ProfessionVehicleInfo,
+				[ProfessionType.Mechanized, 800] new ProfessionVehicleInfo,
+				[ProfessionType.AntiArmor, 400] new ProfessionVehicleInfo,
+				[ProfessionType.Armored, 1000] new ProfessionVehicleInfo,
 			];
 		};
 		

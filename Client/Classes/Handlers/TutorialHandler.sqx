@@ -18,10 +18,6 @@ namespace Intrusion.Client
         // Creates a TutorialHandler object.
         public static method Init {
         	_mTutorialsTurnedOff = false;
-        	
-			if (DebugConfig.Mode != MissionConfigMode.Production) then {
-				_mTutorialsTurnedOff = true;
-			};
 		};
 		
 		// Shows a tutorial.
@@ -30,7 +26,7 @@ namespace Intrusion.Client
 		{
 			private ["_tutorial" as Tutorial, "_tutorialDialog" as TutorialDialog];
 			
-			if (DebugConfig.ShowTutorials && !_mTutorialsTurnedOff) then {
+			if (!_mTutorialsTurnedOff) then {
 			
 				_tutorial = [_tutorialType] call TutorialConfig.GetTutorial;
 				if (!_tutorial.IsTurnedOff) then {

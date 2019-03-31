@@ -2,13 +2,11 @@ call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\SquadConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfigFactory.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
@@ -69,18 +67,7 @@ call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
 
-if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gServerConfig = [new GameplayProdConfig, new ProfessionVehiclesProdConfig] new ServerConfig;
-}
-else {
-	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesTestConfig] new ServerConfig;
-	}
-	else { // Dev
-		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesDevConfig] new ServerConfig;
-	};
-};
-
+gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
 gServer = [new AiUnitCounter] new IntrusionServer;
 
 /* Handlers */
