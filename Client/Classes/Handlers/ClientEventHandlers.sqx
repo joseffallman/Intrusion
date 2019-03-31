@@ -38,7 +38,10 @@ namespace Intrusion.Client
 					// Show the Welcome tutorial
 					[] spawn {
 						sleep 1;
-						[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+						
+						if (ReleaseSettings.ShowTutorials) then {
+							[TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+						};
 					};
 				};
 			}] call BIS_fnc_addStackedEventHandler;
