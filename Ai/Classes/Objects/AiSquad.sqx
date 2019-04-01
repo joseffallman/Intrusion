@@ -351,9 +351,9 @@ namespace Intrusion.Ai
 					};
 				};
 				
-				// If within 1500 meters from enemy flag, then move towards the flag.
+				// If within 3000 meters from enemy flag, then move towards the flag.
 				
-				if (vehicle _mUnit distance _mCurrentOrder.TargetPosition < 1500) then
+				if (vehicle _mUnit distance _mCurrentOrder.TargetPosition < 3000) then
 				{
 					_mMovingToPos = _mCurrentOrder.TargetPosition;
 					_waypoint = _self.Group addWaypoint [_mMovingToPos, 10];
