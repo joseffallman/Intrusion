@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=469;
+		nextID=479;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3104.9194,22.332581,6424.0991};
-		dir[]={0.4550986,-0.39827979,-0.79644632};
-		up[]={0.19762984,0.91723341,-0.34586158};
-		aside[]={-0.86827701,-4.9360096e-008,-0.49614429};
+		pos[]={3122.8713,15.308982,6344.1792};
+		dir[]={0.44615358,-0.52857733,0.72226846};
+		up[]={0.2778191,0.84884369,0.44975656};
+		aside[]={0.85082394,-1.3213139e-007,-0.52556121};
 	};
 };
 binarizationWanted=0;
@@ -262,7 +262,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=77;
+		items=78;
 		class Item0
 		{
 			dataType="Marker";
@@ -2681,6 +2681,80 @@ class Mission
 			{
 			};
 			id=467;
+		};
+		class Item77
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={3121.646,5.4030576,6357.1938};
+						angles[]={0,1.5786853,0};
+					};
+					side="East";
+					flags=7;
+					class Attributes
+					{
+						init="removeAllWeapons this";
+					};
+					id=476;
+					type="O_Soldier_AR_F";
+					atlOffset=-4.7683716e-007;
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="Male01PER";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"SCALAR"
+										};
+									};
+									value=1;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+			};
+			class Attributes
+			{
+			};
+			id=475;
+			atlOffset=-4.7683716e-007;
 		};
 	};
 };

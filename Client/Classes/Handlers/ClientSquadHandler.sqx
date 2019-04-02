@@ -7,17 +7,19 @@
  * Description:
  * Handles all about squads on the client.
  */
+
 using Intrusion.Common;
 
 namespace Intrusion.Client
 {
 	public class ClientSquadHandler
 	{
-		private static fields ["_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mProfessionConfig" as IProfessionConfig, "_mSquadConfig" as ISquadConfig];
 	
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init("_professionConfig" as IProfessionConfig, "_squadConfig" as ISquadConfig)
 		{
 			_mProfessionConfig = _professionConfig;
+			_mSquadConfig = _squadConfig;
 		};
 	
 		// Notifies the player that his/her profession has changed.
@@ -40,6 +42,34 @@ namespace Intrusion.Client
 		{
 			if (_group == group player) then {
 				[_reason] call ClientMessageHandler.ShowMessage;
+			};
+		};
+		
+		// Adds rating to all members of a squad.
+		// _rating (Scalar): The amout of rating to add.
+		// _group (Group): The squad/group to add rating to.
+		public static method AddSquadRating("_rating" as Scalar, "_group" as Group)
+		{
+			private ["_okDistance" as Boolean, "_calculatedRating" as Scalar];
+			
+			_okDistance = true;
+			
+			{
+				if (vehicle _x distance vehicle leader _group > _mSquadConfig.RatingSquadLeaderMaxDistance) then {
+					_okDistance = false;
+				};
+			} foreach units _group;
+
+			if (_okDistance) then
+			{
+				_calculatedRating = (_rating * count units _group);
+
+				if (_calculatedRating < 0) then {
+					_calculatedRating = 0;
+				};
+				
+				player addRating _calculatedRating;
+				ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
 			};
 		};
 	};

@@ -31,6 +31,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
+using Intrusion.Common;
 
 cutText ["", "BLACK FADED"];
 
@@ -47,7 +48,7 @@ call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
-[gCommonConfig.Professions] call ClientSquadHandler.Init;
+[gCommonConfig.Professions, new SquadConfig] call ClientSquadHandler.Init;
 [gCommonConfig.Professions] call GroupActionHandler.Init;
 
 // Initialize the intrusion client object

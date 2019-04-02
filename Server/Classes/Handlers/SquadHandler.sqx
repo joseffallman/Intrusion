@@ -138,12 +138,32 @@ namespace Intrusion.Server
 			} foreach _removedSquads as Squad;
 		};
 		
-		// Adds rating to all squad members of a group.
+		// Adds rating to all squad members of a group. The rating given is multiplied with
+		// the number of units in the group, but is only given if the distance between team
+		// members is within "team range".
+		// _rating (Scalar): The rating to add (if the group size is only one member).
+		// _group (Group): The group to recieve the rating.
 		public method AddRatingToSquad("_rating" as Scalar, "_group" as Group)
 		{
+/*
+			private ["_okDistance" as Boolean, "_newRating" as Scalar];
+			
+			_okDistance = true;
+			
 			{
-				_x addRating _rating;
-			} foreach units _group as Object;
+				if (vehicle _x distance vehicle leader _group > _mSquadConfig.RatingSquadLeaderMaxDistance) then {
+					_okDistance = false;
+				};
+			} foreach units _group;
+			
+			if (_okDistance) then {
+				{
+					_newRating = rating _x + (_rating * count units _group);
+					_x setUnitRank ([_newRating] call RatingHandler.GetRank);
+					_x addRating _newRating;
+				} foreach units _group as Object;
+			};
+*/
 		};
 		
 		// Adds a rating event handler to a player.
@@ -153,7 +173,8 @@ namespace Intrusion.Server
 			_player addEventHandler ["HandleRating", {
 				params ["_unit" as Object, "_rating" as Scalar];
 				
-				[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
+				["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
+				//[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
 				
 				0
 			}];

@@ -66,6 +66,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnBrigadeLeaderGivingOrder": { _parameters spawn ClientEventReciever.OnBrigadeLeaderGivingOrder; };
 					case "ClientEventReciever.OnPlayerRespawn": { _parameters spawn ClientEventReciever.OnPlayerRespawn; };
 					case "ClientEventReciever.OnSquadVehiclesSpawned": { _parameters spawn ClientEventReciever.OnSquadVehiclesSpawned; };
+					case "ClientEventReciever.OnAddSquadRating": { _parameters spawn ClientEventReciever.OnAddSquadRating; };
 				};
 			};
 		};

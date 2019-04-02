@@ -170,5 +170,12 @@ namespace Intrusion.Client
 				[_vehicles] call gClient.ClientVehicleHandler.AddGroupMarkerToVehicles;
 			};
 		};
+		
+		public static method OnAddSquadRating("_rating" as Scalar, "_group" as Group)
+		{
+			if (_group == group player) then {
+				[_rating, _group] call ClientSquadHandler.AddSquadRating;
+			};
+		};
 	};
 };

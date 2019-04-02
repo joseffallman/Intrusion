@@ -4,7 +4,6 @@ call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfi
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\SquadConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfigFactory.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";

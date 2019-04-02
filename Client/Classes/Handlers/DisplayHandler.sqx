@@ -52,6 +52,8 @@ namespace Intrusion.Client
 				_text = _text + "(" + _technologyInfo.Name + " at " + str _technologyInfo.RequiredResearch + ")";
 			};
 			
+			_text = _text + ", Rank: " + ([ClientState.CurrentRank] call RankMeta.GetRankText) + " (rating: " + str rating player + ")";
+			
 			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
 				"<t color='#ffffff' align='left' size='1.4'>" + _text + "</t>";
 			];

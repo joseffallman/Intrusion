@@ -7,12 +7,12 @@
  * Description:
  * Handles configs about squads.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public interface ISquadConfig
 	{
 		// Gets the required maximum distance between team members to gain rating. All team members must be within this distance from the squad leader 
-		// for anyone in the group to be assigned the rating.
+		// for anyone in the group to be assigned rating.
 		property Scalar RatingSquadLeaderMaxDistance { get; private set; };
 	};
 };
