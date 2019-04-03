@@ -278,9 +278,10 @@ namespace Intrusion.Client
 				"<t size='2.2' underline='false'>" + _profession.Name + "</t>",
 				"",
 				"Required administration: " + _requiredResearch,
+				"Required player rank: " + ([_profession.RequiredRank] call RankMeta.GetRankText),
 				"Vehicle type: " + _vehicleNames,
 				"Vehicle production cost: " + _cost,
-				"Weapons in trunk: " + _weaponNames,
+				"Weapons in cargo: " + _weaponNames,
 				"Squad size: " + _squadSize,
 				"Maximum number of squads: " + _maxGroupsCount
 			];

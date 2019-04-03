@@ -84,6 +84,12 @@ namespace Intrusion.Server
 				breakOut "main";
 			};
 			
+			// Check if leader rank is high enough.
+			if (rating leader _group < (_profession.RequiredRank as Scalar)) then {
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Your rank is to low. You will need to be of rank " + ([_profession.RequiredRank] call RankMeta.GetRankText) + " to play this profession."]] call Remote.Invoke;
+				breakOut "main";
+			};
+			
 			// All clear, set the profession!
 
 			call _mSquadCollection.AquireLock;
