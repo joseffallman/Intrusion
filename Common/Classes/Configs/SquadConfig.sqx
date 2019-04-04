@@ -13,10 +13,10 @@ namespace Intrusion.Common
 	{
 		// Creates a SquadConfig object.
 		public constructor {
-			_self.RatingSquadLeaderMaxDistance = 100;
+			_self.RatingSquadLeaderMaxDistance = 150;
 		};
 		
-		// Gets the required maximum distance between team members to gain rating. All team members must be within this distance from the squad leader 
+		// Gets the required maximum distance between team members and their leader to gain rating. All team members must be within this distance from the squad leader 
 		// for anyone in the group to be assigned rating.
 		public property Scalar RatingSquadLeaderMaxDistance { get; private set; };
 	};

@@ -397,7 +397,8 @@ namespace Intrusion.Ai
 			{
 				if (_x distance2D _location.Flag < 10) then {
 					if (alive _x && _location.Side != side _self.Group) then {
-						[_location.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
+						[_location.Flag, _location.MarkerName, side _self.Group, _x] call ServerEventReciever.OnFlagCaptured;
+						//[_location.MarkerName, side _self.Group] call ResourceLocationHandler.SetNewFlagOwner;
 					};
 					
 					[AiSquadState.Idle, 0] call _self.SetState;

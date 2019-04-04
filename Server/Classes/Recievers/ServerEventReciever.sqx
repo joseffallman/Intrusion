@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
@@ -48,6 +49,12 @@ namespace Intrusion.Server
 		public static method OnJipPlayerEnteredGame("_player" as Object)
 		{
 			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
+		};
+		
+		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
+		{
+			[_markerName, _capturedBySide] call ResourceLocationHandler.SetNewFlagOwner;
+			["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
 		};
 	};
 };

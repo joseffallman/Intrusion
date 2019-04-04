@@ -10,6 +10,7 @@
 
 using Intrusion.Client;
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Client
 {
@@ -22,6 +23,8 @@ namespace Intrusion.Client
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];
 		
 			waitUntil { call PublicVariableHandler.PlayerInfoCollectionHasValue && player == player };
+			
+			["ServerEventReciever.OnJipPlayerEnteredGame", [player]] call Remote.Invoke;
 
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
 			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;

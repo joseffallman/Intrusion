@@ -30,13 +30,13 @@ namespace Intrusion.Communication
 			
 			if (isServer) then {
 				switch (_methodFullName) do {
-					case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
+					//case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
 					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };
 					case "ServerEventReciever.OnPlayerQuitBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerQuitBrigadeLeadership; };
 					case "ServerEventReciever.OnLeaderMoveBase": { _parameters spawn ServerEventReciever.OnLeaderMoveBase; };
 					case "ServerEventReciever.OnPlayerJoinedGroup": { _parameters spawn ServerEventReciever.OnPlayerJoinedGroup; };
-					//case "ServerEventReciever.OnPlayerLeftGroup": { _parameters spawn ServerEventReciever.OnPlayerLeftGroup; };
+					case "ServerEventReciever.OnFlagCaptured": { _parameters spawn ServerEventReciever.OnFlagCaptured; };
 				};
 			};
 			

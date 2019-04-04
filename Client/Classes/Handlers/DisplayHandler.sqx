@@ -24,7 +24,7 @@ namespace Intrusion.Client
 		
 		public method DisplayResourceReport("_report" as ResourceReport)
 		{
-			private ["_technologyInfo" as TechnologyInfo, "_text" as String];
+			private ["_technologyInfo" as TechnologyInfo, "_text" as String, "_playerText" as String];
 			
 			waitUntil {!isNull findDisplay 46};
 			disableSerialization;
@@ -52,10 +52,14 @@ namespace Intrusion.Client
 				_text = _text + "(" + _technologyInfo.Name + " at " + str _technologyInfo.RequiredResearch + ")";
 			};
 			
-			_text = _text + ", Rank: " + ([ClientState.CurrentRank] call RankMeta.GetRankText) + " (rating: " + str rating player + ")";
+			_playerText = "Rank: " + ([ClientState.CurrentRank] call RankMeta.GetRankText);
+			
+			if (name player == "Engima") then {
+				_playerText = _playerText + " (rating: " + str rating player + ")";
+			};
 			
 			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
-				"<t color='#ffffff' align='left' size='1.4'>" + _text + "</t>";
+				"<t color='#ffffff' align='left' size='1.4'>" + _text + "<br/>" + _playerText + "</t>";
 			];
 /*
 			if (!isNull _technologyInfo) then {
