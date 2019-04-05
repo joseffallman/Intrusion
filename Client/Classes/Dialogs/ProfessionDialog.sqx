@@ -185,7 +185,8 @@ namespace Intrusion.Client
 				"_selectedIndex" as Scalar,
 				"_squadSize" as String,
 				"_maxGroupsCount" as String,
-				"_weaponNames" as String
+				"_weaponNames" as String,
+				"_squadsInBrigade" as String
 			];
 			private _model = "";
 			private _vehicleNames = []; 
@@ -272,6 +273,17 @@ namespace Intrusion.Client
 			if (_profession.MaxGroupsCount > 0) then {
 				_maxGroupsCount = str _profession.MaxGroupsCount;
 			};
+			
+			// Number of squads in brigade
+			_squadsInBrigade = "N/A";
+			if (call PublicVariableHandler.SquadsHasValue) then {
+				private [
+					"_squads" as SquadCollection
+				];
+				_squads = call PublicVariableHandler.GetSquads;
+				_squadsInBrigade = [side player, _profession.Type] call _squads.CountByProfessionType;
+				_squadsInBrigade = str _squadsInBrigade;
+			};
 
 
  			private _description = [
@@ -283,7 +295,8 @@ namespace Intrusion.Client
 				"Vehicle production cost: " + _cost,
 				"Weapons in cargo: " + _weaponNames,
 				"Squad size: " + _squadSize,
-				"Maximum number of squads: " + _maxGroupsCount
+				"Maximum number of squads: " + _maxGroupsCount,
+				"Current number of squads in Brigade: " + _squadsInBrigade
 			];
 			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
 			
