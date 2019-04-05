@@ -84,6 +84,12 @@ namespace Intrusion.Server
 				breakOut "main";
 			};
 			
+			// Check if leader rank is high enough (only check players, and not AI).
+			if (isPlayer leader _group && rating leader _group < (_profession.RequiredRank as Scalar)) then {
+				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Your rank is to low. You will need to be of rank " + ([_profession.RequiredRank] call RankMeta.GetRankText) + " to play this profession."]] call Remote.Invoke;
+				breakOut "main";
+			};
+			
 			// All clear, set the profession!
 
 			call _mSquadCollection.AquireLock;
@@ -136,6 +142,48 @@ namespace Intrusion.Server
 			{
 				[_x.Group] call _mVehicleSpawner.DeleteProfessionVehicles;
 			} foreach _removedSquads as Squad;
+		};
+		
+		// Adds rating to all squad members of a group. The rating given is multiplied with
+		// the number of units in the group, but is only given if the distance between team
+		// members is within "team range".
+		// _rating (Scalar): The rating to add (if the group size is only one member).
+		// _group (Group): The group to recieve the rating.
+		public method AddRatingToSquad("_rating" as Scalar, "_group" as Group)
+		{
+/*
+			private ["_okDistance" as Boolean, "_newRating" as Scalar];
+			
+			_okDistance = true;
+			
+			{
+				if (vehicle _x distance vehicle leader _group > _mSquadConfig.RatingSquadLeaderMaxDistance) then {
+					_okDistance = false;
+				};
+			} foreach units _group;
+			
+			if (_okDistance) then {
+				{
+					_newRating = rating _x + (_rating * count units _group);
+					_x setUnitRank ([_newRating] call RatingHandler.GetRank);
+					_x addRating _newRating;
+				} foreach units _group as Object;
+			};
+*/
+		};
+		
+		// Adds a rating event handler to a player.
+		// _player (Object): The player to add the rating event handler to.
+		public method AddRatingEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["HandleRating", {
+				params ["_unit" as Object, "_rating" as Scalar];
+				
+				["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
+				//[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
+				
+				0
+			}];
 		};
 	};
 };

@@ -15,6 +15,7 @@ namespace Intrusion.Common
     		"_type" as ProfessionType,
     		"_name" as String,
     		"_requiredTechnology" as Technology,
+    		"_requiredRank" as Rank,
     		"_maxGroupsCount" as Scalar,
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
@@ -26,6 +27,7 @@ namespace Intrusion.Common
         	_self.Type = _type;
         	_self.Name = _name;
         	_self.RequiredTechnology = _requiredTechnology;
+        	_self.RequiredRank = _requiredRank;
         	_self.MaxGroupsCount = _maxGroupsCount;
         	_self.MinGroupSize = _minGroupSize;
         	_self.MaxGroupSize = _maxGroupSize;
@@ -43,6 +45,9 @@ namespace Intrusion.Common
 		
 		// Gets the required technology for this profession vehicle.
 		public property Technology RequiredTechnology { get; private set; };
+		
+		// Gets the required rank to be able to select this profession.
+		public property Rank RequiredRank { get; private set; };
 
 		// Gets the maximum number of group that can have this profession on a side. -1 means unlimited.
 		public property Scalar MaxGroupsCount { get; private set; };

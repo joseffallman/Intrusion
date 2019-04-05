@@ -7,6 +7,7 @@
  * Description:
  * Handles all about squads on the client.
  */
+
 using Intrusion.Common;
 
 namespace Intrusion.Client
@@ -40,6 +41,32 @@ namespace Intrusion.Client
 		{
 			if (_group == group player) then {
 				[_reason] call ClientMessageHandler.ShowMessage;
+			};
+		};
+		
+		// Adds rating to all members of a squad.
+		// _rating (Scalar): The amout of rating to add.
+		// _group (Group): The squad/group to add rating to.
+		public static method AddSquadRating("_rating" as Scalar, "_group" as Group)
+		{
+			private ["_calculatedRating" as Scalar];
+			private ["_ratingLock" as RatingLock];
+			
+			if (_group == group player) then
+			{
+				_ratingLock = ClientState.RatingLock;
+			
+				if (isNull _ratingLock || { !(call _ratingLock.IsActive) }) then
+				{
+					_calculatedRating = (_rating * count units _group);
+	
+					if (_calculatedRating < 0) then {
+						_calculatedRating = 0;
+					};
+					
+					player addRating _calculatedRating;
+					ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
+				};
 			};
 		};
 	};

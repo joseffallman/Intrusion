@@ -1,0 +1,18 @@
+/*
+ * Name:	ISquadConfig
+ * Date:	2019-03-29
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configs about squads.
+ */
+namespace Intrusion.Common
+{
+	public interface ISquadConfig
+	{
+		// Gets the required maximum distance between team members to gain rating. All team members must be within this distance from the squad leader 
+		// for anyone in the group to be assigned rating.
+		property Scalar RatingSquadLeaderMaxDistance { get; private set; };
+	};
+};

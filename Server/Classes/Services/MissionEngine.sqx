@@ -27,7 +27,9 @@ namespace Intrusion.Server
 			
 			{
 				_player = _x;
+				
 				[getPlayerUid _player, name _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
+				[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
 			} foreach _allPlayers;
 			
 			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;

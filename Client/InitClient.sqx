@@ -28,9 +28,11 @@ call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\RatingService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
+using Intrusion.Common;
 
 cutText ["", "BLACK FADED"];
 
@@ -68,3 +70,4 @@ call GroupActionHandler.UpdateAllInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;
+call gClient.RatingService.RunAsync;

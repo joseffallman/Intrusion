@@ -13,7 +13,7 @@ namespace Intrusion.Common
 	{
 		// Gets the correct time since mission start, no matter SP or MP.
 		// Returns time since mission start in seconds.
-		public static method Scalar Time()
+		public static method Scalar GetMissionTime()
 		{
 			private _time = time;
 			

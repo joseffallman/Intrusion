@@ -10,6 +10,7 @@
 
 using Intrusion.Client;
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Client
 {
@@ -22,6 +23,8 @@ namespace Intrusion.Client
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_playerInfo" as PlayerInfo, "_isCheating" as Boolean];
 		
 			waitUntil { call PublicVariableHandler.PlayerInfoCollectionHasValue && player == player };
+			
+			["ServerEventReciever.OnJipPlayerEnteredGame", [player]] call Remote.Invoke;
 
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
 			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;
@@ -61,7 +64,11 @@ namespace Intrusion.Client
 		  		
 				[] spawn {
 				    sleep 1;
-				    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+				    
+					if (ReleaseSettings.ShowTutorials) then {
+					    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
+					};
+					
 //				    ["WELCOME"] call dre_fnc_CC_ShowTutorial;
 //		            ["ECONOMY"] call dre_fnc_CC_ShowTutorial;
 				};

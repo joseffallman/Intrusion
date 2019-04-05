@@ -24,7 +24,7 @@ class IntProfessionDialog
     {
 		
 		class IntProfessionDialog_CancelButton : IntBaseDialog_CancelButton {
-			x = 28.5 * GUI_GRID_W + GUI_GRID_X;
+			x = 27.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 5 * GUI_GRID_W;
 			h = 1.5 * GUI_GRID_H;
@@ -49,10 +49,10 @@ class IntProfessionDialog
 		class IntProfessionDialog_ListBox : RscListBox
 		{
 			idc = 2200;
-			x = 28 * GUI_GRID_W + GUI_GRID_X;
+			x = 27.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 1 * GUI_GRID_H + GUI_GRID_Y;
 			w = 12 * GUI_GRID_W;
-			h = 20 * GUI_GRID_H;
+			h = 20.5 * GUI_GRID_H;
 			
 			onLBSelChanged = "call Intrusion_Client_ProfessionDialog_OnListSelectChanged;";
 		};
@@ -61,7 +61,7 @@ class IntProfessionDialog
 		{
 			idc = 2215;
 			x = 0.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 11 * GUI_GRID_H + GUI_GRID_Y;
+			y = 12 * GUI_GRID_H + GUI_GRID_Y;
 			w = 27.5 * GUI_GRID_W;
 			h = 13 * GUI_GRID_H;
 		};
