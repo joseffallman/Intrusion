@@ -103,7 +103,12 @@ namespace Intrusion.Client
 				{
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If profession is available, and if the group has a good size
-					if ([playerSide, _profession.Type] call _squads.ProfessionTypeAvailable && _unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
+					if (
+						[playerSide, _profession.Type] call _squads.ProfessionTypeAvailable &&
+						_unitsInPlayerGroup >= _profession.MinGroupSize &&
+						_unitsInPlayerGroup <= _profession.MaxGroupSize &&
+						rating leader group player >= (_profession.RequiredRank as Scalar)
+					) then {
 						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
 						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
 					}
@@ -125,7 +130,11 @@ namespace Intrusion.Client
 				{
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If the group has a good size
-					if (_unitsInPlayerGroup >= _profession.MinGroupSize && _unitsInPlayerGroup <= _profession.MaxGroupSize) then {
+					if (
+						_unitsInPlayerGroup >= _profession.MinGroupSize &&
+						_unitsInPlayerGroup <= _profession.MaxGroupSize &&
+						rating leader group player >= (_profession.RequiredRank as Scalar)
+					) then {
 						lbSetColor[DialogControl.GroupProfessionListBox, _forEachIndex, _mDefaultColor];
 						lbSetData[DialogControl.GroupProfessionListBox, _forEachIndex, "Enabled"];
 					}
