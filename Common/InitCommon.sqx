@@ -43,6 +43,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\Order.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\OrderCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ValuedObject.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 
 using Intrusion.Common;

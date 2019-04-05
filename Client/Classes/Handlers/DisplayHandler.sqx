@@ -25,6 +25,7 @@ namespace Intrusion.Client
 		public method DisplayResourceReport("_report" as ResourceReport)
 		{
 			private ["_technologyInfo" as TechnologyInfo, "_text" as String, "_playerText" as String];
+			private ["_ratingLock" as RatingLock];
 			
 			waitUntil {!isNull findDisplay 46};
 			disableSerialization;
@@ -56,6 +57,11 @@ namespace Intrusion.Client
 			
 			if (name player == "Engima") then {
 				_playerText = _playerText + " (rating: " + str rating player + ")";
+			};
+		
+			_ratingLock = ClientState.RatingLock;
+			if (!isNull _ratingLock) then {
+				_playerText = _playerText + " (Locked - Group members to far apart)";
 			};
 			
 			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[

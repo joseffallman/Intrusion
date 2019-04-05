@@ -27,7 +27,7 @@ namespace Intrusion.Server
 		// Marks all observations in the observation collection as deleted.
 		private static method MarkObservationsAsDeleted() {
 			{
-				if (call Functions.Time > _x.Time + 45) then {
+				if (call Functions.GetMissionTime > _x.Time + 45) then {
 					_x.MarkedAsDeleted = true;
 				};
 			} foreach _mObservations as Observation;
@@ -112,17 +112,18 @@ namespace Intrusion.Server
 			
 			if (isNull _existingObservation) then {
 				_mCurrentId = _mCurrentId + 1;
-				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call Functions.Time] new Observation;
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call Functions.GetMissionTime] new Observation;
 			
 				_mObservations pushBack _newObservation;
 			} else {
-				_existingObservation.Time = call Functions.Time;
+				_existingObservation.Time = call Functions.GetMissionTime;
 				[_existingObservation, _target] call _self.PrioritizeObservation;
 			};
 		};
 		
         // Runs the service.
-        private static method Run() {
+        private static method Run()
+        {
         	private ["_targets" as Array, "_mapObservations" as Array];
         	
         	_mCurrentId = 0;

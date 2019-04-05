@@ -28,6 +28,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\RatingService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
@@ -48,7 +49,7 @@ call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
-[gCommonConfig.Professions, new SquadConfig] call ClientSquadHandler.Init;
+[gCommonConfig.Professions] call ClientSquadHandler.Init;
 [gCommonConfig.Professions] call GroupActionHandler.Init;
 
 // Initialize the intrusion client object
@@ -69,3 +70,4 @@ call GroupActionHandler.UpdateAllInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;
+call gClient.RatingService.RunAsync;

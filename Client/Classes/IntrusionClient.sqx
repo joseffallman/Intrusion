@@ -29,6 +29,7 @@ namespace Intrusion.Client
 			_self.GiveOrderService = new GiveOrderService;
 			_self.TaskHandler = new TaskHandler;
 			_self.ClientVehicleHandler = new ClientVehicleHandler;
+			_self.RatingService = [new SquadConfig] new RatingService;
 		};
 	
 		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };
@@ -38,5 +39,6 @@ namespace Intrusion.Client
 		public property GiveOrderService GiveOrderService { get; private set; };
 		public property TaskHandler TaskHandler { get; private set; };
 		public property ClientVehicleHandler ClientVehicleHandler { get; private set; };
+		public property RatingService RatingService { get; private set; };
 	};
 };

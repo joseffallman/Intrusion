@@ -21,6 +21,7 @@ namespace Intrusion.Client
 			_self.IsSquadLeader = true;
 			_self.MyGroup = grpNull;
 			_self.CurrentRank = Rank.Private;
+			_self.RatingLock = classNull;
 		};
 	
 		public static property Boolean IsOnCorrectSide { get; set; };
@@ -32,5 +33,7 @@ namespace Intrusion.Client
 		public static property Group MyGroup { get; set; };
 		
 		public static property Rank CurrentRank { get; set; };
+		
+		public static property RatingLock RatingLock { get; set; };
 	};
 };
