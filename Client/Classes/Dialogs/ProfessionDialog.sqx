@@ -85,7 +85,7 @@ namespace Intrusion.Client
 		{
 			private [
 				"_profession" as Profession,
-				"_squads" as SquadCollection,
+				"_squadCollection" as SquadCollection,
 				"_unitsInPlayerGroup" as Scalar,
 				"_playerGroupProfessionType" as ProfessionType,
 				"_playerSquad" as Squad
@@ -94,8 +94,8 @@ namespace Intrusion.Client
 			_playerGroupProfessionType = ProfessionType.Undefined;
 		
 			if (call PublicVariableHandler.SquadsHasValue) then {
-				_squads = call PublicVariableHandler.GetSquads;
-				_playerSquad = [group player] call _squads.GetSquadByGroup;
+				_squadCollection = call PublicVariableHandler.GetSquads;
+				_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
 				if (!isNull _playerSquad) then {
 					_playerGroupProfessionType = _playerSquad.ProfessionType;
 				};
@@ -104,7 +104,7 @@ namespace Intrusion.Client
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If profession is available, and if the group has a good size
 					if (
-						[playerSide, _profession.Type] call _squads.ProfessionTypeAvailable &&
+						[playerSide, _profession.Type] call _squadCollection.ProfessionTypeAvailable &&
 						_unitsInPlayerGroup >= _profession.MinGroupSize &&
 						_unitsInPlayerGroup <= _profession.MaxGroupSize &&
 						rating leader group player >= (_profession.RequiredRank as Scalar)
@@ -287,11 +287,23 @@ namespace Intrusion.Client
 			_squadsInBrigade = "0";
 			if (call PublicVariableHandler.SquadsHasValue) then {
 				private [
-					"_squadCollection" as SquadCollection
+					"_squadCollection" as SquadCollection,
+					"_allSquadsInBrigade" as Scalar,
+					"_squadsWithProfession" as Scalar,
+					"_squadsUndefined" as Scalar,
+					"_squadsInBrigadeScalar" as Scalar
 				];
 				_squadCollection = call PublicVariableHandler.GetSquads;
-				_squadsInBrigade = [side player, _profession.Type] call _squadCollection.CountByProfessionType;
-				_squadsInBrigade = str _squadsInBrigade;
+				if (_profession.Type == ProfessionType.Infantry) then {
+					_allSquadsInBrigade = {side _x == playerSide} count allGroups;
+					_squadsWithProfession = count _squadCollection.Squads;
+					_squadsUndefined = _allSquadsInBrigade - _squadsWithProfession;
+					_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
+					_squadsInBrigadeScalar = _squadsInBrigadeScalar + _squadsUndefined;
+				} else {
+					_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
+				};
+				_squadsInBrigade = str _squadsInBrigadeScalar;
 			};
 
 
