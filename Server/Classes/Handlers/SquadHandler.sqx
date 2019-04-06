@@ -185,5 +185,13 @@ namespace Intrusion.Server
 				0
 			}];
 		};
+		
+		public method LogContent()
+		{
+			diag_log "Current Squads:";
+			{
+				diag_log (str _x);
+			} foreach _mSquadCollection.Squads as Squad;
+		};
 	};
 };

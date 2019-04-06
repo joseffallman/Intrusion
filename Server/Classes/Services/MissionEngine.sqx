@@ -82,6 +82,7 @@ namespace Intrusion.Server
 					_resourceReport = call _sideManager.PerformTurn;
 					
 					[_resourceReport] call _resourceReportCollection.AddOrUpdateResourceReport;
+					call gServer.SquadHandler.LogContent;
 				} foreach _sideManagers as SideManager;
 				
 				["ClientEventReciever.OnResourceReportCollectionUpdated", [_resourceReportCollection]] call Remote.Invoke;

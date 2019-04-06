@@ -16,7 +16,7 @@ namespace Intrusion.Ai
 	public class AiService : IService
 	{
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessinConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
+		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
 		
 		// Creates a AiService object.
 		public constructor("_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel)
@@ -26,7 +26,7 @@ namespace Intrusion.Ai
 			_mUnitsConfig = _unitsConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mVehicleSpawner = _vehicleSpawner;
-			_mProfessinConfig = _professinConfig;
+			_mProfessionConfig = _professinConfig;
 			_mSquadHandler = _squadHandler;
 			_mSkillLevel = _skillLevel;
 			_mSquads = [];
@@ -66,7 +66,7 @@ namespace Intrusion.Ai
 			
 			while { !_ok } do {
 				_professionType = selectRandom _self.AiWarriorTypes;
-				_profession = [_professionType] call _mProfessinConfig.GetProfession;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
 				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
 				
 				if (_ok) then {

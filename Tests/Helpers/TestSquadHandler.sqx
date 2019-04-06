@@ -47,5 +47,9 @@ namespace Intrusion.Tests.Helpers
 		// _group (Group): The group to get the squad for.
 		// Returns (Squad): The squad if it is found. Otherwise classNull.
 		public method Squad GetSquadByGroup("_group" as Group) { _mSquad };
+		
+		public method LogContent()
+		{
+		};
 	};
 };

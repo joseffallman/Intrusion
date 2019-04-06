@@ -47,11 +47,14 @@ namespace Intrusion.Ai
 			{
 				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
 				_x setVariable ["IsAiUnit", true];
+				_self.Members pushBack _x;
 			} foreach units _self.Group;
 		};
 		
 		// Gets the AI squad's group.
 		public property Group Group { get; private set; };
+		
+		public property Array Members { get; private set; };
 		
 		// Updates the tracking information of the squad.
 		private method UpdateTracking()
@@ -339,7 +342,7 @@ namespace Intrusion.Ai
 				// If there is a vehicle nearby and no enemies, and group fit, then board it.
 				
 				if (!_seeEnemies) then {
-					_nearestIntrusionVehicle = [side _self.Group, getPos leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
 					
 					if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
 						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {
@@ -450,15 +453,15 @@ namespace Intrusion.Ai
 		
 		private method RespawnIfDead()
 		{
-			private ["_alive" as Boolean, "_oldUnits" as Array];
+			private ["_anyMemberAlive" as Boolean, "_oldUnits" as Array];
 			
-			_alive = true;
-			if ({canMove _x} count units _self.Group == 0) then {
-				_alive = false;
+			_anyMemberAlive = true;
+			if ({canMove _x} count _self.Members == 0) then {
+				_anyMemberAlive = false;
 			};
 			
-			if (!_alive) then {
-				_oldUnits = units _self.Group;
+			if (!_anyMemberAlive) then {
+				_oldUnits = _self.Members;
 				
 				for "_i" from 1 to (count _oldUnits) do {
 					_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -471,9 +474,11 @@ namespace Intrusion.Ai
 				
 				(_oldUnits) joinSilent grpNull;
 				
+				_self.Members = units _self.Group;
+				
 				{
 					_x setVariable ["IsAiUnit", true];
-				} foreach units _self.Group;
+				} foreach _self.Members;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				_mState = AiSquadState.Idle;
