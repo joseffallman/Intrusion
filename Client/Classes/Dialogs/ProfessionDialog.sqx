@@ -284,13 +284,13 @@ namespace Intrusion.Client
 			};
 			
 			// Number of squads in brigade
-			_squadsInBrigade = "N/A";
+			_squadsInBrigade = "0";
 			if (call PublicVariableHandler.SquadsHasValue) then {
 				private [
-					"_squads" as SquadCollection
+					"_squadCollection" as SquadCollection
 				];
-				_squads = call PublicVariableHandler.GetSquads;
-				_squadsInBrigade = [side player, _profession.Type] call _squads.CountByProfessionType;
+				_squadCollection = call PublicVariableHandler.GetSquads;
+				_squadsInBrigade = [side player, _profession.Type] call _squadCollection.CountByProfessionType;
 				_squadsInBrigade = str _squadsInBrigade;
 			};
 
