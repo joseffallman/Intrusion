@@ -293,17 +293,19 @@ namespace Intrusion.Client
 					"_squadsUndefined" as Scalar,
 					"_squadsInBrigadeScalar" as Scalar
 				];
+				
 				_squadCollection = call PublicVariableHandler.GetSquads;
 				_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
+				
 				if (_profession.Type == ProfessionType.Infantry) then {
 					_allSquadsInBrigade = {side _x == playerSide} count allGroups;
 					_squadsWithProfession = count _squadCollection.Squads;
 					_squadsUndefined = _allSquadsInBrigade - _squadsWithProfession;
 					_squadsInBrigadeScalar = _squadsInBrigadeScalar + _squadsUndefined;
 				};
+				
 				_squadsInBrigade = str _squadsInBrigadeScalar;
 			};
-
 
  			private _description = [
 				"<t size='2.2' underline='false'>" + _profession.Name + "</t>",
@@ -313,9 +315,9 @@ namespace Intrusion.Client
 				"Vehicle type: " + _vehicleNames,
 				"Vehicle production cost: " + _cost,
 				"Weapons in cargo: " + _weaponNames,
-				"Squad size: " + _squadSize,
-				"Maximum number of squads: " + _maxGroupsCount,
-				"Current number of squads in Brigade: " + _squadsInBrigade
+				"Squad size limits: " + _squadSize,
+				"Number of squads: " + _squadsInBrigade,
+				"Maximum number of squads: " + _maxGroupsCount
 			];
 			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
 			

@@ -32,7 +32,6 @@ namespace Intrusion.Ai
 			_mSquads = [];
 			
 			_self.AiWarriorTypes = [
-				ProfessionType.Infantry,
 				ProfessionType.Motorized,
 				ProfessionType.Mechanized,
 				ProfessionType.Armored,
@@ -60,11 +59,12 @@ namespace Intrusion.Ai
 		
 		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
 		{
-			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection];
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
 			
 			_ok = false;
+			_tries = 0;
 			
-			while { !_ok } do {
+			while { !_ok && _tries < 25 } do {
 				_professionType = selectRandom _self.AiWarriorTypes;
 				_profession = [_professionType] call _mProfessionConfig.GetProfession;
 				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
@@ -73,6 +73,12 @@ namespace Intrusion.Ai
 					_squadCollection = call PublicVariableHandler.GetSquads;
 					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
 				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
 			};
 
 			_professionType
