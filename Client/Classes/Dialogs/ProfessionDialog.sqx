@@ -294,14 +294,12 @@ namespace Intrusion.Client
 					"_squadsInBrigadeScalar" as Scalar
 				];
 				_squadCollection = call PublicVariableHandler.GetSquads;
+				_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
 				if (_profession.Type == ProfessionType.Infantry) then {
 					_allSquadsInBrigade = {side _x == playerSide} count allGroups;
 					_squadsWithProfession = count _squadCollection.Squads;
 					_squadsUndefined = _allSquadsInBrigade - _squadsWithProfession;
-					_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
 					_squadsInBrigadeScalar = _squadsInBrigadeScalar + _squadsUndefined;
-				} else {
-					_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
 				};
 				_squadsInBrigade = str _squadsInBrigadeScalar;
 			};
