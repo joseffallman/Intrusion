@@ -71,3 +71,6 @@ call GroupActionHandler.UpdateAllInvitePlayerActions;
 // Start the map marker service
 call MapMarkerService.RunAsync;
 call gClient.RatingService.RunAsync;
+
+player addRating 1500;
+ClientState.CurrentRank = Rank.Corpral;
