@@ -1,5 +1,5 @@
 /*
- * Name:	DefaultGameSettings
+ * Name:	ProfessionProdConfig
  * Date:	2017-11-18
  * Version: 1.0
  * Author:  Engima
@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionConfig : IProfessionConfig
+	public class ProfessionProdConfig : IProfessionConfig
 	{
         // Field(s):
 		// _mProfessions (Array): All professions as an array of Profession objects.

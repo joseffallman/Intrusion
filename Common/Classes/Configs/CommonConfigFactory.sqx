@@ -18,14 +18,14 @@ namespace Intrusion.Common
 			private ["_commonConfig" as ICommonConfig]; // SQX TODO: Complains at return line if _commonConfig is declared as a CommonConfig, but it shouldn't.
 			
 			if (ReleaseSettings.Mode == ReleaseMode.Production) then {
-				_commonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig, new VehicleClassNamesConfig, new ProfessionVehiclesProdConfig] new CommonConfig;
+				_commonConfig = [new MapMarkersConfig, new ProfessionProdConfig, new TechnologyProdConfig, new VehicleClassNamesConfig, new ProfessionVehiclesProdConfig] new CommonConfig;
 			}
 			else {
 				if (ReleaseSettings.Mode == ReleaseMode.Test) then {
-					_commonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig, new VehicleClassNamesConfig, new ProfessionVehiclesTestConfig] new CommonConfig;
+					_commonConfig = [new MapMarkersConfig, new ProfessionTestConfig, new TechnologyTestConfig, new VehicleClassNamesConfig, new ProfessionVehiclesTestConfig] new CommonConfig;
 				}
 				else { // Dev
-					_commonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig, new VehicleClassNamesConfig, new ProfessionVehiclesDevConfig] new CommonConfig;
+					_commonConfig = [new MapMarkersConfig, new ProfessionTestConfig, new TechnologyDevConfig, new VehicleClassNamesConfig, new ProfessionVehiclesDevConfig] new CommonConfig;
 				};
 			};
 			

@@ -7,7 +7,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehicle
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ReleaseSettings.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
