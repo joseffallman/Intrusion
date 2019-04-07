@@ -21,11 +21,19 @@ namespace Intrusion.Ai
 			
 			_count = 0;
 			
+			// Count alive units
 			{
 				if (_x getVariable ["IsAiUnit", false]) then {
 					_count = _count + 1;
 				};
 			} foreach allUnits as Object;
+			
+			// Count dead units
+			{
+				if (_x getVariable ["IsAiUnit", false]) then {
+					_count = _count + 1;
+				};
+			} foreach allDead as Object;
 			
 			_count
 		};
@@ -36,11 +44,19 @@ namespace Intrusion.Ai
 			
 			_count = 0;
 			
+			// Count alive units
 			{
 				if (side _x == _side && {_x getVariable ["IsAiUnit", false]}) then {
 					_count = _count + 1;
 				};
 			} foreach allUnits as Object;
+			
+			// Count dead units
+			{
+				if (side _x == _side && {_x getVariable ["IsAiUnit", false]}) then {
+					_count = _count + 1;
+				};
+			} foreach allDead as Object;
 			
 			_count
 		};

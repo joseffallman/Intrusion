@@ -51,10 +51,11 @@ namespace Intrusion.Server
 		// Gets the side of the side handler.
 		public property Side Side { get; private set; };
 		
-		private method Boolean GrouopsTechnologyInvented("_group" as Group)
+		private method Boolean SquadsTechnologyInvented("_group" as Group)
 		{
 			private ["_profession" as Profession, "_technologyInvented" as Boolean, "_squad" as Squad];
 			
+			_technologyInvented = false;
 			_squad = [_mReservationQueue.CurrentReservation.Group] call _mSquadHandler.GetSquadByGroup;
 			
 			if (!isNull _squad) then {
@@ -82,7 +83,7 @@ namespace Intrusion.Server
 			
 			if (!isNull _mReservationQueue.CurrentReservation) then
 			{
-				if ([_mReservationQueue.CurrentReservation.Group] call _self.GrouopsTechnologyInvented) then {
+				if ([_mReservationQueue.CurrentReservation.Group] call _self.SquadsTechnologyInvented) then {
 					_nextVehicleGroup = _mReservationQueue.CurrentReservation.Group;
 					_nextVehicleCost = _mReservationQueue.CurrentReservation.ProductionCost;
 				};
