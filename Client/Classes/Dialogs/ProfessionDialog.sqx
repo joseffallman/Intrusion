@@ -298,7 +298,7 @@ namespace Intrusion.Client
 				_squadsInBrigadeScalar = [playerSide, _profession.Type] call _squadCollection.CountByProfessionType;
 				
 				if (_profession.Type == ProfessionType.Infantry) then {
-					_allSquadsInBrigade = {side _x == playerSide} count allGroups;
+					_allSquadsInBrigade = {side _x == playerSide && (count units _x) > 0 } count allGroups;
 					_squadsWithProfession = count _squadCollection.Squads;
 					_squadsUndefined = _allSquadsInBrigade - _squadsWithProfession;
 					_squadsInBrigadeScalar = _squadsInBrigadeScalar + _squadsUndefined;
