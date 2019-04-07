@@ -19,6 +19,7 @@ namespace Intrusion.Server
         public method ShowHint("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowHint", _this] call Remote.Invoke;
+			["Server message: (hint for " + str _address + "): " + _message] call LogHandler.Info;
 		};
 
         // Shows a message to the user.
@@ -26,6 +27,7 @@ namespace Intrusion.Server
         public method ShowMessage("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowMessage", _this] call Remote.Invoke;
+			["Server message: (message for " + str _address + "): " + _message] call LogHandler.Info;
 		};
 
         // Shows a sub title to the user.
@@ -33,6 +35,7 @@ namespace Intrusion.Server
         public method ShowSubTitle("_message" as String, ["_address" as Any, objNull])
         {
 			["ClientMessageHandler.ShowSubTitle", _this] call Remote.Invoke;
+			["Server message: (subtitle for " + str _address + "): " + _message] call LogHandler.Info;
 		};
 	};
 };
