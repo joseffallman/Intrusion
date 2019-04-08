@@ -562,7 +562,7 @@ namespace Intrusion.Ai
 		
 		private method UpdateOrder()
 		{
-			if (MissionCounterService.RemainingMinutes <= 12) then {
+			if (MissionCounterService.RemainingMinutes <= 20) then {
 				call _self.CreateOrderOnOwnInitiative;
 			}
 			else {
