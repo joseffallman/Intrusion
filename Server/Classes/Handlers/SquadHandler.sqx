@@ -25,7 +25,7 @@ namespace Intrusion.Server
 			_mProfessionChangeListeners = [];
 			_mProfessionConfig = _professionConfig;
 			
-			[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
+			[_mSquadCollection] call PublicVariableHandler.BroadcastSquadCollection;
 		};
 		
 		// Gets a group by its leader.
@@ -106,7 +106,7 @@ namespace Intrusion.Server
 				};
 			} foreach _mProfessionChangeListeners as IGroupChangingProfessionListener;
 			
-			[_mSquadCollection] call PublicVariableHandler.BroadcastSquads;
+			[_mSquadCollection] call PublicVariableHandler.BroadcastSquadCollection;
 			
 			// Tell the clients about the change
 			["ClientSquadHandler.OnGroupProfessionChanged", [_group, _professionType]] call Remote.Invoke;

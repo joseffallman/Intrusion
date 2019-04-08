@@ -70,7 +70,7 @@ namespace Intrusion.Ai
 				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
 				
 				if (_ok) then {
-					_squadCollection = call PublicVariableHandler.GetSquads;
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
 					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
 				};
 				

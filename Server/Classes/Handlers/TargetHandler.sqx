@@ -44,7 +44,7 @@ namespace Intrusion.Server
 			
     		// Get all targets within range
 	        _targets = _unit nearTargets _maxRange;
-	        _squadCollection = call PublicVariableHandler.GetSquads;
+	        _squadCollection = call PublicVariableHandler.GetSquadCollection;
 			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
 	        
 			{

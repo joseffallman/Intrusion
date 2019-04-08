@@ -70,9 +70,9 @@ namespace Intrusion.Client
 					_itemIsRangeSniperRifle = (_item call BIS_fnc_itemtype) select 1 == "SniperRifle";
 					_itemIsRangeFinder = "RangeFinder" in  (vestItems player + uniformItems player + backpackItems player + assignedItems player);
 					
-					if ((_itemIsRangeFinder || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadsHasValue) then
+					if ((_itemIsRangeFinder || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadCollectionHasValue) then
 					{
-						_squadCollection = call PublicVariableHandler.GetSquads;
+						_squadCollection = call PublicVariableHandler.GetSquadCollection;
 						_squad = [group player] call _squadCollection.GetSquadByGroup;
 						
 						if (isNull _squad || {_squad.ProfessionType != ProfessionType.Sniper}) then {

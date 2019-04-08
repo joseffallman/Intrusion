@@ -101,7 +101,7 @@ namespace Intrusion.Server
 			
 			call _mVehicleSpawner.RemoveOwnershipOfDestroyedVehicles;
 			
-			_squadCollection = call PublicVariableHandler.GetSquads;
+			_squadCollection = call PublicVariableHandler.GetSquadCollection;
 			
 			{
 				_squad = _x;
