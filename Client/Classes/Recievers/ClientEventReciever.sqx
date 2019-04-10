@@ -153,6 +153,11 @@ namespace Intrusion.Client
 					};
 				};
 			};
+			
+			// If anyone in the player's group respawned, punish them all...!
+			if (group _player == group player) then {
+				ClientState.RatingLock = [(call Functions.GetMissionTime) + 5 * 60, RatingLockReason.Respawn] new RatingLock;
+			};
 		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
