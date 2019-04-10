@@ -69,9 +69,9 @@ namespace Intrusion.Server
 				_reservation = [_group, _vehicleClassName, _professionVehicle.Cost] new Reservation;
 				[_reservation] call _mReservationQueue.PutReservation;
 				
-				if (call _mReservationQueue.Count == 1) then {
-					[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
-				};
+//				if (call _mReservationQueue.Count == 1) then {
+//					[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
+//				};
 			};
 		};
 		
@@ -89,10 +89,10 @@ namespace Intrusion.Server
 			[_group, _professionType] call _self.CreateReservation;
 		};
 		
-		private method TellSquadVehicleSoonDelivered("_group" as Group)
-		{
-			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowMessage;
-		};
+//		private method TellSquadVehicleSoonDelivered("_group" as Group)
+//		{
+//			["Your squad's vehicle is in the production queue and will soon be delivered.", _group] call _mMessageHandler.ShowMessage;
+//		};
 		
 		public method AddReservationsForSquadsWithNoVehicle()
 		{
@@ -196,7 +196,7 @@ namespace Intrusion.Server
 							if (call _mReservationQueue.Count > 0) then
 							{
 								["if (call _mReservationQueue.Count > 0)"] call LogHandler.Debug;
-								[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
+								//[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
 							};
 							
 							_tryOneMore = true;
