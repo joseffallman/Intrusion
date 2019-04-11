@@ -23,7 +23,9 @@ namespace Intrusion.Tests.Server
 		public static method Init {
 			["Intrusion.Tests.Server", "ResourceCollectorTests", [
 				"FullServer_60Minutes_Correct",
-				"FullServer_30Minutes_Correct"
+				"FullServer_30Minutes_Correct",
+				"HalfServer_60Minutes_Correct",
+				"HalfServer_30Minutes_Correct"
 			]] call TestEngine.Register;
 		};
 		
@@ -36,7 +38,7 @@ namespace Intrusion.Tests.Server
 		
 		private static method FullServer_60Minutes_Correct {
 			// Arrange
-			_mMissionTime.MissionTime = 60 * 60; // After 60 minutes
+			_mMissionTime.MissionTime = 60 * 60;
 						
 			// Act
 			call _mResourceCollector.CollectResources;
@@ -48,7 +50,7 @@ namespace Intrusion.Tests.Server
 		
 		private static method FullServer_30Minutes_Correct {
 			// Arrange
-			_mMissionTime.MissionTime = 30 * 60; // After 60 minutes
+			_mMissionTime.MissionTime = 30 * 60;
 						
 			// Act
 			call _mResourceCollector.CollectResources;
@@ -62,7 +64,7 @@ namespace Intrusion.Tests.Server
 			// Arrange
 			_mUnitCounter.UnitsInPlay = 30;
 			_mUnitCounter.UnitsInPlaySide = 15;
-			_mMissionTime.MissionTime = 60 * 60; // After 60 minutes
+			_mMissionTime.MissionTime = 60 * 60;
 						
 			// Act
 			call _mResourceCollector.CollectResources;
@@ -76,7 +78,7 @@ namespace Intrusion.Tests.Server
 			// Arrange
 			_mUnitCounter.UnitsInPlay = 30;
 			_mUnitCounter.UnitsInPlaySide = 15;
-			_mMissionTime.MissionTime = 30 * 60; // After 60 minutes
+			_mMissionTime.MissionTime = 30 * 60;
 						
 			// Act
 			call _mResourceCollector.CollectResources;
