@@ -17,9 +17,11 @@ call compile preprocessFileLineNumbers "Tests\Helpers\TestProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ReservationQueueTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
 call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ScientistTests.sqx";
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ResourceCollectorTests.sqx";
 
 /* Initialize test classes */
 //call Tests.Example.ExampleTests.Init;
 call Intrusion.Tests.Server.ReservationQueueTests.Init;
 call Intrusion.Tests.Server.ProductionManagerTests.Init;
 call Intrusion.Tests.Server.ScientistTests.Init;
+call Intrusion.Tests.Server.ResourceCollectorTests.Init;

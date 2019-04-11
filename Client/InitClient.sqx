@@ -41,6 +41,9 @@ waitUntil { player == player };
 // Configs
 call TutorialConfig.Init;
 
+// Recievers
+call ClientEventReciever.Init;
+
 // Handlers
 call ClientEventHandlers.Init;
 call ClientState.Init;

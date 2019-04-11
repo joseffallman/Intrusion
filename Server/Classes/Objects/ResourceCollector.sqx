@@ -14,18 +14,19 @@ namespace Intrusion.Server
 {
 	public class ResourceCollector
 	{
-		private fields ["_mGameplayConfig" as IGameplayConfig, "_mMatchLengthMinutes" as Scalar, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
+		private fields ["_mMissionTime" as IMissionTime, "_mGameplayConfig" as IGameplayConfig, "_mMatchLengthMinutes" as Scalar, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
 		private fields ["_mLastAquireTime" as Scalar, "_mSecondsSinceLastAquire" as Scalar];
 	
 		// Creates a ResourceCollector object.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_matchLengthMinutes" as Scalar, "_side" as Side, "_resourceBook" as ResourceBook, "_unitCounter" as IUnitCounter) {
+		public constructor("_missionTime" as IMissionTime, "_gameplayConfig" as IGameplayConfig, "_matchLengthMinutes" as Scalar, "_side" as Side, "_resourceBook" as ResourceBook, "_unitCounter" as IUnitCounter) {
+			_mMissionTime = _missionTime;
 			_mGameplayConfig = _gameplayConfig;
 			_self.Side = _side;
 			_mResourceBook = _resourceBook;
 			_mUnitCounter = _unitCounter;
 			_mMatchLengthMinutes = _matchLengthMinutes;
 			
-			_mLastAquireTime = time;
+			_mLastAquireTime = 0;
 			_mSecondsSinceLastAquire = 0;
 		};
 		
@@ -67,9 +68,10 @@ namespace Intrusion.Server
 		
 		// Aquires map resources and makes deposits to the resource book.
 		public method CollectResources {
-			private ["_production" as Scalar, "_technology" as Scalar];
+			private ["_production" as Scalar, "_technology" as Scalar, "_time" as Scalar];
 			
-			_mSecondsSinceLastAquire = time - _mLastAquireTime;
+			_time = (call _mMissionTime.GetMissionTime);
+			_mSecondsSinceLastAquire = _time - _mLastAquireTime;
 			
 			_production = call _self.AquireProduction;
 			_technology = call _self.AquireTechnology;
@@ -77,7 +79,7 @@ namespace Intrusion.Server
 			[_production] call _mResourceBook.DepositProduction;
 			[_technology] call _mResourceBook.DepositResearch;
 			
-			_mLastAquireTime = time;
+			_mLastAquireTime = _time;
 		};
 	};
 };

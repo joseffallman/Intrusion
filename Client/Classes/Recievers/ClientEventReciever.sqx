@@ -14,6 +14,13 @@ namespace Intrusion.Client
 {
 	public class ClientEventReciever
 	{
+		private static fields ["_mMissionTime" as MissionTime];
+		
+		public static method Init()
+		{
+			_mMissionTime = new MissionTime;
+		};
+		
 		// Called when a player was set as a new brigade leader.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
@@ -156,7 +163,7 @@ namespace Intrusion.Client
 			
 			// If anyone in the player's group respawned, punish them all...!
 			if (group _player == group player) then {
-				ClientState.RatingLock = [(call Functions.GetMissionTime) + 5 * 60, RatingLockReason.Respawn] new RatingLock;
+				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.Respawn] new RatingLock;
 			};
 		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;

@@ -23,6 +23,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHa
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\MissionParametersHandler.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\MissionTime.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";

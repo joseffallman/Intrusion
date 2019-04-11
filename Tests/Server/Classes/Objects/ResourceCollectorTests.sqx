@@ -1,0 +1,42 @@
+/*
+ * Name:	ResourceCollectorTests
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the ResourceCollector object.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Server;
+//using Intrusion.Tests.Helpers;
+
+namespace Intrusion.Tests.Server
+{
+	public class ResourceCollectorTests
+	{
+		private static fields ["_mResourceCollector" as ResourceCollector];
+	
+		// Creates a ReservationQueueTests object.
+		public static method Init {
+			["Intrusion.Tests.Server", "ResourceCollectorTests", [
+				"ReservationQueueEmpty_NothingChanged_CurrentIsNull"
+			]] call TestEngine.Register;
+		};
+		
+		private static method BeforeEach {
+			//_mResourceCollector = [0, 0, 0, 0, 0] new ResourceCollector;
+		};
+		
+		private static method ReservationQueueEmpty_NothingChanged_CurrentIsNull {
+			// Arrange
+			
+			// Act
+			
+			// Assert
+			//[_mReservationQueue.CurrentReservation, "Current reservation should be null."] call Assert.IsNull;
+			//[0, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+		};
+	};
+};

@@ -14,13 +14,14 @@ namespace Intrusion.Client
 {
 	public class RatingService : IService
 	{
-		private fields ["_mSquadConfig" as ISquadConfig];
+		private fields ["_mSquadConfig" as ISquadConfig, "_mMissionTime" as IMissionTime];
 	
 		// Creates a RatingService object.
-		public constructor("_squadConfig" as ISquadConfig)
+		public constructor("_squadConfig" as ISquadConfig, "_missionTime" as IMissionTime)
 		{
 			_self.IsRunning = false;
 			_mSquadConfig = _squadConfig;
+			_mMissionTime = _missionTime;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -47,7 +48,7 @@ namespace Intrusion.Client
 						ClientState.RatingLock = classNull;
 					}
 					else {
-						ClientState.RatingLock = [(call Functions.GetMissionTime) + 5 * 60, RatingLockReason.GroupIsSplit] new RatingLock;
+						ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.GroupIsSplit] new RatingLock;
 					};
 				};
 				
