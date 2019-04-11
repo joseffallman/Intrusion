@@ -14,13 +14,22 @@ namespace Intrusion.Server
 {
 	public class ResourceCollector
 	{
-		private fields ["_mMissionTime" as IMissionTime, "_mGameplayConfig" as IGameplayConfig, "_mMatchLengthMinutes" as Scalar, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
+		private fields ["_mMissionTime" as IMissionTime, "_mGameplayConfig" as IGameplayConfig, "_mResourceLocationHandler" as IResourceLocationHandler, "_mMatchLengthMinutes" as Scalar, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
 		private fields ["_mLastAquireTime" as Scalar, "_mSecondsSinceLastAquire" as Scalar];
 	
 		// Creates a ResourceCollector object.
-		public constructor("_missionTime" as IMissionTime, "_gameplayConfig" as IGameplayConfig, "_matchLengthMinutes" as Scalar, "_side" as Side, "_resourceBook" as ResourceBook, "_unitCounter" as IUnitCounter) {
+		public constructor(
+			"_missionTime" as IMissionTime, 
+			"_gameplayConfig" as IGameplayConfig, 
+			"_resourceLocationHandler" as IResourceLocationHandler, 
+			"_matchLengthMinutes" as Scalar, 
+			"_side" as Side, 
+			"_resourceBook" as ResourceBook, 
+			"_unitCounter" as IUnitCounter)
+		{
 			_mMissionTime = _missionTime;
 			_mGameplayConfig = _gameplayConfig;
+			_mResourceLocationHandler = _resourceLocationHandler;
 			_self.Side = _side;
 			_mResourceBook = _resourceBook;
 			_mUnitCounter = _unitCounter;
@@ -38,9 +47,9 @@ namespace Intrusion.Server
 		private method Scalar AquireProduction {
 			private ["_playingUnitsCount" as Scalar];
 		
-			private _pointsPerFacility = (_mGameplayConfig.TotalProduction / ResourceLocationHandler.FactoryLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
-			private _neutralCount = [civilian] call ResourceLocationHandler.GetFactoriesCountBySide;
-			private _ourCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
+			private _pointsPerFacility = (_mGameplayConfig.TotalProduction / _mResourceLocationHandler.FactoryLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
+			private _neutralCount = [civilian] call _mResourceLocationHandler.GetFactoriesCountBySide;
+			private _ourCount = [_self.Side] call _mResourceLocationHandler.GetFactoriesCountBySide;
 			
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
 			
@@ -57,9 +66,9 @@ namespace Intrusion.Server
 		// Calculates how much technology has been generated since last aquire.
 		// Returns (Scalar): Amount of technology.
 		private method Scalar AquireTechnology {
-			private _pointsPerFacility = (_mGameplayConfig.TotalResearch / ResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
-			private _neutralCount = [civilian] call ResourceLocationHandler.GetTechLabsCountBySide;
-			private _ourCount = [_self.Side] call ResourceLocationHandler.GetTechLabsCountBySide;
+			private _pointsPerFacility = (_mGameplayConfig.TotalResearch / _mResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
+			private _neutralCount = [civilian] call _mResourceLocationHandler.GetTechLabsCountBySide;
+			private _ourCount = [_self.Side] call _mResourceLocationHandler.GetTechLabsCountBySide;
 			
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
 			

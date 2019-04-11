@@ -19,12 +19,13 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
-		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar];
+		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
+		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
 		{
+			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
@@ -106,7 +107,7 @@ namespace Intrusion.Ai
 			if (MissionCounterService.RemainingMinutes <= 12) then {
 //				player sideChat "less than 12!";
 				
-				_location = ResourceLocationHandler.WinnersLocation;
+				_location = _mResourceLocationHandler.WinnersLocation;
 				
 				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 					_mResourceLocation = _location;

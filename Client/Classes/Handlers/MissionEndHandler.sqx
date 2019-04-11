@@ -7,15 +7,25 @@
  * Description:
  * Handles all about camera and cutscenes.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class MissionEndHandler
 	{
 		// Plays the end mission scene.
-		// _winningSide (Side): The side that has won.
-		public static method PlayEndScene("_winningSide" as Side)
+		public static method PlayEndScene()
 		{
-			["END1", _winningSide == playerSide] spawn BIS_fnc_endMission;
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_winnersLocation" as ResourceLocation];
+		
+			if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then
+			{
+				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+				_winnersLocation = call _resourceLocationCollection.GetWinnersLocation;
+				
+				["END1", _winnersLocation.Side == playerSide] spawn BIS_fnc_endMission;
+			};
 		};
 	};
 };

@@ -14,13 +14,13 @@ using Intrusion.Communication;
  
 namespace Intrusion.Server
 {
-	public class ResourceLocationHandler
+	public class ResourceLocationHandler : IResourceLocationHandler
 	{
-		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mAiSkillLevel" as SkillLevel];
-		private static fields ["_mResourceLocationCollection" as ResourceLocationCollection];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mAiSkillLevel" as SkillLevel];
+		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_aiSkillLevel" as SkillLevel) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_aiSkillLevel" as SkillLevel) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mAiSkillLevel = _aiSkillLevel;
 			
@@ -30,11 +30,11 @@ namespace Intrusion.Server
 		};
 		
 		// Gets the location selected as the Winner's location.
-		public static property ResourceLocation WinnersLocation { get; private set; };
+		public property ResourceLocation WinnersLocation { get; private set; };
 		
 		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
 		// resource locations for them all.
-		public static method AquireAllResourceLocations {
+		public method AquireAllResourceLocations {
 			private ["_number" as Scalar];
 			
 			// Find all factory locations
@@ -68,7 +68,7 @@ namespace Intrusion.Server
 		};
 		
 		// Broadcasts all resource locations to the clients.
-		public static method BroadcastResourceLocations {
+		public method BroadcastResourceLocations {
 			[_mResourceLocationCollection] call PublicVariableHandler.BroadcastResourceLocationCollection;
 			
 			// Tell the clients to update them.
@@ -78,7 +78,7 @@ namespace Intrusion.Server
 		// Gets a resource location from the internal list of flag locations.
 		// _markerName (String): Name of the marker associated with the flag location.
 		// Returns (ResourceLocation): A flag location. classNull of no flag location was found.
-		private static method ResourceLocation GetResourceLocation("_markerName" as String)
+		private method ResourceLocation GetResourceLocation("_markerName" as String)
 		{
 			private ["_resourceLocations" as Array];
 			
@@ -98,7 +98,7 @@ namespace Intrusion.Server
 		// Sets a new owner for a resource location and sends resource location updates to clients.
 		// _markerName (String): Name of the marker associated with the flag.
 		// _side (Side): The side of the player that captured the flag.
-		public static method SetNewFlagOwner("_markerName" as String, "_side" as Side)
+		public method SetNewFlagOwner("_markerName" as String, "_side" as Side)
 		{
 			private ["_resourceLocation" as ResourceLocation];
 			private ["_markerInfo" as MapMarkerInfo];
@@ -118,15 +118,15 @@ namespace Intrusion.Server
 		};
 		
 		// Gets the number of factory locations. 
-		public static property Scalar FactoryLocationsCount { get; private set; };
+		public property Scalar FactoryLocationsCount { get; private set; };
 		
 		// Gets the number of tech lab locations. 
-		public static property Scalar TechLabLocationsCount { get; private set; };
+		public property Scalar TechLabLocationsCount { get; private set; };
 		
 		// Get the number of factories owned by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of factories owned by the side.
-		public static method Scalar GetFactoriesCountBySide("_side" as Side)
+		public method Scalar GetFactoriesCountBySide("_side" as Side)
 		{
 			[_side] call _mResourceLocationCollection.GetFactoriesCountBySide
 		};
@@ -134,13 +134,13 @@ namespace Intrusion.Server
 		// Get the number of tech labs ownd by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of tech labs owned by the side.
-		public static method Scalar GetTechLabsCountBySide("_side" as Side)
+		public method Scalar GetTechLabsCountBySide("_side" as Side)
 		{
 			[_side] call _mResourceLocationCollection.GetTechLabsCountBySide
 		};
 		
 		// Creates guarding guerilla units on all resource locations.
-		public static method CreateGuerillaUnits()
+		public method CreateGuerillaUnits()
 		{
 			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_waypoint" as Array, "_i" as Scalar, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
 			

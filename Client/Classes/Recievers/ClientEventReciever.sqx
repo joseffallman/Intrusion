@@ -189,5 +189,10 @@ namespace Intrusion.Client
 				[_rating, _group] call ClientSquadHandler.AddSquadRating;
 			};
 		};
+		
+		public static method OnMissionTimeIsUp()
+		{
+			call MissionEndHandler.PlayEndScene;
+		};
 	};
 };

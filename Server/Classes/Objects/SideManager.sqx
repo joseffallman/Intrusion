@@ -20,7 +20,8 @@ namespace Intrusion.Server
 			"_mScientist" as Scientist,
 			"_mReservationQueue" as ReservationQueue,
 			"_mSquadHandler" as ISquadHandler,
-			"_mProfessionConfig" as IProfessionConfig];
+			"_mProfessionConfig" as IProfessionConfig,
+			"_mResourceLocationHandler" as IResourceLocationHandler];
 		
         // Creates a SideHandler object.
         // Parameter(s):
@@ -35,14 +36,16 @@ namespace Intrusion.Server
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_unitCounter" as IUnitCounter,
 			"_professionConfig" as IProfessionConfig,
-			"_matchLengthMinutes" as Scalar)
+			"_matchLengthMinutes" as Scalar,
+			"_resourceLocationHandler" as IResourceLocationHandler)
 		{
             _self.Side = _side;
             _mSquadHandler = _squadHandler;
             _mProfessionConfig = _professionConfig;
+            _mResourceLocationHandler = _resourceLocationHandler;
             
             _mResourceBook = new ResourceBook;
-            _mResourceCollector = [new MissionTime, _serverConfig.Gameplay, _matchLengthMinutes, _side, _mResourceBook, _unitCounter] new ResourceCollector;
+            _mResourceCollector = [new MissionTime, _serverConfig.Gameplay, _resourceLocationHandler, _matchLengthMinutes, _side, _mResourceBook, _unitCounter] new ResourceCollector;
             _mScientist = [_side, _mResourceBook, _commonConfig.Technology, _messageHandler, _inventedTechnologiesCollection] new Scientist;
             _mReservationQueue = new ReservationQueue;
             _mProductionManager = [_commonConfig.ProfessionVehicles, _commonConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions, _mReservationQueue] new ProductionManager;
@@ -76,8 +79,8 @@ namespace Intrusion.Server
 			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
 			
-			_factoryCount = [_self.Side] call ResourceLocationHandler.GetFactoriesCountBySide;
-			_techLabCount = [_self.Side] call ResourceLocationHandler.GetTechLabsCountBySide;
+			_factoryCount = [_self.Side] call _mResourceLocationHandler.GetFactoriesCountBySide;
+			_techLabCount = [_self.Side] call _mResourceLocationHandler.GetTechLabsCountBySide;
 			
 			_nextVehicleGroup = grpNull;
 			_nextVehicleCost = 0;

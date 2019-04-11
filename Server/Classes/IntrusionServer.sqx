@@ -24,6 +24,7 @@ namespace Intrusion.Server
 			_self.UnitCounter = [gServerConfig.Gameplay, _aiUnitCounter] new UnitCounter;
 			_self.SquadHandler = [_self.VehicleSpawner, gCommonConfig.Professions] new SquadHandler;
 			_self.BrigadeLeadershipHandler = [_self.MessageHandler] new BrigadeLeadershipHandler;
+			_self.ResourceLocationHandler = [gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] new ResourceLocationHandler;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -33,5 +34,6 @@ namespace Intrusion.Server
 		public property IUnitCounter UnitCounter { get; private set; };
 		public property SquadHandler SquadHandler { get; private set; };
 		public property BrigadeLeadershipHandler BrigadeLeadershipHandler { get; private set; };
+		public property IResourceLocationHandler ResourceLocationHandler { get; private set; };
 	};
 };
