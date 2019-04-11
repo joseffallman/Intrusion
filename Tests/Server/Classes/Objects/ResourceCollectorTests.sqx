@@ -30,7 +30,7 @@ namespace Intrusion.Tests.Server
 			_mMissionTime = new TestMissionTime;
 			_mResourceBook = new ResourceBook;
 			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
-			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mTestUnitCounter] new ResourceCollector;
+			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
 		};
 		
 		private static method FullServer_60Minutes_Correct {
