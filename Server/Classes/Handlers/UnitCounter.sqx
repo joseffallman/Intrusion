@@ -16,6 +16,9 @@ namespace Intrusion.Server
 	{
 		private fields ["_mAiUnitCounter" as IAiUnitCounter];
 		
+		// Creates a UnitCounter object.
+		// _gameplayConfig (IGameplayConfig): The gameplay configuration object.
+		// _aiUnitCounter (IAiUnitCounter): The AI unit counter, so that AI units also are correctly included.
 		public constructor("_gameplayConfig" as IGameplayConfig, "_aiUnitCounter" as IAiUnitCounter)
 		{
 			private ["_lobbySlotsCount" as Scalar];
@@ -31,18 +34,24 @@ namespace Intrusion.Server
 			_self.LobbySlotsCount = _lobbySlotsCount;
 		};
 
+		// Counts the number of units (players and AI) of both sides currently in the mission.
+		// Returns (Scalar): The number of units in play.
 		public method Scalar CountUnitsInPlay()
 		{
 			private _no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
 			_no
 		};
 		
+		// Counts the number of units (players and AI) of a specific side currently in the came.
+		// _side (Side): The side to be checked.
+		// Returns (Scalar): The number of units in play.
 		public method Scalar CountUnitsInPlaySide("_side" as Side)
 		{
 			private _no = ({side _x == _side} count (call BIS_fnc_listPlayers)) + ([_side] call _mAiUnitCounter.CountUnitsSide);
 			_no
 		};
 		
+		// Gets the number of lobby slots of both sides in the mission.
 		public property Scalar LobbySlotsCount { get; private set; };
 	};
 };

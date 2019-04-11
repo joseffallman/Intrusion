@@ -1,0 +1,47 @@
+/*
+ * Name:	TestUnitCounter
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a unit counter used for test purposes.
+ */
+
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestUnitCounter : IUnitCounter
+	{
+		// Creates a TestUnitCounter object.
+		public constructor("_unitsInPlay" as Scalar, "_unitsInPlaySide" as Scalar, "_lobbySlotsCount" as Scalar)
+		{
+			_self.UnitsInPlay = _unitsInPlay;
+			_self.UnitsInPlaySide = _unitsInPlaySide;
+			_self.LobbySlotsCount = _lobbySlotsCount;
+		};
+		
+		// Counts the number of units (players and AI) of both sides currently in the mission.
+		// Returns (Scalar): The number of units in play.
+		public method Scalar CountUnitsInPlay()
+		{
+			_self.UnitsInPlay
+		};
+		
+		// Counts the number of units (players and AI) of a specific side currently in the came.
+		// _side (Side): The side to be checked.
+		// Returns (Scalar): The number of units in play.
+		public method Scalar CountUnitsInPlaySide("_side" as Side)
+		{
+			_self.UnitsInPlaySide
+		};
+		
+		public property Scalar UnitsInPlay { get; set; };
+		
+		public property Scalar UnitsInPlaySide { get; set; };
+		
+		// Gets the number of lobby slots of both sides in the mission.
+		public property Scalar LobbySlotsCount { get; private set; };
+	};
+};

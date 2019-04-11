@@ -1,0 +1,31 @@
+/*
+ * Name:	TestMissionTime
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Mocks the mission time for test purpuses.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestMissionTime : IMissionTime
+	{
+		// Creates a TestMissionTime object.
+		// _missionTime (Scalar): Optional. Initializes the test mission time object.
+		public constructor(["_missionTime" as Scalar, 0])
+		{
+			_self.MissionTime = _missionTime;
+		};
+		
+		public property Scalar MissionTime { get; set; };
+		
+		public method Scalar GetMissionTime()
+		{
+			_self.MissionTime
+		};
+	};
+};

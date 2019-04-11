@@ -9,14 +9,15 @@
  */
 
 using Sqx.UnitTest;
+using Intrusion.Common;
 using Intrusion.Server;
-//using Intrusion.Tests.Helpers;
+using Intrusion.Tests.Helpers;
 
 namespace Intrusion.Tests.Server
 {
 	public class ResourceCollectorTests
 	{
-		private static fields ["_mResourceCollector" as ResourceCollector];
+		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
 	
 		// Creates a ReservationQueueTests object.
 		public static method Init {
@@ -26,17 +27,22 @@ namespace Intrusion.Tests.Server
 		};
 		
 		private static method BeforeEach {
-			//_mResourceCollector = [0, 0, 0, 0, 0] new ResourceCollector;
+			_mMissionTime = new TestMissionTime;
+			_mResourceBook = new ResourceBook;
+			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
+			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mTestUnitCounter] new ResourceCollector;
 		};
 		
-		private static method ReservationQueueEmpty_NothingChanged_CurrentIsNull {
+		private static method FullServer_60Minutes_Correct {
 			// Arrange
-			
+			_mMissionTime.MissionTime = 60 * 60; // After 60 minutes
+						
 			// Act
+			call _mResourceCollector.CollectResources;
 			
 			// Assert
-			//[_mReservationQueue.CurrentReservation, "Current reservation should be null."] call Assert.IsNull;
-			//[0, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
 		};
 	};
 };
