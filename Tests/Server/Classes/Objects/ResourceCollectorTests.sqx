@@ -17,12 +17,13 @@ namespace Intrusion.Tests.Server
 {
 	public class ResourceCollectorTests
 	{
-		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as IUnitCounter];
+		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as TestUnitCounter];
 	
 		// Creates a ReservationQueueTests object.
 		public static method Init {
 			["Intrusion.Tests.Server", "ResourceCollectorTests", [
-				"ReservationQueueEmpty_NothingChanged_CurrentIsNull"
+				"FullServer_60Minutes_Correct",
+				"FullServer_30Minutes_Correct"
 			]] call TestEngine.Register;
 		};
 		
@@ -30,7 +31,7 @@ namespace Intrusion.Tests.Server
 			_mMissionTime = new TestMissionTime;
 			_mResourceBook = new ResourceBook;
 			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
-			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mTestUnitCounter] new ResourceCollector;
+			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
 		};
 		
 		private static method FullServer_60Minutes_Correct {
@@ -43,6 +44,46 @@ namespace Intrusion.Tests.Server
 			// Assert
 			[1000, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
 			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method FullServer_30Minutes_Correct {
+			// Arrange
+			_mMissionTime.MissionTime = 30 * 60; // After 60 minutes
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method HalfServer_60Minutes_Correct {
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mUnitCounter.UnitsInPlaySide = 15;
+			_mMissionTime.MissionTime = 60 * 60; // After 60 minutes
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method HalfServer_30Minutes_Correct {
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mUnitCounter.UnitsInPlaySide = 15;
+			_mMissionTime.MissionTime = 30 * 60; // After 60 minutes
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
 		};
 	};
 };
