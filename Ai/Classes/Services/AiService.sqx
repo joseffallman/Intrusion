@@ -17,9 +17,10 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
+		private fields ["_mResourceLocationHandler" as IResourceLocationHandler];
 		
 		// Creates a AiService object.
-		public constructor("_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel)
+		public constructor("_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel, "_resourceLocationHandler" as IResourceLocationHandler)
 		{
 			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
@@ -29,6 +30,7 @@ namespace Intrusion.Ai
 			_mProfessionConfig = _professinConfig;
 			_mSquadHandler = _squadHandler;
 			_mSkillLevel = _skillLevel;
+			_mResourceLocationHandler = _resourceLocationHandler;
 			_mSquads = [];
 			
 			_self.AiWarriorTypes = [
@@ -105,7 +107,7 @@ namespace Intrusion.Ai
 				_unitCount = selectRandom [1, 2, 2, 2, 3];
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
-					_aiSquad = [_mUnitsConfig, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
+					_aiSquad = [_mUnitsConfig, _mResourceLocationHandler, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
 					_mSquads pushBack _aiSquad;
 					
 					[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;

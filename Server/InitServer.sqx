@@ -69,7 +69,7 @@ gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConf
 gServer = [new AiUnitCounter] new IntrusionServer;
 
 /* Handlers */
-[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
+//[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
 [gServer.TargetHandler] call ObservationService.Init;
@@ -80,7 +80,7 @@ gServer = [new AiUnitCounter] new IntrusionServer;
 	private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
 	
 	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
-	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel] new AiService;
+	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel, gServer.ResourceLocationHandler] new AiService;
 	sleep 5;
 	call _aiService.RunAsync;
 };

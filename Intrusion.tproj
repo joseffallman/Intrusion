@@ -746,6 +746,10 @@
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Handlers\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IResourceLocationHandler.sqx" IsExpanded="false" FileName="Server\Classes\Handlers\Interfaces\IResourceLocationHandler.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ISquadHandler.sqx" IsExpanded="false" FileName="Server\Classes\Handlers\Interfaces\ISquadHandler.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />

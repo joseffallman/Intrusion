@@ -53,8 +53,13 @@ namespace Intrusion.Server
 		
 		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
 		{
-			[_markerName, _capturedBySide] call ResourceLocationHandler.SetNewFlagOwner;
+			[_markerName, _capturedBySide] call gServer.ResourceLocationHandler.SetNewFlagOwner;
 			["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+		};
+		
+		public static method OnMissionTimeIsUp()
+		{
+		
 		};
 	};
 };
