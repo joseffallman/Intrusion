@@ -1064,6 +1064,10 @@
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestResourceLocationHandler.sqx" IsExpanded="false" FileName="Tests\Helpers\TestResourceLocationHandler.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestScientist.sqx" IsExpanded="false" FileName="Tests\Helpers\TestScientist.sqx">
                 <IsSelected>false</IsSelected>
                 <SubNodes />

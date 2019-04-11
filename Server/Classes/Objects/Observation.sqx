@@ -13,10 +13,10 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	private fields ["_mMissionTime" as IMissionTime];
-	
 	public class Observation
 	{
+		private fields ["_mMissionTime" as IMissionTime];
+	
 		// Creates an Observation object.
 		// _name (String): The unique and persistent ID of the observation.
 		// _position (Array): The position of the observation.
@@ -89,7 +89,7 @@ namespace Intrusion.Server
 				_isIdentifiedAsEnemy = [_self.ObservingSide, _self.PercievedSide] call BIS_fnc_sideIsEnemy;
 			};
 
-			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, call _mMissionTime.GetMissionTime > _self.Time + 10] new MapObservation
+			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, (call _mMissionTime.GetMissionTime) > _self.Time + 10] new MapObservation
 		};
 	};
 };

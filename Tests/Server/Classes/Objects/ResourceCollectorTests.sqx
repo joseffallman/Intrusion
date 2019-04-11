@@ -17,10 +17,11 @@ namespace Intrusion.Tests.Server
 {
 	public class ResourceCollectorTests
 	{
-		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as TestUnitCounter];
+		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as TestUnitCounter, "_mResourceLocationHandler" as IResourceLocationHandler];
 	
 		// Creates a ReservationQueueTests object.
-		public static method Init {
+		public static method Init
+		{
 			["Intrusion.Tests.Server", "ResourceCollectorTests", [
 				"FullServer_60Minutes_Correct",
 				"FullServer_30Minutes_Correct",
@@ -29,14 +30,17 @@ namespace Intrusion.Tests.Server
 			]] call TestEngine.Register;
 		};
 		
-		private static method BeforeEach {
+		private static method BeforeEach
+		{
 			_mMissionTime = new TestMissionTime;
 			_mResourceBook = new ResourceBook;
 			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
-			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mResourceLocationHandler = [3, 3, 0, 0] new TestResourceLocationHandler;
+			_mResourceCollector = [_mMissionTime, new TestGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
 		};
 		
-		private static method FullServer_60Minutes_Correct {
+		private static method FullServer_60Minutes_Correct
+		{
 			// Arrange
 			_mMissionTime.MissionTime = 60 * 60;
 						

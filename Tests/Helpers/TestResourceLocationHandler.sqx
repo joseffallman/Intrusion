@@ -1,0 +1,75 @@
+/*
+ * Name:	TestResourceLocationHandler
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles resource location stuff for test purposes.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestResourceLocationHandler : IResourceLocationHandler
+	{
+		public constructor("_factoryLocationsCount" as Scalar, "_techLabLocationsCount" as Scalar, "_factoriesCountBySide" as Scalar, "_techLabsCountBySide" as Scalar)
+		{
+			_self.WinnersLocation = classNull;
+			
+			_self.FactoryLocationsCount = _factoryLocationsCount;
+			_self.TechLabLocationsCount = _techLabLocationsCount;
+			_self.FactoriesCountBySide = _factoriesCountBySide;
+			_self.TechLabsCountBySide = _techLabsCountBySide;
+		};
+		
+		// Gets the location selected as the Winner's location.
+		public property ResourceLocation WinnersLocation { get; set; };
+		
+		// Gets the number of factory locations. 
+		public property Scalar FactoryLocationsCount { get; set; };
+		
+		// Gets the number of tech lab locations. 
+		public property Scalar TechLabLocationsCount { get; set; };
+		
+		public property Scalar FactoriesCountBySide { get; set; };
+		
+		public property Scalar TechLabsCountBySide { get; set; };
+		
+		// Get the number of factories owned by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of factories owned by the side.
+		public method Scalar GetFactoriesCountBySide("_side" as Side)
+		{
+			_self.FactoriesCountBySide
+		};
+		
+		// Get the number of tech labs ownd by a side.
+		// _side (Side): The side that is asked for.
+		// Returns (Scalar): The number of tech labs owned by the side.
+		public method Scalar GetTechLabsCountBySide("_side" as Side)
+		{
+			_self.TechLabsCountBySide
+		};
+		
+		// Sets a new owner for a resource location and sends resource location updates to clients.
+		// _markerName (String): Name of the marker associated with the flag.
+		// _side (Side): The side of the player that captured the flag.
+		public method SetNewFlagOwner("_markerName" as String, "_side" as Side)
+		{
+		};
+		
+		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
+		// resource locations for them all.
+		public method AquireAllResourceLocations()
+		{
+		};
+		
+		// Creates guarding guerilla units on all resource locations.
+		public method CreateGuerillaUnits()
+		{
+		};
+	};
+};
