@@ -53,6 +53,8 @@ namespace Intrusion.Server
 			
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
 			
+			hint str _mSecondsSinceLastAquire;
+			
 			// Balance up for missing units
 			_playingUnitsCount = call _mUnitCounter.CountUnitsInPlay;
 			_points = _points - (_points * (1 - (_playingUnitsCount / _mUnitCounter.LobbySlotsCount)));
@@ -69,7 +71,7 @@ namespace Intrusion.Server
 			private _pointsPerFacility = (_mGameplayConfig.TotalResearch / _mResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call _mResourceLocationHandler.GetTechLabsCountBySide;
 			private _ourCount = [_self.Side] call _mResourceLocationHandler.GetTechLabsCountBySide;
-			
+
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
 			
 			_points
@@ -81,7 +83,7 @@ namespace Intrusion.Server
 			
 			_time = (call _mMissionTime.GetMissionTime);
 			_mSecondsSinceLastAquire = _time - _mLastAquireTime;
-			
+
 			_production = call _self.AquireProduction;
 			_technology = call _self.AquireTechnology;
 			

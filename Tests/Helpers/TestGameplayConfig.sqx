@@ -15,11 +15,12 @@ namespace Intrusion.Tests.Helpers
 	public class TestGameplayConfig : IGameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
-		public constructor()
+		public constructor("_totalProduction" as Scalar, "_totalResearch" as Scalar)
 		{
+			_self.TotalProduction = _totalProduction;
+			_self.TotalResearch = _totalResearch;
+			
 			_self.CompetingSides = [east, west];
-			_self.TotalProduction = 1000;
-			_self.TotalResearch = 1000;
 			_self.MaxFreeVehiclesAtBase = 3;
 		};
 		

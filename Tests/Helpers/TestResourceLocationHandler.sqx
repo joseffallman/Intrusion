@@ -15,14 +15,34 @@ namespace Intrusion.Tests.Helpers
 {
 	public class TestResourceLocationHandler : IResourceLocationHandler
 	{
-		public constructor("_factoryLocationsCount" as Scalar, "_techLabLocationsCount" as Scalar, "_factoriesCountBySide" as Scalar, "_techLabsCountBySide" as Scalar)
+		private fields [
+			"_mFactorySides" as Array /* of Side */, "_mFactorySideCounts" as Array /* of Scalar */,
+			"_mTechLabSides" as Array /* of Side */, "_mTechLabSideCounts" as Array /* of Scalar */
+		];
+		
+		public constructor("_factoryLocationsCount" as Scalar, "_techLabLocationsCount" as Scalar)
 		{
 			_self.WinnersLocation = classNull;
 			
+			_mFactorySides = [];
+			_mFactorySideCounts = [];
+			_mTechLabSides = [];
+			_mTechLabSideCounts = [];
+			
 			_self.FactoryLocationsCount = _factoryLocationsCount;
 			_self.TechLabLocationsCount = _techLabLocationsCount;
-			_self.FactoriesCountBySide = _factoriesCountBySide;
-			_self.TechLabsCountBySide = _techLabsCountBySide;
+		};
+		
+		public method AddFactoiesCountBySide("_side" as Side, "_sideCount" as Scalar)
+		{
+			_mFactorySides pushBack _side;
+			_mFactorySideCounts pushBack _sideCount;
+		};
+		
+		public method AddTechLabsCountBySide("_side" as Side, "_sideCount" as Scalar)
+		{
+			_mTechLabSides pushBack _side;
+			_mTechLabSideCounts pushBack _sideCount;
 		};
 		
 		// Gets the location selected as the Winner's location.
@@ -34,16 +54,20 @@ namespace Intrusion.Tests.Helpers
 		// Gets the number of tech lab locations. 
 		public property Scalar TechLabLocationsCount { get; set; };
 		
-		public property Scalar FactoriesCountBySide { get; set; };
-		
-		public property Scalar TechLabsCountBySide { get; set; };
-		
 		// Get the number of factories owned by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of factories owned by the side.
 		public method Scalar GetFactoriesCountBySide("_side" as Side)
 		{
-			_self.FactoriesCountBySide
+			scopeName "main";
+			
+			for "_i" from 0 to (count _mFactorySides) - 1 do {
+				if (_mFactorySides select _i == _side) then {
+					(_mFactorySideCounts select _i) breakOut "main";
+				};
+			};
+			
+			0
 		};
 		
 		// Get the number of tech labs ownd by a side.
@@ -51,7 +75,15 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Scalar): The number of tech labs owned by the side.
 		public method Scalar GetTechLabsCountBySide("_side" as Side)
 		{
-			_self.TechLabsCountBySide
+			scopeName "main";
+			
+			for "_i" from 0 to (count _mTechLabSides) - 1 do {
+				if (_mTechLabSides select _i == _side) then {
+					(_mTechLabSideCounts select _i) breakOut "main";
+				};
+			};
+			
+			0
 		};
 		
 		// Sets a new owner for a resource location and sends resource location updates to clients.
