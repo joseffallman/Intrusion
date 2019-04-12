@@ -45,7 +45,7 @@ namespace Intrusion.Tests.Server
 		
 		private static method BeforeEach
 		{
-			_mMissionTime = new TestMissionTime;
+			_mMissionTime = [0] new TestMissionTime;
 			_mResourceBook = new ResourceBook;
 			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
 			_mResourceLocationHandler = [2, 2] new TestResourceLocationHandler;

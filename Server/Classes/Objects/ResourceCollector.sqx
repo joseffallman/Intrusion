@@ -35,7 +35,7 @@ namespace Intrusion.Server
 			_mUnitCounter = _unitCounter;
 			_mMatchLengthMinutes = _matchLengthMinutes;
 			
-			_mLastAquireTime = 0;
+			_mLastAquireTime = call _mMissionTime.GetMissionTime;
 			_mSecondsSinceLastAquire = 0;
 		};
 		
@@ -53,14 +53,24 @@ namespace Intrusion.Server
 			
 			private _points = _pointsPerFacility * (_ourCount + (_neutralCount / 2));
 			
-			hint str _mSecondsSinceLastAquire;
+        	["Aquire production variables:"] call LogHandler.Debug;
+        	["_pointsPerFacility: " + (str _pointsPerFacility)] call LogHandler.Debug;
+        	["_neutralCount: " + (str _neutralCount)] call LogHandler.Debug;
+        	["_ourCount: " + (str _ourCount)] call LogHandler.Debug;
+        	["_points #1: " + (str _points)] call LogHandler.Debug;
 			
 			// Balance up for missing units
 			_playingUnitsCount = call _mUnitCounter.CountUnitsInPlay;
 			_points = _points - (_points * (1 - (_playingUnitsCount / _mUnitCounter.LobbySlotsCount)));
 			
+			hint ("playing: " + str _playingUnitsCount);
+        	["_playingUnitsCount: " + (str _playingUnitsCount)] call LogHandler.Debug;
+        	["_points #2: " + (str _points)] call LogHandler.Debug;
+			
 			// Balance up for game length
 			_points = _points * (_mMatchLengthMinutes / 60);
+			
+        	["_points #3: " + (str _points)] call LogHandler.Debug;
 			
 			_points
 		};

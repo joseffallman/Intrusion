@@ -16,7 +16,7 @@ namespace Intrusion.Tests.Helpers
 	{
 		// Creates a TestMissionTime object.
 		// _missionTime (Scalar): Optional. Initializes the test mission time object.
-		public constructor(["_missionTime" as Scalar, 0])
+		public constructor("_missionTime" as Scalar) // TODO SQX: Seems to be wrong if there is exactly one argument and it is optional.
 		{
 			_self.MissionTime = _missionTime;
 		};
