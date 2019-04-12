@@ -15,7 +15,7 @@ namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{
-		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mSquads" as Array /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler];
 		
@@ -31,7 +31,6 @@ namespace Intrusion.Ai
 			_mSquadHandler = _squadHandler;
 			_mSkillLevel = _skillLevel;
 			_mResourceLocationHandler = _resourceLocationHandler;
-			_mSquads = [];
 			
 			_self.AiWarriorTypes = [
 				ProfessionType.Motorized,
@@ -43,21 +42,6 @@ namespace Intrusion.Ai
 		public property Boolean IsRunning { get; private set; };
 		
 		public property Array AiWarriorTypes { get; private set; };
-		
-		private method Scalar CountExistingAiUnits("_side" as Side)
-		{
-			private ["_count" as Scalar];
-			
-			_count = 0;
-			
-			{
-				if (side _x.Group == _side) then {
-					_count = _count + count units _x.Group;
-				};
-			} foreach _mSquads as AiSquad;
-			
-			_count
-		};
 		
 		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
 		{
@@ -102,31 +86,32 @@ namespace Intrusion.Ai
 			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquad];
 
 			{
-				_existingUnitsCount = [_x] call _self.CountExistingAiUnits;
+				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
 				_unitCount = selectRandom [1, 2, 2, 2, 3];
 			
 				if (_existingUnitsCount < _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mResourceLocationHandler, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
-					_mSquads pushBack _aiSquad;
+					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					
 					[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;
-					//_professionType = [_x, _unitCount] call _self.GetRandomProfessionType;
-					//[_aiSquad.Group, _professionType] call _mSquadHandler.SetSquadProfession;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
 		};
 		
 		private method Run()
 		{
+			private ["_allSquads" as Array];
+			
 			while { true } do
 			{
+				_allSquads = call _mAiSquadHandler.GetAllSquads;
 				call _self.CreateNewSquads;
 				
 				{
 					call _x.Act;
 					sleep 0.1;
-				} foreach _mSquads as AiSquad;
+				} foreach _allSquads as AiSquad;
 				
 				sleep 1;
 			};
