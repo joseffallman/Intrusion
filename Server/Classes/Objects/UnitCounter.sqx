@@ -14,16 +14,16 @@ namespace Intrusion.Server
 {
 	public class UnitCounter : IUnitCounter
 	{
-		private fields ["_mAiUnitCounter" as IAiUnitCounter];
+		private fields ["_mAiSquadHandler" as IAiSquadHandler];
 		
 		// Creates a UnitCounter object.
 		// _gameplayConfig (IGameplayConfig): The gameplay configuration object.
 		// _aiUnitCounter (IAiUnitCounter): The AI unit counter, so that AI units also are correctly included.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_aiUnitCounter" as IAiUnitCounter)
+		public constructor("_gameplayConfig" as IGameplayConfig, "_aiSquadHandler" as IAiSquadHandler)
 		{
 			private ["_lobbySlotsCount" as Scalar];
 			
-			_mAiUnitCounter = _aiUnitCounter;
+			_mAiSquadHandler = _aiSquadHandler;
 		
 			_lobbySlotsCount = 0;
 			
@@ -38,7 +38,7 @@ namespace Intrusion.Server
 		// Returns (Scalar): The number of units in play.
 		public method Scalar CountUnitsInPlay()
 		{
-			private _no = (count call BIS_fnc_listPlayers) + (call _mAiUnitCounter.CountUnits);
+			private _no = (count call BIS_fnc_listPlayers) + (call _mAiSquadHandler.CountAllUnits); // (call _mAiUnitCounter.CountUnits);
 			_no
 		};
 		
@@ -47,7 +47,7 @@ namespace Intrusion.Server
 		// Returns (Scalar): The number of units in play.
 		public method Scalar CountUnitsInPlaySide("_side" as Side)
 		{
-			private _no = ({side _x == _side} count (call BIS_fnc_listPlayers)) + ([_side] call _mAiUnitCounter.CountUnitsSide);
+			private _no = ({side _x == _side} count (call BIS_fnc_listPlayers)) + ([_side] call _mAiSquadHandler.CountAllUnitsOfSide); // ([_side] call _mAiUnitCounter.CountUnitsSide);
 			_no
 		};
 		

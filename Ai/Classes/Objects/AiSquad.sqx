@@ -47,7 +47,6 @@ namespace Intrusion.Ai
 			
 			{
 				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
-				_x setVariable ["IsAiUnit", true];
 				_self.Members pushBack _x;
 			} foreach units _self.Group;
 		};
@@ -470,16 +469,11 @@ namespace Intrusion.Ai
 				
 				{
 					_x setDamage 1;
-					_x setVariable ["IsAiUnit", false];
 				} foreach _oldUnits;
 				
 				(_oldUnits) joinSilent grpNull;
 				
 				_self.Members = units _self.Group;
-				
-				{
-					_x setVariable ["IsAiUnit", true];
-				} foreach _self.Members;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				_mState = AiSquadState.Idle;

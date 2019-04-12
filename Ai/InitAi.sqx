@@ -2,7 +2,6 @@ call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiSquadHandler.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitBalancer.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
@@ -15,7 +14,7 @@ using Intrusion.Ai;
 	sleep 5;
 
 	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
-	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel, gServer.ResourceLocationHandler] new AiService;
+	_aiService = [gServer.AiSquadHandler, _aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel, gServer.ResourceLocationHandler] new AiService;
 	
 	call _aiService.RunAsync;
 };

@@ -25,6 +25,21 @@ namespace Intrusion.Ai
 			_mSquads pushBack _aiSquad;
 		};
 		
+		// Counts all AI units. Alive as well as dead units "waiting for respawn".
+		// Returns (Scalar): The number of AI units.
+		public method Scalar CountAllUnits()
+		{
+			private ["_count" as Scalar];
+			
+			_count = 0;
+			
+			{
+				_count = _count + count _x.Members;
+			} foreach _mSquads as AiSquad;
+			
+			_count
+		};
+		
 		// Counts all AI units of a side. Alive as well as dead units "waiting for respawn".
 		// _side (Side): The side to ask for.
 		// Returns (Scalar): The number of AI units on the side.

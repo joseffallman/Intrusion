@@ -20,6 +20,10 @@ namespace Intrusion.Ai
 		// Returns (Scalar): The number of AI units on the side.
 		method Scalar CountAllUnitsOfSide("_side" as Side);
 		
+		// Counts all AI units. Alive as well as dead units "waiting for respawn".
+		// Returns (Scalar): The number of AI units.
+		method Scalar CountAllUnits();
+		
 		// Gets all AI squads.
 		// Returns (Array): All AI squads as an array of AiSquad.
 		method Array GetAllSquads();
