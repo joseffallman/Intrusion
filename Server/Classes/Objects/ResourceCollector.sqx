@@ -63,7 +63,6 @@ namespace Intrusion.Server
 			_playingUnitsCount = call _mUnitCounter.CountUnitsInPlay;
 			_points = _points - (_points * (1 - (_playingUnitsCount / _mUnitCounter.LobbySlotsCount)));
 			
-			hint ("playing: " + str _playingUnitsCount);
         	["_playingUnitsCount: " + (str _playingUnitsCount)] call LogHandler.Debug;
         	["_points #2: " + (str _points)] call LogHandler.Debug;
 			

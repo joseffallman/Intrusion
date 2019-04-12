@@ -90,7 +90,12 @@ namespace Intrusion.Ai
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
 				_unitCount = selectRandom [1, 2, 2, 2, 3];
-			
+
+        		["Create new squads variables:"] call LogHandler.Debug;
+        		["_existingUnitsCount: " + str _existingUnitsCount] call LogHandler.Debug;
+        		["_maxUnitsCount: " + str _maxUnitsCount] call LogHandler.Debug;
+        		["_unitCount: " + str _unitCount] call LogHandler.Debug;
+        	
 				if (_existingUnitsCount < _maxUnitsCount) then {
 					_aiSquad = [_mUnitsConfig, _mResourceLocationHandler, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
 					[_aiSquad] call _mAiSquadHandler.AddSquad;

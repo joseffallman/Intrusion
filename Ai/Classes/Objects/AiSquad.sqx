@@ -45,6 +45,7 @@ namespace Intrusion.Ai
 				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 			};
 			
+			_self.Members = [];
 			{
 				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
 				_self.Members pushBack _x;
