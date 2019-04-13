@@ -483,11 +483,21 @@ namespace Intrusion.Ai
 				// Check if launchers are invented, and in that case equip AI with launchers.
 				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
 				{
+					private ["_launcherClassName" as String, "_magazineClassName" as String];
+					
+					_launcherClassName = "launch_NLAW_F";
+					_magazineClassName = "NLAW_F";
+					
+					if (side _self.Group == west) then {
+						_launcherClassName = "launch_RPG32_F";
+						_magazineClassName = "RPG32_F";
+					};
+					
 					{
 						if (random 100 > 33) then {
 							_x addBackpack "B_Kitbag_cbr";
-							(unitBackpack _x) addMagazineCargo ["NLAW_F", 1];
-							_x addWeapon "launch_NLAW_F";
+							(unitBackpack _x) addMagazineCargo [_magazineClassName, 1];
+							_x addWeapon _launcherClassName;
 						};
 					} foreach _self.Members as Object;
 				};
