@@ -19,12 +19,13 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
-		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar];
+		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
+		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
 		{
+			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
@@ -44,9 +45,9 @@ namespace Intrusion.Ai
 				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 			};
 			
+			_self.Members = [];
 			{
 				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
-				_x setVariable ["IsAiUnit", true];
 				_self.Members pushBack _x;
 			} foreach units _self.Group;
 		};
@@ -106,7 +107,7 @@ namespace Intrusion.Ai
 			if (MissionCounterService.RemainingMinutes <= 12) then {
 //				player sideChat "less than 12!";
 				
-				_location = ResourceLocationHandler.WinnersLocation;
+				_location = _mResourceLocationHandler.WinnersLocation;
 				
 				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 					_mResourceLocation = _location;
@@ -469,16 +470,11 @@ namespace Intrusion.Ai
 				
 				{
 					_x setDamage 1;
-					_x setVariable ["IsAiUnit", false];
 				} foreach _oldUnits;
 				
 				(_oldUnits) joinSilent grpNull;
 				
 				_self.Members = units _self.Group;
-				
-				{
-					_x setVariable ["IsAiUnit", true];
-				} foreach _self.Members;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				_mState = AiSquadState.Idle;
@@ -488,7 +484,7 @@ namespace Intrusion.Ai
 		private method BeamToBaseIfSquadVehicleIsThere()
 		{
 			private ["_vehicles" as Array, "_vehicle" as IntrusionVehicle, "_driverSeats" as Array, "_commanderSeats" as Array, "_gunnerSeats" as Array ];
-			private ["_driverIn" as Boolean, "_commanderIn" as Boolean, "_gunnerIn" as Boolean, "_unit" as Object, "_basePos" as Array];
+			private ["_driverIn" as Boolean, "_commanderIn" as Boolean, "_gunnerIn" as Boolean, "_unit" as Object, "_basePos" as Array, "_tempGroup" as Group];
 			
 			_vehicles = [_self.Group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
 			
@@ -506,10 +502,25 @@ namespace Intrusion.Ai
 					_driverSeats = fullCrew [_vehicle.Vehicle, "driver", true];
 					_commanderSeats = fullCrew [_vehicle.Vehicle, "commander", true];
 					_gunnerSeats = fullCrew [_vehicle.Vehicle, "gunner", true];
-
+					_tempGroup = createGroup side _self.Group;
+					
+					// Respawn all alive members, and wake up all dead
 					{
-						_x setPos _basePos;
-						
+						if (alive _x) then {
+							_x setPos _basePos;
+							_x setDamage 0;
+						}
+						else {
+							_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup];							
+						};						
+					} foreach _self.Members as Object;
+					
+					(units _tempGroup) joinSilent _self.Group;
+					_self.Members = units _self.Group;
+					deleteGroup _tempGroup;
+
+					// Assign the group to the vehicle.
+					{
 						if (!_driverIn && count _driverSeats > 0) then {
 							_x assignAsDriver _vehicle.Vehicle;
 							[_x] orderGetIn true;
@@ -533,7 +544,7 @@ namespace Intrusion.Ai
 								};
 							};
 						};
-					} foreach units _self.Group;
+					} foreach units _self.Group as Object;
 					
 					_mVehicle = _vehicle.Vehicle;
 					_mVehicleIsSquadVehicle = true;
@@ -547,7 +558,7 @@ namespace Intrusion.Ai
 		
 		private method UpdateOrder()
 		{
-			if (MissionCounterService.RemainingMinutes <= 12) then {
+			if (MissionCounterService.RemainingMinutes <= 20) then {
 				call _self.CreateOrderOnOwnInitiative;
 			}
 			else {
@@ -582,9 +593,9 @@ namespace Intrusion.Ai
 			call _self.UpdateTargetResourceLocation;
 			call _self.RespawnIfDead;
 			call _self.SetIdleIfActionTimedOut;
+			call _self.BeamToBaseIfSquadVehicleIsThere;
 			
 			if (_mState == AiSquadState.Idle) then {
-				call _self.BeamToBaseIfSquadVehicleIsThere;
 				call _self.UpdateOrder;
 			};
 			

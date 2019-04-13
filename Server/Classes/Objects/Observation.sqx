@@ -15,14 +15,26 @@ namespace Intrusion.Server
 {
 	public class Observation
 	{
+		private fields ["_mMissionTime" as IMissionTime];
+	
 		// Creates an Observation object.
 		// _name (String): The unique and persistent ID of the observation.
 		// _position (Array): The position of the observation.
 		// _percievedSide (Side): The side that the observation is identified to belong to. sideUnknown if the side is unknkown to the observer.
 		// _unit (Object): The observed unit.
 		// _professionType (ProfessionType): The supposed profession type.
-		public constructor {
-			params ["_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_percievedSide" as Side, "_group" as Group, "_unit" as Object, "_percievedProfessionType" as ProfessionType, "_accuracy" as Scalar, "_time" as Scalar];
+		public constructor(
+			"_id" as Scalar, 
+			"_observingSide" as Side, 
+			"_percievedPos" as Array, 
+			"_percievedSide" as Side, 
+			"_group" as Group, 
+			"_unit" as Object, 
+			"_percievedProfessionType" as ProfessionType, 
+			"_accuracy" as Scalar, 
+			"_time" as Scalar)
+		{
+			_mMissionTime = new MissionTime;
 			
 			_self.Id = _id;
 			_self.ObservingSide = _observingSide;
@@ -77,7 +89,7 @@ namespace Intrusion.Server
 				_isIdentifiedAsEnemy = [_self.ObservingSide, _self.PercievedSide] call BIS_fnc_sideIsEnemy;
 			};
 
-			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, call Functions.GetMissionTime > _self.Time + 10] new MapObservation
+			[_self.Id, _self.ObservingSide, _self.PercievedPos, _isIdentifiedAsEnemy, _self.PercievedProfessionType, (call _mMissionTime.GetMissionTime) > _self.Time + 10] new MapObservation
 		};
 	};
 };

@@ -1,0 +1,31 @@
+/*
+ * Name:	IAiSquadHandler
+ * Date:	2019-04-12
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all AI squads.
+ */
+namespace Intrusion.Ai
+{
+	public interface IAiSquadHandler
+	{
+		// Adds an AI squad to the AI squad handler.
+		// _aiSquad (AiSquad): The AI squad to add.
+		method AddSquad("_aiSquad" as AiSquad);
+		
+		// Counts all AI units of a side. Alive as well as dead units "waiting for respawn".
+		// _side (Side): The side to ask for.
+		// Returns (Scalar): The number of AI units on the side.
+		method Scalar CountAllUnitsOfSide("_side" as Side);
+		
+		// Counts all AI units. Alive as well as dead units "waiting for respawn".
+		// Returns (Scalar): The number of AI units.
+		method Scalar CountAllUnits();
+		
+		// Gets all AI squads.
+		// Returns (Array): All AI squads as an array of AiSquad.
+		method Array GetAllSquads();
+	};
+};

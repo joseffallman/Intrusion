@@ -41,6 +41,9 @@ waitUntil { player == player };
 // Configs
 call TutorialConfig.Init;
 
+// Recievers
+call ClientEventReciever.Init;
+
 // Handlers
 call ClientEventHandlers.Init;
 call ClientState.Init;
@@ -71,3 +74,6 @@ call GroupActionHandler.UpdateAllInvitePlayerActions;
 // Start the map marker service
 call MapMarkerService.RunAsync;
 call gClient.RatingService.RunAsync;
+
+player addRating 1500;
+ClientState.CurrentRank = Rank.Corpral;

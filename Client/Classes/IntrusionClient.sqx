@@ -29,7 +29,7 @@ namespace Intrusion.Client
 			_self.GiveOrderService = new GiveOrderService;
 			_self.TaskHandler = new TaskHandler;
 			_self.ClientVehicleHandler = new ClientVehicleHandler;
-			_self.RatingService = [new SquadConfig] new RatingService;
+			_self.RatingService = [new SquadConfig, new MissionTime] new RatingService;
 		};
 	
 		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };

@@ -1,0 +1,319 @@
+/*
+ * Name:	ResourceCollectorTests
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Tests for the ResourceCollector object.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Common;
+using Intrusion.Server;
+using Intrusion.Tests.Helpers;
+
+namespace Intrusion.Tests.Server
+{
+	public class ResourceCollectorTests
+	{
+		private static fields ["_mMissionTime" as TestMissionTime, "_mResourceCollector" as ResourceCollector, "_mResourceBook" as ResourceBook, "_mUnitCounter" as TestUnitCounter, "_mResourceLocationHandler" as TestResourceLocationHandler];
+		private static fields ["_mGameplayConfig" as TestGameplayConfig];
+		
+		// Creates a ReservationQueueTests object.
+		public static method Init
+		{
+			["Intrusion.Tests.Server", "ResourceCollectorTests", [
+				"60MinutesGameFullServerWestlyFlags_After60Minutes_Correct",
+				"60MinutesGameFullServerWestlyFlags_After30Minutes_Correct",
+				"60MinutesGameFullServerCivilianFlags_After60Minutes_Correct",
+				"60MinutesGameFullServerCivilianFlags_After30Minutes_Correct",
+				"60MinutesGameHalfServerWestlyFlags_After60Minutes_Correct",
+				"60MinutesGameHalfServerWestlyFlags_After30Minutes_Correct",
+				"60MinutesGameHalfServerCivilianFlags_After60Minutes_Correct",
+				"60MinutesGameHalfServerCivilianFlags_After30Minutes_Correct",
+				"30MinutesGameFullServerWestlyFlags_After30Minutes_Correct",
+				"30MinutesGameFullServerWestlyFlags_After15Minutes_Correct",
+				"30MinutesGameFullServerCivilianFlags_After30Minutes_Correct",
+				"30MinutesGameFullServerCivilianFlags_After15Minutes_Correct",
+				"30MinutesGameHalfServerWestlyFlags_After30Minutes_Correct",
+				"30MinutesGameHalfServerWestlyFlags_After15Minutes_Correct",
+				"30MinutesGameHalfServerCivilianFlags_After30Minutes_Correct",
+				"30MinutesGameHalfServerCivilianFlags_After15Minutes_Correct"
+			]] call TestEngine.Register;
+		};
+		
+		private static method BeforeEach
+		{
+			_mMissionTime = [0] new TestMissionTime;
+			_mResourceBook = new ResourceBook;
+			_mUnitCounter = [60, 30, 60] new TestUnitCounter;
+			_mResourceLocationHandler = [2, 2] new TestResourceLocationHandler;
+			_mGameplayConfig = [1000, 1000] new TestGameplayConfig;
+		};
+		
+		private static method 60MinutesGameFullServerWestlyFlags_After60Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 60 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[1000, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameFullServerWestlyFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameFullServerCivilianFlags_After60Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 60 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameFullServerCivilianFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameHalfServerWestlyFlags_After60Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 60 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameHalfServerWestlyFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameHalfServerCivilianFlags_After60Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 60 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 60MinutesGameHalfServerCivilianFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 60, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameFullServerWestlyFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameFullServerWestlyFlags_After15Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 15 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameFullServerCivilianFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameFullServerCivilianFlags_After15Minutes_Correct
+		{
+			// Arrange
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 15 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameHalfServerWestlyFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameHalfServerWestlyFlags_After15Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 15 * 60;
+			[west, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[west, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameHalfServerCivilianFlags_After30Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 30 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+		
+		private static method 30MinutesGameHalfServerCivilianFlags_After15Minutes_Correct
+		{
+			// Arrange
+			_mUnitCounter.UnitsInPlay = 30;
+			_mResourceCollector = [_mMissionTime, _mGameplayConfig, _mResourceLocationHandler, 30, west, _mResourceBook, _mUnitCounter] new ResourceCollector;
+			_mMissionTime.MissionTime = 15 * 60;
+			[civilian, 2] call _mResourceLocationHandler.AddFactoiesCountBySide;
+			[civilian, 2] call _mResourceLocationHandler.AddTechLabsCountBySide;
+						
+			// Act
+			call _mResourceCollector.CollectResources;
+			
+			// Assert
+			[62.5, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+		};
+	};
+};

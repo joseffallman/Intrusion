@@ -37,6 +37,7 @@ namespace Intrusion.Communication
 					case "ServerEventReciever.OnLeaderMoveBase": { _parameters spawn ServerEventReciever.OnLeaderMoveBase; };
 					case "ServerEventReciever.OnPlayerJoinedGroup": { _parameters spawn ServerEventReciever.OnPlayerJoinedGroup; };
 					case "ServerEventReciever.OnFlagCaptured": { _parameters spawn ServerEventReciever.OnFlagCaptured; };
+					case "ServerEventReciever.OnMissionTimeIsUp": { _parameters spawn ServerEventReciever.OnMissionTimeIsUp; };
 				};
 			};
 			
@@ -50,7 +51,7 @@ namespace Intrusion.Communication
 					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
-					case "MissionEndHandler.PlayEndScene": { _parameters spawn MissionEndHandler.PlayEndScene };
+					case "ClientEventReciever.OnMissionTimeIsUp": { _parameters spawn ClientEventReciever.OnMissionTimeIsUp };
 					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
 					//case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };

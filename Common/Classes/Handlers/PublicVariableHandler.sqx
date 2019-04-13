@@ -36,22 +36,22 @@ namespace Intrusion.Common
 			!isNil "INT_Public_resourceLocationCollection"
 		};
 
-		// Sets and broadcasts an array of squads across the network.
-		// _squads (Array): An array of squads.
-		public static method BroadcastSquads("_squads" as SquadCollection)
+		// Sets and broadcasts an squad collection across the network.
+		// _squadCollection (SquadCollection): The squad collection.
+		public static method BroadcastSquadCollection("_squadCollection" as SquadCollection)
 		{
-			INT_Public_squads = _squads;
-			publicVariable "INT_Public_squads";
+			INT_Public_squadCollection = _squadCollection;
+			publicVariable "INT_Public_squadCollection";
 		};
 		
-		// Gets all squads from the public network synchronized variable.
-		public static method SquadCollection GetSquads { 
-			INT_Public_squads
+		// Gets the squad collection from the public network synchronized variable.
+		public static method SquadCollection GetSquadCollection { 
+			INT_Public_squadCollection
 		};
 		
-		// Gets whether the squads has been set on the current machine or not.
-		public static method Boolean SquadsHasValue {
-			!isNil "INT_Public_squads"
+		// Gets whether the squad collection has been set on the current machine or not.
+		public static method Boolean SquadCollectionHasValue {
+			!isNil "INT_Public_squadCollection"
 		};
 
 		// Sets and broadcasts an array of player infos across the network.

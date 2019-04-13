@@ -56,7 +56,9 @@ namespace Intrusion.Server
 			};
 			
 			_self.MissionIsRunning = false;
-			["MissionEndHandler.PlayEndScene", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
+			["ClientEventReciever.OnMissionTimeIsUp"] call Remote.Invoke;
+			["ServerEventReciever.OnMissionTimeIsUp"] call Remote.Invoke;
+			//["MissionEndHandler.PlayEndScene", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
         };
 	
 		// Starts the mission
