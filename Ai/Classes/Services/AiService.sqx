@@ -18,9 +18,10 @@ namespace Intrusion.Ai
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 		
 		// Creates a AiService object.
-		public constructor("_aiSquadHandler" as IAiSquadHandler, "_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel, "_resourceLocationHandler" as IResourceLocationHandler)
+		public constructor("_aiSquadHandler" as IAiSquadHandler, "_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_professinConfig" as IProfessionConfig, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel, "_resourceLocationHandler" as IResourceLocationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -32,6 +33,7 @@ namespace Intrusion.Ai
 			_mSquadHandler = _squadHandler;
 			_mSkillLevel = _skillLevel;
 			_mResourceLocationHandler = _resourceLocationHandler;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			
 			_self.AiWarriorTypes = [
 				ProfessionType.Motorized,
@@ -97,7 +99,7 @@ namespace Intrusion.Ai
         		["_unitCount: " + str _unitCount] call LogHandler.Debug;
         	
 				if (_existingUnitsCount < _maxUnitsCount) then {
-					_aiSquad = [_mUnitsConfig, _mResourceLocationHandler, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel] new AiSquad;
+					_aiSquad = [_mUnitsConfig, _mResourceLocationHandler, _mMapMarkersConfig, _mVehicleSpawner, _x, _unitCount, _mSkillLevel, _mInventedTechnologiesCollection] new AiSquad;
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					
 					[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;

@@ -14,7 +14,18 @@ using Intrusion.Ai;
 	sleep 5;
 
 	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
-	_aiService = [gServer.AiSquadHandler, _aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel, gServer.ResourceLocationHandler] new AiService;
+	_aiService = [
+		gServer.AiSquadHandler,
+		_aiUnitBalancer, 
+		gServerConfig.Gameplay, 
+		new AiUnitsConfig, 
+		gCommonConfig.MapMarkers, 
+		gServer.VehicleSpawner, 
+		gCommonConfig.Professions, 
+		gServer.SquadHandler, 
+		gCommon.MissionParametersHandler.AiSkillLevel, 
+		gServer.ResourceLocationHandler,
+		gServer.InventedTechnologiesCollection] new AiService;
 	
 	call _aiService.RunAsync;
 };

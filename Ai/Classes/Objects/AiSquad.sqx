@@ -20,14 +20,16 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
+		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -477,6 +479,19 @@ namespace Intrusion.Ai
 				_self.Members = units _self.Group;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				
+				// Check if launchers are invented, and in that case equip AI with launchers.
+				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
+				{
+					{
+						if (random 100 > 33) then {
+							_x addBackpack "B_Kitbag_cbr";
+							(unitBackpack _x) addMagazineCargo ["NLAW_F", 1];
+							_x addWeapon "launch_NLAW_F";
+						};
+					} foreach _self.Members as Object;
+				};
+				
 				_mState = AiSquadState.Idle;
 			};
 		};
