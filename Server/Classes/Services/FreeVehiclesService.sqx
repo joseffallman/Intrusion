@@ -33,7 +33,10 @@ namespace Intrusion.Server
 			        
 		    	} foreach _mGameplayConfig.CompetingSides as Side;
 		    	
-		        if (time < 30) then {
+		    	// Check if there are profession vehicles that is not owned by any group
+		    	
+		    	
+		        if (time < 300) then {
 		            sleep 3;
 		        }
 		        else {

@@ -243,7 +243,38 @@ namespace Intrusion.Server
 		// Returns (Array): A list of IntrusionVehicle objects.
 		public method Array GetAllVehicles()
 		{
-			+_mAllIntrusionVehicles;
+			_mAllIntrusionVehicles
+		};
+		
+		// Deletes all profession vehicles that have no owner on a side.
+		// _side (Side): The side to delete vehicles from.
+		// Returns (Scalar): The total production value of the deleted vehicles.
+		public method Scalar DeleteProfessionVehiclesWithNoOwner("_side" as Side)
+		{
+			private ["_intrusionVehiclesToKeep" as Array, "_totalCost" as Scalar, "_vehicleDeleted" as Boolean];
+			
+			_intrusionVehiclesToKeep = [];
+			_totalCost = 0;
+			_vehicleDeleted = false;
+			
+			{
+				player sideChat "1";
+				if (_x.Side == _side && _x.OwnerProfession != ProfessionType.Undefined && isNull _x.OwnerGroup) then {
+					player sideChat "2";
+					_totalCost = _totalCost + floor (_totalCost * (1 - (damage _x.Vehicle)));
+					[_x.Vehicle] spawn _self.DeleteVehicleWhenEmpty;
+					_vehicleDeleted = true;
+				}
+				else {
+					_intrusionVehiclesToKeep pushBack _x;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			if (_vehicleDeleted) then {
+				_mAllIntrusionVehicles = _intrusionVehiclesToKeep;
+			};
+			
+			_totalCost
 		};
 		
 		public method RemoveOwnershipOfDestroyedVehicles()
