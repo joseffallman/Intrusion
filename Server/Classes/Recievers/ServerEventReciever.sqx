@@ -61,7 +61,10 @@ namespace Intrusion.Server
 		// Called when mission time is up.
 		public static method OnMissionTimeIsUp()
 		{
-			["END1"] spawn BIS_fnc_endMission;
+			// If the server is dedicated, we need to end the mission on the server (otherwise it is done for the server's client).
+			if (isDedicated) then {
+				["END1"] spawn BIS_fnc_endMission;
+			};
 		};
 	};
 };
