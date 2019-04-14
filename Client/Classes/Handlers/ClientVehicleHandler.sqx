@@ -13,9 +13,16 @@ namespace Intrusion.Client
 {
 	public class ClientVehicleHandler
 	{
+		private fields ["_mGroupMarkers" as Array /* of Object */];
+		
+		public constructor()
+		{
+			_mGroupMarkers = [];
+		};
+	
 		// Adds the GetIn event handler to all vehicles in an array.
 		// _vehicleArray (Array): Array of vehicles to add the event handler to.
-		public static method GroupLockVehicles("_vehicleArray" as Array /* of Object */)
+		public method GroupLockVehicles("_vehicleArray" as Array /* of Object */)
 		{
 		    {
 		        _x addEventHandler ["GetIn", {
@@ -24,7 +31,10 @@ namespace Intrusion.Client
 				    
                 	_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
 
-					if (!isNull _intrusionVehicle) then {
+					if (!isNull _intrusionVehicle) then
+					{
+						call gClient.ClientVehicleHandler.RemoveGroupMarkerFromVehicles;
+					
 						if (!(group _player isEqualTo _intrusionVehicle.OwnerGroup)) then {
 							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport) then {
 								if (_player == driver _intrusionVehicle.Vehicle) then {
@@ -40,6 +50,32 @@ namespace Intrusion.Client
 					};
 		        }];
 		    } foreach _vehicleArray as Object;
+		};
+		
+		// Adds an arrow above the vehicle to mark the vehicle for the owners.
+		// _vehicleArray (Array): The vehicles to mark.
+		public method AddGroupMarkerToVehicles("_vehicleArray" as Array /* of Object */)
+		{
+			private ["_groupMarker" as Object, "_vehicleHeight" as Scalar];
+			
+			call _self.RemoveGroupMarkerFromVehicles;
+			
+			{
+				_vehicleHeight = ((boundingBox _x) select 1) select 2;
+				_groupMarker = "Sign_Arrow_Large_Blue_F" createVehicleLocal [getPosATL _x select 0, getPosATL _x select 1, (getPosATL _x select 2) + _vehicleHeight + 3];
+				_groupMarker setPosATL [getPosATL _x select 0, getPosATL _x select 1, (getPosATL _x select 2) + _vehicleHeight + 3];
+				_mGroupMarkers pushBack _groupMarker;
+			} foreach _vehicleArray as Object;
+		};
+		
+		// Removes the group marker arrow from above the vehicle.
+		public method RemoveGroupMarkerFromVehicles()
+		{
+			{
+				deleteVehicle _x;
+			} foreach _mGroupMarkers as Object;
+			
+			_mGroupMarkers = [];
 		};
 	};
 };

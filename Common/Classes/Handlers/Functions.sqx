@@ -11,19 +11,6 @@ namespace Intrusion.Common
 {
 	public class Functions
 	{
-		// Gets the correct time since mission start, no matter SP or MP.
-		// Returns time since mission start in seconds.
-		public static method Scalar Time()
-		{
-			private _time = time;
-			
-			if (isMultiplayer) then {
-				_time = serverTime;	
-			};
-			
-			_time
-		};
-		
 		// Gets the nearest mine.
 		// _pos (Array): The reference position.
 		// Returns (Object): The closest mine.

@@ -28,9 +28,11 @@ call compile preprocessFileLineNumbers "Client\Classes\Services\MapMarkerService
 call compile preprocessFileLineNumbers "Client\Classes\Services\JipService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Services\RatingService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
 
 using Intrusion.Client;
+using Intrusion.Common;
 
 cutText ["", "BLACK FADED"];
 
@@ -38,6 +40,9 @@ waitUntil { player == player };
 
 // Configs
 call TutorialConfig.Init;
+
+// Recievers
+call ClientEventReciever.Init;
 
 // Handlers
 call ClientEventHandlers.Init;
@@ -57,7 +62,7 @@ gClient = new IntrusionClient;
 [gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig] call MapMarkerService.Init;
 
 // Dialogs
-[gCommonConfig.Professions] call ProfessionDialog.Init;
+[gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionVehicles] call ProfessionDialog.Init;
 call MoveBaseDialog.Init;
 
 // Create the briefing
@@ -68,3 +73,7 @@ call GroupActionHandler.UpdateAllInvitePlayerActions;
 
 // Start the map marker service
 call MapMarkerService.RunAsync;
+call gClient.RatingService.RunAsync;
+
+player addRating 1500;
+ClientState.CurrentRank = Rank.Corpral;

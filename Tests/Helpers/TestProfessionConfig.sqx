@@ -66,6 +66,7 @@ namespace Intrusion.Tests.Helpers
     		"_type" as ProfessionType,
     		"_name" as String,
     		"_requiredTechnology" as Technology,
+    		"_requiredRank" as Rank,
     		"_maxGroupsCount" as Scalar,
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
@@ -74,7 +75,7 @@ namespace Intrusion.Tests.Helpers
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
     	{
-    		_mProfessions pushBack [_type, _name, _requiredTechnology, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy] new Profession;
+    		_mProfessions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy] new Profession;
     	};
 	};
 };

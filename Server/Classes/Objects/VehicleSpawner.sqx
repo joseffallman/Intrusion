@@ -97,11 +97,6 @@ namespace Intrusion.Server
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo];
-
-			diag_log("_mAllIntrusionVehicles:");
-			{
-				diag_log(str _x);
-			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
 		    
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
         	_vehicleClassInfo = [_side, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
@@ -139,9 +134,17 @@ namespace Intrusion.Server
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	
         	if (_professionType != ProfessionType.Undefined) then {
-				["ClientVehicleHandler.GroupLockVehicles", [[_vehicleObj]]] call Remote.Invoke;
+				["ClientEventReciever.OnSquadVehiclesSpawned", [_group, _professionType, [_vehicleObj]]] call Remote.Invoke;
         	};
 			
+        	["Spawning squad vehicle at side " + str _side + ": " + str _intrusionVehicle] call LogHandler.Info;
+
+			// Log all vehicles
+        	["_mAllIntrusionVehicles:"] call LogHandler.Debug;        	
+			{
+	        	[str _x] call LogHandler.Debug;
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+        	
 		    _intrusionVehicle
 		};
 
@@ -164,9 +167,8 @@ namespace Intrusion.Server
 		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
-        	["Spawning free vehicle at side " + str _side] call LogHandler.Info;
-        	
         	_intrusionVehicle = [_side, ProfessionType.Undefined] call _self.SpawnIntrusionVehicle;
+        	["Spawning free vehicle at side " + str _side + ": " + str _intrusionVehicle] call LogHandler.Info;
         	
         	_intrusionVehicle
 		};
@@ -219,6 +221,8 @@ namespace Intrusion.Server
 					_totalVehicleDamage = damage _x.Vehicle;
 					
 					[_x.Vehicle] spawn _self.DeleteVehicleWhenEmpty;
+					
+		        	["Deleting squad vehicle:" + str _x] call LogHandler.Debug;
 				}
 				else {
 					_intrusionVehiclesToKeep pushBack _x;
@@ -250,6 +254,7 @@ namespace Intrusion.Server
 			
 			{
 				if (!alive _x.Vehicle && !isNull _x.OwnerGroup) then {
+		        	["Deleting ownership of destroyed profession vehicle:" + str _x] call LogHandler.Debug;
 					call _x.RemoveOwnership;
 					_collectionModified = true;
 				};
@@ -259,7 +264,6 @@ namespace Intrusion.Server
 				[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 			};
 		};
-		
 		
 		// Gets a squad's intrusion vehciels.
 		// _group (Group): The group that owns the vehicles.

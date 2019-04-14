@@ -55,7 +55,7 @@ namespace Intrusion.Client
         	private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_leader" as Object, "_profession" as Profession, "_marker" as Marker, "_professionType" as ProfessionType];
         	private ["_squadIsNearVehicle" as Boolean, "_group" as Group, "_mapMarkersToKeep" as Array];
 
-			_squadCollection = call PublicVariableHandler.GetSquads;
+			_squadCollection = call PublicVariableHandler.GetSquadCollection;
 			
 			// Remove all groups that no longer exist or is empty
 			_mapMarkersToKeep = [];
@@ -252,7 +252,7 @@ namespace Intrusion.Client
 		
         // Runs the service.
         private static method Run {
-        	waitUntil { call PublicVariableHandler.SquadsHasValue };
+        	waitUntil { call PublicVariableHandler.SquadCollectionHasValue };
 			waitUntil { call PublicVariableHandler.IntrusionVehiclesHasValue };
 
         	while { true } do {

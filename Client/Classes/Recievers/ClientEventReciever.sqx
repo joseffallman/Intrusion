@@ -14,6 +14,13 @@ namespace Intrusion.Client
 {
 	public class ClientEventReciever
 	{
+		private static fields ["_mMissionTime" as MissionTime];
+		
+		public static method Init()
+		{
+			_mMissionTime = new MissionTime;
+		};
+		
 		// Called when a player was set as a new brigade leader.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
@@ -153,9 +160,39 @@ namespace Intrusion.Client
 					};
 				};
 			};
+			
+			// If anyone in the player's group respawned, punish them all...!
+			if (group _player == group player) then {
+				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.Respawn] new RatingLock;
+			};
 		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
+		};
+		
+		// Called when a squad vehicle is spawned.
+		// _group (Group): The owner group of the vehicle.
+		// _professionType (ProfessionType): The profession type of the squad.
+		// _vehicles (Array): A list of the vehicles that was spawned.
+		public static method OnSquadVehiclesSpawned("_group" as Group, "_professionType" as ProfessionType, "_vehicles" as Array)
+		{
+			[_vehicles] call gClient.ClientVehicleHandler.GroupLockVehicles;
+			
+			if (_group == group player) then {
+				[_vehicles] call gClient.ClientVehicleHandler.AddGroupMarkerToVehicles;
+			};
+		};
+		
+		public static method OnAddSquadRating("_rating" as Scalar, "_group" as Group)
+		{
+			if (_group == group player) then {
+				[_rating, _group] call ClientSquadHandler.AddSquadRating;
+			};
+		};
+		
+		public static method OnMissionTimeIsUp()
+		{
+			call MissionEndHandler.PlayEndScene;
 		};
 	};
 };

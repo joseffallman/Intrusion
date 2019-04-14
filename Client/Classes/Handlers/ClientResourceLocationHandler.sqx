@@ -19,7 +19,8 @@ namespace Intrusion.Client
 		private static method OnActionCaptureFlag("_flag" as Object) {
 			private _markerName = _flag getVariable ["MarkerName", ""];
 			
-			["ResourceLocationHandler.SetNewFlagOwner", [_markerName, playerSide]] call Remote.Invoke;
+			//["ResourceLocationHandler.SetNewFlagOwner", [_markerName, playerSide]] call Remote.Invoke;
+			["ServerEventReciever.OnFlagCaptured", [_flag, _markerName, playerSide, player]] call Remote.Invoke;
 		};
 	
 		// Initializes the resource location actions for the first time.
@@ -39,7 +40,7 @@ namespace Intrusion.Client
 				removeAllActions _x.Flag;
 				
 				if (_x.Side != playerSide && vehicle player == player) then {
-					_x.Flag addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }];
+					_x.Flag addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }, nil, 1.5, true, true, "", "true", 5 ];
 				};
 				
 				[_x.MarkerName, _x.Side] call _self.UpdateMarkerColor;

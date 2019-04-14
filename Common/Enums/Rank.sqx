@@ -1,0 +1,70 @@
+/*
+ * Name:	Rank
+ * Date:	2019-04-02
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum describing all ranks.
+ */
+namespace Intrusion.Common
+{
+	public enum Rank
+	{
+		Private = 0,
+		Corpral = 500,
+		Sergeant = 1500,
+		Lieutenant = 2500,
+		Captain = 3500,
+		Major = 5000,
+		Colonel = 7500
+	};
+	
+	public class RankMeta
+	{
+		public static method GetRankText("_rank" as Rank)
+		{
+			private ["_sRank" as String];
+			
+			switch (_rank) do {
+				case Rank.Corpral: { _sRank = "Corpral"; };
+				case Rank.Sergeant: { _sRank = "Sergeant"; };
+				case Rank.Lieutenant: { _sRank = "Lieutenant"; };
+				case Rank.Captain: { _sRank = "Captain"; };
+				case Rank.Major: { _sRank = "Major"; };
+				case Rank.Colonel: { _sRank = "Colonel"; };
+				default { _sRank = "Private"; };
+			};
+			
+			_sRank
+		};
+		
+		public static method GetRankByRating("_rating" as Scalar)
+		{
+		    private ["_rank" as Rank];
+		
+		    _rank = Rank.Private;
+		
+		    if (_rating >= (Rank.Corpral as Scalar)) then {
+		        _rank = Rank.Corpral;
+		    };
+		    if (_rating >= (Rank.Sergeant as Scalar)) then {
+		        _rank = Rank.Sergeant;
+		    };
+		    if (_rating >= (Rank.Lieutenant as Scalar)) then {
+		        _rank = Rank.Lieutenant;
+		    };
+		    if (_rating >= (Rank.Captain as Scalar)) then {
+		        _rank = Rank.Captain;
+		    };
+		    if (_rating >= (Rank.Major as Scalar)) then {
+		        _rank = Rank.Major;
+		    };
+		    if (_rating >= (Rank.Colonel as Scalar)) then {
+		        _rank = Rank.Colonel;
+		    };
+		
+		    _rank 
+	    };
+	};
+};

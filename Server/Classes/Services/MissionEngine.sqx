@@ -27,7 +27,9 @@ namespace Intrusion.Server
 			
 			{
 				_player = _x;
+				
 				[getPlayerUid _player, name _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
+				[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
 			} foreach _allPlayers;
 			
 			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;
@@ -45,10 +47,10 @@ namespace Intrusion.Server
         	call _self.InitPlayerInfoCollection;
         	
         	// Aquire resource collections
-        	call ResourceLocationHandler.AquireAllResourceLocations;
+        	call gServer.ResourceLocationHandler.AquireAllResourceLocations;
 			
 			if (gCommon.MissionParametersHandler.GuerillaGuardingResourceLocations) then {
-				call ResourceLocationHandler.CreateGuerillaUnits;
+				call gServer.ResourceLocationHandler.CreateGuerillaUnits;
 			};
 			
         	// Start the mission counter.
@@ -64,7 +66,7 @@ namespace Intrusion.Server
         	_sideManagers = [];
     		
         	{
-        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, gServer.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter, gCommonConfig.Professions, gCommon.MissionParametersHandler.MatchLengthMinutes] new SideManager;
+        		_sideManagers pushBack [_mServerConfig, _mCommonConfig, _x, _mServer.VehicleSpawner, gServer.SquadHandler, _mServer.MessageHandler, gServer.InventedTechnologiesCollection, gServer.UnitCounter, gCommonConfig.Professions, gCommon.MissionParametersHandler.MatchLengthMinutes, gServer.ResourceLocationHandler] new SideManager;
         	} foreach _mServerConfig.Gameplay.CompetingSides as Side;
         	
         	// Start the free vehicles service
@@ -80,6 +82,7 @@ namespace Intrusion.Server
 					_resourceReport = call _sideManager.PerformTurn;
 					
 					[_resourceReport] call _resourceReportCollection.AddOrUpdateResourceReport;
+					//call gServer.SquadHandler.LogContent;
 				} foreach _sideManagers as SideManager;
 				
 				["ClientEventReciever.OnResourceReportCollectionUpdated", [_resourceReportCollection]] call Remote.Invoke;

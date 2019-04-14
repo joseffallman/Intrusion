@@ -1,0 +1,27 @@
+/*
+ * Name:	MissionTime
+ * Date:	2019-04-11
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the mission time.
+ */
+namespace Intrusion.Common
+{
+	public class MissionTime : IMissionTime
+	{
+		// Gets the time in seconds since mission start.
+		// Returns time since mission start in seconds.
+		public method Scalar GetMissionTime()
+		{
+			private _time = time;
+			
+			if (isMultiplayer) then {
+				_time = serverTime;	
+			};
+			
+			_time
+		};
+	};
+};

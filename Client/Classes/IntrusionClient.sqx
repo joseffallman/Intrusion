@@ -28,6 +28,8 @@ namespace Intrusion.Client
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;
 			_self.GiveOrderService = new GiveOrderService;
 			_self.TaskHandler = new TaskHandler;
+			_self.ClientVehicleHandler = new ClientVehicleHandler;
+			_self.RatingService = [new SquadConfig, new MissionTime] new RatingService;
 		};
 	
 		public property ISquadMarkersConfig SquadMarkersConfig { get; private set; };
@@ -36,5 +38,7 @@ namespace Intrusion.Client
 		public property DisplayHandler DisplayHandler { get; private set; };
 		public property GiveOrderService GiveOrderService { get; private set; };
 		public property TaskHandler TaskHandler { get; private set; };
+		public property ClientVehicleHandler ClientVehicleHandler { get; private set; };
+		public property RatingService RatingService { get; private set; };
 	};
 };

@@ -27,6 +27,7 @@ class IntBaseDialog_Button : RscButton
 	y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
 	w = 4 * GUI_GRID_W;
 	h = 2 * GUI_GRID_H;
+	colorDisabled[] = { 0, 0, 1, 0.7 }
 	action = " hint ""Button pressed!""; ";
 };
 

@@ -15,10 +15,11 @@ namespace Intrusion.Server
 {
 	public class ObservationService
 	{
-		private static fields ["_mObservations" as Array, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
+		private static fields ["_mMissionTime" as IMissionTime, "_mObservations" as Array, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
 		
 		// Initializes the observation service.
 		public static method Init("_targetHandler" as TargetHandler) {
+			_mMissionTime = new MissionTime;
 			_mTargetHandler = _targetHandler;
 			_mCurrentId = 0;
 			_mObservations = [];
@@ -27,7 +28,7 @@ namespace Intrusion.Server
 		// Marks all observations in the observation collection as deleted.
 		private static method MarkObservationsAsDeleted() {
 			{
-				if (call Functions.Time > _x.Time + 45) then {
+				if (call _mMissionTime.GetMissionTime > _x.Time + 45) then {
 					_x.MarkedAsDeleted = true;
 				};
 			} foreach _mObservations as Observation;
@@ -112,17 +113,18 @@ namespace Intrusion.Server
 			
 			if (isNull _existingObservation) then {
 				_mCurrentId = _mCurrentId + 1;
-				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call Functions.Time] new Observation;
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime] new Observation;
 			
 				_mObservations pushBack _newObservation;
 			} else {
-				_existingObservation.Time = call Functions.Time;
+				_existingObservation.Time = call _mMissionTime.GetMissionTime;
 				[_existingObservation, _target] call _self.PrioritizeObservation;
 			};
 		};
 		
         // Runs the service.
-        private static method Run() {
+        private static method Run()
+        {
         	private ["_targets" as Array, "_mapObservations" as Array];
         	
         	_mCurrentId = 0;

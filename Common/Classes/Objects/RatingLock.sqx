@@ -1,0 +1,35 @@
+/*
+ * Name:	RatingLock
+ * Date:	2019-04-05
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a rating lock for a player.
+ */
+namespace Intrusion.Common
+{
+	public class RatingLock
+	{
+		private fields ["_mMissionTime" as IMissionTime];
+	
+		// Creates a RatingLock object.
+		public constructor("_lockedUntilTime" as Scalar, "_reason" as RatingLockReason) {
+			_mMissionTime = new MissionTime;
+			_self.LockedUntilTime = _lockedUntilTime;
+			_self.Reason = _reason;
+		};
+		
+		// Gets the time when the player's rating lock is released.
+		public property Scalar LockedUntilTime { get; private set; };
+		
+		// Gets the reason for the rating lock.
+		public property RatingLockReason Reason { get; private set; };
+		
+		// Gets whether the lock is active or not.
+		public method Boolean IsActive()
+		{
+			(call _mMissionTime.GetMissionTime) > _self.LockedUntilTime
+		};
+	};
+};

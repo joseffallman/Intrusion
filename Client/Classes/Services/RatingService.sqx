@@ -1,0 +1,65 @@
+/*
+ * Name:	RatingService
+ * Date:	2019-04-05
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service checking status for squad rating.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class RatingService : IService
+	{
+		private fields ["_mSquadConfig" as ISquadConfig, "_mMissionTime" as IMissionTime];
+	
+		// Creates a RatingService object.
+		public constructor("_squadConfig" as ISquadConfig, "_missionTime" as IMissionTime)
+		{
+			_self.IsRunning = false;
+			_mSquadConfig = _squadConfig;
+			_mMissionTime = _missionTime;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Run()
+		{
+			private ["_okDistances" as Boolean, "_ratingLock" as RatingLock];
+			
+			while { true } do
+			{
+				_ratingLock = ClientState.RatingLock;
+				
+				if (isNull _ratingLock || { !(call _ratingLock.IsActive) || _ratingLock.Reason == RatingLockReason.GroupIsSplit }) then
+				{
+					_okDistances = true;
+					
+					{
+						if (vehicle _x distance vehicle leader group player > _mSquadConfig.RatingSquadLeaderMaxDistance) then {
+							_okDistances = false;
+						};
+					} foreach units group player;
+						
+					if (_okDistances) then {
+						ClientState.RatingLock = classNull;
+					}
+					else {
+						ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.GroupIsSplit] new RatingLock;
+					};
+				};
+				
+				sleep 5;
+			};
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};

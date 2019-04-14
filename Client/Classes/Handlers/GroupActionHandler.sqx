@@ -67,7 +67,7 @@ namespace Intrusion.Client
 			private ["_previousGroup" as Group, "_squadCollection" as SquadCollection, "_mySquad" as Squad, "_profession" as Profession, "_maxPlayers" as Scalar];
 			
 			_maxPlayers = 0;
-			_squadCollection = call PublicVariableHandler.GetSquads;
+			_squadCollection = call PublicVariableHandler.GetSquadCollection;
 			_mySquad = [group player] call _squadCollection.GetSquadByGroup;
 			
 			if (!isNull _mySquad) then {

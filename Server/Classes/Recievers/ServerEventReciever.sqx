@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
@@ -42,6 +43,23 @@ namespace Intrusion.Server
 			if (count units _oldGroup == 0) then {
 				call gServer.SquadHandler.RemoveEmptySquads;
 			};
+		};
+		
+		// Called when a JIP player entered the game.
+		public static method OnJipPlayerEnteredGame("_player" as Object)
+		{
+			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
+		};
+		
+		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
+		{
+			[_markerName, _capturedBySide] call gServer.ResourceLocationHandler.SetNewFlagOwner;
+			["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+		};
+		
+		public static method OnMissionTimeIsUp()
+		{
+		
 		};
 	};
 };

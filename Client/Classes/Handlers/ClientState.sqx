@@ -5,8 +5,11 @@
  * Author:  Engima
  *
  * Description:
- * Handles different client states.
+ * Handles different client states. Used to store information about the local player that does not need to be persistent if player looses connection and logs in again.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class ClientState
@@ -17,6 +20,8 @@ namespace Intrusion.Client
 			_self.IsBrigadeLeader = false;
 			_self.IsSquadLeader = true;
 			_self.MyGroup = grpNull;
+			_self.CurrentRank = Rank.Private;
+			_self.RatingLock = classNull;
 		};
 	
 		public static property Boolean IsOnCorrectSide { get; set; };
@@ -26,5 +31,9 @@ namespace Intrusion.Client
 		public static property Boolean IsSquadLeader { get; set; };
 		
 		public static property Group MyGroup { get; set; };
+		
+		public static property Rank CurrentRank { get; set; };
+		
+		public static property RatingLock RatingLock { get; set; };
 	};
 };

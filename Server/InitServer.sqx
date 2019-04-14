@@ -2,12 +2,9 @@ call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\ProfessionVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfigFactory.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
@@ -23,8 +20,8 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Handlers\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
@@ -38,12 +35,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationServi
 call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitCounter.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiUnitBalancer.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
+call compile preprocessFileLineNumbers "Ai\InitAi.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
 
 using Intrusion.Common;
@@ -68,35 +60,13 @@ call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
 
-if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gServerConfig = [new GameplayProdConfig, new ProfessionVehiclesProdConfig] new ServerConfig;
-}
-else {
-	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesTestConfig] new ServerConfig;
-	}
-	else { // Dev
-		gServerConfig = [new GameplayTestConfig, new ProfessionVehiclesDevConfig] new ServerConfig;
-	};
-};
-
-gServer = [new AiUnitCounter] new IntrusionServer;
+gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
+gServer = [] new IntrusionServer;
 
 /* Handlers */
-[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
+//[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
 [gServer.TargetHandler] call ObservationService.Init;
-
-/* AI */
-
-[] spawn {
-	private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
-	
-	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
-	_aiService = [_aiUnitBalancer, gServerConfig.Gameplay, new AiUnitsConfig, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.Professions, gServer.SquadHandler, gCommon.MissionParametersHandler.AiSkillLevel] new AiService;
-	sleep 5;
-	call _aiService.RunAsync;
-};
 
 #endregion

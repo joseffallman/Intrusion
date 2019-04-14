@@ -1,18 +1,30 @@
-call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\SkillLevel.sqx";
+call compile preprocessFileLineNumbers "Common\Enums\Rank.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\DebugConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ReleaseSettings.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfigFactory.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\SquadConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\MissionParametersHandler.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\MissionTime.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleClassNamesInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocation.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ResourceLocationCollection.sqx";
@@ -32,34 +44,33 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\TechnologyInfo.sq
 call compile preprocessFileLineNumbers "Common\Classes\Objects\Order.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\OrderCollection.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ValuedObject.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 
 using Intrusion.Common;
 
 #region Common Objects
 
+/****** Mission Release Settings ***********/
+
+ReleaseSettings.Mode = ReleaseMode.Production;
+ReleaseSettings.ShowTutorials = true;
+ReleaseSettings.LogLevelFile = LogLevel.Debug;
+ReleaseSettings.LogLevelScreen = LogLevel.Warning;
+
+/*******************************************/
+
 // Enum Metas
 call TechnologyMeta.Init;
 
 // Configs
-call DebugConfig.Init;
 call ProfessionTypeMeta.Init;
 
-if (DebugConfig.Mode == MissionConfigMode.Production) then {
-	gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyProdConfig, new VehicleClassNamesConfig] new CommonConfig;
-}
-else {
-	if (DebugConfig.Mode == MissionConfigMode.Test) then {
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyTestConfig, new VehicleClassNamesConfig] new CommonConfig;
-	}
-	else { // Dev
-		gCommonConfig = [new MapMarkersConfig, new ProfessionConfig, new TechnologyDevConfig, new VehicleClassNamesConfig] new CommonConfig;
-	};
-};
-
+gCommonConfig = [ReleaseSettings.Mode] call CommonConfigFactory.CreateCommonConfig as ICommonConfig;
 gCommon = new IntrusionCommon;
 
 // Handlers
-[DebugConfig.LogLevelFile, DebugConfig.LogLevelScreen] call LogHandler.Init;
+[ReleaseSettings.LogLevelFile, ReleaseSettings.LogLevelScreen] call LogHandler.Init;
 
 #endregion
