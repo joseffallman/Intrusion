@@ -52,10 +52,25 @@ namespace Intrusion.Server
 			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
 		};
 		
+		// Called when a unit (player or AI) captures a flag.
+		// _flag (Object): The flag that was captured.
+		// _markerName (String): The name of the resource location marker.
+		// _capturedBySide (Side): The side that captured the flag.
+		// _capturedByUnit (Object): The unit that captured the flag.
 		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
 		{
+			private ["_rating" as Scalar];
+			
 			[_markerName, _capturedBySide] call gServer.ResourceLocationHandler.SetNewFlagOwner;
-			["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+			
+			if (isPlayer _capturedByUnit) then {
+				["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+			}
+			else {
+				_rating = (group _capturedByUnit) getVariable ["Rating", 0];
+				_rating = _rating + 200;
+				(group _capturedByUnit) setVariable ["Rating", _rating];
+			};
 		};
 		
 		// Called when mission time is up.
