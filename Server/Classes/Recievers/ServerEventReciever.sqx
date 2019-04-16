@@ -42,6 +42,7 @@ namespace Intrusion.Server
 		{
 			if (count units _oldGroup == 0) then {
 				call gServer.SquadHandler.RemoveEmptySquads;
+				deleteGroup _oldGroup;
 			};
 		};
 		
