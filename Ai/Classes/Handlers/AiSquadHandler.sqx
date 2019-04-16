@@ -7,16 +7,27 @@
  * Description:
  * Handles all AI squads.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Ai
 {
 	public class AiSquadHandler : IAiSquadHandler
 	{
-		private fields ["_mSquads" as Array /* of AiSquad */];
+		private fields ["_mSquads" as Array /* of AiSquad */, "_mProfessionConfig" as IProfessionConfig];
 		
 		// Creates a AiSquadHandler object.
 		public constructor {
 			_mSquads = [];
+			
+			_self.AiWarriorTypes = [
+				ProfessionType.Motorized,
+				ProfessionType.Mechanized,
+				ProfessionType.Armored,
+			];
 		};
+		
+		public property Array AiWarriorTypes { get; private set; };
 		
 		// Adds an AI squad to the AI squad handler.
 		// _aiSquad (AiSquad): The AI squad to add.
@@ -63,6 +74,36 @@ namespace Intrusion.Ai
 		public method Array GetAllSquads()
 		{
 			_mSquads
+		};
+		
+		// Gets a random an possible to implement profession type for the group.
+		// _side (Side): The side of the group.
+		// _unitCount (Scalar): The number of units in the group.
+		public method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
+		{
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
+			
+			_ok = false;
+			_tries = 0;
+			
+			while { !_ok && _tries < 25 } do {
+				_professionType = selectRandom _self.AiWarriorTypes;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
+				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
+				
+				if (_ok) then {
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
+				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
+			};
+
+			_professionType
 		};
 	};
 };

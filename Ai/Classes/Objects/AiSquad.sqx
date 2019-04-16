@@ -20,16 +20,29 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mAiSquadHandler" as IAiSquadHandler];
+		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+		public constructor(
+			"_unitsConfig" as IAiUnitsConfig, 
+			"_resourceLocationHandler" as IResourceLocationHandler, 
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_vehicleSpawner" as IVehicleSpawner, 
+			"_side" as Side, 
+			"_noOfUnits" as Scalar, 
+			"_skillLevel" as SkillLevel, 
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_aiSquadHandler" as IAiSquadHandler,
+			"_squadHandler" as ISquadHandler)
 		{
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mAiSquadHandler = _aiSquadHandler;
+			_mSquadHandler = _squadHandler;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -42,6 +55,8 @@ namespace Intrusion.Ai
 			_mMovingToPos = getMarkerPos _mMapMarkerInfo.BaseMarkerName;
 			_mLastPos = [];
 			_mLastPosTime = 0;
+			_mWannaBeProfessionType = ProfessionType.Undefined;
+			_mProfessionType = ProfessionType.Undefined;
 			
 			for "_i" from 1 to _noOfUnits do {
 				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
@@ -611,10 +626,44 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		// Tries to set the squad's profession if it is still Infantry.
+		private method SetSquadProfession()
+		{
+			private ["_rating" as Scalar];
+			private ["_squadCollection" as SquadCollection];
+		
+			if (_mProfessionType == ProfessionType.Undefined) then
+			{
+				// Check that the squad has selected the profession type it wants to be.
+				if (_mWannaBeProfessionType == ProfessionType.Undefined) then {
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _mAiSquadHandler.GetRandomProfessionType;
+				};
+				
+				// Try to select the wanted profession type
+				_squadCollection = call PublicVariableHandler.GetSquadCollection;
+				
+				if ([side _self.Group, _mWannaBeProfessionType] call _squadCollection.ProfessionTypeAvailable) then
+				{
+					_rating = _self.Group getVariable ["Rating", 0];
+					
+					if ([side _self.Group, _mWannaBeProfessionType, _rating] call _squadCollection.ProfessionTypeSelectable) then {
+						[_self.Group, _mWannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
+						_mProfessionType = _mWannaBeProfessionType;
+					};
+					
+				}
+				else {
+					// If profession type is not available, then select another profession type
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _mAiSquadHandler.GetRandomProfessionType;
+				};
+			};
+		};
+		
 		// Gives the AI squad an opportunity to act.
 		public method Act()
 		{
 			call _self.UpdateTracking;
+			call _self.SetSquadProfession;
 			call _self.UpdateTargetResourceLocation;
 			call _self.RespawnIfDead;
 			call _self.SetIdleIfActionTimedOut;

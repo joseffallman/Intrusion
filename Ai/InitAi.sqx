@@ -21,7 +21,6 @@ using Intrusion.Ai;
 		new AiUnitsConfig, 
 		gCommonConfig.MapMarkers, 
 		gServer.VehicleSpawner, 
-		gCommonConfig.Professions, 
 		gServer.SquadHandler, 
 		gCommon.MissionParametersHandler.AiSkillLevel, 
 		gServer.ResourceLocationHandler,
