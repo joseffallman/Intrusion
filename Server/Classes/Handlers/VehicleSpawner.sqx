@@ -258,7 +258,7 @@ namespace Intrusion.Server
 			_vehicleDeleted = false;
 			
 			{
-				if (alive _x.Vehicle && _x.Side == _side && _x.OwnerProfession != ProfessionType.Undefined && isNull _x.OwnerGroup) then {
+				if (alive _x.Vehicle && _x.Side == _side && _x.OwnerProfession != ProfessionType.Undefined && (isNull _x.OwnerGroup || count units _x.OwnerGroup == 0)) then {
 					_totalCost = _totalCost + floor (_totalCost * (1 - (damage _x.Vehicle)));
 					[_x.Vehicle] spawn _self.DeleteVehicleWhenEmpty;
 					_vehicleDeleted = true;
