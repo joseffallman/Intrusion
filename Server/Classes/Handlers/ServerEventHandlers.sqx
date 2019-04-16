@@ -55,7 +55,7 @@ namespace Intrusion.Server
 				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then {
 					if (!isPlayer _killer) then {
 						_rating = (group _killer) getVariable ["Rating", 0];
-						_rating = _rating + 200;
+						_rating = _rating + 200 * (1 + (count units group _killer)) * 0.5;
 						(group _killer) setVariable ["Rating", _rating];
 			        	["Group " + str (group _killer) + " recieved a rating of 200 (to " + str ((group _killer) getVariable ["Rating", 0]) + ") for killing " + name _unit] call LogHandler.Debug;
 					};

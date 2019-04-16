@@ -20,13 +20,14 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mAiSquadHandler" as IAiSquadHandler];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
 		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
 		public constructor(
-			"_unitsConfig" as IAiUnitsConfig, 
+			"_unitsConfig" as IAiUnitsConfig,
+			"_professionConfig" as IProfessionConfig,			
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
 			"_vehicleSpawner" as IVehicleSpawner, 
@@ -34,15 +35,14 @@ namespace Intrusion.Ai
 			"_noOfUnits" as Scalar, 
 			"_skillLevel" as SkillLevel, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			"_aiSquadHandler" as IAiSquadHandler,
 			"_squadHandler" as ISquadHandler,
 			"_unitSpawner" as IUnitSpawner)
 		{
+			_mProfessionConfig = _professionConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
-			_mAiSquadHandler = _aiSquadHandler;
 			_mSquadHandler = _squadHandler;
 			_mUnitSpawner = _unitSpawner;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
@@ -631,6 +631,36 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		// Gets a random an possible to implement profession type for the group.
+		// _side (Side): The side of the group.
+		// _unitCount (Scalar): The number of units in the group.
+		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
+		{
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
+			
+			_ok = false;
+			_tries = 0;
+			
+			while { !_ok && _tries < 25 } do {
+				_professionType = selectRandom AiSquadHandler.AiWarriorTypes;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
+				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
+				
+				if (_ok) then {
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
+				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
+			};
+
+			_professionType
+		};
+		
 		// Tries to set the squad's profession if it is still Infantry.
 		private method SetSquadProfession()
 		{
@@ -641,7 +671,7 @@ namespace Intrusion.Ai
 			{
 				// Check that the squad has selected the profession type it wants to be.
 				if (_mWannaBeProfessionType == ProfessionType.Undefined) then {
-					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _mAiSquadHandler.GetRandomProfessionType;
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _self.GetRandomProfessionType;
 				};
 				
 				// Try to select the wanted profession type
@@ -659,7 +689,7 @@ namespace Intrusion.Ai
 				}
 				else {
 					// If profession type is not available, then select another profession type
-					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _mAiSquadHandler.GetRandomProfessionType;
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _self.GetRandomProfessionType;
 				};
 			};
 		};

@@ -99,10 +99,9 @@ namespace Intrusion.Common
 			_selectable = false;
 			_available = [_side, _professionType] call _self.ProfessionTypeAvailable;
 			
-			
 			if (_available) then {
 				_profession = [_professionType] call gCommonConfig.Professions.GetProfession;
-				_available = _rating >= (_profession.RequiredRank as Scalar);
+				_selectable = _rating >= (_profession.RequiredRank as Scalar);
 			};
 			
 			_selectable

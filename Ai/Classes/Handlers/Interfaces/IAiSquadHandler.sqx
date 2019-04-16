@@ -30,10 +30,5 @@ namespace Intrusion.Ai
 		// Gets all AI squads.
 		// Returns (Array): All AI squads as an array of AiSquad.
 		method Array GetAllSquads();
-		
-		// Gets a random an possible to implement profession type for the group.
-		// _side (Side): The side of the group.
-		// _unitCount (Scalar): The number of units in the group.
-		method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar);
 	};
 };

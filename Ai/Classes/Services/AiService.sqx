@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
-		private fields ["_mResourceLocationHandler" as IResourceLocationHandler];
+		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mProfessionConfig" as IProfessionConfig];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mUnitSpawner" as IUnitSpawner];
 		
 		// Creates a AiService object.
@@ -33,7 +33,8 @@ namespace Intrusion.Ai
 			"_skillLevel" as SkillLevel, 
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			"_unitSpawner" as IUnitSpawner)
+			"_unitSpawner" as IUnitSpawner,
+			"_professionConfig" as IProfessionConfig)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -46,6 +47,7 @@ namespace Intrusion.Ai
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mUnitSpawner = _unitSpawner;
+			_mProfessionConfig = _professinConfig;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -76,8 +78,10 @@ namespace Intrusion.Ai
         		["_unitCount: " + str _unitCount] call LogHandler.Debug;
         	
 				if (_existingUnitsCount < _maxUnitsCount) then {
+				
 					_aiSquad = [
-						_mUnitsConfig, 
+						_mUnitsConfig,
+						_mProfessionConfig,
 						_mResourceLocationHandler, 
 						_mMapMarkersConfig, 
 						_mVehicleSpawner, 
@@ -85,7 +89,6 @@ namespace Intrusion.Ai
 						_unitCount, 
 						_mSkillLevel, 
 						_mInventedTechnologiesCollection, 
-						_mAiSquadHandler,
 						_mSquadHandler,
 						_mUnitSpawner] new AiSquad;
 					
