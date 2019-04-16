@@ -649,8 +649,8 @@ namespace Intrusion.Ai
 					if ([side _self.Group, _mWannaBeProfessionType, _rating] call _squadCollection.ProfessionTypeSelectable) then {
 						[_self.Group, _mWannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
 						_mProfessionType = _mWannaBeProfessionType;
+		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mProfessionType + "'."] call LogHandler.Debug;
 					};
-					
 				}
 				else {
 					// If profession type is not available, then select another profession type
