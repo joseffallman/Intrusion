@@ -49,7 +49,8 @@ namespace Intrusion.Server
 		// _player (Object): The unit of the player that entered.
 		public static method OnJipPlayerEnteredGame("_player" as Object)
 		{
-			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
+			[_player] call ServerEventHandlers.AddRatingEventHandlerToPlayer;
+			[_player] call ServerEventHandlers.AddKilledEventHandler;
 		};
 		
 		// Called when a unit (player or AI) captures a flag.

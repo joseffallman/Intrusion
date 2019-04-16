@@ -61,5 +61,19 @@ namespace Intrusion.Server
 				};
 			}];
 		};
+		
+		// Adds a rating event handler to a player.
+		// _player (Object): The player to add the rating event handler to.
+		public static method AddRatingEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["HandleRating", {
+				params ["_unit" as Object, "_rating" as Scalar];
+				
+				["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
+				//[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
+				
+				0
+			}];
+		};
 	};
 };
