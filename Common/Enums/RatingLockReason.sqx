@@ -13,6 +13,7 @@ namespace Intrusion.Common
 	{
 		GroupIsSplit,
 		Respawn,
-		LostVehicle
+		LostVehicle,
+		TeamKill
 	};
 };

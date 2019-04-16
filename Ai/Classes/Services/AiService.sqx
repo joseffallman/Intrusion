@@ -18,10 +18,22 @@ namespace Intrusion.Ai
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mUnitSpawner" as IUnitSpawner];
 		
 		// Creates a AiService object.
-		public constructor("_aiSquadHandler" as IAiSquadHandler, "_unitBalancer" as IAiUnitBalancer, "_gameplayConfig" as IGameplayConfig, "_unitsConfig" as IAiUnitsConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_squadHandler" as ISquadHandler, "_skillLevel" as SkillLevel, "_resourceLocationHandler" as IResourceLocationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+		public constructor(
+			"_aiSquadHandler" as IAiSquadHandler, 
+			"_unitBalancer" as IAiUnitBalancer, 
+			"_gameplayConfig" as IGameplayConfig, 
+			"_unitsConfig" as IAiUnitsConfig, 
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_vehicleSpawner" as IVehicleSpawner, 
+			"_professinConfig" as IProfessionConfig, 
+			"_squadHandler" as ISquadHandler, 
+			"_skillLevel" as SkillLevel, 
+			"_resourceLocationHandler" as IResourceLocationHandler, 
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_unitSpawner" as IUnitSpawner)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -33,6 +45,7 @@ namespace Intrusion.Ai
 			_mSkillLevel = _skillLevel;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mUnitSpawner = _unitSpawner;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -73,7 +86,8 @@ namespace Intrusion.Ai
 						_mSkillLevel, 
 						_mInventedTechnologiesCollection, 
 						_mAiSquadHandler,
-						_mSquadHandler] new AiSquad;
+						_mSquadHandler,
+						_mUnitSpawner] new AiSquad;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;

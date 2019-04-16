@@ -43,5 +43,38 @@ namespace Intrusion.Server
 				false
 			}];
 		};
+		
+		// Adds the "killed" event handler on a unit.
+		public static method AddKilledEventHandler("_unit" as Object)
+		{
+			_unit addEventHandler ["Killed", {
+				params ["_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean];
+				private ["_rating" as Scalar];
+				
+				// If the killer is an enemy and the killer is an AI, add killed rating.
+				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then {
+					if (!isPlayer _killer) then {
+						_rating = (group _killer) getVariable ["Rating", 0];
+						_rating = _rating + 200;
+						(group _killer) setVariable ["Rating", _rating];
+			        	["Group " + str (group _killer) + " recieved a rating of 200 (to " + str ((group _killer) getVariable ["Rating", 0]) + ") for killing " + name _unit] call LogHandler.Debug;
+					};
+				};
+			}];
+		};
+		
+		// Adds a rating event handler to a player.
+		// _player (Object): The player to add the rating event handler to.
+		public static method AddRatingEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["HandleRating", {
+				params ["_unit" as Object, "_rating" as Scalar];
+				
+				["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
+				//[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
+				
+				0
+			}];
+		};
 	};
 };

@@ -45,7 +45,7 @@ namespace Intrusion.Client
 		};
 		
 		// Adds rating to all members of a squad.
-		// _rating (Scalar): The amout of rating to add.
+		// _rating (Scalar): The amout of rating to add for a one person group. More for larger groups.
 		// _group (Group): The squad/group to add rating to.
 		public static method AddSquadRating("_rating" as Scalar, "_group" as Group)
 		{
@@ -58,7 +58,7 @@ namespace Intrusion.Client
 			
 				if (isNull _ratingLock || { !(call _ratingLock.IsActive) }) then
 				{
-					_calculatedRating = (_rating * count units _group);
+					_calculatedRating = (_rating * (count units _group + 1) * 0.5);
 	
 					if (_calculatedRating < 0) then {
 						_calculatedRating = 0;

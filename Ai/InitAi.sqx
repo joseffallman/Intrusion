@@ -24,7 +24,8 @@ using Intrusion.Ai;
 		gServer.SquadHandler, 
 		gCommon.MissionParametersHandler.AiSkillLevel, 
 		gServer.ResourceLocationHandler,
-		gServer.InventedTechnologiesCollection] new AiService;
+		gServer.InventedTechnologiesCollection,
+		gServer.UnitSpawner] new AiService;
 	
 	call _aiService.RunAsync;
 };

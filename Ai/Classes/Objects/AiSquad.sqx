@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mAiSquadHandler" as IAiSquadHandler];
@@ -35,7 +35,8 @@ namespace Intrusion.Ai
 			"_skillLevel" as SkillLevel, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_aiSquadHandler" as IAiSquadHandler,
-			"_squadHandler" as ISquadHandler)
+			"_squadHandler" as ISquadHandler,
+			"_unitSpawner" as IUnitSpawner)
 		{
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
@@ -43,6 +44,7 @@ namespace Intrusion.Ai
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mAiSquadHandler = _aiSquadHandler;
 			_mSquadHandler = _squadHandler;
+			_mUnitSpawner = _unitSpawner;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -59,7 +61,8 @@ namespace Intrusion.Ai
 			_mProfessionType = ProfessionType.Undefined;
 			
 			for "_i" from 1 to _noOfUnits do {
-				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+				//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 			};
 			
 			_self.Members = [];
@@ -482,7 +485,8 @@ namespace Intrusion.Ai
 				_oldUnits = _self.Members;
 				
 				for "_i" from 1 to (count _oldUnits) do {
-					_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+					[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+					//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 				};
 				
 				{
@@ -551,7 +555,8 @@ namespace Intrusion.Ai
 							_x setDamage 0;
 						}
 						else {
-							_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup];							
+							[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup] call _mUnitSpawner.CreateUnit;
+							//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup];							
 						};						
 					} foreach _self.Members as Object;
 					

@@ -812,6 +812,10 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IUnitSpawner.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Interfaces\IUnitSpawner.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InventedTechnologiesCollection.sqx" IsExpanded="false" FileName="Server\Classes\Objects\InventedTechnologiesCollection.sqx">
@@ -859,6 +863,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="UnitCounter.sqx" IsExpanded="false" FileName="Server\Classes\Objects\UnitCounter.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="UnitSpawner.sqx" IsExpanded="false" FileName="Server\Classes\Objects\UnitSpawner.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
