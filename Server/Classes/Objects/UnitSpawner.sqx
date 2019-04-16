@@ -21,7 +21,7 @@ namespace Intrusion.Server
 		{
 			private ["_unit" as Object];
 			
-			_unit = _group createUnit [_className, _position];
+			_unit = _group createUnit [_className, _position, [], 5, "NONE"];
 			
 			[_unit] call ServerEventHandlers.AddKilledEventHandler;
 

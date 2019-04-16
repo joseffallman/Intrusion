@@ -57,6 +57,7 @@ namespace Intrusion.Server
 						_rating = (group _killer) getVariable ["Rating", 0];
 						_rating = _rating + 200;
 						(group _killer) setVariable ["Rating", _rating];
+			        	["Group " + str (group _killer) + " recieved a rating of 200 (to " + str ((group _killer) getVariable ["Rating", 0]) + ") for killing " + name _unit] call LogHandler.Debug;
 					};
 				};
 			}];

@@ -72,6 +72,7 @@ namespace Intrusion.Server
 				_rating = (group _capturedByUnit) getVariable ["Rating", 0];
 				_rating = _rating + 200;
 				(group _capturedByUnit) setVariable ["Rating", _rating];
+	        	["Group " + str (group _capturedByUnit) + " recieved a rating of 200 (to " + str ((group _capturedByUnit) getVariable ["Rating", 0]) + ") for capturing resource location " + _markerName] call LogHandler.Debug;
 			};
 		};
 		
