@@ -20,6 +20,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";

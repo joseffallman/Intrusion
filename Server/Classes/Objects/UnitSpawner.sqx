@@ -1,0 +1,31 @@
+/*
+ * Name:	UnitSpawner
+ * Date:	2019-04-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all Intrusion's unit spawning.
+ */
+namespace Intrusion.Server
+{
+	public class UnitSpawner : IUnitSpawner
+	{
+		// Creates a UnitSpawner object.
+		public constructor()
+		{
+		};
+		
+		// Creates a unit and adds the "Killed" event handler to it.
+		public method CreateUnit("_className" as String, "_position" as Array, "_group" as Group)
+		{
+			private ["_unit" as Object];
+			
+			_unit = _group createUnit [_className, _position];
+			
+			[_unit] call ServerEventHandlers.AddKilledEventHandler;
+
+			_unit
+		};
+	};
+};

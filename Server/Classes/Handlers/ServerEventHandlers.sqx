@@ -43,5 +43,23 @@ namespace Intrusion.Server
 				false
 			}];
 		};
+		
+		// Adds the "killed" event handler on a unit.
+		public static method AddKilledEventHandler("_unit" as Object)
+		{
+			_unit addEventHandler ["Killed", {
+				params ["_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean];
+				private ["_rating" as Scalar];
+				
+				// If the killer is an enemy and the killer is an AI, add killed rating.
+				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then {
+					if (!isPlayer _killer) then {
+						_rating = (group _killer) getVariable ["Rating", 0];
+						_rating = _rating + 200;
+						(group _killer) setVariable ["Rating", _rating];
+					};
+				};
+			}];
+		};
 	};
 };
