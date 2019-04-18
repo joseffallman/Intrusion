@@ -14,18 +14,21 @@ namespace Intrusion.Client
 {
 	public class MissionEndHandler
 	{
-		// Plays the end mission scene.
-		public static method PlayEndScene()
+		public static method EndGame()
 		{
-			private ["_resourceLocationCollection" as ResourceLocationCollection, "_winnersLocation" as ResourceLocation];
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_winnersLocation" as ResourceLocation, "_isVictory" as Boolean];
 		
+			_isVictory = false;
+			
 			if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then
 			{
 				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 				_winnersLocation = call _resourceLocationCollection.GetWinnersLocation;
 				
-				["END1", _winnersLocation.Side == playerSide] spawn BIS_fnc_endMission;
+				_isVictory = _winnersLocation.Side == playerSide;
 			};
+			
+			["END1", _isVictory] spawn BIS_fnc_endMission;
 		};
 	};
 };

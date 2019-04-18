@@ -17,17 +17,34 @@ namespace Intrusion.Ai
 {
 	public class AiSquad
 	{
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
+		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
-		public constructor("_unitsConfig" as IAiUnitsConfig, "_resourceLocationHandler" as IResourceLocationHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_side" as Side, "_noOfUnits" as Scalar, "_skillLevel" as SkillLevel)
+		public constructor(
+			"_unitsConfig" as IAiUnitsConfig,
+			"_professionConfig" as IProfessionConfig,			
+			"_resourceLocationHandler" as IResourceLocationHandler, 
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_vehicleSpawner" as IVehicleSpawner, 
+			"_side" as Side, 
+			"_noOfUnits" as Scalar, 
+			"_skillLevel" as SkillLevel, 
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_squadHandler" as ISquadHandler,
+			"_unitSpawner" as IUnitSpawner)
 		{
+			_mProfessionConfig = _professionConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mSquadHandler = _squadHandler;
+			_mUnitSpawner = _unitSpawner;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -40,9 +57,12 @@ namespace Intrusion.Ai
 			_mMovingToPos = getMarkerPos _mMapMarkerInfo.BaseMarkerName;
 			_mLastPos = [];
 			_mLastPosTime = 0;
+			_mWannaBeProfessionType = ProfessionType.Undefined;
+			_mProfessionType = ProfessionType.Undefined;
 			
 			for "_i" from 1 to _noOfUnits do {
-				_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+				//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 			};
 			
 			_self.Members = [];
@@ -465,7 +485,8 @@ namespace Intrusion.Ai
 				_oldUnits = _self.Members;
 				
 				for "_i" from 1 to (count _oldUnits) do {
-					_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+					[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+					//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 				};
 				
 				{
@@ -477,6 +498,29 @@ namespace Intrusion.Ai
 				_self.Members = units _self.Group;
 				
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				
+				// Check if launchers are invented, and in that case equip AI with launchers.
+				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
+				{
+					private ["_launcherClassName" as String, "_magazineClassName" as String];
+					
+					_launcherClassName = "launch_NLAW_F";
+					_magazineClassName = "NLAW_F";
+					
+					if (side _self.Group == west) then {
+						_launcherClassName = "launch_RPG32_F";
+						_magazineClassName = "RPG32_F";
+					};
+					
+					{
+						if (random 100 > 33) then {
+							_x addBackpack "B_Kitbag_cbr";
+							(unitBackpack _x) addMagazineCargo [_magazineClassName, 1];
+							_x addWeapon _launcherClassName;
+						};
+					} foreach _self.Members as Object;
+				};
+				
 				_mState = AiSquadState.Idle;
 			};
 		};
@@ -511,7 +555,8 @@ namespace Intrusion.Ai
 							_x setDamage 0;
 						}
 						else {
-							_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup];							
+							[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup] call _mUnitSpawner.CreateUnit;
+							//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _tempGroup];							
 						};						
 					} foreach _self.Members as Object;
 					
@@ -586,10 +631,74 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		// Gets a random an possible to implement profession type for the group.
+		// _side (Side): The side of the group.
+		// _unitCount (Scalar): The number of units in the group.
+		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
+		{
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
+			
+			_ok = false;
+			_tries = 0;
+			
+			while { !_ok && _tries < 25 } do {
+				_professionType = selectRandom AiSquadHandler.AiWarriorTypes;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
+				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
+				
+				if (_ok) then {
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
+				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
+			};
+
+			_professionType
+		};
+		
+		// Tries to set the squad's profession if it is still Infantry.
+		private method SetSquadProfession()
+		{
+			private ["_rating" as Scalar];
+			private ["_squadCollection" as SquadCollection];
+		
+			if (_mProfessionType == ProfessionType.Undefined) then
+			{
+				// Check that the squad has selected the profession type it wants to be.
+				if (_mWannaBeProfessionType == ProfessionType.Undefined) then {
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _self.GetRandomProfessionType;
+				};
+				
+				// Try to select the wanted profession type
+				_squadCollection = call PublicVariableHandler.GetSquadCollection;
+				
+				if ([side _self.Group, _mWannaBeProfessionType] call _squadCollection.ProfessionTypeAvailable) then
+				{
+					_rating = _self.Group getVariable ["Rating", 0];
+					
+					if ([side _self.Group, _mWannaBeProfessionType, _rating] call _squadCollection.ProfessionTypeSelectable) then {
+						[_self.Group, _mWannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
+						_mProfessionType = _mWannaBeProfessionType;
+		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mProfessionType + "'."] call LogHandler.Debug;
+					};
+				}
+				else {
+					// If profession type is not available, then select another profession type
+					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _self.GetRandomProfessionType;
+				};
+			};
+		};
+		
 		// Gives the AI squad an opportunity to act.
 		public method Act()
 		{
 			call _self.UpdateTracking;
+			call _self.SetSquadProfession;
 			call _self.UpdateTargetResourceLocation;
 			call _self.RespawnIfDead;
 			call _self.SetIdleIfActionTimedOut;

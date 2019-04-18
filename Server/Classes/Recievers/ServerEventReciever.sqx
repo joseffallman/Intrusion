@@ -42,24 +42,47 @@ namespace Intrusion.Server
 		{
 			if (count units _oldGroup == 0) then {
 				call gServer.SquadHandler.RemoveEmptySquads;
+				deleteGroup _oldGroup;
 			};
 		};
 		
-		// Called when a JIP player entered the game.
+		// Called when a JIP player entered the game - i.e. got its player unit in the mission.
+		// _player (Object): The unit of the player that entered.
 		public static method OnJipPlayerEnteredGame("_player" as Object)
 		{
-			[_player] call gServer.SquadHandler.AddRatingEventHandlerToPlayer;
+			[_player] call ServerEventHandlers.AddRatingEventHandlerToPlayer;
+			[_player] call ServerEventHandlers.AddKilledEventHandler;
 		};
 		
+		// Called when a unit (player or AI) captures a flag.
+		// _flag (Object): The flag that was captured.
+		// _markerName (String): The name of the resource location marker.
+		// _capturedBySide (Side): The side that captured the flag.
+		// _capturedByUnit (Object): The unit that captured the flag.
 		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
 		{
+			private ["_rating" as Scalar];
+			
 			[_markerName, _capturedBySide] call gServer.ResourceLocationHandler.SetNewFlagOwner;
-			["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+			
+			if (isPlayer _capturedByUnit) then {
+				["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+			}
+			else {
+				_rating = (group _capturedByUnit) getVariable ["Rating", 0];
+				_rating = _rating + 200 * (1 + (count units group _capturedByUnit)) * 0.5;
+				(group _capturedByUnit) setVariable ["Rating", _rating];
+	        	["Group " + str (group _capturedByUnit) + " recieved a rating of 200 (to " + str ((group _capturedByUnit) getVariable ["Rating", 0]) + ") for capturing resource location " + _markerName] call LogHandler.Debug;
+			};
 		};
 		
+		// Called when mission time is up.
 		public static method OnMissionTimeIsUp()
 		{
-		
+			// If the server is dedicated, we need to end the mission on the server (otherwise it is done for the server's client).
+			if (isDedicated) then {
+				["END1"] spawn BIS_fnc_endMission;
+			};
 		};
 	};
 };

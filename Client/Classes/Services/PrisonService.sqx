@@ -32,7 +32,7 @@ namespace Intrusion.Client
 			_startTime = time;
 			
 			while { time < _startTime + _mPrisonTimeMin * 60 } do {
-				cutText ["You have to spend one minute in team kill prison. If you team kill again, next time you will spend 10 minutes.", "BLACK FADED"];
+				cutText ["You have to spend one minute in team kill prison.", "BLACK FADED"];
 				sleep 1;
 			};
 			

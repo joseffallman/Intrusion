@@ -120,6 +120,16 @@ namespace Intrusion.Server
 			} foreach _squadCollection.Squads as Squad;
 		};
 		
+		// Performs a cleanup and "unproduces" all profession vehicles that do not have an owner. Production spent on the
+		// vehicle is returned to the side.
+		public method DeleteProfessionVehiclesWithNoOwner()
+		{
+			private ["_cost" as Scalar];
+
+			_cost = [_self.Side] call _mVehicleSpawner.DeleteProfessionVehiclesWithNoOwner;
+			[_cost] call _mResourceBook.DepositProduction;
+		};
+		
 		// Produces vehicles from the production queue.
 		public method PerformProduction {
 			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
