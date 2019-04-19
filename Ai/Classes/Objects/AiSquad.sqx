@@ -38,6 +38,8 @@ namespace Intrusion.Ai
 			"_squadHandler" as ISquadHandler,
 			"_unitSpawner" as IUnitSpawner)
 		{
+			private ["_unit" as Object];
+			
 			_mProfessionConfig = _professionConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
@@ -59,17 +61,12 @@ namespace Intrusion.Ai
 			_mLastPosTime = 0;
 			_mWannaBeProfessionType = ProfessionType.Undefined;
 			_mProfessionType = ProfessionType.Undefined;
+			_self.Members = [];
 			
 			for "_i" from 1 to _noOfUnits do {
-				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
-				//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+				_unit = [_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+				_self.Members pushBack _unit;
 			};
-			
-			_self.Members = [];
-			{
-				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
-				_self.Members pushBack _x;
-			} foreach units _self.Group;
 		};
 		
 		// Gets the AI squad's group.
