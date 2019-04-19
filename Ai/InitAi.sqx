@@ -19,13 +19,15 @@ using Intrusion.Ai;
 		_aiUnitBalancer, 
 		gServerConfig.Gameplay, 
 		new AiUnitsConfig, 
-		gCommonConfig.MapMarkers, 
+		gCommonConfig.MapMarkers,
 		gServer.VehicleSpawner, 
-		gCommonConfig.Professions, 
+		gCommonConfig.Professions,
 		gServer.SquadHandler, 
 		gCommon.MissionParametersHandler.AiSkillLevel, 
 		gServer.ResourceLocationHandler,
-		gServer.InventedTechnologiesCollection] new AiService;
+		gServer.InventedTechnologiesCollection,
+		gServer.UnitSpawner,
+		gCommonConfig.Professions] new AiService;
 	
 	call _aiService.RunAsync;
 };

@@ -7,6 +7,9 @@
  * Description:
  * Handles all AI squads.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Ai
 {
 	public interface IAiSquadHandler

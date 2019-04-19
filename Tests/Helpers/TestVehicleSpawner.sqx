@@ -71,5 +71,9 @@ namespace Intrusion.Tests.Helpers
 		{
 			classNull
 		};
+		
+		public method Scalar DeleteProfessionVehiclesWithNoOwner("_side" as Side)
+		{
+		};
 	};
 };

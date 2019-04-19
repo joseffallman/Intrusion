@@ -76,6 +76,7 @@ namespace Intrusion.Server
 		
 			call _mResourceCollector.CollectResources;
 			call _mScientist.PerformResearch;
+			call _mProductionManager.DeleteProfessionVehiclesWithNoOwner;
 			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
 			
