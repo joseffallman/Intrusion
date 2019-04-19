@@ -44,20 +44,29 @@ namespace Intrusion.Server
 			}];
 		};
 		
-		// Adds the "killed" event handler on a unit.
+		// Adds the "killed" event handler to a unit.
+		// _unit (Object): The unit to add the event handler to.
 		public static method AddKilledEventHandler("_unit" as Object)
 		{
 			_unit addEventHandler ["Killed", {
 				params ["_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean];
-				private ["_rating" as Scalar];
+				private ["_rating" as Scalar, "_addingRating" as Scalar];
 				
 				// If the killer is an enemy and the killer is an AI, add killed rating.
-				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then {
-					if (!isPlayer _killer) then {
+				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then
+				{
+					_addingRating = [count units group _killer] call gCommon.RatingCalculator.CalculateGroupRatingEnemyKill;
+					
+					if (isPlayer _killer) then
+					{
+						["ClientEventReciever.OnAddSquadRating", [_addingRating, group _killer]] call Remote.Invoke;
+			        	["Group " + str (group _killer) + " recieved a rating of " + str _addingRating + " for killing " + name _unit] call LogHandler.Debug;
+					}
+					else {
 						_rating = (group _killer) getVariable ["Rating", 0];
-						_rating = _rating + 200 * (1 + (count units group _killer)) * 0.5;
+						_rating = _rating + _addingRating;
 						(group _killer) setVariable ["Rating", _rating];
-			        	["Group " + str (group _killer) + " recieved a rating of 200 (to " + str ((group _killer) getVariable ["Rating", 0]) + ") for killing " + name _unit] call LogHandler.Debug;
+			        	["AI group " + str (group _killer) + " recieved a rating of " + str _addingRating + " (to " + str ((group _killer) getVariable ["Rating", 0]) + ") for killing " + name _unit] call LogHandler.Debug;
 					};
 				};
 			}];
@@ -68,9 +77,9 @@ namespace Intrusion.Server
 		public static method AddRatingEventHandlerToPlayer("_player" as Object)
 		{
 			_player addEventHandler ["HandleRating", {
-				params ["_unit" as Object, "_rating" as Scalar];
+				//params ["_unit" as Object, "_rating" as Scalar];
 				
-				["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
+				//["ClientEventReciever.OnAddSquadRating", [_rating, group _unit]] call Remote.Invoke;
 				//[_rating, group _unit] call gServer.SquadHandler.AddRatingToSquad;
 				
 				0
