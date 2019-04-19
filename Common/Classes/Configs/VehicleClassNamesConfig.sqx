@@ -39,6 +39,66 @@ namespace Intrusion.Common
 			private _eastMechanizedVehicleTypes = ["O_APC_Tracked_02_cannon_F", "O_APC_Wheeled_02_rcws_F"];
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
 			
+			private _westSniperVehicleSpawnCode = {
+				params ["_veh" as Object, "_group" as Group];
+				private "_crate" as Object;
+				
+				_crate = "Box_NATO_Wps_F" createVehicle (getPos _veh);
+				clearWeaponCargoGlobal _crate;
+				clearItemCargoGlobal _crate;
+				clearMagazineCargoGlobal _crate;
+				_crate attachTo [_veh, [0,0.85,-0.40]];
+				_crate addbackpackcargoGlobal ["B_UAV_01_backpack_F", 4];
+				_crate addItemCargoGlobal ["B_UavTerminal", 2];
+
+				// Locks this weaponbox to ProfessionType.Sniper
+				_crate addEventHandler ["ContainerOpened", {
+					params ["_container", "_unit"];
+					private [
+						"_squadCollection" as SquadCollection,
+						"_playerSquad" as Squad
+					];
+					if (call PublicVariableHandler.SquadCollectionHasValue) then {
+						_squadCollection = call PublicVariableHandler.GetSquadCollection;
+						_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
+						if (_playerSquad.ProfessionType != ProfessionType.Sniper) then {
+							["This weapon crate belongs to the sniper team", _unit] call Intrusion.Client.ClientMessageHandler.ShowMessage;
+							_unit action ["CancelAction", _unit];
+						};
+					};
+				}];
+			};
+			
+			private _eastSniperVehicleSpawnCode = {
+				params ["_veh" as Object, "_group" as Group];
+				private "_crate" as Object;
+				
+				_crate = "Box_East_Wps_F" createVehicle (getPos _veh);
+				clearWeaponCargoGlobal _crate;
+				clearItemCargoGlobal _crate;
+				clearMagazineCargoGlobal _crate;				
+				_crate attachTo [_veh, [0,0.85,-0.40]];
+				_crate addbackpackcargoGlobal ["O_UAV_01_backpack_F", 4];
+				_crate addItemCargoGlobal ["O_UavTerminal", 2];
+
+				// Locks this weaponbox to ProfessionType.Sniper
+				_crate addEventHandler ["ContainerOpened", {
+					params ["_container", "_unit"];
+					private [
+						"_squadCollection" as SquadCollection,
+						"_playerSquad" as Squad
+					];
+					if (call PublicVariableHandler.SquadCollectionHasValue) then {
+						_squadCollection = call PublicVariableHandler.GetSquadCollection;
+						_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
+						if (_playerSquad.ProfessionType != ProfessionType.Sniper) then {
+							["This weapon crate belongs to the sniper team", _unit] call Intrusion.Client.ClientMessageHandler.ShowMessage;
+							_unit action ["CancelAction", _unit];
+						};
+					};
+				}];
+			};
+			
 			_mClassNamesInfos = [
 				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes, []] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Transport, _westTransportCarTypes, []] new ProfessionVehicleClassNamesInfo,
@@ -47,7 +107,7 @@ namespace Intrusion.Common
 				[west, ProfessionType.Repair, _westRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, ["B_Mortar_01_support_F", "B_Mortar_01_weapon_F"]] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Sniper, _westSniperVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Sniper, _westSniperVehicleTypes, [], _westSniperVehicleSpawnCode] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, ["B_AT_01_weapon_F", "B_HMG_01_support_F"]] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Armored, _westArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
@@ -59,7 +119,7 @@ namespace Intrusion.Common
 				[east, ProfessionType.Repair, _eastRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, ["O_Mortar_01_support_F", "O_Mortar_01_weapon_F"]] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, [], _eastSniperVehicleSpawnCode] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, ["O_AT_01_weapon_F", "O_HMG_01_support_F"]] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Armored, _eastArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,

@@ -12,13 +12,19 @@ namespace Intrusion.Common
 	public class ProfessionVehicleClassNamesInfo
 	{
 		// Creates a ProVehicleInfo object.
-		public constructor {
-			params ["_side" as Side, "_professionType" as ProfessionType, "_classNames" as Array, "_cargoWeapons" as Array];
+		public constructor(
+			"_side" as Side,
+			"_professionType" as ProfessionType,
+			"_classNames" as Array,
+			"_cargoWeapons" as Array,
+			["_onVehicleSpawn" as Code, {}]
+		) {
 			
 			_self.Side = _side;
 			_self.ProfessionType = _professionType;
 			_self.ClassNames = _classNames;
 			_self.CargoWeapons = _cargoWeapons;
+			_self.OnVehicleSpawn = _onVehicleSpawn;
 		};
 		
 		public property Side Side { get; private set; };
@@ -29,5 +35,12 @@ namespace Intrusion.Common
 		
 		// Gets the weapon classes for weapons in the cargo space.
 		public property Array CargoWeapons { get; private set; };
+		
+		/* Code that runs once every time vehicle is spawned
+		 * This code will receive;
+		 * - vehicle (Object): The spawned vehicle 
+		 * - group (Group): The group this vehicle belongs to
+		 */
+		public property Code OnVehicleSpawn { get; private set; };
 	};
 };

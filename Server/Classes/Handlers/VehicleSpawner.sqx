@@ -128,6 +128,8 @@ namespace Intrusion.Server
             	_vehicleObj addBackpackCargoGlobal [_x, 1];
 		    } foreach _vehicleClassInfo.CargoWeapons as String;
 		    
+		    [_vehicleObj, _group] call _vehicleClassInfo.OnVehicleSpawn;
+		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
