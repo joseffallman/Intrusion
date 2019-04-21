@@ -1,0 +1,29 @@
+/*
+ * Name:	AiWeaponInfo
+ * Date:	2019-04-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the AI units' weapon configurations.
+ */
+namespace Intrusion.Ai
+{
+	public class AiWeaponInfo
+	{
+		// Creates a AiWeaponInfo object.
+		public constructor("_side" as Side, "_launcherClassName" as String, "_launcherAmmoClassName" as String)
+		{
+			_self.Side = _side;
+			_self.LauncherClassName = _launcherClassName;
+			_self.LauncherAmmoClassName = _launcherAmmoClassName;
+		};
+		
+		public property Side Side { get; private set; };
+		
+		public property LauncherClassName { get; private set; };
+		
+		public property LauncherAmmoClassName { get; private set; };
+	};
+};
+

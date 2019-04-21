@@ -21,7 +21,7 @@ namespace Intrusion.Ai
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
-		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler, "_mAiWeaponsConfig" as IAiWeaponsConfig];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
@@ -36,7 +36,8 @@ namespace Intrusion.Ai
 			"_skillLevel" as SkillLevel, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_squadHandler" as ISquadHandler,
-			"_unitSpawner" as IUnitSpawner)
+			"_unitSpawner" as IUnitSpawner,
+			"_aiWeaponsConfig" as IAiWeaponsConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
@@ -45,6 +46,7 @@ namespace Intrusion.Ai
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mSquadHandler = _squadHandler;
 			_mUnitSpawner = _unitSpawner;
+			_mAiWeaponsConfig = _aiWeaponsConfig;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -502,21 +504,15 @@ namespace Intrusion.Ai
 				// Check if launchers are invented, and in that case equip AI with launchers.
 				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
 				{
-					private ["_launcherClassName" as String, "_magazineClassName" as String];
+					private ["_aiWeaponInfo" as AiWeaponInfo];
 					
-					_launcherClassName = "launch_NLAW_F";
-					_magazineClassName = "NLAW_F";
-					
-					if (side _self.Group == west) then {
-						_launcherClassName = "launch_RPG32_F";
-						_magazineClassName = "RPG32_F";
-					};
+					_aiWeaponInfo = [side _self.Group] call _mAiWeaponsConfig.GetWeaponInfo;
 					
 					{
 						if (random 100 > 33) then {
 							_x addBackpack "B_Kitbag_cbr";
-							(unitBackpack _x) addMagazineCargo [_magazineClassName, 1];
-							_x addWeapon _launcherClassName;
+							(unitBackpack _x) addMagazineCargo [_aiWeaponInfo.LauncherAmmoClassName, 1];
+							_x addWeapon _aiWeaponInfo.LauncherClassName;
 						};
 					} foreach _self.Members as Object;
 				};
