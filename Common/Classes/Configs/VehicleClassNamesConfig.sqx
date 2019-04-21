@@ -50,23 +50,34 @@ namespace Intrusion.Common
 				_crate attachTo [_veh, [0,0.85,-0.40]];
 				_crate addbackpackcargoGlobal ["B_UAV_01_backpack_F", 4];
 				_crate addItemCargoGlobal ["B_UavTerminal", 2];
-
-				// Locks this weaponbox to ProfessionType.Sniper
-				_crate addEventHandler ["ContainerOpened", {
-					params ["_container", "_unit"];
-					private [
-						"_squadCollection" as SquadCollection,
-						"_playerSquad" as Squad
-					];
-					if (call PublicVariableHandler.SquadCollectionHasValue) then {
-						_squadCollection = call PublicVariableHandler.GetSquadCollection;
-						_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
-						if (_playerSquad.ProfessionType != ProfessionType.Sniper) then {
-							["This weapon crate belongs to the sniper team", _unit] call Intrusion.Client.ClientMessageHandler.ShowMessage;
-							_unit action ["CancelAction", _unit];
-						};
+				_crate setVariable ["RestrictedTo", [ProfessionType.Sniper], true];
+				
+				// When vehicle explodes, destroy ammo box
+				_veh addEventHandler ["Killed", {
+					params ["_veh"];
+					if (!canMove _veh) then {
+						systemChat "Veh killed";
+						_veh removeEventHandler ["Killed", _thisEventHandler];
+						{
+							[_x] spawn {
+								params["_obj"];
+								_obj setDamage 1;
+								sleep 3;
+								deleteVehicle _obj;
+							};
+						} forEach attachedObjects _veh;
 					};
 				}];
+				
+				// When vehicle is removed, remove ammo box
+				_veh addEventHandler ["Deleted", {
+					params ["_veh"];
+					systemChat "ToBeDeleted";
+					{
+						deleteVehicle _x;
+					} forEach attachedObjects _veh
+				}];
+				
 			};
 			
 			private _eastSniperVehicleSpawnCode = {
@@ -80,22 +91,32 @@ namespace Intrusion.Common
 				_crate attachTo [_veh, [0,0.85,-0.40]];
 				_crate addbackpackcargoGlobal ["O_UAV_01_backpack_F", 4];
 				_crate addItemCargoGlobal ["O_UavTerminal", 2];
-
-				// Locks this weaponbox to ProfessionType.Sniper
-				_crate addEventHandler ["ContainerOpened", {
-					params ["_container", "_unit"];
-					private [
-						"_squadCollection" as SquadCollection,
-						"_playerSquad" as Squad
-					];
-					if (call PublicVariableHandler.SquadCollectionHasValue) then {
-						_squadCollection = call PublicVariableHandler.GetSquadCollection;
-						_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
-						if (_playerSquad.ProfessionType != ProfessionType.Sniper) then {
-							["This weapon crate belongs to the sniper team", _unit] call Intrusion.Client.ClientMessageHandler.ShowMessage;
-							_unit action ["CancelAction", _unit];
-						};
+				_crate setVariable ["RestrictedTo", [ProfessionType.Sniper], true];
+				
+				// When vehicle explodes, destroy ammo box
+				_veh addEventHandler ["Killed", {
+					params ["_veh"];
+					if (!canMove _veh) then {
+						systemChat "Veh killed";
+						_veh removeEventHandler ["Killed", _thisEventHandler];
+						{
+							[_x] spawn {
+								params["_obj"];
+								_obj setDamage 1;
+								sleep 3;
+								deleteVehicle _obj;
+							};
+						} forEach attachedObjects _veh;
 					};
+				}];
+				
+				// When vehicle is removed, remove ammo box
+				_veh addEventHandler ["Deleted", {
+					params ["_veh"];
+					systemChat "ToBeDeleted";
+					{
+						deleteVehicle _x;
+					} forEach attachedObjects _veh
 				}];
 			};
 			
