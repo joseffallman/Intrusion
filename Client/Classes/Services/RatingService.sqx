@@ -34,6 +34,12 @@ namespace Intrusion.Client
 			{
 				_ratingLock = ClientState.RatingLock;
 				
+				player sideChat "::" + str (isNull _ratingLock);
+				if (!isNull _ratingLock) then {
+					player sideChat str (call _ratingLock.IsActive);
+					player sideChat str _ratingLock.Reason;
+				};
+				
 				if (isNull _ratingLock || { !(call _ratingLock.IsActive) || _ratingLock.Reason == RatingLockReason.GroupIsSplit }) then
 				{
 					_okDistances = true;
