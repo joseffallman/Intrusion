@@ -9,16 +9,16 @@
  */
 namespace Intrusion.Ai
 {
-	private fields ["_mWeaponInfos" as Array /* of AiWeaponInfo */];
-	
 	public class AiWeaponsConfig : IAiWeaponsConfig
 	{
+		private fields ["_mWeaponInfos" as Array /* of AiWeaponInfo */];
+	
 		// Creates an AiWeaponsConfig object.
 		public constructor()
 		{
 			_mWeaponInfos = [];
-			_mWeaponInfos pushBack [west, "launch_RPG32_F", "RPG32_F"] new AiWeaponInfo;
-			_mWeaponInfos pushBack [east, "launch_NLAW_F", "NLAW_F"] new AiWeaponInfo;
+			_mWeaponInfos pushBack [west, "launch_NLAW_F", "NLAW_F"] new AiWeaponInfo;
+			_mWeaponInfos pushBack [east, "launch_RPG32_F", "RPG32_F"] new AiWeaponInfo;
 		};
 		
 		// Gets the weapon info for a side.
