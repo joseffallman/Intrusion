@@ -162,7 +162,7 @@ namespace Intrusion.Server
 				_roadSegments = _pos nearRoads 50;
 				
 				_waypoint = _group addWaypoint [_pos, 25];
-				_waypoint setWaypointType "GUARD";
+				_waypoint setWaypointType "HOLD";
 				
 				if (count _roadSegments > 0) then {
 					_pos = getPos (selectRandom _roadSegments);

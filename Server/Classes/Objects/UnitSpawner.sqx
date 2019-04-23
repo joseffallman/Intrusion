@@ -30,6 +30,7 @@ namespace Intrusion.Server
 			_unit = _group createUnit [_className, _position, [], 5, "NONE"];
 			_unit setSkill ([_mSkillLevel] call SkillLevelMeta.SkillToScalar);
 			[_unit] call ServerEventHandlers.AddKilledEventHandler;
+			[_unit] call ServerEventHandlers.AddGetInManEventHandler;
 
 			_unit
 		};

@@ -72,6 +72,14 @@ namespace Intrusion.Server
 			}];
 		};
 		
+		public static method AddGetInManEventHandler("_unit" as Object)
+		{
+			_unit addEventHandler ["GetInMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, _role, _vehicle, _turret]] call Remote.Invoke;
+			}];
+		};
+		
 		// Adds a rating event handler to a player.
 		// _player (Object): The player to add the rating event handler to.
 		public static method AddRatingEventHandlerToPlayer("_player" as Object)

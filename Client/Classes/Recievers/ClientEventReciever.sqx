@@ -202,13 +202,35 @@ namespace Intrusion.Client
 			call MissionEndHandler.EndGame;
 		};
 		
-		// Called when a squad has lost its squad vehicle.
+		// Called when a squad (of players, not AI) has lost its squad vehicle.
 		// _group (Group): The group that lost its vehicle.
 		// _vehicle (Object): The vehicle that was destroyed.
 		public static method OnGroupLostSquadVehicle("_group" as Group, "_vehicle" as Object)
 		{
 			if (_group == group player) then {
 				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.LostVehicle] new RatingLock;
+			};
+		};
+		
+		// Called when a unit (player or AI) has entered a vehicle.
+		// All intrusion vehicles has the variable "IntrusionVehicle", that can be used to get more information about the vehicle (like professions and such).
+		// _unit (Object): The unit that entered the vehicle.
+		// _vehicle (Object): The vehicle that was entered.
+		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array)
+		{
+			private ["_intrusionVehicle" as IntrusionVehicle];
+
+			_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+			
+			if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession != ProfessionType.Undefined }) then
+			{
+				// Tja Josef! Här kan du göra ett anrop till typ [_unit, _role, _vehicle] call ClientSquadHandler.SetUniform på en gubbe.
+				// Tänkte vidare på vad för config man ska ha också, och det kanske inte är så dumt att ha en egen UniformConfig som bara behöver
+				// finnas på klienten.
+				
+				// Att sätta uniformen när man kliver in i fordonet tror jag är rätt smart. Det kan ju vara olika, t.ex. i en pansarskyttevagn ska ju 
+				// föraren, gunnern och commandern vara crewmen, men skyttesoldaterna som sitter i ska ju vara vanliga. Men om de byter, så en som inte
+				// kört tidigare plötsligt sätter sig som förare, ja då kan ju han också få crewmen-dressen då...
 			};
 		};
 	};

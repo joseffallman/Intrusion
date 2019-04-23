@@ -69,6 +69,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnSquadVehiclesSpawned": { _parameters spawn ClientEventReciever.OnSquadVehiclesSpawned; };
 					case "ClientEventReciever.OnAddSquadRating": { _parameters spawn ClientEventReciever.OnAddSquadRating; };
 					case "ClientEventReciever.OnGroupLostSquadVehicle": { _parameters spawn ClientEventReciever.OnGroupLostSquadVehicle; };
+					case "ClientEventReciever.OnUnitEnteredVehicle": { _parameters spawn ClientEventReciever.OnUnitEnteredVehicle; };					
 				};
 			};
 		};
