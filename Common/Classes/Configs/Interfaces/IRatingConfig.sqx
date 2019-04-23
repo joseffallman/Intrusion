@@ -1,0 +1,24 @@
+/*
+ * Name:	IRatingConfig
+ * Date:	2019-04-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * States how much rating should be distributed in different situations.
+ */
+namespace Intrusion.Common
+{
+	public interface IRatingConfig
+	{
+		// How much rating dealt to a group (with one person) for when the group captures a flag.
+		property Scalar CapturingFlag { get; };
+		
+		// How much rating dealt to a group (with one person) when the group kills an enemy unit.
+		property Scalar EnemyUnitKill { get; };
+		
+		// Gets how much bonus rating is given for each extra team member in the team (0 is like 
+		// group having one member, and 1 is like the rating doubles for each extra team member).
+		property Scalar GroupExtraMemberRatingFactor { get; };
+	};
+};

@@ -19,7 +19,8 @@ namespace Intrusion.Server
 		private static fields ["_mProfessionChangeListeners" as Array /* of Code */, "_mProfessionConfig" as IProfessionConfig];
 		
 		// Creates a SquadHandler object.
-		public constructor("_vehicleSpawner" as IVehicleSpawner, "_professionConfig" as IProfessionConfig) {
+		public constructor("_vehicleSpawner" as IVehicleSpawner, "_professionConfig" as IProfessionConfig)
+		{
 			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadCollection = new SquadCollection;
 			_mProfessionChangeListeners = [];
