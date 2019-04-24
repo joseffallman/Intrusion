@@ -1,0 +1,37 @@
+/*
+ * Name:	VehicleRole
+ * Date:	2019-03-14
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enum that describes the roles of the positions in a vehicle.
+ */
+namespace Intrusion.Common
+{
+	public enum VehicleRole
+	{
+		Undefined = 0,
+		Driver = 1,
+		Gunner = 2,
+		Cargo = 3,
+	};
+	
+	public class VehicleRoleMeta
+	{
+		public static method ToString("_vehicleRole" as VehicleRole)
+		{
+			private ["_sRole" as String];
+			
+			_sRole = "UNDEFINED";
+			
+			switch (_vehicleRole) do {
+				case VehicleRole.Driver: { _sRole = "DRIVER"; };
+				case VehicleRole.Gunner: { _sRole = "GUNNER"; };
+				case VehicleRole.Cargo: { _sRole = "CARGO"; };
+			};
+			
+			_sRole
+		};
+	};
+};

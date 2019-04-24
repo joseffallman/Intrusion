@@ -1,0 +1,37 @@
+/*
+ * Name:	UniformConfig
+ * Date:	2019-04-24
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configuration settings of uniforms.
+ */
+namespace Intrusion.Common
+{
+	public class UniformConfig
+	{
+		private fields ["_mUniformInfos" as Array /* of UniformInfo */];
+		
+		// Creates a UniformConfig object.
+		public constructor {
+			_mUniformInfos = [];
+			
+			_mUniformInfos pushBack [west, "AUNIFORM", "AHELMET", VehicleRole.Undefined] new UniformInfo;
+			_mUniformInfos pushBack [east, "ENOTHERUNIFORM", "ANOTHERHELMET", VehicleRole.Undefined] new UniformInfo;
+		};
+		
+		public method UniformInfo GetUniformInfo("_side")
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side) then {
+					_x breakOut "main";
+				};
+			} foreach _mUniformInfos as UniformInfo;
+			
+			classNull
+		};
+	};
+};

@@ -1,0 +1,35 @@
+/*
+ * Name:	UniformInfo
+ * Date:	2019-04-24
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models a uniform usage.
+ */
+namespace Intrusion.Common
+{
+	public class UniformInfo
+	{
+		// Creates a UniformInfo object.
+		public constructor("_side" as Side, "_uniform" as String, "_helmet" as String, "_vehicleRole" as VehicleRole)
+		{
+			_self.Side = _side;
+			_self.Uniform = _uniform;
+			_self.Helmet = _helmet;
+			_self.VehicleRole = _vehicleRole;
+		};
+		
+		public property Side Side { get; private set; };
+		
+		public property String Uniform { get; private set; };
+		
+		public property String Helmet { get; private set; };
+		
+		// Gets the profession type that will use this uniform.
+		public property ProfessionType ProfessionType { get; private set; };
+		
+		// Gets the vheicle role that this uniform will be assigned to. VehicleRole.Undefined if the role doesn't matter.
+		public property VehicleRole VehicleRole { get; private set; };
+	};
+};

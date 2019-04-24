@@ -14,10 +14,12 @@ namespace Intrusion.Common
 	{
 		// Creates a IntrusionCommon object.
 		public constructor() {
+			_self.UniformConfig = new UniformConfig;
 			_self.MissionParametersHandler = new MissionParametersHandler;
 			_self.RatingCalculator = [new RatingConfig] new RatingCalculator;
 		};
 	
+		public property UniformConfig UniformConfig { get; private set; };
 		public property MissionParametersHandler MissionParametersHandler { get; private set; };
 		public property RatingCalculator RatingCalculator { get; private set; };
 	};
