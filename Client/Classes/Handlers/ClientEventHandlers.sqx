@@ -122,6 +122,19 @@ namespace Intrusion.Client
 				
 				ClientEventHandlers.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
 			}];
+			
+			player addEventHandler ["ContainerOpened", {
+				params ["_container" as Object, "_unit" as Object];
+				private ["_intrusionVehicle" as IntrusionVehicle];
+				
+				_intrusionVehicle = _container getVariable ["IntrusionVehicle", classNull];
+				
+				if (!isNull _intrusionVehicle) then {
+					if (!isNull _intrusionVehicle.OwnerGroup && group player != _intrusionVehicle.OwnerGroup) then {
+						closeDialog 602;
+					};
+				};
+			}];
 		};
 	};
 };
