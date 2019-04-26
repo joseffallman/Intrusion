@@ -94,8 +94,14 @@ namespace Intrusion.Client
 					waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime};
 					
 					if (!_mWaitingForMapClick) then {
-						["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
-						_orderResult = ("Group '" + name leader _mSelectedGroup + "' have a new order.");
+						if (!(isPlayer leader _mSelectedGroup)) then {
+							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
+							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' have a new order.");
+						}
+						else {
+							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
+							_orderResult = ("Human group '" + name leader _mSelectedGroup + "' have a new order.");
+						};
 					};
 				};
 			};

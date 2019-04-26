@@ -37,6 +37,7 @@ namespace Intrusion.Communication
 					case "ServerEventReciever.OnPlayerJoinedGroup": { _parameters spawn ServerEventReciever.OnPlayerJoinedGroup; };
 					case "ServerEventReciever.OnFlagCaptured": { _parameters spawn ServerEventReciever.OnFlagCaptured; };
 					case "ServerEventReciever.OnMissionTimeIsUp": { _parameters spawn ServerEventReciever.OnMissionTimeIsUp; };
+					case "ServerEventReciever.OnBrigadeLeaderGivingOrder": { _parameters spawn ServerEventReciever.OnBrigadeLeaderGivingOrder; };
 				};
 			};
 			

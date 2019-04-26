@@ -30,5 +30,10 @@ namespace Intrusion.Ai
 		// Gets all AI squads.
 		// Returns (Array): All AI squads as an array of AiSquad.
 		method Array GetAllSquads();
+		
+		// Gives a new order to an AI group.
+		// _group (Group): The group to recieve the order.
+		// _order (Order): The order.
+		method GiveOrderToGroup("_group" as Group, "_order" as Order);
 	};
 };

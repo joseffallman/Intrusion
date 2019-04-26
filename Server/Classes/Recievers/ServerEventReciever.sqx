@@ -87,5 +87,12 @@ namespace Intrusion.Server
 				["END1"] spawn BIS_fnc_endMission;
 			};
 		};
+		
+		// Called when the brigade leader is giving an order to an AI group.
+		// _order (Order): The order.
+		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
+		{
+			[_order.Group, _order] call gServer.AiSquadHandler.GiveOrderToGroup;
+		};
 	};
 };

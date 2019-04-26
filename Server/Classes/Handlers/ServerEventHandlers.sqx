@@ -94,11 +94,16 @@ namespace Intrusion.Server
 			}];
 		};
 		
+		// Adds a WeaponAssembled event handler to a player.
 		public static method AddWeaponAssembledEventHandlerToPlayer("_player" as Object)
 		{
 			_player addEventHandler ["WeaponAssembled", {
 				params ["_unit" as Object, "_staticWeapon" as Object];
 				private ["_intrusionVehicle" as IntrusionVehicle, "_squad" as Squad];
+				
+				// Known issue: this 'assigns' the assembling unit's profession to the static weapon. This should only be true 
+				// if the weapon belongs to a profession (which it will always do when this code was written). A solution when
+				// needed may be to assign a variable to the backpacks, to know to which profession this weapon really belongs.				
 				
 				_squad = [group _unit] call gServer.SquadHandler.GetSquadByGroup;
 				
