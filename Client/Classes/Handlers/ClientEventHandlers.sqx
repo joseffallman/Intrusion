@@ -128,7 +128,7 @@ namespace Intrusion.Client
 				private ["_intrusionVehicle" as IntrusionVehicle, "_lockContainer" as Boolean];
 				
 				_intrusionVehicle = _container getVariable ["IntrusionVehicle", classNull];
-				
+
 				_lockContainer = false;
 				if (!isNull _intrusionVehicle) then {
 					if (!isNull _intrusionVehicle.OwnerGroup && group player != _intrusionVehicle.OwnerGroup) then {

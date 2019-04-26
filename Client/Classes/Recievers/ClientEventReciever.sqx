@@ -233,5 +233,13 @@ namespace Intrusion.Client
 				// kört tidigare plötsligt sätter sig som förare, ja då kan ju han också få crewmen-dressen då...
 			};
 		};
+		
+		// Called when a unit assembled a static weapon.
+		// _staticWeapon (Object): The weapon that was assembled.
+		// _unit (Object): The unit that assembled the weapon.
+		public static method OnStaticWeaponAssebled("_staticWeapon" as Object, "_unit" as Object)
+		{
+			[[_staticWeapon]] call gClient.ClientVehicleHandler.GroupLockVehicles;
+		};
 	};
 };

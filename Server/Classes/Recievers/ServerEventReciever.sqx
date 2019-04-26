@@ -52,6 +52,7 @@ namespace Intrusion.Server
 		{
 			[_player] call ServerEventHandlers.AddRatingEventHandlerToPlayer;
 			[_player] call ServerEventHandlers.AddKilledEventHandler;
+			[_player] call ServerEventHandlers.AddWeaponAssembledEventHandlerToPlayer;
 		};
 		
 		// Called when a unit (player or AI) captures a flag.

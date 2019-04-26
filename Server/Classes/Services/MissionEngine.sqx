@@ -31,6 +31,7 @@ namespace Intrusion.Server
 				[getPlayerUid _player, name _player, side group _player] call _playerInfoCollection.AddPlayerInfo;
 				[_player] call ServerEventHandlers.AddRatingEventHandlerToPlayer;
 				[_player] call ServerEventHandlers.AddKilledEventHandler;
+				[_player] call ServerEventHandlers.AddWeaponAssembledEventHandlerToPlayer;
 			} foreach _allPlayers;
 			
 			[_playerInfoCollection] call PublicVariableHandler.BroadcastPlayerInfoCollection;

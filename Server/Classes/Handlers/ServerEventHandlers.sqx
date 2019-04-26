@@ -93,5 +93,21 @@ namespace Intrusion.Server
 				0
 			}];
 		};
+		
+		public static method AddWeaponAssembledEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["WeaponAssembled", {
+				params ["_unit" as Object, "_staticWeapon" as Object];
+				private ["_intrusionVehicle" as IntrusionVehicle, "_squad" as Squad];
+				
+				_squad = [group _unit] call gServer.SquadHandler.GetSquadByGroup;
+				
+				if (!isNull _squad) then {
+					_intrusionVehicle = [_staticWeapon, side group _unit, _squad.ProfessionType, group _unit, 0] new IntrusionVehicle;
+					_staticWeapon setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+					["ClientEventReciever.OnStaticWeaponAssebled", [_staticWeapon, _unit]] call Remote.Invoke;
+				};
+			}];		
+		};
 	};
 };
