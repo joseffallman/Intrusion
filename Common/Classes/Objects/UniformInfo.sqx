@@ -12,11 +12,22 @@ namespace Intrusion.Common
 	public class UniformInfo
 	{
 		// Creates a UniformInfo object.
-		public constructor("_side" as Side, "_uniform" as String, "_helmet" as String, "_vehicleRole" as VehicleRole)
+		// _side (Side):
+		// _uniform (String): Uniform class name, set it to "" if unknown.
+		// _helmet (String): Headgear class name, set it to "" if unknown.
+		// _professionType (ProfessionType):
+		// _vehicleRole (VehicleRole) Optinal:
+		public constructor(
+			"_side" as Side,
+			"_uniform" as String,
+			"_helmet" as String,
+			"_professionType" as ProfessionType,
+			["_vehicleRole" as VehicleRole, VehicleRole.Undefined])
 		{
 			_self.Side = _side;
 			_self.Uniform = _uniform;
 			_self.Helmet = _helmet;
+			_self.ProfessionType = _professionType;
 			_self.VehicleRole = _vehicleRole;
 		};
 		
