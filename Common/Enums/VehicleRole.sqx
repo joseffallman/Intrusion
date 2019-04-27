@@ -15,6 +15,7 @@ namespace Intrusion.Common
 		Driver = 1,
 		Gunner = 2,
 		Cargo = 3,
+		Commander = 4
 	};
 	
 	public class VehicleRoleMeta
@@ -26,12 +27,29 @@ namespace Intrusion.Common
 			_sRole = "UNDEFINED";
 			
 			switch (_vehicleRole) do {
-				case VehicleRole.Driver: { _sRole = "DRIVER"; };
-				case VehicleRole.Gunner: { _sRole = "GUNNER"; };
-				case VehicleRole.Cargo: { _sRole = "CARGO"; };
+				case VehicleRole.Driver: { _sRole = "driver"; };
+				case VehicleRole.Gunner: { _sRole = "gunner"; };
+				case VehicleRole.Cargo: { _sRole = "cargo"; };
+				case VehicleRole.Commander: { _sRole = "commander"; };
 			};
 			
 			_sRole
+		};
+		
+		public static method VehicleRole ToVehicleRole("_sRole" as String)
+		{
+			private ["_vehicleRole" as VehicleRole];
+			
+			_vehicleRole = VehicleRole.Undefined;
+			
+			switch (_sRole) do {
+				case "driver": { _vehicleRole = VehicleRole.Driver; };
+				case "gunner": { _vehicleRole = VehicleRole.Gunner; };
+				case "cargo": { _vehicleRole = VehicleRole.Cargo; };
+				case "commander": { _vehicleRole = VehicleRole.Commander; };
+			};
+			
+			_vehicleRole
 		};
 	};
 };

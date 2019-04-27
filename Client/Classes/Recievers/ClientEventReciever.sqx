@@ -218,19 +218,8 @@ namespace Intrusion.Client
 		// _vehicle (Object): The vehicle that was entered.
 		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array)
 		{
-			private ["_intrusionVehicle" as IntrusionVehicle];
-
-			_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
-			
-			if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession != ProfessionType.Undefined }) then
-			{
-				// Tja Josef! Här kan du göra ett anrop till typ [_unit, _role, _vehicle] call ClientSquadHandler.SetUniform på en gubbe.
-				// Tänkte vidare på vad för config man ska ha också, och det kanske inte är så dumt att ha en egen UniformConfig som bara behöver
-				// finnas på klienten.
-				
-				// Att sätta uniformen när man kliver in i fordonet tror jag är rätt smart. Det kan ju vara olika, t.ex. i en pansarskyttevagn ska ju 
-				// föraren, gunnern och commandern vara crewmen, men skyttesoldaterna som sitter i ska ju vara vanliga. Men om de byter, så en som inte
-				// kört tidigare plötsligt sätter sig som förare, ja då kan ju han också få crewmen-dressen då...
+			if (player == _unit) then {
+				[_unit, _role, _vehicle] call ClientSquadHandler.SetUniform;
 			};
 		};
 		
@@ -240,6 +229,16 @@ namespace Intrusion.Client
 		public static method OnStaticWeaponAssebled("_staticWeapon" as Object, "_unit" as Object)
 		{
 			[[_staticWeapon]] call gClient.ClientVehicleHandler.GroupLockVehicles;
+		};
+		
+		// Called when a unit changed seat in a vehicle.
+		// _unit (Object): The unit that changing seat.
+		// _vehicle (Object): The vehicle that the unit occupies.
+		public static method OnUnitChangedSeat("_unit" as Object, "_vehicle" as Object)
+		{
+			if (player == _unit) then {
+				[_unit, assignedVehicleRole _unit select 0, _vehicle] call ClientSquadHandler.SetUniform;
+			};
 		};
 	};
 };

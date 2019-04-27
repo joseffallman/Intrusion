@@ -17,16 +17,56 @@ namespace Intrusion.Common
 		public constructor {
 			_mUniformInfos = [];
 			
-			_mUniformInfos pushBack [west, "AUNIFORM", "AHELMET", VehicleRole.Undefined] new UniformInfo;
-			_mUniformInfos pushBack [east, "ENOTHERUNIFORM", "ANOTHERHELMET", VehicleRole.Undefined] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Infantry] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_tshirt", "H_HelmetB_grass", ProfessionType.Transport] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_tshirt", "H_HelmetB_grass", ProfessionType.Fuel] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB_grass", ProfessionType.Ammo] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB_light_sand", ProfessionType.Repair] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_vest", "H_HelmetCrew_B", ProfessionType.Motorized] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB_sand", ProfessionType.Mortars] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_GhillieSuit", "H_HelmetB_sand", ProfessionType.Sniper] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetSpec_B", ProfessionType.AntiArmor] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_vest", "H_HelmetCrew_B", ProfessionType.Mechanized] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_vest", "H_HelmetCrew_B", ProfessionType.Armored] new UniformInfo;
+			
+			// East
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Infantry] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_I_CombatUniform_tshirt", "H_HelmetO_ocamo", ProfessionType.Transport] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_I_CombatUniform_tshirt", "H_HelmetO_ocamo", ProfessionType.Fuel] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_oucamo", "H_HelmetO_ocamo", ProfessionType.Ammo] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_oucamo", "H_HelmetO_ocamo", ProfessionType.Repair] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_SpecopsUniform_oucamo", "H_HelmetCrew_O", ProfessionType.Motorized] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Mortars] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_GhillieSuit", "H_HelmetO_ocamo", ProfessionType.Sniper] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_SpecopsUniform_blk", "H_HelmetO_ocamo", ProfessionType.AntiArmor] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_SpecopsUniform_blk", "H_HelmetCrew_O", ProfessionType.Mechanized] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetCrew_O", ProfessionType.Armored] new UniformInfo;
 		};
 		
-		public method UniformInfo GetUniformInfo("_side")
+		//
+		// Get the UniformInfo object for a specific side and profession
+		// VehicleRole is optional, default VehicleRole.Undefined
+		//
+		public method UniformInfo GetUniformInfo(
+			"_side" as Side,
+			"_professionType" as ProfessionType,
+			["_vehicleRole" as VehicleRole, VehicleRole.Undefined])
 		{
 			scopeName "main";
 			
 			{
-				if (_x.Side == _side) then {
+				if (_x.Side == _side && _x.ProfessionType == _professionType && _x.VehicleRole == _vehicleRole) then {
+					_x breakOut "main";
+				};
+			} foreach _mUniformInfos as UniformInfo;
+			
+			// If there was no specific uniform for this vehicleRole, grab one for this professionType
+			{
+				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
 					_x breakOut "main";
 				};
 			} foreach _mUniformInfos as UniformInfo;
