@@ -2,6 +2,7 @@ call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\SkillLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Rank.sqx";
+call compile preprocessFileLineNumbers "Common\Enums\VehicleRole.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
@@ -19,6 +20,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehicle
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfigFactory.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\SquadConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\RatingConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\UniformConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
@@ -46,6 +49,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\OrderCollection.s
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ValuedObject.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicleInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingCalculator.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\UniformInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 
 using Intrusion.Common;

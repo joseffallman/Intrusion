@@ -7,13 +7,19 @@
  * Description:
  * Handles all Intrusion's unit spawning.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Server
 {
 	public class UnitSpawner : IUnitSpawner
 	{
+		private fields ["_mSkillLevel" as SkillLevel];
+		
 		// Creates a UnitSpawner object.
-		public constructor()
+		public constructor("_skillLevel" as SkillLevel)
 		{
+			_mSkillLevel = _skillLevel;
 		};
 		
 		// Creates a unit and adds the "Killed" event handler to it.
@@ -22,8 +28,9 @@ namespace Intrusion.Server
 			private ["_unit" as Object];
 			
 			_unit = _group createUnit [_className, _position, [], 5, "NONE"];
-			
+			_unit setSkill ([_mSkillLevel] call SkillLevelMeta.SkillToScalar);
 			[_unit] call ServerEventHandlers.AddKilledEventHandler;
+			[_unit] call ServerEventHandlers.AddGetInManEventHandler;
 
 			_unit
 		};

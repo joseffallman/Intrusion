@@ -32,17 +32,6 @@ namespace Intrusion.Server
 			_mProfessionConfig = _professionConfig;
 			_mReservationQueue = _reservationQueue;
 			[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
-
-/*
-			// If reservationQueue is null, then we are in production mode (not in unit testing)
-			if (isNull _mReservationQueue) then {
-				_mReservationQueue = new ReservationQueue;
-			
-				// Register the class to the global group handler to recieve notifications 
-				// when groups on the side is changing its profession.
-				[_self] call SquadHandler.RegisterGroupChangingProfessionListener;
-			};
-*/
 		};
 		
 		// Gets the production manager's side.

@@ -1,0 +1,19 @@
+/*
+ * Name:	IAiWeaponsConfig
+ * Date:	2019-04-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the AI weapons configuration.
+ */
+namespace Intrusion.Ai
+{
+	public interface IAiWeaponsConfig
+	{
+		// Gets the weapon info for a side.
+		// _side (Side): The side to get weapon info from.
+		// Returns (AiWeaponInfo): AI weapon informaion about a side.
+		method AiWeaponInfo GetWeaponInfo("_side" as Side);
+	};
+};

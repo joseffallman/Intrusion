@@ -30,7 +30,6 @@ namespace Intrusion.Communication
 			
 			if (isServer) then {
 				switch (_methodFullName) do {
-					//case "ResourceLocationHandler.SetNewFlagOwner": { _parameters spawn ResourceLocationHandler.SetNewFlagOwner; };
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
 					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };
 					case "ServerEventReciever.OnPlayerQuitBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerQuitBrigadeLeadership; };
@@ -38,6 +37,7 @@ namespace Intrusion.Communication
 					case "ServerEventReciever.OnPlayerJoinedGroup": { _parameters spawn ServerEventReciever.OnPlayerJoinedGroup; };
 					case "ServerEventReciever.OnFlagCaptured": { _parameters spawn ServerEventReciever.OnFlagCaptured; };
 					case "ServerEventReciever.OnMissionTimeIsUp": { _parameters spawn ServerEventReciever.OnMissionTimeIsUp; };
+					case "ServerEventReciever.OnBrigadeLeaderGivingOrder": { _parameters spawn ServerEventReciever.OnBrigadeLeaderGivingOrder; };
 				};
 			};
 			
@@ -53,7 +53,6 @@ namespace Intrusion.Communication
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
 					case "ClientEventReciever.OnMissionTimeIsUp": { _parameters spawn ClientEventReciever.OnMissionTimeIsUp };
 					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
-					//case "ClientVehicleHandler.GroupLockVehicles": { _parameters spawn ClientVehicleHandler.GroupLockVehicles };
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
 					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };
 					case "ClientEventReciever.OnBrigadeLeaderQuit": { _parameters spawn ClientEventReciever.OnBrigadeLeaderQuit };
@@ -68,6 +67,10 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnPlayerRespawn": { _parameters spawn ClientEventReciever.OnPlayerRespawn; };
 					case "ClientEventReciever.OnSquadVehiclesSpawned": { _parameters spawn ClientEventReciever.OnSquadVehiclesSpawned; };
 					case "ClientEventReciever.OnAddSquadRating": { _parameters spawn ClientEventReciever.OnAddSquadRating; };
+					case "ClientEventReciever.OnGroupLostSquadVehicle": { _parameters spawn ClientEventReciever.OnGroupLostSquadVehicle; };
+					case "ClientEventReciever.OnUnitEnteredVehicle": { _parameters spawn ClientEventReciever.OnUnitEnteredVehicle; };
+					case "ClientEventReciever.OnStaticWeaponAssebled": { _parameters spawn ClientEventReciever.OnStaticWeaponAssebled; };
+					case "ClientEventReciever.OnUnitChangedSeat": { _parameters spawn ClientEventReciever.OnUnitChangedSeat};					
 				};
 			};
 		};

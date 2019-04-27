@@ -52,6 +52,7 @@ namespace Intrusion.Server
 		{
 			[_player] call ServerEventHandlers.AddRatingEventHandlerToPlayer;
 			[_player] call ServerEventHandlers.AddKilledEventHandler;
+			[_player] call ServerEventHandlers.AddWeaponAssembledEventHandlerToPlayer;
 		};
 		
 		// Called when a unit (player or AI) captures a flag.
@@ -61,18 +62,20 @@ namespace Intrusion.Server
 		// _capturedByUnit (Object): The unit that captured the flag.
 		public static method OnFlagCaptured("_flag" as Object, "_markerName" as String, "_capturedBySide" as Side, "_capturedByUnit" as Object)
 		{
-			private ["_rating" as Scalar];
+			private ["_rating" as Scalar, "_addingRating" as Scalar];
 			
 			[_markerName, _capturedBySide] call gServer.ResourceLocationHandler.SetNewFlagOwner;
+			_addingRating = [count units group _capturedByUnit] call gCommon.RatingCalculator.CalculateGroupRatingFlag;
 			
 			if (isPlayer _capturedByUnit) then {
-				["ClientEventReciever.OnAddSquadRating", [200, group _capturedByUnit]] call Remote.Invoke;
+				["ClientEventReciever.OnAddSquadRating", [_addingRating, group _capturedByUnit]] call Remote.Invoke;
+	        	["Group " + str (group _capturedByUnit) + " recieved a rating of " + str _addingRating + " for capturing resource location " + _markerName] call LogHandler.Debug;
 			}
 			else {
 				_rating = (group _capturedByUnit) getVariable ["Rating", 0];
-				_rating = _rating + 200 * (1 + (count units group _capturedByUnit)) * 0.5;
+				_rating = _rating + _addingRating;
 				(group _capturedByUnit) setVariable ["Rating", _rating];
-	        	["Group " + str (group _capturedByUnit) + " recieved a rating of 200 (to " + str ((group _capturedByUnit) getVariable ["Rating", 0]) + ") for capturing resource location " + _markerName] call LogHandler.Debug;
+	        	["AI group " + str (group _capturedByUnit) + " recieved a rating of " + str _addingRating + " (to " + str ((group _capturedByUnit) getVariable ["Rating", 0]) + ") for capturing resource location " + _markerName] call LogHandler.Debug;
 			};
 		};
 		
@@ -83,6 +86,13 @@ namespace Intrusion.Server
 			if (isDedicated) then {
 				["END1"] spawn BIS_fnc_endMission;
 			};
+		};
+		
+		// Called when the brigade leader is giving an order to an AI group.
+		// _order (Order): The order.
+		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
+		{
+			[_order.Group, _order] call gServer.AiSquadHandler.GiveOrderToGroup;
 		};
 	};
 };

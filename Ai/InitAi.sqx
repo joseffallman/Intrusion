@@ -1,8 +1,10 @@
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiWeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiSquadHandler.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitBalancer.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiWeaponInfo.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
 using Intrusion.Common;
@@ -27,7 +29,8 @@ using Intrusion.Ai;
 		gServer.ResourceLocationHandler,
 		gServer.InventedTechnologiesCollection,
 		gServer.UnitSpawner,
-		gCommonConfig.Professions] new AiService;
+		gCommonConfig.Professions,
+		new AiWeaponsConfig] new AiService;
 	
 	call _aiService.RunAsync;
 };
