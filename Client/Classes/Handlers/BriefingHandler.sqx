@@ -19,13 +19,13 @@ namespace Intrusion.Client
         	// Background And Main Story
         	// Overview - Who wins?
         	// Intrusion Menu
-        	// Resources
+        	// Resources - General
+        	// (Resources - Production)
+        	// (Resources - Administration)
         	// Weapons
         	// Squads
         	// Professions - General
-        	// Professions - Each One
-        	// Administrations - General
-        	// Administrations - Each One
+        	// (Professions - Each One)
         	// Rank And Rating
         	// Vehicles +info about production lane
         	// Brigade Commanders
@@ -41,7 +41,7 @@ namespace Intrusion.Client
 			"PRODUCTION<br /><br />" +
 			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'. A produced ehicle's cost is withdrawn from the side's total production.<br /><br />" +
 			"ADMINISTRATION<br /><br />" +
-			"Offices generate administration. Administration is needed for the brigade to establish more and more advanced materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of administration."]];
+			"Offices generate administration, and administration leads to 'establishments'. Administration is the resource needed for the brigade to establish more and more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of administration."]];
 
 			player createDiaryRecord ["Diary", ["Weapons",
 			"HANDHELD WEAPONS<br /><br />" +
@@ -56,7 +56,7 @@ namespace Intrusion.Client
 			"1. Move next to another player. The player need to be alone in his or her group.<br />" +
 			"2. Turn to the player and from the action menu select 'Invite player to group'."]];
 
-			player createDiaryRecord ["Diary", ["Professions - General",
+			player createDiaryRecord ["Diary", ["Professions",
 			"A squad assigned to a profession will get the vehicles and weapons that are associated with the profession. However, weapons and vehicles will not be delivered from start, but when the side has earned enough of both kinds of resources. A few requirements must be met before a group leader can select a profession. Such requirements are among max. and min. number of players in the group, limited number of groups on a side, and required rank of the players. All information is listed in the profession dialog.<br /><br />" +
 			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use.<br /><br />"+
 			"HOW TO SELECT A PROFESSION<br />" +
@@ -64,6 +64,15 @@ namespace Intrusion.Client
 			"2. From the Intrusion menu, select 'Set group profession'.<br />" +
 			"3. On the profession dialog, select a profession that is not greyed out and press 'Select'."]];
 
+			player createDiaryRecord ["Diary", ["Professions",
+			"RANK AND RATING<br /><br />" +
+			"Each player has a rank, and each player's starting rank is always 'private'. The more the player performs, the more rating is generated, and at certains levels the players 'rank' is increased. The ranks are Private, Corpral, Seargent, Leutenant, Captain, Major and Colonel. The possibility for the leader to select a profession is sometimes limited by his or her rank.<br /><br />" +
+			"SQUAD BONUS<br /><br />" +
+			"...<br />" +
+			"RATING IS SOMETIMES BLOCKED<br />" +
+			""]];
+
+/*
 			player createDiaryRecord ["Diary", ["Professions - Each One",
 			"TRANSPORT<br />" +
 			"Requires 'Transport' (Se Administrations). Vehicle is a transport truck which is used to transport troops from the base to the field.<br /><br />"+
@@ -74,7 +83,7 @@ namespace Intrusion.Client
 			"MECHANIZED TROOPS<br />" +
 			"Requires 'Mechanized'. Vehicle is a light armored vehicle with a heavy mounted gun, used to transport and support an infantry group.<br /><br />"
 			]];
-        	
+*/
 			player createDiaryRecord ["Diary", ["Intrusion - The Philosophy", "The main philosophy behind Intrusion is to encourage the use of teams, roles, leaderships and communication, while at the same time provide fun gameplay without elements that may seem too difficult to embrace."]];
 
 /*
