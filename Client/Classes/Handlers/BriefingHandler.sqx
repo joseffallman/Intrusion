@@ -64,13 +64,17 @@ namespace Intrusion.Client
 			"2. From the Intrusion menu, select 'Set group profession'.<br />" +
 			"3. On the profession dialog, select a profession that is not greyed out and press 'Select'."]];
 
-			player createDiaryRecord ["Diary", ["Professions",
+			player createDiaryRecord ["Diary", ["Rank and Rating",
 			"RANK AND RATING<br /><br />" +
-			"Each player has a rank, and each player's starting rank is always 'private'. The more the player performs, the more rating is generated, and at certains levels the players 'rank' is increased. The ranks are Private, Corpral, Seargent, Leutenant, Captain, Major and Colonel. The possibility for the leader to select a profession is sometimes limited by his or her rank.<br /><br />" +
+			"Each player has a rank, and each player's starting rank is 'Private'. The more the player's group performs, the more rating is generated to its members, and at certains levels the players 'rank' is increased. The ranks are Private, Corpral, Seargent, Leutenant, Captain, Major and Colonel. Note that rating is shared equally among the members of the group, so the ability that increases the rating morstly is cooperation. The possibility for the leader to select a profession is sometimes limited by his or her rank.<br /><br />" +
 			"SQUAD BONUS<br /><br />" +
-			"...<br />" +
-			"RATING IS SOMETIMES BLOCKED<br />" +
-			""]];
+			"The more members a squad has, the more rating is generated for its deeds.<br /><br />" +
+			"RATING IS SOMETIMES BLOCKED<br /><br />" +
+			"The squad's rating generation will be blocked for some minutes under the following circumstances:<br /><br />" +
+			" - Group members are to far apart<br />" +
+			" - A group member respawns<br />" +
+			" - The group loses its squad vehicle<br />" +
+			" - A group member team kills<br />"]];
 
 /*
 			player createDiaryRecord ["Diary", ["Professions - Each One",
