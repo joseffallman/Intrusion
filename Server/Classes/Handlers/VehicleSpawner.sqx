@@ -277,16 +277,20 @@ namespace Intrusion.Server
 			_totalCost
 		};
 		
+		// Removes ownership of all destroyed squad vehicles and leaves them on the field.
 		public method RemoveOwnershipOfDestroyedVehicles()
 		{
-			private ["_collectionModified" as Boolean];
+			private ["_collectionModified" as Boolean, "_losingVehicleGroup" as Group];
 			
 			_collectionModified = false;
 			
 			{
 				if (!alive _x.Vehicle && !isNull _x.OwnerGroup) then {
 		        	["Deleting ownership of destroyed profession vehicle:" + str _x] call LogHandler.Debug;
+		        	_losingVehicleGroup = _x.OwnerGroup;
 					call _x.RemoveOwnership;
+					
+					["ClientEventReciever.OnGroupLostSquadVehicle", [_losingVehicleGroup, _x.Vehicle]] call Remote.Invoke;
 					_collectionModified = true;
 				};
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;

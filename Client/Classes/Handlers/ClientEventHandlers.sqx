@@ -95,6 +95,8 @@ namespace Intrusion.Client
 					private _resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
 				};
+
+				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, _role, _vehicle, _turret]] call Remote.Invoke;
 			}];
 			
 			player addEventHandler ["GetOutMan", {
@@ -119,6 +121,28 @@ namespace Intrusion.Client
 				params ["_unit" as Object, "_source", "_damage", "_instigator" as Object];
 				
 				ClientEventHandlers.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
+			}];
+			
+			player addEventHandler ["InventoryOpened", {
+				params ["_unit" as Object, "_container" as Object];
+				private ["_intrusionVehicle" as IntrusionVehicle, "_lockContainer" as Boolean];
+				
+				_intrusionVehicle = _container getVariable ["IntrusionVehicle", classNull];
+
+				_lockContainer = false;
+				if (!isNull _intrusionVehicle) then {
+					if (!isNull _intrusionVehicle.OwnerGroup && group player != _intrusionVehicle.OwnerGroup) then {
+						_lockContainer = true;
+						["This cargo space is locked."] call ClientMessageHandler.ShowMessage;
+					};
+				};
+				
+				_lockContainer
+			}];
+			
+			player addEventHandler ["SeatSwitchedMan", {
+				params ["_unit" as Object, "_unit2" as Object, "_vehicle" as Object];
+				["ClientEventReciever.OnUnitChangedSeat", [_unit, _vehicle]] call Remote.Invoke;
 			}];
 		};
 	};

@@ -1,0 +1,40 @@
+/*
+ * Name:	AiWeaponsConfig
+ * Date:	2019-04-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the AI weapons configuration.
+ */
+namespace Intrusion.Ai
+{
+	public class AiWeaponsConfig : IAiWeaponsConfig
+	{
+		private fields ["_mWeaponInfos" as Array /* of AiWeaponInfo */];
+	
+		// Creates an AiWeaponsConfig object.
+		public constructor()
+		{
+			_mWeaponInfos = [];
+			_mWeaponInfos pushBack [west, "launch_NLAW_F", "NLAW_F"] new AiWeaponInfo;
+			_mWeaponInfos pushBack [east, "launch_RPG32_F", "RPG32_F"] new AiWeaponInfo;
+		};
+		
+		// Gets the weapon info for a side.
+		// _side (Side): The side to get weapon info from.
+		// Returns (AiWeaponInfo): AI weapon informaion about a side. classNull if side does not exist.
+		public method AiWeaponInfo GetWeaponInfo("_side" as Side)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Side == _side) then {
+					_x breakOut "main";
+				};
+			} foreach _mWeaponInfos as AiWeaponInfo;
+			
+			classNull
+		};
+	};
+};

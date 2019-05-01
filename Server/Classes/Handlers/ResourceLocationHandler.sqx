@@ -16,13 +16,12 @@ namespace Intrusion.Server
 {
 	public class ResourceLocationHandler : IResourceLocationHandler
 	{
-		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mAiSkillLevel" as SkillLevel, "_mUnitSpawner" as IUnitSpawner];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_aiSkillLevel" as SkillLevel, "_unitSpawner" as IUnitSpawner) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_unitSpawner" as IUnitSpawner) {
 			_mMapMarkersConfig = _mapMarkersConfig;
-			_mAiSkillLevel = _aiSkillLevel;
 			_mUnitSpawner = _unitSpawner;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
@@ -156,13 +155,6 @@ namespace Intrusion.Server
 				
 				_pos = getMarkerPos _location.MarkerName;
 				
-				/*
-				_marker = createMarkerLocal ["GuerillaGuardMarker" + str _i, _pos];
-				_marker setMarkerShapeLocal "RECTANGLE";
-				_marker setMarkerAlphaLocal 0;
-				_marker setMarkerSizeLocal [20, 20];
-				*/
-				
 				// Create a group
 				
 				_group = createGroup [independent, true];
@@ -170,7 +162,7 @@ namespace Intrusion.Server
 				_roadSegments = _pos nearRoads 50;
 				
 				_waypoint = _group addWaypoint [_pos, 25];
-				_waypoint setWaypointType "GUARD";
+				_waypoint setWaypointType "HOLD";
 				
 				if (count _roadSegments > 0) then {
 					_pos = getPos (selectRandom _roadSegments);
@@ -178,14 +170,8 @@ namespace Intrusion.Server
 				
 				for "_i" from 1 to _noOfUnits do {
 					["I_soldier_F", _pos, _group] call _mUnitSpawner.CreateUnit;
-					//"I_soldier_F" createUnit [_pos, _group];
 				};
 				
-				{
-					_x setSkill ([_mAiSkillLevel] call SkillLevelMeta.SkillToScalar);
-				} foreach units _group;
-				
-				//[_group, _marker, [0,0,0], true] execVM "Engima\SearchPatrol\SearchPatrol.sqf";
 			} foreach _resourceLocations as ResourceLocation;
 		};
 	};

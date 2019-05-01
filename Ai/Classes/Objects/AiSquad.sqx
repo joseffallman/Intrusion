@@ -13,15 +13,15 @@ using Intrusion.Server;
 using Sqx.Collections;
 using Sqx.Waypoints;
 
-namespace Intrusion.Ai
-{
+namespace Intrusion.Ai {
 	public class AiSquad
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
-		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler, "_mAiWeaponsConfig" as IAiWeaponsConfig];
+		private fields ["_mOrderSetByLeader" as Boolean];
 		
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
@@ -36,8 +36,11 @@ namespace Intrusion.Ai
 			"_skillLevel" as SkillLevel, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_squadHandler" as ISquadHandler,
-			"_unitSpawner" as IUnitSpawner)
+			"_unitSpawner" as IUnitSpawner,
+			"_aiWeaponsConfig" as IAiWeaponsConfig)
 		{
+			private ["_unit" as Object];
+			
 			_mProfessionConfig = _professionConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mMapMarkerInfo = [_side] call _mapMarkersConfig.GetMapMarkerInfo;
@@ -45,6 +48,7 @@ namespace Intrusion.Ai
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mSquadHandler = _squadHandler;
 			_mUnitSpawner = _unitSpawner;
+			_mAiWeaponsConfig = _aiWeaponsConfig;
 			_mUnitInfo = [_side] call _unitsConfig.GetUnitInfo;
 			_self.Group = createGroup _side;
 			_mState = AiSquadState.Idle;
@@ -59,17 +63,13 @@ namespace Intrusion.Ai
 			_mLastPosTime = 0;
 			_mWannaBeProfessionType = ProfessionType.Undefined;
 			_mProfessionType = ProfessionType.Undefined;
+			_self.Members = [];
+			_mOrderSetByLeader = false;
 			
 			for "_i" from 1 to _noOfUnits do {
-				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
-				//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
+				_unit = [_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+				_self.Members pushBack _unit;
 			};
-			
-			_self.Members = [];
-			{
-				_x setSkill ([_skillLevel] call SkillLevelMeta.SkillToScalar);
-				_self.Members pushBack _x;
-			} foreach units _self.Group;
 		};
 		
 		// Gets the AI squad's group.
@@ -120,56 +120,59 @@ namespace Intrusion.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
 			private ["_count" as Scalar, "_index" as Scalar];
 			
-			waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
-			
-			_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
-
-			if (MissionCounterService.RemainingMinutes <= 12) then {
-//				player sideChat "less than 12!";
+			if (!_mOrderSetByLeader) then
+			{
+				waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
 				
-				_location = _mResourceLocationHandler.WinnersLocation;
-				
-				if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
-					_mResourceLocation = _location;
-					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-					//_mOrderTime = time;
-					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-//					player sideChat "End location order!";
-				};
-			}
-			else {
-				// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
-				
-				_locations = call _resourceLocationCollection.GetResourceLocations;
-				_count = 0;
-				_valuedLocations = [];
-				
-				{
-					_location = _x;
+				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+	
+				if (MissionCounterService.RemainingMinutes <= 12) then {
+	//				player sideChat "less than 12!";
 					
-					if (_location.Side != side _self.Group) then {
-						_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
-						_count = _count + 1;
+					_location = _mResourceLocationHandler.WinnersLocation;
+					
+					if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
+						_mResourceLocation = _location;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						//_mOrderTime = time;
+						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+	//					player sideChat "End location order!";
 					};
-				} foreach _locations as ResourceLocation;
-				
-				_valuedLocations = [_valuedLocations] call Sorter.QSort;
-				
-				if (_count > 3) then {
-					_count = 3;
-				};
-				
-				if (_count > 0) then {
-					_index = floor random _count;
-					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+				}
+				else {
+					// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
 					
-					_mResourceLocation = _location;
-					_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-					//_mOrderTime = time;
-					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+					_locations = call _resourceLocationCollection.GetResourceLocations;
+					_count = 0;
+					_valuedLocations = [];
+					
+					{
+						_location = _x;
+						
+						if (_location.Side != side _self.Group) then {
+							_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
+							_count = _count + 1;
+						};
+					} foreach _locations as ResourceLocation;
+					
+					_valuedLocations = [_valuedLocations] call Sorter.QSort;
+					
+					if (_count > 3) then {
+						_count = 3;
+					};
+					
+					if (_count > 0) then {
+						_index = floor random _count;
+						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+						
+						_mResourceLocation = _location;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						//_mOrderTime = time;
+						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+					};
+					
+					// If there is no flags to capture, maybe one can chose to defend one instead.
 				};
-				
-				// If there is no flags to capture, maybe one can chose to defend one instead.
 			};
 		};
 		
@@ -502,21 +505,15 @@ namespace Intrusion.Ai
 				// Check if launchers are invented, and in that case equip AI with launchers.
 				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
 				{
-					private ["_launcherClassName" as String, "_magazineClassName" as String];
+					private ["_aiWeaponInfo" as AiWeaponInfo];
 					
-					_launcherClassName = "launch_NLAW_F";
-					_magazineClassName = "NLAW_F";
-					
-					if (side _self.Group == west) then {
-						_launcherClassName = "launch_RPG32_F";
-						_magazineClassName = "RPG32_F";
-					};
+					_aiWeaponInfo = [side _self.Group] call _mAiWeaponsConfig.GetWeaponInfo;
 					
 					{
 						if (random 100 > 33) then {
 							_x addBackpack "B_Kitbag_cbr";
-							(unitBackpack _x) addMagazineCargo [_magazineClassName, 1];
-							_x addWeapon _launcherClassName;
+							(unitBackpack _x) addMagazineCargo [_aiWeaponInfo.LauncherAmmoClassName, 1];
+							_x addWeapon _aiWeaponInfo.LauncherClassName;
 						};
 					} foreach _self.Members as Object;
 				};
@@ -692,6 +689,16 @@ namespace Intrusion.Ai
 					_mWannaBeProfessionType = [side _self.Group, count _self.Members] call _self.GetRandomProfessionType;
 				};
 			};
+		};
+		
+		// Gives a new order to the group.
+		// _order (Order): The new order.
+		public method GiveOrder("_order" as Order)
+		{
+			_mCurrentOrder = _order;
+			_mOrderSetByLeader = true;
+			[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			[AiSquadState.Idle, 0] call _self.SetState;
 		};
 		
 		// Gives the AI squad an opportunity to act.

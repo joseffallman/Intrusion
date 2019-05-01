@@ -61,7 +61,7 @@ namespace Intrusion.Client
 		
 			_ratingLock = ClientState.RatingLock;
 			if (!isNull _ratingLock) then {
-				_playerText = _playerText + " (Locked - Group members to far apart)";
+				_playerText = _playerText + " Locked - " + _ratingLock.ReasonText;
 			};
 			
 			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[

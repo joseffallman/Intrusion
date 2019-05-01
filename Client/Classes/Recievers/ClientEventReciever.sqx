@@ -118,9 +118,16 @@ namespace Intrusion.Client
 		{
 			private ["_prisonService" as PrisonService];
 
-			if (gCommon.MissionParametersHandler.UseTeamKillPrison) then {
-				if (_unit != _killer && _killer == player && [_side, side _killer] call BIS_fnc_sideIsFriendly) then {
-				
+			if (_unit != _killer && [_side, side _killer] call BIS_fnc_sideIsFriendly) then
+			{
+				// Rating lock
+				if (group _killer == group player) then {
+					ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.TeamKill] new RatingLock;
+				};
+
+				// Team kill prison
+				if (gCommon.MissionParametersHandler.UseTeamKillPrison && _killer == player) then
+				{			
 					// Do not start prison if player was killed by mines
 					_nearestMine = [getPos player] call Functions.GetNearestMine;
 					
@@ -193,6 +200,45 @@ namespace Intrusion.Client
 		public static method OnMissionTimeIsUp()
 		{
 			call MissionEndHandler.EndGame;
+		};
+		
+		// Called when a squad (of players, not AI) has lost its squad vehicle.
+		// _group (Group): The group that lost its vehicle.
+		// _vehicle (Object): The vehicle that was destroyed.
+		public static method OnGroupLostSquadVehicle("_group" as Group, "_vehicle" as Object)
+		{
+			if (_group == group player) then {
+				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.LostVehicle] new RatingLock;
+			};
+		};
+		
+		// Called when a unit (player or AI) has entered a vehicle.
+		// All intrusion vehicles has the variable "IntrusionVehicle", that can be used to get more information about the vehicle (like professions and such).
+		// _unit (Object): The unit that entered the vehicle.
+		// _vehicle (Object): The vehicle that was entered.
+		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array)
+		{
+			if (player == _unit) then {
+				[_unit, _role, _vehicle] call ClientSquadHandler.SetUniform;
+			};
+		};
+		
+		// Called when a unit assembled a static weapon.
+		// _staticWeapon (Object): The weapon that was assembled.
+		// _unit (Object): The unit that assembled the weapon.
+		public static method OnStaticWeaponAssebled("_staticWeapon" as Object, "_unit" as Object)
+		{
+			[[_staticWeapon]] call gClient.ClientVehicleHandler.GroupLockVehicles;
+		};
+		
+		// Called when a unit changed seat in a vehicle.
+		// _unit (Object): The unit that changing seat.
+		// _vehicle (Object): The vehicle that the unit occupies.
+		public static method OnUnitChangedSeat("_unit" as Object, "_vehicle" as Object)
+		{
+			if (player == _unit) then {
+				[_unit, assignedVehicleRole _unit select 0, _vehicle] call ClientSquadHandler.SetUniform;
+			};
 		};
 	};
 };
