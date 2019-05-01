@@ -95,6 +95,26 @@ namespace Intrusion.Server
 			classNull
 		};
 		
+		// Sets the dominant side of a resource location and sends resource location updates to clients.
+		// _markerName (String): Name of the marker associated with the flag.
+		// _dominantSide (Side): The side that is dominating the side.
+		public method SetNewDominantSide("_markerName" as String, "_dominantSide" as Side)
+		{
+			private ["_resourceLocation" as ResourceLocation];
+		
+			_resourceLocation = [_markerName] call _self.GetResourceLocation;
+			
+			if (!isNull _resourceLocation) then {
+				_resourceLocation.DominantSide = _dominantSide;
+				
+				call _self.BroadcastResourceLocations;
+				
+				if (_dominantSide != civilian) then {
+					["ClientMessageHandler.ShowHint", [_resourceLocation.Text + " is being taken over by " + str _dominantSide]] call Remote.Invoke;
+				};
+			};
+		};
+		
 		// Sets a new owner for a resource location and sends resource location updates to clients.
 		// _markerName (String): Name of the marker associated with the flag.
 		// _side (Side): The side of the player that captured the flag.

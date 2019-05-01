@@ -1,0 +1,26 @@
+/*
+ * Name:	ResourceLocationConfig
+ * Date:	2019-05-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configurations about resource locations.
+ */
+namespace Intrusion.Server
+{
+	public class ResourceLocationConfig
+	{
+		// Creates a ResourceLocationConfig object.
+		public constructor {
+			_self.AreaRadius = 30;
+			_self.DominanceTimeBeforeCaptureSek = 10;
+		};
+		
+		// Gets the area radious of a resource location.
+		public property Scalar AreaRadius { get; private set; };
+		
+		// Gets the time a side must be dominating the resource location area before it is captured.
+		public property Scalar DominanceTimeBeforeCaptureSek { get; private set; };
+	};
+};

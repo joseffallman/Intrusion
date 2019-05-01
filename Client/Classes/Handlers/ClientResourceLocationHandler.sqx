@@ -37,12 +37,6 @@ namespace Intrusion.Client
 			_resourceLocations = call _resourceLocationCollection.GetResourceLocations;
 			
 			{
-				removeAllActions _x.Flag;
-				
-				if (_x.Side != playerSide && vehicle player == player) then {
-					_x.Flag addAction ["Capture flag", { [_this select 0] spawn _self.OnActionCaptureFlag; }, nil, 1.5, true, true, "", "true", 5 ];
-				};
-				
 				[_x.MarkerName, _x.Side] call _self.UpdateMarkerColor;
 			} foreach _resourceLocations as ResourceLocation;
 		};

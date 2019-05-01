@@ -1,0 +1,216 @@
+/*
+ * Name:	ResourceLocationOwnerService
+ * Date:	2019-05-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles the ownership of resource locations.
+ */
+ 
+using Intrusion.Common;
+using Intrusion.Communication;
+ 
+namespace Intrusion.Server
+{
+	public class ResourceLocationOwnerService : IService
+	{
+		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mResourceLocationDomInfos" as Array /* of ResourceLocationDominanceInfo */];
+		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceLocationConfig" as ResourceLocationConfig, "_mMissionTime" as IMissionTime, "_mRatingCalculator" as RatingCalculator];
+		
+		// Creates a ResourceLocationOwnerService object.
+		public constructor(
+			"_gameplayConfig" as IGameplayConfig,
+			"_resourceLocationHandler" as IResourceLocationHandler,
+			"_resourceLocationConfig" as ResourceLocationConfig,
+			"_missionTime" as IMissionTime,
+			"_ratingCalculator" as RatingCalculator)
+		{
+			_mGameplayConfig = _gameplayConfig;
+			_mResourceLocationHandler = _resourceLocationHandler;
+			_mResourceLocationConfig = _resourceLocationConfig;
+			_mMissionTime = _missionTime;
+			_mRatingCalculator = _ratingCalculator;
+			
+			_self.IsRunning = false;
+			_mResourceLocationDomInfos = [];
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method GetPresentUnits("_markerName" as String, "_side" as Side)
+		{
+			private ["_units"];
+			
+			_units = [];
+			
+			{
+				if (side group _x == _side && _x distance getMarkerPos _markerName <= _mResourceLocationConfig.AreaRadius) then
+				{
+					_units pushBack _x;
+				};
+			} foreach allUnits as Object;
+			
+			_units
+		};
+		
+		// Checks which side is the dominant side around a marker.
+		// _markerName (String): The name of the marker to check.
+		// Returns (Side): The dominant side. civilian if sides are equally dominant.
+		private method Side CheckDominantSide("_markerName" as String)
+		{
+			private ["_side" as Side, "_points" as Scalar, "_bestSide" as Side, "_bestSidesPoints" as Scalar];
+			
+			_bestSide = civilian;
+			_bestSidesPoints = 0;
+			
+			{
+				_side = _x;
+				_points = 0;
+				
+				{
+					if (side group _x == _side && _x distance getMarkerPos _markerName <= _mResourceLocationConfig.AreaRadius) then
+					{
+						_points = _points + 1;
+					};
+				} foreach allUnits as Object;
+				
+				if (_points > _bestSidesPoints) then {
+					_bestSide = _side;
+					_bestSidesPoints = _points;
+				}
+				else {
+					if (_points == _bestSidesPoints) then {
+						_bestSide = civilian;
+						_bestSidesPoints = _points;
+					};
+				};
+			} foreach _mGameplayConfig.CompetingSides;
+			
+			_bestSide
+		};
+		
+		private method ResourceLocationDominanceInfo GetLocationDominanceInfo("_markerName" as String)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.MarkerName == _markerName) then {
+					_x breakOut "main";
+				};
+			} foreach _mResourceLocationDomInfos as ResourceLocationDominanceInfo;
+			
+			classNull
+		};
+		
+		private method UpdateLocationDominanceInfo("_markerName" as String, "_dominantSide" as Side)
+		{
+			private ["_itemWasFound" as Boolean];
+			
+			scopeName "main";
+			_itemWasFound = false;
+			
+			{
+				
+				if (_x.MarkerName == _markerName) then {
+					_x.DominantSide = _dominantSide;
+					_x.StartDominanceTime = call _mMissionTime.GetMissionTime;
+					_x.IsHandled = false;
+					
+					_itemWasFound = true;
+					breakTo "main";
+				};
+				
+			} foreach _mResourceLocationDomInfos as ResourceLocationDominanceInfo;
+				
+			if (!_itemWasFound) then {
+				_mResourceLocationDomInfos pushBack [_markerName, _dominantSide, call _mMissionTime.GetMissionTime] new ResourceLocationDominanceInfo;
+			};
+		};
+		
+		private method AddRatingToGroups("_markerName" as String, "_presentUnits" as Array /* of Object */)
+		{
+			private ["_rating" as Scalar, "_addingRating" as Scalar, "_presentGroups" as Array];
+			
+			_presentGroups = [];
+			
+			{
+				if (!((group _x) in _presentGroups)) then {
+					_presentGroups pushBack group _x;
+				};
+			} foreach _presentUnits;
+			
+			{
+				_addingRating = [count units _x] call _mRatingCalculator.CalculateGroupRatingFlag;
+				
+				if (isPlayer leader _x) then {
+					["ClientEventReciever.OnAddSquadRating", [_addingRating, _x]] call Remote.Invoke;
+		        	["Group " + str (_x) + " recieved a rating of " + str _addingRating + " for capturing resource location " + _markerName] call LogHandler.Debug;
+				}
+				else {
+					_rating = (_x) getVariable ["Rating", 0];
+					_rating = _rating + _addingRating;
+					(_x) setVariable ["Rating", _rating];
+		        	["AI group " + str (_x) + " recieved a rating of " + str _addingRating + " (to " + str (_x getVariable ["Rating", 0]) + ") for capturing resource location " + _markerName] call LogHandler.Debug;
+				};
+			} foreach _presentGroups as Group;
+		};
+		
+		private method HandleLocation("_resourceLocation" as ResourceLocation)
+		{
+			private ["_dominantSide" as Side, "_domInfo" as ResourceLocationDominanceInfo, "_presentUnits" as Array];
+			
+			_dominantSide = [_resourceLocation.MarkerName] call _self.CheckDominantSide;
+			
+			// If the resource location has changed
+			if (_dominantSide != _resourceLocation.DominantSide) then {
+				[_resourceLocation.MarkerName, _dominantSide] call _mResourceLocationHandler.SetNewDominantSide;
+				
+				// Save the time for when the resource location was updated with a dominant side
+				[_resourceLocation.MarkerName, _dominantSide] call _self.UpdateLocationDominanceInfo;
+			}
+			else // If the resource location has not changed, check if the dominant side should capture the location
+			{
+				_domInfo = [_resourceLocation.MarkerName] call _self.GetLocationDominanceInfo;
+
+				if (!isNull _domInfo) then {
+					if (_domInfo.DominantSide != _resourceLocation.Side && 
+						_domInfo.DominantSide != civilian && 
+						(call _mMissionTime.GetMissionTime) > _domInfo.StartDominanceTime + _mResourceLocationConfig.DominanceTimeBeforeCaptureSek && 
+						!_domInfo.IsHandled) then {
+						
+						[_resourceLocation.MarkerName, _domInfo.DominantSide] call _mResourceLocationHandler.SetNewFlagOwner;
+						_domInfo.IsHandled = true;
+						_presentUnits = [_resourceLocation.MarkerName, _domInfo.DominantSide] call _self.GetPresentUnits;
+						[_resourceLocation.MarkerName, _presentUnits] call _self.AddRatingToGroups;
+					};
+				};
+			};
+		};
+		
+		private method Run()
+		{
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_resourceLocations" as Array /* of ResourceLocation */];
+			
+			waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
+			
+			while { true } do
+			{
+				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+				_resourceLocations = call _resourceLocationCollection.GetResourceLocations;
+				
+				{
+					[_x] call _self.HandleLocation;
+				} foreach _resourceLocations as ResourceLocation;
+			
+				sleep 3;
+			};
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};
