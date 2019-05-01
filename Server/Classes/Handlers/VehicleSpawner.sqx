@@ -124,16 +124,13 @@ namespace Intrusion.Server
 		    clearBackpackCargoGlobal _vehicleObj;
 		    clearItemCargoGlobal _vehicleObj;
 		    
-		    {
-            	_vehicleObj addBackpackCargoGlobal [_x, 1];
-		    } foreach _vehicleClassInfo.CargoWeapons as String;
-		    
-		    [_vehicleObj, _group] call _vehicleClassInfo.OnVehicleSpawn;
-		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
+        	
+        	// Run vehicle specific code, e.g. to add cargo weapons or attach items.
+        	[_vehicleObj, _vehicleClassInfo] call _vehicleClassInfo.OnVehicleSpawn;
         	
         	if (_professionType != ProfessionType.Undefined) then {
 				["ClientEventReciever.OnSquadVehiclesSpawned", [_group, _professionType, [_vehicleObj]]] call Remote.Invoke;
