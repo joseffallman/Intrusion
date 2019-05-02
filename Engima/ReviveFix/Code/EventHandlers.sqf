@@ -23,7 +23,6 @@ player addEventHandler ["Hit", {
 // Event handler that fires when player respawns. A player respawns when healed by someone (and not
 // when hit.
 player addEventHandler ["Respawn", {
-	player sideChat "Respawned.";
 	player allowDamage true;
 	ENGIMA_RESPAWNFIX_playerIsIncapacitated = false;
 }];
@@ -36,18 +35,14 @@ if (ENGIMA_REVIVEFIX_alwaysUnconscious) then
 	player addEventHandler ["HandleDamage", {
     	params ["_unit", "_hitSelection", "_damage"];
     	
-		player sideChat "HandleDamage.";
-    	
     	scopeName "main";
 
 		if (ENGIMA_RESPAWNFIX_playerIsIncapacitated) then
 		{
-			player sideChat "Incapacitated.";
 			_damage = 0;
 		}
 		else
 		{
-			player sideChat "Not Incapacitated.";
 			// If player is hurt to death, throw out of vehicle and return 0.99
 			if (_damage >= 1) then
 			{
@@ -81,8 +76,6 @@ if (ENGIMA_REVIVEFIX_alwaysUnconscious) then
 				};
 			};
 		};
-		
-		player sideChat "DAMAGE: " + str damage player;
 		
 		_damage
 	}];
