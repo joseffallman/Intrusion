@@ -14,7 +14,7 @@ namespace Intrusion.Server
 		// Creates a ResourceLocationConfig object.
 		public constructor {
 			_self.AreaRadius = 30;
-			_self.DominanceTimeBeforeCaptureSek = 10;
+			_self.DominanceTimeBeforeCaptureSek = 30;
 		};
 		
 		// Gets the area radious of a resource location.

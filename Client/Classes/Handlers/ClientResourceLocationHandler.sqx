@@ -52,7 +52,15 @@ namespace Intrusion.Client
 		// _ownerSide (Side): The side owning the marker.
 		private static method UpdateMarkerColor("_markerName" as String, "_ownerSide" as Side, "_dominantSide" as Side)
 		{
-			if (_ownerSide != civilian) then {
+			if (_ownerSide == civilian) then {
+				if (_dominantSide == civilian) then {
+					_markerName setMarkerAlphaLocal 1;
+				}
+				else {
+					_markerName setMarkerAlphaLocal 0.3;
+				};
+			}
+			else {
 				if (_ownerSide == playerSide) then {
 					if (_dominantSide == playerSide || _dominantSide == civilian) then {
 						_markerName setMarkerColorLocal "ColorWest";
@@ -60,7 +68,7 @@ namespace Intrusion.Client
 					}
 					else {
 						_markerName setMarkerColorLocal "ColorWest";
-						_markerName setMarkerAlphaLocal 0.5;
+						_markerName setMarkerAlphaLocal 0.3;
 					};
 				}
 				else {
@@ -70,7 +78,7 @@ namespace Intrusion.Client
 					}
 					else {
 						_markerName setMarkerColorLocal "ColorEast";
-						_markerName setMarkerAlphaLocal 0.5;
+						_markerName setMarkerAlphaLocal 0.3;
 					};
 				};
 			};

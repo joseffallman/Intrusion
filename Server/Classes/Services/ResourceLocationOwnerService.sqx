@@ -71,7 +71,9 @@ namespace Intrusion.Server
 				{
 					if (side group _x == _side && _x distance getMarkerPos _markerName <= _mResourceLocationConfig.AreaRadius) then
 					{
-						_points = _points + 1;
+						if (!(_x getVariable ["BIS_revive_incapacitated", false])) then {
+							_points = _points + 1;
+						};
 					};
 				} foreach allUnits as Object;
 				
@@ -111,7 +113,6 @@ namespace Intrusion.Server
 			_itemWasFound = false;
 			
 			{
-				
 				if (_x.MarkerName == _markerName) then {
 					_x.DominantSide = _dominantSide;
 					_x.StartDominanceTime = call _mMissionTime.GetMissionTime;
@@ -120,7 +121,6 @@ namespace Intrusion.Server
 					_itemWasFound = true;
 					breakTo "main";
 				};
-				
 			} foreach _mResourceLocationDomInfos as ResourceLocationDominanceInfo;
 				
 			if (!_itemWasFound) then {
