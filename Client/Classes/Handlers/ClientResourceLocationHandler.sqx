@@ -37,7 +37,7 @@ namespace Intrusion.Client
 			_resourceLocations = call _resourceLocationCollection.GetResourceLocations;
 			
 			{
-				[_x.MarkerName, _x.Side] call _self.UpdateMarkerColor;
+				[_x.MarkerName, _x.Side, _x.DominantSide] call _self.UpdateMarkerColor;
 			} foreach _resourceLocations as ResourceLocation;
 		};
 		
@@ -50,14 +50,28 @@ namespace Intrusion.Client
 		// Updates the marker color with the color reflecting the current side.
 		// _markerName (String): The name of the flag marker.
 		// _ownerSide (Side): The side owning the marker.
-		private static method UpdateMarkerColor("_markerName" as String, "_ownerSide" as Side)
+		private static method UpdateMarkerColor("_markerName" as String, "_ownerSide" as Side, "_dominantSide" as Side)
 		{
-			if (_ownerSide == playerSide) then {
-				_markerName setMarkerColorLocal "ColorWest";
-			}
-			else {
-				if (_ownerSide != civilian) then {
-					_markerName setMarkerColorLocal "ColorEast";
+			if (_ownerSide != civilian) then {
+				if (_ownerSide == playerSide) then {
+					if (_dominantSide == playerSide || _dominantSide == civilian) then {
+						_markerName setMarkerColorLocal "ColorWest";
+						_markerName setMarkerAlphaLocal 1;
+					}
+					else {
+						_markerName setMarkerColorLocal "ColorWest";
+						_markerName setMarkerAlphaLocal 0.5;
+					};
+				}
+				else {
+					if (_dominantSide != playerSide || _dominantSide == civilian) then {
+						_markerName setMarkerColorLocal "ColorEast";
+						_markerName setMarkerAlphaLocal 1;
+					}
+					else {
+						_markerName setMarkerColorLocal "ColorEast";
+						_markerName setMarkerAlphaLocal 0.5;
+					};
 				};
 			};
 		};
