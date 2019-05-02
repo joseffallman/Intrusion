@@ -4,16 +4,16 @@ player addEventHandler ["Hit", {
 	params ["_player"];
 	
 	// If player is not incapacitated
-	if (_player getVariable ["BIS_revive_incapacitated", false] && !ENGINA_RESPAWNFIX_PlayerIsIncapacitated) then {
+	if (_player getVariable ["BIS_revive_incapacitated", false] && !ENGIMA_RESPAWNFIX_playerIsIncapacitated) then {
 		player allowDamage false;
 		player sideChat "unbeatable";
-		ENGINA_RESPAWNFIX_PlayerIsIncapacitated = true;
+		ENGIMA_RESPAWNFIX_playerIsIncapacitated = true;
 		
 		[] spawn {
-			waitUntil {!ENGINA_RESPAWNFIX_PlayerIsIncapacitated || !(player getVariable ["BIS_revive_incapacitated", false]) };
+			waitUntil {!ENGIMA_RESPAWNFIX_playerIsIncapacitated || !(player getVariable ["BIS_revive_incapacitated", false]) };
 			
 			player allowDamage true;
-			ENGINA_RESPAWNFIX_PlayerIsIncapacitated = false;
+			ENGIMA_RESPAWNFIX_playerIsIncapacitated = false;
 			player sideChat "beatable again";
 		};
 	};
@@ -23,28 +23,35 @@ player addEventHandler ["Hit", {
 // Event handler that fires when player respawns. A player respawns when healed by someone (and not
 // when hit.
 player addEventHandler ["Respawn", {
+	player sideChat "Respawned.";
 	player allowDamage true;
-	ENGINA_RESPAWNFIX_PlayerIsIncapacitated = false;
+	ENGIMA_RESPAWNFIX_playerIsIncapacitated = false;
 }];
 
 // Event handler that fires when player is hurt.
-if (ENGIMA_REVIVEFIX_alwaysUnconscious) then {
+if (ENGIMA_REVIVEFIX_alwaysUnconscious) then
+{
  	player removeAllEventHandlers "HandleDamage";
+ 	
 	player addEventHandler ["HandleDamage", {
     	params ["_unit", "_hitSelection", "_damage"];
     	
+		player sideChat "HandleDamage.";
+    	
     	scopeName "main";
 
-		if (ENGINA_RESPAWNFIX_PlayerIsIncapacitated) then
+		if (ENGIMA_RESPAWNFIX_playerIsIncapacitated) then
 		{
+			player sideChat "Incapacitated.";
 			_damage = 0;
 		}
 		else
 		{
+			player sideChat "Not Incapacitated.";
 			// If player is hurt to death, throw out of vehicle and return 0.99
 			if (_damage >= 1) then
 			{
-				ENGINA_RESPAWNFIX_PlayerIsIncapacitated = true;
+				ENGIMA_RESPAWNFIX_playerIsIncapacitated = true;
 					
 				// If playe is in a vehicle, throw him/her out, because vanilla Arma
 				// will have him/her killed.
@@ -67,13 +74,15 @@ if (ENGIMA_REVIVEFIX_alwaysUnconscious) then {
 				_damage = 0.99;
 				
 				[] spawn {
-					waitUntil {!ENGINA_RESPAWNFIX_PlayerIsIncapacitated || !(player getVariable ["BIS_revive_incapacitated", false]) };
+					waitUntil {!ENGIMA_RESPAWNFIX_playerIsIncapacitated || !(player getVariable ["BIS_revive_incapacitated", false]) };
 					
 					player allowDamage true;
-					ENGINA_RESPAWNFIX_PlayerIsIncapacitated = false;
+					ENGIMA_RESPAWNFIX_playerIsIncapacitated = false;
 				};
 			};
 		};
+		
+		player sideChat "DAMAGE: " + str damage player;
 		
 		_damage
 	}];
