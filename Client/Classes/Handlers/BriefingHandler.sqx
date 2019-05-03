@@ -32,7 +32,8 @@ namespace Intrusion.Client
         	// AI
         	// Intrusion - The Philosophy
 			
-			player createDiaryRecord ["Diary", ["Intrusion - The Philosophy", "The main philosophy behind Intrusion is to encourage the use of teams, roles, leaderships and communication, while at the same time provide fun gameplay without elements that may seem too difficult to embrace."]];
+			player createDiaryRecord ["Diary", ["Intrusion - The Philosophy",
+			"The main philosophy behind Intrusion is to encourage a gameplay style that simulates the use of weapons and vehicle in how they are used in real life, and at the same time offer a fun and easy gameplay relatively easy to embrace. Like in real life, the use of teams, roles, communications and leadership strategy on different levels are essential to form a winning army. What ia single unit does may be of importance, but not compared to what a team can accomplish, when its members supporting each other in all kinds of situations. In a real battle there are often limited amount of resources, but even an outcounted group of people may beat event the works odds if fighting well together."]];
 
 			player createDiaryRecord ["Diary", ["Rank and Rating",
 			"RANK AND RATING<br /><br />" +
@@ -70,7 +71,8 @@ namespace Intrusion.Client
 			player createDiaryRecord ["Diary", ["Resources",
 			"For each side to get more advanced vehicles and weapons they will need to bring in resources by securing the resource locations marked on the map. The resources are of two types, production and administration. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
 			"PRODUCTION<br /><br />" +
-			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'. A produced ehicle's cost is withdrawn from the side's total production.<br /><br />" +
+			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'.<br /><br />" +
+			"When a squad assigns to a profession that has a vehicle, a vehicle order/reservation is placed in a queue at the side's production manager. The first vehicle in the queue are delivered when tha vehicle's required administration is established and when the side has enough production to create it. Then the next order in the queueu is treated. A produced vehicle's cost is withdrawn from the side's total production. And the production cost of a vehicle that is removed by the framework (e.g. its owner logged out) will be returned to the side upon removal.<br /><br />" +
 			"ADMINISTRATION<br /><br />" +
 			"Offices generate administration, and administration leads to 'establishments'. Administration is the resource needed for the brigade to establish more and more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of administration."]];
 
