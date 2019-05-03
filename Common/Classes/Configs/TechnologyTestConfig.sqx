@@ -22,6 +22,7 @@ namespace Intrusion.Common
 				[Technology.Maintenance, "Maintenance", 75] new TechnologyInfo,
 				[Technology.Ordnance, "Ordnance", 300] new TechnologyInfo,
 				[Technology.Motorized, "Motorized Vehicles", 350] new TechnologyInfo,
+				[Technology.AirRecon, "Air Recon", 400] new TechnologyInfo,
 				[Technology.LightArmor, "Light Armor", 500] new TechnologyInfo,
 				[Technology.Artillery, "Artillery", 600] new TechnologyInfo,
 				[Technology.HeavyArmor, "Heavy Armor", 750] new TechnologyInfo,

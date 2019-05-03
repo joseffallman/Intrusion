@@ -216,7 +216,7 @@ namespace Intrusion.Client
 		// All intrusion vehicles has the variable "IntrusionVehicle", that can be used to get more information about the vehicle (like professions and such).
 		// _unit (Object): The unit that entered the vehicle.
 		// _vehicle (Object): The vehicle that was entered.
-		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array)
+		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as VehicleRole, "_vehicle" as Object, "_turret" as Array)
 		{
 			if (player == _unit) then {
 				[_unit, _role, _vehicle] call ClientSquadHandler.SetUniform;

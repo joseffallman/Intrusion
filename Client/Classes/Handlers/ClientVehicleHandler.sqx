@@ -36,7 +36,7 @@ namespace Intrusion.Client
 						call gClient.ClientVehicleHandler.RemoveGroupMarkerFromVehicles;
 					
 						if (!(group _player isEqualTo _intrusionVehicle.OwnerGroup)) then {
-							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport) then {
+							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport || _intrusionVehicle.OwnerProfession == ProfessionType.ReconChopper) then {
 								if (_player == driver _intrusionVehicle.Vehicle) then {
 									moveOut _player;
 			                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;

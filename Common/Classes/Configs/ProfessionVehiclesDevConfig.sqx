@@ -22,6 +22,7 @@ namespace Intrusion.Common
 				[ProfessionType.Repair, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Motorized, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Sniper, 10] new ProfessionVehicleInfo,
+				[ProfessionType.ReconChopper, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
 				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,

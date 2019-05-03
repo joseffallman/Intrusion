@@ -44,8 +44,8 @@ namespace Intrusion.Server
 				_randis = _initialRadius + floor random _extendedRadius;
 				_spawnpos = [(_markpos select 0) + ((sin _randir) * _randis), (_markpos select 1) + ((cos _randir) * _randis), 0.1];
 				_houses = nearestObjects [_spawnpos, ["house","wall"], 50];
-				_vehicles = nearestObjects [_spawnpos, ["LandVehicle", "Land_BagBunker_01_Large_green_F", "Land_TTowerBig_2_F"], 20];
-				_isFlat = _spawnpos isFlatEmpty [2, -1, 0.5, 10, 0, false, objNull ]; 
+				_vehicles = nearestObjects [_spawnpos, ["LandVehicle", "Land_BagBunker_01_Large_green_F", "Land_TTowerBig_2_F"], 25];
+				_isFlat = _spawnpos isFlatEmpty [2, -1, 0.5, 10, 0, false, objNull ];
 				_danger = false;
 				{ if (floor(_spawnpos distance getPos _x) < 10) then { _danger=true; }; } forEach _houses;
 				{ if (floor(_spawnpos distance getPos _x) < 8) then { _danger=true; }; } forEach _vehicles;
@@ -64,7 +64,7 @@ namespace Intrusion.Server
 				_spawnPos = [];
 			};
 			
-			_spawnpos		
+			_spawnpos
 		};
 		
 		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side)
@@ -119,6 +119,7 @@ namespace Intrusion.Server
 		    [_vehicleObj, _side] call _self.PlaceVehicleOnCarPark;
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
+		    
 		    clearWeaponCargoGlobal _vehicleObj;
 		    clearMagazineCargoGlobal _vehicleObj;
 		    clearBackpackCargoGlobal _vehicleObj;
@@ -140,7 +141,8 @@ namespace Intrusion.Server
         	["Spawning squad vehicle at side " + str _side + ": " + str _intrusionVehicle] call LogHandler.Info;
 
 			// Log all vehicles
-        	["_mAllIntrusionVehicles:"] call LogHandler.Debug;        	
+        	["_mAllIntrusionVehicles:"] call LogHandler.Debug;
+
 			{
 	        	[str _x] call LogHandler.Debug;
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
