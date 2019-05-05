@@ -17,9 +17,10 @@ namespace Intrusion.Common
 		public constructor {
 			_mUniformInfos = [];
 			
+			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Undefined] new UniformInfo; // Default
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Infantry] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_tshirt", "H_HelmetB_grass", ProfessionType.Transport] new UniformInfo;
-			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_tshirt", "H_HelmetB_grass", ProfessionType.Fuel] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB_grass", ProfessionType.Ammo] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB_light_sand", ProfessionType.Repair] new UniformInfo;
@@ -28,13 +29,17 @@ namespace Intrusion.Common
 			_mUniformInfos pushBack [west, "U_B_GhillieSuit", "H_HelmetB_sand", ProfessionType.Sniper] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetSpec_B", ProfessionType.AntiArmor] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_vest", "H_HelmetCrew_B", ProfessionType.Mechanized] new UniformInfo;
-			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam", "H_HelmetB", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
 			_mUniformInfos pushBack [west, "U_B_CombatUniform_mcam_vest", "H_HelmetCrew_B", ProfessionType.Armored] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_PilotHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Driver] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_PilotHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Turret] new UniformInfo;
+				_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_CrewHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Cargo] new UniformInfo;
 			
 			// East
+			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Undefined] new UniformInfo; //Default
 			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Infantry] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_I_CombatUniform_tshirt", "H_HelmetO_ocamo", ProfessionType.Transport] new UniformInfo;
-			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Transport, VehicleRole.Cargo] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_I_CombatUniform_tshirt", "H_HelmetO_ocamo", ProfessionType.Fuel] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_O_CombatUniform_oucamo", "H_HelmetO_ocamo", ProfessionType.Ammo] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_O_CombatUniform_oucamo", "H_HelmetO_ocamo", ProfessionType.Repair] new UniformInfo;
@@ -43,8 +48,11 @@ namespace Intrusion.Common
 			_mUniformInfos pushBack [east, "U_O_GhillieSuit", "H_HelmetO_ocamo", ProfessionType.Sniper] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_O_SpecopsUniform_blk", "H_HelmetO_ocamo", ProfessionType.AntiArmor] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_O_SpecopsUniform_blk", "H_HelmetCrew_O", ProfessionType.Mechanized] new UniformInfo;
-			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Mechanized, VehicleRole.Cargo] new UniformInfo;
 			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetCrew_O", ProfessionType.Armored] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_PilotHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Driver] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_PilotHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Turret] new UniformInfo;
+				_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_CrewHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Cargo] new UniformInfo;
 		};
 		
 		//
@@ -58,15 +66,23 @@ namespace Intrusion.Common
 		{
 			scopeName "main";
 			
+			// Vehiclerole uniform
 			{
 				if (_x.Side == _side && _x.ProfessionType == _professionType && _x.VehicleRole == _vehicleRole) then {
 					_x breakOut "main";
 				};
 			} foreach _mUniformInfos as UniformInfo;
 			
-			// If there was no specific uniform for this vehicleRole, grab one for this professionType
+			// Profession uniform
 			{
 				if (_x.Side == _side && _x.ProfessionType == _professionType) then {
+					_x breakOut "main";
+				};
+			} foreach _mUniformInfos as UniformInfo;
+			
+			// Default uniform
+			{
+				if (_x.Side == _side && _x.ProfessionType == ProfessionType.Undefined) then {
 					_x breakOut "main";
 				};
 			} foreach _mUniformInfos as UniformInfo;

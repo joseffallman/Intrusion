@@ -1,0 +1,80 @@
+/*
+ * Name:	CommonSquadHandler
+ * Date:	2019-05-05
+ * Version: 1.0
+ * Author:  Josef
+ *
+ * Description:
+ * Common squad handlers related methods
+ */
+namespace Intrusion.Common
+{
+	public class CommonSquadHandler
+	{
+		private static fields ["_mUniformConfig" as UniformConfig];
+
+		// Creates a CommonSquadHandler object.
+		public constructor("_uniformConfig" as UniformConfig) {
+			_mUniformConfig = _uniformConfig;
+		};
+		
+		// Change unit uniform.
+		// _unit (Object): The unit to change dress on.
+		// _role (String): Role in vehicle.
+		// _vehicle (Object): The vehicle that the unit entered.
+		public static method SetUniform(
+			"_unit" as Object,
+			"_vehicleRole" as VehicleRole,
+			"_vehicle" as Object)
+		{
+			private [
+				"_uniformItems" as Array,
+				"_uniformInfo" as UniformInfo,
+				"_intrusionVehicle" as IntrusionVehicle,
+				"_squadCollection" as SquadCollection,
+				"_playerSquad" as Squad,
+				"_playerGroupProfessionType" as ProfessionType
+			];
+			
+			// Find unit profession type.
+			// This to see if unit belong to the infantry's.
+			_playerGroupProfessionType = ProfessionType.Undefined;
+			if (call PublicVariableHandler.SquadCollectionHasValue) then 
+			{
+				_squadCollection = call PublicVariableHandler.GetSquadCollection;
+				_playerSquad = [group player] call _squadCollection.GetSquadByGroup;
+				if (!isNull _playerSquad) then 
+				{
+					_playerGroupProfessionType = _playerSquad.ProfessionType;
+				};
+			};
+
+			// Find information about vehicle.
+			_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+
+			if (
+				!isNull _intrusionVehicle && { 
+				(_intrusionVehicle.OwnerProfession != ProfessionType.Undefined && _intrusionVehicle.OwnerGroup == group _unit) || 
+				(_intrusionVehicle.OwnerProfession == ProfessionType.Undefined && _playerGroupProfessionType == ProfessionType.Infantry)}
+			) then
+			{
+				_uniformInfo = [side group _unit, _intrusionVehicle.OwnerProfession, _vehicleRole] call _mUniformConfig.GetUniformInfo;
+				
+				if (!isNull _uniformInfo) then
+				{
+					_uniformItems = uniformItems _unit;
+					
+					_unit addUniform _uniformInfo.Uniform;
+					_unit addHeadgear _uniformInfo.Helmet;
+					
+					// Restore items/magazines etc to this units new uniform
+					{
+						_unit addItemToUniform _x;
+					} forEach _uniformItems;
+				};
+				
+			};
+		};
+	};
+};
+

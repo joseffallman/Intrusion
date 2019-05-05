@@ -76,7 +76,7 @@ namespace Intrusion.Server
 		{
 			_unit addEventHandler ["GetInMan", {
 				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
-				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle, _turret]] call Remote.Invoke;
+				[_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle] call CommonSquadHandler.SetUniform;
 			}];
 		};
 		

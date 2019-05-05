@@ -52,6 +52,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingCalculator.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\UniformInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\CommonSquadHandler.sqx";
 
 using Intrusion.Common;
 
@@ -77,5 +78,6 @@ gCommon = new IntrusionCommon;
 
 // Handlers
 [ReleaseSettings.LogLevelFile, ReleaseSettings.LogLevelScreen] call LogHandler.Init;
+[gCommon.UniformConfig] new CommonSquadHandler;
 
 #endregion

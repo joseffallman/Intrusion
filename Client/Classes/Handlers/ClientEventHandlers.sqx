@@ -96,7 +96,7 @@ namespace Intrusion.Client
 					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
 				};
 
-				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle, _turret]] call Remote.Invoke;
+				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, _role, _vehicle, _turret]] call Remote.Invoke;
 			}];
 			
 			player addEventHandler ["GetOutMan", {
