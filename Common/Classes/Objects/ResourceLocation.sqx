@@ -17,6 +17,7 @@ namespace Intrusion.Common
 			_self.MarkerName = _markerName;
 			_self.Text = markerText _markerName;
 			_self.Side = civilian;
+			_self.DominantSide = civilian;
 			_self.FacilityType = _facilityType;
 			_self.IsWinnersLocation = false;
 			
@@ -38,6 +39,9 @@ namespace Intrusion.Common
 		
 		// Gets or sets the location's side.
 		public property Side Side { get; set; };
+		
+		// Gets the side that the resource location is being taken over by.
+		public property Side DominantSide { get; set; };
 		
 		// Gets the location's facility type.
 		public property ResourceFacility FacilityType { get; private set; };

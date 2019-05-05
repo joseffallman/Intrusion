@@ -19,9 +19,10 @@ namespace Intrusion.Common
 		Maintenance = 3,
 		Ordnance = 4,
 		Motorized = 5,
-		LightArmor = 6,
-		Artillery = 7,
-		HeavyArmor = 8
+		AirRecon = 6,
+		LightArmor = 7,
+		Artillery = 8,
+		HeavyArmor = 9
 	};
 	
 	public class TechnologyMeta

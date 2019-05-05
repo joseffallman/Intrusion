@@ -74,6 +74,9 @@ namespace Intrusion.Server
         	// Start the free vehicles service
         	[_mServerConfig.Gameplay, _mServer.VehicleSpawner] call FreeVehiclesService.RunAsync;
         	
+        	// Start the resource location owner service
+        	call gServer.ResourceLocationOwnerService.RunAsync;
+        	
 			// Perform the mission digest loop
 			while { MissionCounterService.MissionIsRunning } do
 			{
