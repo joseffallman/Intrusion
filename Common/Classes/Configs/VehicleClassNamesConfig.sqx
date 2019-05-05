@@ -39,28 +39,64 @@ namespace Intrusion.Common
 			private _eastMechanizedVehicleTypes = ["O_APC_Tracked_02_cannon_F", "O_APC_Wheeled_02_rcws_F"];
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
 			
+			private _westMortarCargo = [
+				["B_Mortar_01_support_F"] new VehicleCargoInfo,
+				["B_Mortar_01_weapon_F"] new VehicleCargoInfo
+			];
+			private _westSniperCargo = [
+				["srifle_LRR_LRPS_F"] new VehicleCargoInfo,
+				["7Rnd_408_Mag", 6] new VehicleCargoInfo,
+				["Laserdesignator"] new VehicleCargoInfo,
+				["Laserbatteries", 2] new VehicleCargoInfo
+			];
+			private _westSniperAttachments = [
+				["Box_NATO_Wps_F", [0,0.85,-0.40]] new VehicleAttachmentInfo
+			];
+			private _westAntiArmorCargo = [
+				["B_AT_01_weapon_F"] new VehicleCargoInfo,
+				["B_HMG_01_support_F"] new VehicleCargoInfo
+			];
+			
+			private _eastMortarCargo = [
+				["O_Mortar_01_support_F"] new VehicleCargoInfo,
+				["O_Mortar_01_weapon_F"] new VehicleCargoInfo
+			];
+			private _eastSniperCargo = [
+				["srifle_GM6_camo_LRPS_F"] new VehicleCargoInfo,
+				["5Rnd_127x108_Mag", 6] new VehicleCargoInfo,
+				["Laserdesignator_02"] new VehicleCargoInfo,
+				["Laserbatteries", 2] new VehicleCargoInfo
+			];
+			private _eastSniperAttachments = [
+				["Box_East_Wps_F", [0,0.85,-0.40]] new VehicleAttachmentInfo
+			];
+			private _eastAntiArmorCargo = [
+				["O_AT_01_weapon_F"] new VehicleCargoInfo,
+				["O_HMG_01_support_F"] new VehicleCargoInfo
+			];
+			
 			_mClassNamesInfos = [
-				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Transport, _westTransportCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Fuel, _westFuelCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Ammo, _westAmmoCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Repair, _westRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, ["B_Mortar_01_support_F", "B_Mortar_01_weapon_F"], _self.AddItemsToCargoOnSpawn] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Sniper, _westSniperVehicleTypes, ["srifle_LRR_LRPS_F"], _self.SniperVehicleSpawnCode] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, ["B_AT_01_weapon_F", "B_HMG_01_support_F"], _self.AddItemsToCargoOnSpawn] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Armored, _westArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Transport, _westTransportCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Fuel, _westFuelCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Ammo, _westAmmoCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Repair, _westRepairCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, _westMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Sniper, _westSniperVehicleTypes, _westSniperCargo, _westSniperAttachments] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, _westAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Armored, _westArmorVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				
-				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Transport, _eastTransportCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Fuel, _eastFuelCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Ammo, _eastAmmoCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Repair, _eastRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, ["O_Mortar_01_support_F", "O_Mortar_01_weapon_F"], _self.AddItemsToCargoOnSpawn] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, ["srifle_GM6_camo_LRPS_F"], _self.SniperVehicleSpawnCode] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, ["O_AT_01_weapon_F", "O_HMG_01_support_F"], _self.AddItemsToCargoOnSpawn] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Transport, _eastTransportCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Fuel, _eastFuelCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Ammo, _eastAmmoCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Repair, _eastRepairCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, _eastMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, _eastSniperCargo, _eastSniperAttachments] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, _eastAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Armored, _eastArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
 			];
@@ -82,86 +118,6 @@ namespace Intrusion.Common
 			
 			classNull
 		};
-		
-		
-		// Static method that will add cargowapon to vehicle cargo.
-		// Called from VehicleSpawner after vehicle is created.
-		// _vehicleObj (Object): The vehicle that was created.
-		// _vehicleClassInfo (ProfessionVehicleClassNamesInfo): The classNames and config for this vehicle.
-		public static method AddItemsToCargoOnSpawn("_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo) {
-		    {
-            	_vehicleObj addBackpackCargoGlobal [_x, 1];
-		    } foreach _vehicleClassInfo.CargoWeapons as String;
-		};
-		
-		// Static method that will add weaponbox to snipervehicle.
-		// Called from VehicleSpawner after vehicle is created.
-		// _vehicleObj (Object): The vehicle that was created.
-		// _vehicleClassInfo (ProfessionVehicleClassNamesInfo): The classNames and config for this vehicle.
-		public static method SniperVehicleSpawnCode("_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo) {
-		    private [
-		    	"_crate" as Object,
-		    	"_boxClassName" as String,
-		    	"_magazineClassName" as String,
-		    	"_laserClassName" as String
-		    ];
-		    
-		    switch (_vehicleClassInfo.Side) do {
-		    	case WEST: {
-		    		_boxClassName = "Box_NATO_Wps_F";
-		    		_magazineClassName = "7Rnd_408_Mag";
-		    		_laserClassName = "Laserdesignator";
-		    	};
-		    	case EAST: {
-		    		_boxClassName = "Box_East_Wps_F";
-		    		_magazineClassName = "5Rnd_127x108_Mag";
-		    		_laserClassName = "Laserdesignator_02";
-		    	};
-		    };
-			
-			_crate = _boxClassName createVehicle (getPos _vehicleObj);
-			_crate attachTo [_vehicleObj, [0,0.85,-0.40]];
-			clearWeaponCargoGlobal _crate;
-			clearItemCargoGlobal _crate;
-			clearMagazineCargoGlobal _crate;
-			
-			// Fill the weaponbox again
-			{
-            	_crate addItemCargoGlobal [_x, 1];
-		    } foreach _vehicleClassInfo.CargoWeapons as String;
-		    _crate addItemCargoGlobal [_magazineClassName, 6];
-		    //_crate addItemCargoGlobal ["RangeFinder", 1];
-		    _crate addItemCargoGlobal [_laserClassName, 1];
-		    _crate addItemCargoGlobal ["Laserbatteries", 2];
 
-			// When this is a part of the vehicle, add the IntrusionVehicle object.
-			// This will lock the crate to right profession.
-			private _intrusionVehicle = _vehicleObj getVariable ["IntrusionVehicle", classNull];
-			_crate setVariable ["IntrusionVehicle", _intrusionVehicle, true];
-			
-			// When vehicle explodes, destroy ammo box
-			_vehicleObj addEventHandler ["Killed", {
-				params ["_veh"];
-				if (!canMove _veh) then {
-					_veh removeEventHandler ["Killed", _thisEventHandler];
-					{
-						[_x] spawn {
-							params["_obj"];
-							_obj setDamage 1;
-							sleep 3;
-							deleteVehicle _obj;
-						};
-					} forEach attachedObjects _veh;
-				};
-			}];
-			
-			// When vehicle is removed, remove ammo box
-			_vehicleObj addEventHandler ["Deleted", {
-				params ["_veh"];
-				{
-					deleteVehicle _x;
-				} forEach attachedObjects _veh
-			}];
-		};
 	};
 };

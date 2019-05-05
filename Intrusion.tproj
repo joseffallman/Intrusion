@@ -431,6 +431,10 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonSquadHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\CommonSquadHandler.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Functions.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\Functions.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -553,6 +557,14 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleAttachmentInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\VehicleAttachmentInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleCargoInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\VehicleCargoInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ViewPos.sqx" IsExpanded="false" FileName="Common\Classes\Objects\ViewPos.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -628,7 +640,7 @@
               </ProjectNodeViewModel>
             </SubNodes>
           </ProjectNodeViewModel>
-          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommon.sqx" IsExpanded="false" FileName="Common\InitCommon.sqx">
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommon.sqx" IsExpanded="true" FileName="Common\InitCommon.sqx">
             <IsSelected>false</IsSelected>
             <SubNodes />
           </ProjectNodeViewModel>
@@ -762,6 +774,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\ResourceLocationConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ServerConfig.sqx" IsExpanded="false" FileName="Server\Classes\Configs\ServerConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -882,6 +898,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationDominanceInfo.sqx" IsExpanded="false" FileName="Server\Classes\Objects\ResourceLocationDominanceInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Scientist.sqx" IsExpanded="false" FileName="Server\Classes\Objects\Scientist.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -953,6 +973,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ObservationService.sqx" IsExpanded="false" FileName="Server\Classes\Services\ObservationService.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationOwnerService.sqx" IsExpanded="false" FileName="Server\Classes\Services\ResourceLocationOwnerService.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

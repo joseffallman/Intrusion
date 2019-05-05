@@ -126,11 +126,69 @@ namespace Intrusion.Server
 		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+        	
+	    	{
+	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleAttachmentInfo];
+	    		_attachObjInfo = _x;
+	    		
+	    		_attachObj = _attachObjInfo.ClassName createVehicle (getPos _vehicleObj);
+				_attachObj attachTo [_vehicleObj, _attachObjInfo.AttachOffset];
+				clearWeaponCargoGlobal _attachObj;
+				clearItemCargoGlobal _attachObj;
+				clearMagazineCargoGlobal _attachObj;
+				
+				// Fill the weaponbox again
+				{
+	            	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
+			    	} else {
+	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
+	    	        };
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoInfo;
+			    
+			    // When this is a part of the vehicle, add the IntrusionVehicle object.
+				// This will lock the crate to right profession.
+			    _attachObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+			    
+			    // When vehicle explodes, destroy ammo box
+				_vehicleObj addEventHandler ["Killed", {
+					params ["_veh"];
+					if (!canMove _veh) then {
+						_veh removeEventHandler ["Killed", _thisEventHandler];
+						{
+							[_x] spawn {
+								params["_obj"];
+								_obj setDamage 1;
+								sleep 3;
+								deleteVehicle _obj;
+							};
+						} forEach attachedObjects _veh;
+					};
+				}];
+				
+				// When vehicle is removed, delete the attachments
+				_vehicleObj addEventHandler ["Deleted", {
+					params ["_veh"];
+					{
+						deleteVehicle _x;
+					} forEach attachedObjects _veh
+				}];
+			    
+	    	} foreach _vehicleClassInfo.Attachments as VehicleAttachmentInfo;
+		    
+		    // If there are no attachments to this vehicle add cargo items to vehicle cargo .
+		    if (count _vehicleClassInfo.Attachments == 0) then {
+			    {
+			    	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
+			    	} else {
+	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
+	    	        };
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoInfo;
+			};
+			
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
-        	
-        	// Run vehicle specific code, e.g. to add cargo weapons or attach items.
-        	[_vehicleObj, _vehicleClassInfo] call _vehicleClassInfo.OnVehicleSpawn;
         	
         	if (_professionType != ProfessionType.Undefined) then {
 				["ClientEventReciever.OnSquadVehiclesSpawned", [_group, _professionType, [_vehicleObj]]] call Remote.Invoke;
