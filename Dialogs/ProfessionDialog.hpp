@@ -5,7 +5,7 @@ class IntProfessionDialog
 
 	class Controls
     {
-	    class RscModel_2231 : RscPicture
+	    class IntProfessionDialog_VehiclePicture : RscPicture
 			{
 				idc = 2231;
 				x = 0.5 * GUI_GRID_W + GUI_GRID_X;
