@@ -447,6 +447,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="UniformHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\UniformHandler.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Common\Classes\Objects">
