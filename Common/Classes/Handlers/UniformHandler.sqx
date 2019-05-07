@@ -52,6 +52,9 @@ namespace Intrusion.Common
 			// Find information about vehicle.
 			_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
 
+
+			// Only if vehicle HAVE a profession and OWNED by unit gruop
+			// Or if its a free vehicle and unit is infantry.
 			if (
 				!isNull _intrusionVehicle && { 
 				(_intrusionVehicle.OwnerProfession != ProfessionType.Undefined && _intrusionVehicle.OwnerGroup == group _unit) || 
