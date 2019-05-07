@@ -240,5 +240,31 @@ namespace Intrusion.Client
 				[_unit, assignedVehicleRole _unit select 0, _vehicle] call ClientSquadHandler.SetUniform;
 			};
 		};
+		
+		// Called when a box is attached to a vehicle.
+		// Adds a handler to destroy and delete it.
+		// The code in the handler is also in VehicleSpawner for the server.
+		// _vehicleObj (Object): The vehicle
+		// _attachObj (Object): The object attached to vehicle.
+		public static method OnVehicleBoxAttachmentCreated("_vehicleObj" as Object, "_attachObj" as Object)
+		{
+		    // When vehicle explodes, destroy ammo box
+			_vehicleObj addEventHandler ["Killed", {
+				params ["_veh"];
+				if (local _veh) then {
+					if (!canMove _veh) then {
+						_veh removeEventHandler ["Killed", _thisEventHandler];
+						{
+							[_x] spawn {
+								params["_obj"];
+								_obj setDamage 1;
+								sleep 3;
+								deleteVehicle _obj;
+							};
+						} forEach attachedObjects _veh;
+					};
+				};
+			}];
+		};
 	};
 };

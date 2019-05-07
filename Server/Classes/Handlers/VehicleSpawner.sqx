@@ -154,18 +154,21 @@ namespace Intrusion.Server
 			    // When vehicle explodes, destroy ammo box
 				_vehicleObj addEventHandler ["Killed", {
 					params ["_veh"];
-					if (!canMove _veh) then {
-						_veh removeEventHandler ["Killed", _thisEventHandler];
-						{
-							[_x] spawn {
-								params["_obj"];
-								_obj setDamage 1;
-								sleep 3;
-								deleteVehicle _obj;
-							};
-						} forEach attachedObjects _veh;
+					if (local _veh) then {
+						if (!canMove _veh) then {
+							_veh removeEventHandler ["Killed", _thisEventHandler];
+							{
+								[_x] spawn {
+									params["_obj"];
+									_obj setDamage 1;
+									sleep 3;
+									deleteVehicle _obj;
+								};
+							} forEach attachedObjects _veh;
+						};
 					};
 				}];
+				["ClientEventReciever.OnVehicleBoxAttachmentCreated", [_vehicleObj as Object, _attachObj as Object]] call Remote.Invoke;
 				
 				// When vehicle is removed, delete the attachments
 				_vehicleObj addEventHandler ["Deleted", {
