@@ -1,5 +1,5 @@
 /*
- * Name:	VehicleCargoInfo
+ * Name:	VehicleCargoItemInfo
  * Date:	2019-05-05
  * Version: 1.0
  * Author:  Josef
@@ -9,9 +9,9 @@
  */
 namespace Intrusion.Common
 {
-	public class VehicleCargoInfo
+	public class VehicleCargoItemInfo
 	{
-		// Creates a VehicleCargoInfo object.
+		// Creates a VehicleCargoItemInfo object.
 		public constructor(
 			"_className" as String,
 			["_quantity" as Scalar, 1]

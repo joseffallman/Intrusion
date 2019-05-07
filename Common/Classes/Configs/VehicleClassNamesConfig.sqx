@@ -42,39 +42,39 @@ namespace Intrusion.Common
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
 			
 			private _westMortarCargo = [
-				["B_Mortar_01_support_F"] new VehicleCargoInfo,
-				["B_Mortar_01_weapon_F"] new VehicleCargoInfo
+				["B_Mortar_01_support_F"] new VehicleCargoItemInfo,
+				["B_Mortar_01_weapon_F"] new VehicleCargoItemInfo
 			];
 			private _westSniperCargo = [
-				["srifle_LRR_LRPS_F"] new VehicleCargoInfo,
-				["7Rnd_408_Mag", 6] new VehicleCargoInfo,
-				["Laserdesignator"] new VehicleCargoInfo,
-				["Laserbatteries", 2] new VehicleCargoInfo
+				["srifle_LRR_LRPS_F"] new VehicleCargoItemInfo,
+				["7Rnd_408_Mag", 6] new VehicleCargoItemInfo,
+				["Laserdesignator"] new VehicleCargoItemInfo,
+				["Laserbatteries", 2] new VehicleCargoItemInfo
 			];
 			private _westSniperAttachments = [
-				["Box_NATO_Wps_F", [0,0.85,-0.40]] new VehicleAttachmentInfo
+				["Box_NATO_Wps_F", [0,0.85,-0.40]] new VehicleBoxAttachmentInfo
 			];
 			private _westAntiArmorCargo = [
-				["B_AT_01_weapon_F"] new VehicleCargoInfo,
-				["B_HMG_01_support_F"] new VehicleCargoInfo
+				["B_AT_01_weapon_F"] new VehicleCargoItemInfo,
+				["B_HMG_01_support_F"] new VehicleCargoItemInfo
 			];
 			
 			private _eastMortarCargo = [
-				["O_Mortar_01_support_F"] new VehicleCargoInfo,
-				["O_Mortar_01_weapon_F"] new VehicleCargoInfo
+				["O_Mortar_01_support_F"] new VehicleCargoItemInfo,
+				["O_Mortar_01_weapon_F"] new VehicleCargoItemInfo
 			];
 			private _eastSniperCargo = [
-				["srifle_GM6_camo_LRPS_F"] new VehicleCargoInfo,
-				["5Rnd_127x108_Mag", 6] new VehicleCargoInfo,
-				["Laserdesignator_02"] new VehicleCargoInfo,
-				["Laserbatteries", 2] new VehicleCargoInfo
+				["srifle_GM6_camo_LRPS_F"] new VehicleCargoItemInfo,
+				["5Rnd_127x108_Mag", 6] new VehicleCargoItemInfo,
+				["Laserdesignator_02"] new VehicleCargoItemInfo,
+				["Laserbatteries", 2] new VehicleCargoItemInfo
 			];
 			private _eastSniperAttachments = [
-				["Box_East_Wps_F", [0,0.85,-0.40]] new VehicleAttachmentInfo
+				["Box_East_Wps_F", [0,0.85,-0.40]] new VehicleBoxAttachmentInfo
 			];
 			private _eastAntiArmorCargo = [
-				["O_AT_01_weapon_F"] new VehicleCargoInfo,
-				["O_HMG_01_support_F"] new VehicleCargoInfo
+				["O_AT_01_weapon_F"] new VehicleCargoItemInfo,
+				["O_HMG_01_support_F"] new VehicleCargoItemInfo
 			];
 			
 			_mClassNamesInfos = [

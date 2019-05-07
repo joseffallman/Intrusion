@@ -129,7 +129,7 @@ namespace Intrusion.Server
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	
 	    	{
-	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleAttachmentInfo];
+	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleBoxAttachmentInfo];
 	    		_attachObjInfo = _x;
 	    		
 	    		_attachObj = _attachObjInfo.ClassName createVehicle (getPos _vehicleObj);
@@ -138,14 +138,14 @@ namespace Intrusion.Server
 				clearItemCargoGlobal _attachObj;
 				clearMagazineCargoGlobal _attachObj;
 				
-				// Fill the weaponbox again
+				// Fill the weaponbox again with weapons/items.
 				{
 	            	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
 			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
 			    	} else {
 	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
 	    	        };
-			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoInfo;
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoItemInfo;
 			    
 			    // When this is a part of the vehicle, add the IntrusionVehicle object.
 				// This will lock the crate to right profession.
@@ -175,7 +175,7 @@ namespace Intrusion.Server
 					} forEach attachedObjects _veh
 				}];
 			    
-	    	} foreach _vehicleClassInfo.Attachments as VehicleAttachmentInfo;
+	    	} foreach _vehicleClassInfo.Attachments as VehicleBoxAttachmentInfo;
 		    
 		    // If there are no attachments to this vehicle add cargo items to vehicle cargo .
 		    if (count _vehicleClassInfo.Attachments == 0) then {
@@ -185,7 +185,7 @@ namespace Intrusion.Server
 			    	} else {
 	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
 	    	        };
-			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoInfo;
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoItemInfo;
 			};
 			
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;

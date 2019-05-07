@@ -52,8 +52,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingCalculator.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\UniformInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoInfo.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleAttachmentInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoItemInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleBoxAttachmentInfo.sqx";
 
 using Intrusion.Common;
 

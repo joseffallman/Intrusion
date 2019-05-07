@@ -16,8 +16,8 @@ namespace Intrusion.Common
 			"_side" as Side,
 			"_professionType" as ProfessionType,
 			"_classNames" as Array,
-			["_cargoItems" as Array, []],// of VehicleCargoInfo objects
-			["_attachments" as Array, []]// of VehicleAttachmentInfo objects
+			["_cargoItems" as Array, []],// of VehicleCargoItemInfo objects
+			["_attachments" as Array, []]// of VehicleBoxAttachmentInfo objects
 		) {
 			
 			_self.Side = _side;
@@ -34,11 +34,11 @@ namespace Intrusion.Common
 		public property Array ClassNames { get; private set; };
 		
 		// Gets the cargo info objects.
-		// Array with VehicleCargoInfo objects.
+		// Array with VehicleCargoItemInfo objects.
 		public property Array CargoItems { get; private set; };
 		
 		// Array with the objects to attachTo vehicle.
-		// Array with VehicleAttachmentInfo.
+		// Array with VehicleBoxAttachmentInfo.
 		public property Array Attachments { get; private set; };
 		
 	};
