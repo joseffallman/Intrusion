@@ -41,7 +41,7 @@ namespace Intrusion.Client
 							
 							if (!isNull _profession) then {
 								if (_profession.AllowedToTransport) then {
-									if (_player == driver _intrusionVehicle.Vehicle) then {
+									if (_player in crew _intrusionVehicle.Vehicle) then {
 										moveOut _player;
 				                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
 									};
