@@ -42,7 +42,7 @@ waitUntil { player == player };
 call TutorialConfig.Init;
 
 // Recievers
-call ClientEventReciever.Init;
+[gCommon.UniformHandler] call ClientEventReciever.Init;
 
 // Handlers
 call ClientEventHandlers.Init;

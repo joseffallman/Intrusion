@@ -1,17 +1,17 @@
 /*
- * Name:	CommonSquadHandler
+ * Name:	UniformChanger
  * Date:	2019-05-05
  * Version: 1.0
  * Author:  Josef
  *
  * Description:
- * Common squad handlers related methods
+ * A class that could change the uniform on a unit.
  */
 namespace Intrusion.Common
 {
-	public class CommonSquadHandler
+	public class UniformHandler
 	{
-		private static fields ["_mUniformConfig" as UniformConfig];
+		private fields ["_mUniformConfig" as UniformConfig];
 
 		// Creates a CommonSquadHandler object.
 		public constructor("_uniformConfig" as UniformConfig) {
@@ -22,7 +22,7 @@ namespace Intrusion.Common
 		// _unit (Object): The unit to change dress on.
 		// _role (String): Role in vehicle.
 		// _vehicle (Object): The vehicle that the unit entered.
-		public static method SetUniform(
+		public method SetUniform(
 			"_unit" as Object,
 			"_vehicleRole" as VehicleRole,
 			"_vehicle" as Object)

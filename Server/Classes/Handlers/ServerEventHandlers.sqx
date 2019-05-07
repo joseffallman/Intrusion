@@ -72,11 +72,14 @@ namespace Intrusion.Server
 			}];
 		};
 		
+		// This is called when a new Ai unit is spawned.
+		// Adds a unit entering vehicle event handler.
+		// _unit (Object): The unit to add eventhandler to.
 		public static method AddGetInManEventHandler("_unit" as Object)
 		{
 			_unit addEventHandler ["GetInMan", {
 				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
-				[_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle] call CommonSquadHandler.SetUniform;
+				[_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle] call ServerEventReciever.OnAiEnteredVehicle;
 			}];
 		};
 		
