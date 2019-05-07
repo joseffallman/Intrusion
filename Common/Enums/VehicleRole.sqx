@@ -15,7 +15,8 @@ namespace Intrusion.Common
 		Driver = 1,
 		Gunner = 2,
 		Cargo = 3,
-		Commander = 4
+		Commander = 4,
+		Turret = 5
 	};
 	
 	public class VehicleRoleMeta
@@ -47,6 +48,7 @@ namespace Intrusion.Common
 				case "gunner": { _vehicleRole = VehicleRole.Gunner; };
 				case "cargo": { _vehicleRole = VehicleRole.Cargo; };
 				case "commander": { _vehicleRole = VehicleRole.Commander; };
+				case "turret": { _vehicleRole = VehicleRole.Turret; };
 			};
 			
 			_vehicleRole

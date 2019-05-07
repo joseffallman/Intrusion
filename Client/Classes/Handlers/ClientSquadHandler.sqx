@@ -15,12 +15,10 @@ namespace Intrusion.Client
 	public class ClientSquadHandler
 	{
 		private static fields ["_mProfessionConfig" as IProfessionConfig];
-		private static fields ["_mUniformConfig" as UniformConfig];
 	
-		public static method Init("_professionConfig" as IProfessionConfig, "_uniformConfig" as UniformConfig)
+		public static method Init("_professionConfig" as IProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
-			_mUniformConfig = _uniformConfig;
 		};
 	
 		// Notifies the player that his/her profession has changed.
@@ -69,42 +67,6 @@ namespace Intrusion.Client
 //					player addRating _calculatedRating;
 					player addRating _rating;
 					ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
-				};
-			};
-		};
-		
-		// Change unit uniform.
-		// _unit (Object): The unit to change dress on.
-		// _role (String): Role in vehicle.
-		// _vehicle (Object): The vehicle that the unit entered.
-		public static method SetUniform(
-			"_unit" as Object,
-			"_vehicleRole" as VehicleRole,
-			"_vehicle" as Object)
-		{
-			private [
-				"_uniformItems" as Array,
-				"_uniformInfo" as UniformInfo,
-				"_intrusionVehicle" as IntrusionVehicle
-			];
-			
-			_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
-			
-			if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession != ProfessionType.Undefined && _intrusionVehicle.OwnerGroup == group _unit }) then
-			{
-				_uniformInfo = [side group _unit, _intrusionVehicle.OwnerProfession, _vehicleRole] call _mUniformConfig.GetUniformInfo;
-				
-				if (!isNull _uniformInfo) then
-				{
-					_uniformItems = uniformItems _unit;
-					
-					_unit addUniform _uniformInfo.Uniform;
-					_unit addHeadgear _uniformInfo.Helmet;
-					
-					// Restore items/magazines etc to this units new uniform
-					{
-						_unit addItemToUniform _x;
-					} forEach _uniformItems;
 				};
 			};
 		};

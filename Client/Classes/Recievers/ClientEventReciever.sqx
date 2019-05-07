@@ -15,10 +15,12 @@ namespace Intrusion.Client
 	public class ClientEventReciever
 	{
 		private static fields ["_mMissionTime" as MissionTime];
+		private static fields ["_mUniformHandler" as UniformHandler];
 		
-		public static method Init()
+		public static method Init("_uniformHandler" as UniformHandler)
 		{
 			_mMissionTime = new MissionTime;
+			_mUniformHandler = _uniformHandler;
 		};
 		
 		// Called when a player was set as a new brigade leader.
@@ -219,7 +221,7 @@ namespace Intrusion.Client
 		public static method OnUnitEnteredVehicle("_unit" as Object, "_role" as VehicleRole, "_vehicle" as Object, "_turret" as Array)
 		{
 			if (player == _unit) then {
-				[_unit, _role, _vehicle] call ClientSquadHandler.SetUniform;
+				[_unit, _role, _vehicle] call _mUniformHandler.SetUniform;
 			};
 		};
 		
@@ -237,7 +239,7 @@ namespace Intrusion.Client
 		public static method OnUnitChangedSeat("_unit" as Object, "_vehicle" as Object)
 		{
 			if (player == _unit) then {
-				[_unit, assignedVehicleRole _unit select 0, _vehicle] call ClientSquadHandler.SetUniform;
+				[_unit, [assignedVehicleRole _unit select 0 as String] call VehicleRoleMeta.ToVehicleRole, _vehicle] call _mUniformHandler.SetUniform;
 			};
 		};
 	};
