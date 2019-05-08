@@ -39,7 +39,7 @@ if (ENGIMA_REVIVEFIX_alwaysUnconscious) then
 
 		if (ENGIMA_RESPAWNFIX_playerIsIncapacitated) then
 		{
-			_damage = 0;
+			_damage = 0.99;
 		}
 		else
 		{
