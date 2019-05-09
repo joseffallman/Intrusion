@@ -37,5 +37,33 @@ namespace Intrusion.Common
 			
 			_closestMine
 		};
+		
+		// Checks wether a class name is a sub class of a parent class name.
+		// _className (String): The class name to test.
+		// _parentClassName (String): The parent class name to search for.
+		// Returns (Boolean): 
+		public static method Boolean ClassNameIsTypeOf("_className" as String, "_parentClassName" as String)
+		{
+			private ["_config" as Config];
+			scopeName "main";
+			
+			disableSerialization;
+			
+			_config = (configFile >> "CfgVehicles" >> _className);
+			
+			if (isClass _config) then
+			{
+				while { !isNull _config } do
+				{
+					_config = inheritsFrom _config;
+					
+					if (configName _config == _parentClassName) then {
+						true breakOut "main";
+					};
+				};
+			};
+			
+			false
+		};
 	};
 };

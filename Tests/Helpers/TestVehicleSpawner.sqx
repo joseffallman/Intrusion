@@ -46,7 +46,7 @@ namespace Intrusion.Tests.Helpers
 			[]
 		};
 		
-		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side)
+		public method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side, ["_pos" as Array, []])
 		{
 		};
 		

@@ -39,7 +39,7 @@ namespace Intrusion.Server
 			_side = _mSide;
 			_mMapMarkerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 			
-			_timeLeft = 20;
+			_timeLeft = 15;
 			_sleepTime = 10;
 			
 	    	while { _timeLeft > 0 } do {

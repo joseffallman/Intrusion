@@ -30,7 +30,7 @@ namespace Intrusion.Server
 		method Scalar DeleteProfessionVehicles("_group" as Group);
 		
 		// Places an existing vehicle on a side's car park.
-		method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side);
+		method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side, ["_pos" as Array, []]);
 		
 		// Gets all spawned vehicles.
 		// Returns (Array): A list of IntrusionVehicle objects.
