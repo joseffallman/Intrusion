@@ -54,5 +54,9 @@ namespace Intrusion.Server
 		// _side (Side): The side to delete vehicles from.
 		// Returns (Scalar): The total production value of the deleted vehicles.
 		method Scalar DeleteProfessionVehiclesWithNoOwner("_side" as Side);
+		
+		// Removes the information about helipads for a side.
+		// _side (Side): The side's helipad information to remove.
+		method RemoveSidesHelipads("_side" as Side);
 	};
 };

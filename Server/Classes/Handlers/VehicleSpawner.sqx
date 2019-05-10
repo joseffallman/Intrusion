@@ -112,9 +112,10 @@ namespace Intrusion.Server
 		// Returns (Boolean): true if the helipad is empty and possible to spawn in a helicopter on.
 		private method Boolean HelipadIsEmpty("_helipad" as Object)
 		{
-			private ["_helicopterPresent" as Boolean];
+			private ["_helicopterPresent" as Boolean, "_otherVehiclaTooClose" as Boolean];
 			
 			_helicopterPresent = false;
+			_otherVehiclaTooClose = false;
 			
 			// Check for presence of helicopters, on the helipad or above.
 			{
@@ -122,13 +123,48 @@ namespace Intrusion.Server
 					if (_x.Vehicle distance2D _helipad < 50) then {
 						_helicopterPresent = true;
 					};
+				}
+				else {
+					if (_x.Vehicle distance _helipad < 10) then {
+						_otherVehiclaTooClose = true;
+					};
 				};
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
 			
-			// Check presence of other stuff
-			if (!_helicopterPresent) then {
-				
-			};
+			!_helicopterPresent && !_otherVehiclaTooClose
+		};
+	
+		// Gets an empty helipad position at the base.
+		// _side (Side): The side that owns the helipad.
+		// Returns (Array): The empty helipad's position. Empty array [] if no empty helipad exists around the base.
+		private method Array GetEmptyHelipadPosition("_side" as Side)
+		{
+			scopeName "main";
+		
+	    	{
+	    		if (_x.Side == _side && { [_x.Object] call _self.HelipadIsEmpty }) then {
+	    			(getPos _x.Object) breakOut "main";
+	    		};
+	    	} foreach _mAllHelipads as SideObject;
+	    	
+	    	[]
+		};
+		
+		// Removes the information about helipads for a side.
+		// _side (Side): The side's helipad information to remove.
+		public method RemoveSidesHelipads("_side" as Side)
+		{
+			private ["_helipadsToKeep" as Array];
+			
+			_helipadsToKeep = [];
+			
+			{
+				if (_x.Side != _side) then {
+					_helipadsToKeep pushBack _x;
+				};
+			} foreach _mAllHelipads as SideObject;
+			
+			_mAllHelipads = _helipadsToKeep;
 		};
 		
 		// Performs the actual spawn and puts the vehicle on a free spot on the ground around the base.
@@ -143,8 +179,9 @@ namespace Intrusion.Server
 		{
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
-		    private ["_markerInfo" as MapMarkerInfo, "_isHelicopter" as Boolean, "_helipad" as Object];
+		    private ["_markerInfo" as MapMarkerInfo, "_isHelicopter" as Boolean, "_helipad" as Object, "_helipadExists" as Boolean];
 		    
+        	_spawnPos = [];
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
         	_vehicleClassInfo = [_side, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
         	
@@ -156,16 +193,28 @@ namespace Intrusion.Server
         	};
 		    
 		    _isHelicopter = [_vehicleClass, "Helicopter"] call Functions.ClassNameIsTypeOf;
+		    _helipadExists = false;
 		    
 			_spawnDir = markerDir _markerInfo.CarParkMarkerName;
-		    _spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10, _isHelicopter] call _self.FindSpawnPos;
+			
+		    if (_isHelicopter) then {
+		    	_spawnPos = [_side] call _self.GetEmptyHelipadPosition;
+		    	
+		    	if (count _spawnPos > 0) then {
+		    		_helipadExists = true;
+		    	};
+		    };
+		    
+		    if (count _spawnPos == 0) then {
+			    _spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10, _isHelicopter] call _self.FindSpawnPos;
+		    };
 		    
 		    while {count _spawnPos == 0} do {
 		    	_spawnPos = [getMarkerPos _markerInfo.CarParkMarkerName, 10, _isHelicopter] call _self.FindSpawnPos;
 		    };
 		    
 		    // Create the helipad for the helicopter
-		    if (_isHelicopter) then {
+		    if (_isHelicopter && !_helipadExists) then {
 		    	_helipad = createVehicle ["Land_HelipadCircle_F", _spawnPos];
 		    	_mAllHelipads pushBack [_side, _helipad] new SideObject;
 		    };

@@ -63,6 +63,7 @@ namespace Intrusion.Server
 			
 			// Move carpark marker and vehicles
 			
+			[_side] call _mVehicleSpawner.RemoveSidesHelipads;
 			_oldVehicleSpawnPos = getMarkerPos _mMapMarkerInfo.CarParkMarkerName;
 			_mMapMarkerInfo.CarParkMarkerName setMarkerPos _mBaseLayout.CarParkPlacement.Position;
 			_mMapMarkerInfo.CarParkMarkerName setMarkerDir _mBaseLayout.CarParkPlacement.Direction;
