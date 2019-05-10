@@ -13,7 +13,11 @@ namespace Intrusion.Server
 {
 	public class VehicleSpawner : IVehicleSpawner
 	{
-		private fields ["_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */, "_mMapMarkersConfig" as IMapMarkersConfig];
+		private fields [
+			"_mVehicleClassNamesConfig" as IVehicleClassNamesConfig,
+			"_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */,
+			"_mMapMarkersConfig" as IMapMarkersConfig,
+			"_mAllHelipads" as Array /* of SideObject */];
 	
 		// Creates a VehicleHandler object.
 		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig) {
@@ -21,6 +25,7 @@ namespace Intrusion.Server
 			_mMapMarkersConfig = _mapMarkersConfig;
 			
 			_mAllIntrusionVehicles = [];
+			_mAllHelipads = [];
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
 		};
 		
@@ -94,11 +99,36 @@ namespace Intrusion.Server
 		    // If it is a helicopter and the position is not given, then there is no helipad beneath it.
 			if (_isHelicopter && !_exactPosGiven) then {
 		    	_helipad = createVehicle ["Land_HelipadCircle_F", _pos];
+		    	_mAllHelipads pushBack [_side, _helipad] new SideObject;
 		    	_helipad setDir _spawnDir;
 			};
 			
 		    _vehicle setDir _spawnDir;
 		    _vehicle setPos [_pos select 0, _pos select 1, 0.1];
+		};
+		
+		// Checks if a helipad is empty or if it is occupied or blocked in any way.
+		// _helipad (Object): The helipad that should be checked.
+		// Returns (Boolean): true if the helipad is empty and possible to spawn in a helicopter on.
+		private method Boolean HelipadIsEmpty("_helipad" as Object)
+		{
+			private ["_helicopterPresent" as Boolean];
+			
+			_helicopterPresent = false;
+			
+			// Check for presence of helicopters, on the helipad or above.
+			{
+				if (_x.Vehicle isKindOf "Helicopter") then {
+					if (_x.Vehicle distance2D _helipad < 50) then {
+						_helicopterPresent = true;
+					};
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			// Check presence of other stuff
+			if (!_helicopterPresent) then {
+				
+			};
 		};
 		
 		// Performs the actual spawn and puts the vehicle on a free spot on the ground around the base.
@@ -113,7 +143,7 @@ namespace Intrusion.Server
 		{
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
-		    private ["_markerInfo" as MapMarkerInfo, "_isHelicopter" as Boolean];
+		    private ["_markerInfo" as MapMarkerInfo, "_isHelicopter" as Boolean, "_helipad" as Object];
 		    
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
         	_vehicleClassInfo = [_side, _professionType] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
@@ -136,7 +166,8 @@ namespace Intrusion.Server
 		    
 		    // Create the helipad for the helicopter
 		    if (_isHelicopter) then {
-		    	createVehicle ["Land_HelipadCircle_F", _spawnPos];
+		    	_helipad = createVehicle ["Land_HelipadCircle_F", _spawnPos];
+		    	_mAllHelipads pushBack [_side, _helipad] new SideObject;
 		    };
 		    
 		    _vehicleObj = createVehicle [_vehicleClass, [_spawnPos select 0, _spawnPos select 1, 100]];
