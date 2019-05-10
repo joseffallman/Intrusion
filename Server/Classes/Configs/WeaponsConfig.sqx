@@ -41,6 +41,7 @@ namespace Intrusion.Server
 				[west, WeaponBoxType.Grenades, Technology.None, "", ["1Rnd_SmokeBlue_Grenade_shell"], CrateItemType.Weapon] new WeaponInfo,
 
 				[west, WeaponBoxType.Launchers, Technology.None, "launch_NLAW_F", ["NLAW_F"], CrateItemType.Weapon] new WeaponInfo,
+				[west, WeaponBoxType.Launchers, Technology.AntiAir, "launch_B_Titan_F", ["Titan_AA"], CrateItemType.Weapon] new WeaponInfo,
 
 				[west, WeaponBoxType.Ordnance, Technology.None, "", ["ATMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				//[west, WeaponBoxType.Ordnance, Technology.None, "", ["APERSMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
@@ -69,6 +70,7 @@ namespace Intrusion.Server
 				[east, WeaponBoxType.Grenades, Technology.None, "", ["1Rnd_SmokeBlue_Grenade_shell"], CrateItemType.Weapon] new WeaponInfo,
 
 				[east, WeaponBoxType.Launchers, Technology.None, "launch_RPG32_F", ["RPG32_F"], CrateItemType.Weapon] new WeaponInfo,
+				[east, WeaponBoxType.Launchers, Technology.AntiAir, "launch_O_Titan_F", ["Titan_AA"], CrateItemType.Weapon] new WeaponInfo,
 				
 				[east, WeaponBoxType.Ordnance, Technology.None, "", ["ATMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				//[east, WeaponBoxType.Ordnance, Technology.None, "", ["APERSMine_Range_Mag"], CrateItemType.Weapon] new WeaponInfo,

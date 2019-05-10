@@ -36,11 +36,9 @@ namespace Intrusion.Server
 		    	// Check if there are profession vehicles that is not owned by any group
 		    	
 		        if (time < 30) then {
-		            player sideChat "3";
 		            sleep 3;
 		        }
 		        else {
-		            player sideChat "60";
 		            sleep (60 * 6); // sleep in 6 minutes
 		        };
 			};
