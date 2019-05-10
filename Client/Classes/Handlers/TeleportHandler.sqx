@@ -14,10 +14,10 @@ namespace Intrusion.Client
 {
 	public class TeleportHandler
 	{
-		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mBaseConfig" as BaseConfig];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mBaseConfig" as IBaseConfig];
 	
 		// Creates a TeleportHandler object.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_baseConfig" as BaseConfig) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_baseConfig" as IBaseConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mBaseConfig = _baseConfig;
 		};

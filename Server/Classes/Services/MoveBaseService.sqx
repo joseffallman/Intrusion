@@ -15,11 +15,18 @@ namespace Intrusion.Server
 	public class MoveBaseService : IService
 	{
 		private fields ["_mSide" as Side, "_mBaseLayout" as BaseLayout, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mBaseConfig" as IBaseConfig];
 		
 		// Creates a MoveBaseService object.
 		// _leader (Object): The leader unit moving the base.
-		public constructor("_side" as Side, "_baseLayout" as BaseLayout, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner) {
+		public constructor(
+			"_side" as Side, 
+			"_baseLayout" as BaseLayout, 
+			"_messageHandler" as IMessageHandler, 
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_vehicleSpawner" as IVehicleSpawner,
+			"_baseConfig" as IBaseConfig)
+		{
 			_self.IsRunning = false;
 			
 			_mSide = _side;
@@ -27,6 +34,7 @@ namespace Intrusion.Server
 			_mMessageHandler = _messageHandler;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mBaseConfig = _baseConfig;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -39,7 +47,7 @@ namespace Intrusion.Server
 			_side = _mSide;
 			_mMapMarkerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 			
-			_timeLeft = 15;
+			_timeLeft = _mBaseConfig.TimeRequiredToMoveBase;
 			_sleepTime = 10;
 			
 	    	while { _timeLeft > 0 } do {
@@ -66,7 +74,7 @@ namespace Intrusion.Server
 				_intrusionVehicle = _x;
 				
 				// Move vehicle if it is near the base and is empty
-				if (_intrusionVehicle.Vehicle distance _oldVehicleSpawnPos < 125 && count (units _intrusionVehicle.Vehicle) == 0) then
+				if (_intrusionVehicle.Vehicle distance _oldVehicleSpawnPos < _mBaseConfig.BaseRadius && count (units _intrusionVehicle.Vehicle) == 0) then
 				{
 				    [_intrusionVehicle.Vehicle, _intrusionVehicle.Side] call _mVehicleSpawner.PlaceVehicleOnCarPark;
 				};

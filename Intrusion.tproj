@@ -127,10 +127,6 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseConfig.sqx" IsExpanded="false" FileName="Client\Classes\Configs\BaseConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SquadMarkersConfig.sqx" IsExpanded="false" FileName="Client\Classes\Configs\SquadMarkersConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -319,6 +315,10 @@
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IBaseConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IBaseConfig.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ICommonConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\ICommonConfig.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
@@ -352,6 +352,14 @@
                         <SubNodes />
                       </ProjectNodeViewModel>
                     </SubNodes>
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseProdConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\BaseProdConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseTestConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\BaseTestConfig.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\CommonConfig.sqx">
                     <IsSelected>false</IsSelected>

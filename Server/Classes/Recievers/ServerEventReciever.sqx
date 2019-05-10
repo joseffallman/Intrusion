@@ -40,7 +40,7 @@ namespace Intrusion.Server
 		{
 			private ["_moveBaseService" as MoveBaseService];
 			
-			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new MoveBaseService;
+			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.BaseConfig] new MoveBaseService;
 			call _moveBaseService.RunAsync;
 		};
 		

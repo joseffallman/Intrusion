@@ -48,7 +48,6 @@ namespace Intrusion.Server
 			_extendedRadius = 0;
 			
 			while { true } do {
-				player sideChat "finding..." + str _extendedRadius;
 				scopeName "SpawnPosGen";
 				
 				_randir = floor random 360;
