@@ -24,11 +24,11 @@ namespace Intrusion.Common
 			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
 			    [ProfessionType.Repair, "Repair Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_maint", "o_maint", false] new Profession,
 			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, Rank.Corpral, 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf", false] new Profession,
-			    [ProfessionType.Sniper, "Sniper Teams", Technology.Ordnance, Rank.Sergeant, 1, 1, 2, 2, false, "b_support", "o_support", false] new Profession,
+			    [ProfessionType.Sniper, "Sniper Teams", Technology.Ordnance, Rank.Corpral, 1, 1, 2, 2, false, "b_support", "o_support", false] new Profession,
 			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, Rank.Sergeant, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
-			    [ProfessionType.ReconChopper, "Recon Helicopter", Technology.AirRecon, Rank.Captain, 1, 1, 2, 4, true, "b_air", "o_air", true] new Profession,
-			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, Rank.Corpral, 2, 1, 2, 4, false, "b_support", "o_support", true] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, Rank.Corpral, 2, 2, 10, 10, true, "b_mech_inf", "o_mech_inf", false] new Profession,
+			    [ProfessionType.ReconChopper, "Recon Helicopter", Technology.AirRecon, Rank.Sergeant, 1, 1, 2, 4, true, "b_air", "o_air", true] new Profession,
+			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, Rank.Sergeant, 2, 1, 2, 4, false, "b_support", "o_support", true] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, Rank.Sergeant, 2, 2, 10, 10, true, "b_mech_inf", "o_mech_inf", false] new Profession,
 			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Lieutenant, 1, 2, 9, 3, true, "b_armor", "o_armor", false] new Profession
         	];
 		};
