@@ -193,7 +193,7 @@ class BrigadeInfoDialog : BaseDialog {
 	
 	class SummaryText : BaseMultilineText {
 		idc = 30;              // set to -1, unneeded
-		text = "Your brigade's total administration: <none>\nYour brigade's total production: <none>";
+		text = "Your brigade's total technology: <none>\nYour brigade's total production: <none>";
 	};
 	
 	class ProfessionOverview : BaseMultilineText {
@@ -215,7 +215,7 @@ class TechTreeDialog : BaseDialog {
 	
 	class SummaryText : BaseMultilineText {
 		idc = 30;              // set to -1, unneeded
-		text = "Your brigade's administration progress:";
+		text = "Your brigade's technology progress:";
 	};
 	
 	class ProfessionOverview : BaseMultilineText {

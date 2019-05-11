@@ -250,7 +250,7 @@ namespace Intrusion.Client
 			};
 
 
-			// Required administration: 
+			// Required technology: 
  			_technology = [_profession.RequiredTechnology] call _mTechnologyConfig.GetTechnology;
 			private _requiredResearch = "N/A";
 			if (!isNull _technology && { _technology.Technology != Technology.None } ) then {
