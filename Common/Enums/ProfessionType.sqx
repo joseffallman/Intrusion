@@ -28,10 +28,11 @@ namespace Intrusion.Common
 		Sniper = 7,
 		ReconChopper = 8,
 		Mortars = 9,
-		AntiArmor = 10,
-		Mechanized = 11,
-		Armored = 12,
-		AttackHelicopter = 13
+		UAV = 10,
+		AntiArmor = 11,
+		Mechanized = 12,
+		Armored = 13,
+		AttackHelicopter = 14
 	};
 	
 	public class ProfessionTypeMeta
@@ -51,6 +52,7 @@ namespace Intrusion.Common
 				ProfessionType.Sniper,
 				ProfessionType.ReconChopper,
 				ProfessionType.Mortars,
+				ProfessionType.UAV,
 				ProfessionType.AntiArmor,
 				ProfessionType.Mechanized,
 				ProfessionType.Armored,

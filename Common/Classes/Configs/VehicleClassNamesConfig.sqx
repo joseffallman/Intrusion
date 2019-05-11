@@ -22,6 +22,7 @@ namespace Intrusion.Common
 			private _westRepairCarTypes = ["B_Truck_01_Repair_F"];
 			private _westMotorizedVehicleTypes = ["B_MRAP_01_gmg_F", "B_MRAP_01_hmg_F"];
 			private _westMortarsVehicleTypes = ["B_MRAP_01_F"];
+			private _westUAVVehicleTypes = ["B_MRAP_01_F"];
 			private _westSniperVehicleTypes = ["B_Quadbike_01_F"];
 			private _westReconHelicopterVehicleTypes = ["B_Heli_Light_01_F"];
 			private _westAntiArmorVehicleTypes = ["B_MRAP_01_F"];
@@ -36,6 +37,7 @@ namespace Intrusion.Common
 			private _eastRepairCarTypes = ["O_Truck_02_box_F"];
 			private _eastMotorizedVehicleTypes = ["O_MRAP_02_gmg_F", "O_MRAP_02_hmg_F"];
 			private _eastMortarsVehicleTypes = ["O_MRAP_02_F"];
+			private _eastUAVVehicleTypes = ["O_MRAP_02_F"];
 			private _eastSniperVehicleTypes = ["O_Quadbike_01_F"];
 			private _eastReconHelicopterVehicleTypes = ["O_Heli_Light_02_unarmed_F"];
 			private _eastAntiArmorVehicleTypes = ["O_MRAP_02_F"];
@@ -60,6 +62,10 @@ namespace Intrusion.Common
 				["B_AT_01_weapon_F"] new VehicleCargoItemInfo,
 				["B_HMG_01_support_F"] new VehicleCargoItemInfo
 			];
+			private _westUAVCargo = [
+				["B_UAV_01_backpack_F", 4] new VehicleCargoItemInfo,
+				["B_UavTerminal", 2] new VehicleCargoItemInfo
+			];
 			
 			private _eastMortarCargo = [
 				["O_Mortar_01_support_F"] new VehicleCargoItemInfo,
@@ -78,6 +84,10 @@ namespace Intrusion.Common
 				["O_AT_01_weapon_F"] new VehicleCargoItemInfo,
 				["O_HMG_01_support_F"] new VehicleCargoItemInfo
 			];
+			private _eastUAVCargo = [
+				["O_UAV_01_backpack_F", 4] new VehicleCargoItemInfo,
+				["O_UavTerminal", 2] new VehicleCargoItemInfo
+			];
 			
 			_mClassNamesInfos = [
 				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes] new ProfessionVehicleClassNamesInfo,
@@ -87,6 +97,7 @@ namespace Intrusion.Common
 				[west, ProfessionType.Repair, _westRepairCarTypes] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, _westMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.UAV, _westUAVVehicleTypes, _westUAVCargo] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.Sniper, _westSniperVehicleTypes, _westSniperCargo, _westSniperAttachments] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.ReconChopper, _westReconHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, _westAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
@@ -101,6 +112,7 @@ namespace Intrusion.Common
 				[east, ProfessionType.Repair, _eastRepairCarTypes] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, _eastMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.UAV, _eastUAVVehicleTypes, _eastUAVCargo] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, _eastSniperCargo, _eastSniperAttachments] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.ReconChopper, _eastReconHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, _eastAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
