@@ -229,12 +229,56 @@ namespace Intrusion.Server
 		    clearBackpackCargoGlobal _vehicleObj;
 		    clearItemCargoGlobal _vehicleObj;
 		    
-		    {
-            	_vehicleObj addBackpackCargoGlobal [_x, 1];
-		    } foreach _vehicleClassInfo.CargoWeapons as String;
-		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+        	
+	    	{
+	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleBoxAttachmentInfo];
+	    		_attachObjInfo = _x;
+	    		
+	    		_attachObj = _attachObjInfo.ClassName createVehicle (getPos _vehicleObj);
+				_attachObj attachTo [_vehicleObj, _attachObjInfo.AttachOffset];
+				clearWeaponCargoGlobal _attachObj;
+				clearItemCargoGlobal _attachObj;
+				clearMagazineCargoGlobal _attachObj;
+				
+				// Fill the weaponbox again with weapons/items.
+				{
+	            	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+			    		_attachObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
+			    	} else {
+	    	        	_attachObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
+	    	        };
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoItemInfo;
+			    
+			    // When this is a part of the vehicle, add the IntrusionVehicle object.
+				// This will lock the crate to right profession.
+			    _attachObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+			    
+			    // Add Eventhandler on server that will destroy and remove attachment when vehicle is destroyed.
+				[_vehicleObj] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
+				
+				// When vehicle is removed, delete the attachments
+				_vehicleObj addEventHandler ["Deleted", {
+					params ["_veh"];
+					{
+						deleteVehicle _x;
+					} forEach attachedObjects _veh
+				}];
+			    
+	    	} foreach _vehicleClassInfo.Attachments as VehicleBoxAttachmentInfo;
+		    
+		    // If there are no attachments to this vehicle add cargo items to vehicle cargo .
+		    if (count _vehicleClassInfo.Attachments == 0) then {
+			    {
+			    	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
+			    	} else {
+	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
+	    	        };
+			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoItemInfo;
+			};
+			
         	_mAllIntrusionVehicles pushBack _intrusionVehicle;
 			[_mAllIntrusionVehicles] call PublicVariableHandler.BroadcastIntrusionVehicles;
         	

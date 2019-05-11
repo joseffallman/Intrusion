@@ -439,6 +439,10 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="CommonEventHandlers.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\CommonEventHandlers.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Functions.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\Functions.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -562,6 +566,14 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ValuedObject.sqx" IsExpanded="false" FileName="Common\Classes\Objects\ValuedObject.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleBoxAttachmentInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\VehicleBoxAttachmentInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="VehicleCargoItemInfo.sqx" IsExpanded="false" FileName="Common\Classes\Objects\VehicleCargoItemInfo.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
