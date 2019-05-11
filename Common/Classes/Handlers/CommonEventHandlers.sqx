@@ -1,0 +1,43 @@
+/*
+ * Name:	CommonEventHandlers
+ * Date:	2019-05-11
+ * Version: 1.0
+ * Author:  Josef
+ *
+ * Description:
+ * Common event handlers
+ */
+namespace Intrusion.Common
+{
+	public class CommonEventHandlers
+	{
+		// Creates a CommonEventHandlers object.
+		public constructor {
+
+		};
+
+		// Adds a event handler to remove attachment when a vehicle is destroyed
+		// _vehicle (Object): The vehicle that have some object attached to it
+		public static method AddVehicleAttachmentEventHandler("_vehicle" as Object) {
+
+			_vehicle addEventHandler ["Killed", {
+				params ["_veh"];
+				if (local _veh) then {
+					if (!canMove _veh) then {
+						_veh removeEventHandler ["Killed", _thisEventHandler];
+						{
+							[_x] spawn {
+								params["_obj"];
+								_obj setDamage 1;
+								sleep 3;
+								deleteVehicle _obj;
+							};
+						} forEach attachedObjects _veh;
+					};
+				};
+			}];
+		};
+		
+	};
+};
+

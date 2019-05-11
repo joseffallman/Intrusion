@@ -141,9 +141,9 @@ namespace Intrusion.Server
 				// Fill the weaponbox again with weapons/items.
 				{
 	            	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
-			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
+			    		_attachObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
 			    	} else {
-	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
+	    	        	_attachObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
 	    	        };
 			    } foreach _vehicleClassInfo.CargoItems as VehicleCargoItemInfo;
 			    
@@ -151,24 +151,8 @@ namespace Intrusion.Server
 				// This will lock the crate to right profession.
 			    _attachObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
 			    
-			    // When vehicle explodes, destroy ammo box
-				_vehicleObj addEventHandler ["Killed", {
-					params ["_veh"];
-					if (local _veh) then {
-						if (!canMove _veh) then {
-							_veh removeEventHandler ["Killed", _thisEventHandler];
-							{
-								[_x] spawn {
-									params["_obj"];
-									_obj setDamage 1;
-									sleep 3;
-									deleteVehicle _obj;
-								};
-							} forEach attachedObjects _veh;
-						};
-					};
-				}];
-				["ClientEventReciever.OnVehicleBoxAttachmentCreated", [_vehicleObj as Object, _attachObj as Object]] call Remote.Invoke;
+			    // Add Eventhandler on server that will destroy and remove attachment when vehicle is destroyed.
+				[_vehicleObj] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
 				
 				// When vehicle is removed, delete the attachments
 				_vehicleObj addEventHandler ["Deleted", {
