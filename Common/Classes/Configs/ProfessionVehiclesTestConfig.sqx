@@ -27,6 +27,7 @@ namespace Intrusion.Common
 				[ProfessionType.Mechanized, 800] new ProfessionVehicleInfo,
 				[ProfessionType.AntiArmor, 400] new ProfessionVehicleInfo,
 				[ProfessionType.Armored, 1000] new ProfessionVehicleInfo,
+				[ProfessionType.AttackHelicopter, 1200] new ProfessionVehicleInfo,
 			];
 		};
 		

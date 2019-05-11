@@ -23,14 +23,15 @@ namespace Intrusion.Common
 		AirRecon = 7,
 		LightArmor = 8,
 		Artillery = 9,
-		HeavyArmor = 10
+		HeavyArmor = 10,
+		AirArmed = 11,
 	};
 	
 	public class TechnologyMeta
 	{
 		public static method Init()
 		{
-			_self.LastTechnology = Technology.HeavyArmor;
+			_self.LastTechnology = Technology.AirArmed;
 		};
 		
 		public static property Technology LastTechnology { get; private set; };

@@ -31,6 +31,7 @@ namespace Intrusion.Common
 		AntiArmor = 10,
 		Mechanized = 11,
 		Armored = 12,
+		AttackHelicopter = 13
 	};
 	
 	public class ProfessionTypeMeta
@@ -41,20 +42,22 @@ namespace Intrusion.Common
 				ProfessionType.Transport,
 				ProfessionType.Fuel,
 				ProfessionType.Ammo,
-				ProfessionType.Repair
+				ProfessionType.Repair,
 			];
 			
 			_self.WarriorTypes = [
 				ProfessionType.Infantry,
 				ProfessionType.Motorized,
 				ProfessionType.Sniper,
+				ProfessionType.ReconChopper,
 				ProfessionType.Mortars,
 				ProfessionType.AntiArmor,
 				ProfessionType.Mechanized,
 				ProfessionType.Armored,
+				ProfessionType.AttackHelicopter,
 			];
 			
-			_self.LastValue = ProfessionType.Armored;
+			_self.LastValue = ProfessionType.AttackHelicopter;
 			_self.ProfessionTypeCount = _self.LastValue as Scalar;
 		};
 

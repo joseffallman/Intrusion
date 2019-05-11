@@ -25,8 +25,9 @@ namespace Intrusion.Common
 				[Technology.AntiAir, "Anti Air", 375] new TechnologyInfo,
 				[Technology.AirRecon, "Air Recon", 400] new TechnologyInfo,
 				[Technology.LightArmor, "Light Armor", 500] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 600] new TechnologyInfo,
-				[Technology.HeavyArmor, "Heavy Armor", 750] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 575] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 650] new TechnologyInfo,
+				[Technology.AirArmed, "Armed Air Units", 750] new TechnologyInfo,
 			];
 			
 			_self.Technologies = +_mTechnologies;
