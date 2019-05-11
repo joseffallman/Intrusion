@@ -34,6 +34,7 @@ namespace Intrusion.Common
 			_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_PilotHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Driver] new UniformInfo;
 				_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_PilotHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Turret] new UniformInfo;
 				_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_CrewHelmetHeli_B", ProfessionType.ReconChopper, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [west, "U_B_HeliPilotCoveralls", "H_PilotHelmetHeli_B", ProfessionType.AttackHelicopter] new UniformInfo;
 			
 			// East
 			_mUniformInfos pushBack [east, "U_O_CombatUniform_ocamo", "H_HelmetO_ocamo", ProfessionType.Undefined] new UniformInfo; //Default
@@ -53,6 +54,7 @@ namespace Intrusion.Common
 			_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_PilotHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Driver] new UniformInfo;
 				_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_PilotHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Turret] new UniformInfo;
 				_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_CrewHelmetHeli_O", ProfessionType.ReconChopper, VehicleRole.Cargo] new UniformInfo;
+			_mUniformInfos pushBack [east, "U_O_PilotCoveralls", "H_PilotHelmetHeli_O", ProfessionType.AttackHelicopter] new UniformInfo;
 		};
 		
 		//
