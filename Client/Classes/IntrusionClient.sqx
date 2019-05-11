@@ -15,11 +15,10 @@ namespace Intrusion.Client
 	public class IntrusionClient
 	{
 		// Creates a IntrusionClient object.
-		public constructor() {
-			private ["_baseConfig" as BaseConfig];
+		public constructor("_baseConfig" as IBaseConfig)
+		{
 			private ["_mapMarkersConfig" as MapMarkersConfig];
 			
-			_baseConfig = new BaseConfig;
 			_mapMarkersConfig = new MapMarkersConfig;
 			
 			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
@@ -28,7 +27,7 @@ namespace Intrusion.Client
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;
 			_self.GiveOrderService = new GiveOrderService;
 			_self.TaskHandler = new TaskHandler;
-			_self.ClientVehicleHandler = new ClientVehicleHandler;
+			_self.ClientVehicleHandler = [gCommonConfig.Professions] new ClientVehicleHandler;
 			_self.RatingService = [new SquadConfig, new MissionTime] new RatingService;
 		};
 	

@@ -75,7 +75,7 @@ namespace Intrusion.Tests.Helpers
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
     	{
-    		_mProfessions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy] new Profession;
+    		_mProfessions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy, false] new Profession;
     	};
 	};
 };

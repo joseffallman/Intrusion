@@ -23,6 +23,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnolog
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceLocationDominanceInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideObject.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
@@ -63,6 +64,7 @@ call WeaponBoxTypeMeta.Init;
 call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
+[gCommon.UniformHandler] call ServerEventReciever.Init;
 
 gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
 gServer = [] new IntrusionServer;

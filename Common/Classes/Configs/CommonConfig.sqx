@@ -7,18 +7,26 @@
  * Description:
  * Bundles all server configs together.
  */
+
 namespace Intrusion.Common
 {
 	public class CommonConfig : ICommonConfig
 	{
 		// Creates a CommonConfig object.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig, "_technologyConfig" as ITechnologyConfig, "_vehiclesClassNamesConfig" as IVehicleClassNamesConfig, "_professionVehiclesConfig" as IProfessionVehiclesConfig)
+		public constructor(
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_professionConfig" as IProfessionConfig, 
+			"_technologyConfig" as ITechnologyConfig, 
+			"_vehiclesClassNamesConfig" as IVehicleClassNamesConfig, 
+			"_professionVehiclesConfig" as IProfessionVehiclesConfig,
+			"_baseConfig" as IBaseConfig)
 		{
 			_self.MapMarkers = _mapMarkersConfig;
 			_self.Professions = _professionConfig;
 			_self.Technology = _technologyConfig;
 			_self.VehicleClassNames = _vehiclesClassNamesConfig;
 			_self.ProfessionVehicles = _professionVehiclesConfig;
+			_self.BaseConfig = _baseConfig;
 		};
 		
 		public property IMapMarkersConfig MapMarkers { get; private set; };
@@ -34,5 +42,8 @@ namespace Intrusion.Common
 		
 		// Gets the profession vehicles config.
 		public property IProfessionVehiclesConfig ProfessionVehicles { get; private set; };
+		
+		// Gets the base config.
+		public property IBaseConfig BaseConfig { get; private set; };
 	};
 };

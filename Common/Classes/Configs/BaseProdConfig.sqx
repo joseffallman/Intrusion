@@ -1,5 +1,5 @@
 /*
- * Name:	BaseConfig
+ * Name:	BaseProdConfig
  * Date:	2019-02-01
  * Version: 1.0
  * Author:  Engima
@@ -7,9 +7,9 @@
  * Description:
  * Contains all client non-side base configs.
  */
-namespace Intrusion.Client
+namespace Intrusion.Common
 {
-	public class BaseConfig
+	public class BaseProdConfig : IBaseConfig
 	{
 		// Creates a ClassNamesConfig object.
 		public constructor {
@@ -19,6 +19,7 @@ namespace Intrusion.Client
 			_self.MoveBaseRespawnArrowClassName = "Sign_Arrow_Large_Blue_F";
 			_self.MoveBaseVehiclesArrowClassName = "Sign_Arrow_Large_F";
 			_self.MoveBaseWeaponsArrowClassName = "Sign_Arrow_Large_Green_F";
+			_self.TimeRequiredToMoveBase = 60;
 		};
 		
 		public property Scalar BaseRadius { get; private set; };
@@ -32,5 +33,8 @@ namespace Intrusion.Client
 		public property String MoveBaseVehiclesArrowClassName { get; private set; };
 		
 		public property String MoveBaseWeaponsArrowClassName { get; private set; };
+		
+		// Gets the time in seconds it takes from when the brigade leader moves the base until it is actually moved.
+		public property Scalar TimeRequiredToMoveBase { get; private set; };
 	};
 };

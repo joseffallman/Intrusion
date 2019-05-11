@@ -197,11 +197,10 @@ namespace Intrusion.Client
 				"_weaponNames" as String,
 				"_squadsInBrigade" as String
 			];
-			private _model = "";
 			private _vehicleNames = []; 
-			private _ctrlVehicleModel = (findDisplay 2999) displayCtrl 2230;
+			private _ctrlVehiclePicture = (findDisplay 2999) displayCtrl 2231;
 			private _ctrlDescription = (findDisplay 2999) displayCtrl 2215;
-			//_profession = call _self.GetSelectedProfessionTypeFromCombo;
+			
 			_profession = [call _self.GetSelectedProfessionTypeFromCombo] call _mProfessionConfig.GetProfession;
 			_vehicles = [side player, _profession.Type] call _mVehicleClassNamesConfig.GetProVehiclesClassNameInfo;
 
@@ -227,12 +226,12 @@ namespace Intrusion.Client
  			if (!isNull _vehicles) then {
 
  				if (count _vehicles.ClassNames > 0) then {
-					_className = _vehicles.ClassNames select ((count _vehicles.ClassNames) - 1);
-					_model = (getText(configFile >> "cfgVehicles" >> _className >> "model"));
-					_ctrlVehicleModel ctrlSetModel _model;
-					_ctrlVehicleModel ctrlShow true;
+					_className = _vehicles.ClassNames select 0;
+					_ctrlVehiclePicture ctrlSetText (getText(configFile >> "cfgVehicles" >> _className >> "editorPreview"));
+					_ctrlVehiclePicture ctrlShow true;
 					
 					_vehicleNames = (getText(configFile >> "cfgVehicles" >> _className >> "displayName"));
+					
 				};
 
  				if (count _vehicles.ClassNames > 1) then {
@@ -246,9 +245,8 @@ namespace Intrusion.Client
 				};
 				
 			} else {
-				/* Set a compass as vehicle picture and hide it */
-				_ctrlVehicleModel ctrlSetModel "\a3\Ui_f\objects\Compass.p3d";
-				_ctrlVehicleModel ctrlShow false;
+				_ctrlVehiclePicture ctrlSetText "";
+				_ctrlVehiclePicture ctrlShow false;
 			};
 
 

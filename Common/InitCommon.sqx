@@ -11,6 +11,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx"
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ReleaseSettings.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyTestConfig.sqx";
@@ -51,6 +53,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\ProfessionVehicle
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingLock.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingCalculator.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\UniformInfo.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\UniformHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoItemInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleBoxAttachmentInfo.sqx";

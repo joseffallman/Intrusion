@@ -2,26 +2,17 @@ class IntProfessionDialog
 {
     idd = 2999;
     movingenable = false;
-    
-    class Objects 
-    {
-		class RscModel_2230 : RscObject
-		{
-			idc = 2230;
-			scale = 0.5;
-			z = 8.5;
-			//model = "\A3\armor_f_beta\APC_Tracked_01\APC_Tracked_01_rcws_F.p3d";
-			x = 13 * GUI_GRID_W + GUI_GRID_X;
-			y = 6 * GUI_GRID_H + GUI_GRID_Y;
-			w = 27.5 * GUI_GRID_W;
-			h = 10 * GUI_GRID_H;
-		};
-		
-	};
-
 
 	class Controls
     {
+	    class IntProfessionDialog_VehiclePicture : RscPicture
+			{
+				idc = 2231;
+				x = 0.5 * GUI_GRID_W + GUI_GRID_X;
+				y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
+				w = 26.5 * GUI_GRID_W;
+				h = 9.5 * GUI_GRID_H;
+			};
 		
 		class IntProfessionDialog_CancelButton : IntBaseDialog_CancelButton {
 			x = 27.5 * GUI_GRID_W + GUI_GRID_X;
@@ -33,9 +24,9 @@ class IntProfessionDialog
 
 		class IntProfessionDialog_OkButton : IntBaseDialog_OkButton {
 			idc = 2210;
-			x = 36 * GUI_GRID_W + GUI_GRID_X;
+			x = 34.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 22.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 3.5 * GUI_GRID_W;
+			w = 5 * GUI_GRID_W;
 			h = 1.5 * GUI_GRID_H;
 			text = "Select";
 			action = "call Intrusion_Client_ProfessionDialog_OnOkButtonPressed;";
@@ -50,9 +41,9 @@ class IntProfessionDialog
 		{
 			idc = 2200;
 			x = 27.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 1 * GUI_GRID_H + GUI_GRID_Y;
+			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 12 * GUI_GRID_W;
-			h = 20.5 * GUI_GRID_H;
+			h = 19 * GUI_GRID_H;
 			
 			onLBSelChanged = "call Intrusion_Client_ProfessionDialog_OnListSelectChanged;";
 		};

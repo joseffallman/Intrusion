@@ -15,6 +15,13 @@ namespace Intrusion.Server
 {
 	public class ServerEventReciever
 	{
+		private static fields ["_mUniformHandler" as UniformHandler];
+
+		public static method Init("_uniformHandler" as UniformHandler)
+		{
+			_mUniformHandler = _uniformHandler;
+		};
+	
 		// Called when a player claims brigade leadership.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
@@ -33,7 +40,7 @@ namespace Intrusion.Server
 		{
 			private ["_moveBaseService" as MoveBaseService];
 			
-			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner] new MoveBaseService;
+			_moveBaseService = [side group _leader, _baseLayout, gServer.MessageHandler, gCommonConfig.MapMarkers, gServer.VehicleSpawner, gCommonConfig.BaseConfig] new MoveBaseService;
 			call _moveBaseService.RunAsync;
 		};
 		
@@ -69,6 +76,15 @@ namespace Intrusion.Server
 		public static method OnBrigadeLeaderGivingOrder("_order" as Order)
 		{
 			[_order.Group, _order] call gServer.AiSquadHandler.GiveOrderToGroup;
+		};
+		
+		// Called when Ai is entering a vehicle.
+		// _unit (Object): The unit that's entering a vehicle.
+		// _role (VehicleRole): What type of seat (role) in vehicle the unit entered.
+		// _vehicle (Object): The vehicle.
+		public static method OnAiEnteredVehicle("_unit" as Object, "_role" as VehicleRole, "_vehicle" as Object)
+		{
+			[_unit, _role, _vehicle] call _mUniformHandler.SetUniform;
 		};
 	};
 };

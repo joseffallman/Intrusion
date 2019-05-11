@@ -22,7 +22,8 @@ namespace Intrusion.Common
     		"_maxUnitsPerVehicle" as Scalar,
     		"_vehicleRevealsProfessionType" as Boolean,
     		"_markerTypeFriendly" as String,
-    		"_markerTypeEnemy" as String)
+    		"_markerTypeEnemy" as String,
+    		"_allowedToTransport" as Boolean)
         {
         	_self.Type = _type;
         	_self.Name = _name;
@@ -35,6 +36,7 @@ namespace Intrusion.Common
         	_self.VehicleRevealsProfessionType = _vehicleRevealsProfessionType;
         	_self.MarkerTypeFriendly = _markerTypeFriendly;
         	_self.MarkerTypeEnemy = _markerTypeEnemy;
+        	_self.AllowedToTransport = _allowedToTransport;
 		};
 		
 		// Gets the spezialization type.
@@ -69,5 +71,8 @@ namespace Intrusion.Common
 		
 		// Gets the enemy marker type associated with the profession.
 		public property String MarkerTypeEnemy { get; private set; };
+		
+		// Gets whether this profession is allowed to transport other groups with their profession vehicle.
+		public property Boolean AllowedToTransport { get; private set; };
 	};
 };

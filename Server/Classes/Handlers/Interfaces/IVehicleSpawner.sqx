@@ -30,7 +30,7 @@ namespace Intrusion.Server
 		method Scalar DeleteProfessionVehicles("_group" as Group);
 		
 		// Places an existing vehicle on a side's car park.
-		method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side);
+		method PlaceVehicleOnCarPark("_vehicle" as Object, "_side" as Side, ["_pos" as Array, []]);
 		
 		// Gets all spawned vehicles.
 		// Returns (Array): A list of IntrusionVehicle objects.
@@ -54,5 +54,9 @@ namespace Intrusion.Server
 		// _side (Side): The side to delete vehicles from.
 		// Returns (Scalar): The total production value of the deleted vehicles.
 		method Scalar DeleteProfessionVehiclesWithNoOwner("_side" as Side);
+		
+		// Removes the information about helipads for a side.
+		// _side (Side): The side's helipad information to remove.
+		method RemoveSidesHelipads("_side" as Side);
 	};
 };

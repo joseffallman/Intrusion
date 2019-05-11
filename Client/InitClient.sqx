@@ -1,4 +1,3 @@
-call compile preprocessFileLineNumbers "Client\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\SquadMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
@@ -42,7 +41,7 @@ waitUntil { player == player };
 call TutorialConfig.Init;
 
 // Recievers
-call ClientEventReciever.Init;
+[gCommon.UniformHandler] call ClientEventReciever.Init;
 
 // Handlers
 call ClientEventHandlers.Init;
@@ -52,11 +51,11 @@ call RadioTriggerHandler.Init;
 call IntrusionMenuHandler.Init; // Adds the intrusion menu
 call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 [gCommonConfig.Professions] call MapObservationsHandler.Init;
-[gCommonConfig.Professions, gCommon.UniformConfig] call ClientSquadHandler.Init;
+[gCommonConfig.Professions] call ClientSquadHandler.Init;
 [gCommonConfig.Professions] call GroupActionHandler.Init;
 
 // Initialize the intrusion client object
-gClient = new IntrusionClient;
+gClient = [gCommonConfig.BaseConfig] new IntrusionClient;
 
 // Services
 [gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig] call MapMarkerService.Init;
