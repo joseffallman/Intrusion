@@ -75,5 +75,11 @@ namespace Intrusion.Tests.Helpers
 		public method Scalar DeleteProfessionVehiclesWithNoOwner("_side" as Side)
 		{
 		};
+		
+		// Removes the information about helipads for a side.
+		// _side (Side): The side's helipad information to remove.
+		public method RemoveSidesHelipads("_side" as Side)
+		{
+		};
 	};
 };
