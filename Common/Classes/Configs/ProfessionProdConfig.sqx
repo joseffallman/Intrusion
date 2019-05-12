@@ -25,7 +25,7 @@ namespace Intrusion.Common
 			    [ProfessionType.Repair, "Repair Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_maint", "o_maint", false] new Profession,
 			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, Rank.Corpral, 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf", false] new Profession,
 			    [ProfessionType.Sniper, "Sniper Teams", Technology.Ordnance, Rank.Corpral, 1, 1, 2, 2, false, "b_support", "o_support", false] new Profession,
-			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, Rank.Sergeant, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
+			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, Rank.Corpral, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
 			    [ProfessionType.Uav, "UAV Teams", Technology.AirRecon, Rank.Corpral, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
 			    [ProfessionType.ReconChopper, "Recon Helicopters", Technology.AirRecon, Rank.Sergeant, 1, 1, 2, 4, true, "b_air", "o_air", true] new Profession,
 			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, Rank.Sergeant, 2, 1, 2, 4, false, "b_support", "o_support", true] new Profession,
