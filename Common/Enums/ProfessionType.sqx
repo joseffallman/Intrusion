@@ -28,7 +28,7 @@ namespace Intrusion.Common
 		Sniper = 7,
 		ReconChopper = 8,
 		Mortars = 9,
-		UAV = 10,
+		Uav = 10,
 		AntiArmor = 11,
 		Mechanized = 12,
 		Armored = 13,
@@ -39,32 +39,10 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.NonWarriorTypes = [
-				ProfessionType.Transport,
-				ProfessionType.Fuel,
-				ProfessionType.Ammo,
-				ProfessionType.Repair,
-			];
-			
-			_self.WarriorTypes = [
-				ProfessionType.Infantry,
-				ProfessionType.Motorized,
-				ProfessionType.Sniper,
-				ProfessionType.ReconChopper,
-				ProfessionType.Mortars,
-				ProfessionType.UAV,
-				ProfessionType.AntiArmor,
-				ProfessionType.Mechanized,
-				ProfessionType.Armored,
-				ProfessionType.AttackHelicopter,
-			];
-			
 			_self.LastValue = ProfessionType.AttackHelicopter;
 			_self.ProfessionTypeCount = _self.LastValue as Scalar;
 		};
 
-		public static property Array NonWarriorTypes { get; private set; };
-		public static property Array WarriorTypes { get; private set; };		
 		public static property ProfessionType LastValue { get; private set; };		
 		public static property Scalar ProfessionTypeCount { get; private set; };
 	};

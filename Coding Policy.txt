@@ -13,6 +13,16 @@ that is contributed in this project are to follow all the guidelines beneath.
 All logic goes into classes that by name. No code should be outside a class.
 
 /*
+ * Identifier Names
+ */
+
+All Type names, methods and properties are written in upper camel case (pascal case). Class variables and 
+local variables in camel case but with a leading underscore (_). Class variables also add letter "m"
+(for "member") after the leading underscore.
+
+The same is true for words that are abbreviations, like ProfessionType.Uav.
+
+/*
  * Classes
  */
  

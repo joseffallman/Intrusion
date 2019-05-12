@@ -24,7 +24,7 @@ namespace Intrusion.Common
 				[ProfessionType.Sniper, 10] new ProfessionVehicleInfo,
 				[ProfessionType.ReconChopper, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mortars, 10] new ProfessionVehicleInfo,
-				[ProfessionType.UAV, 10] new ProfessionVehicleInfo,
+				[ProfessionType.Uav, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Mechanized, 10] new ProfessionVehicleInfo,
 				[ProfessionType.AntiArmor, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Armored, 10] new ProfessionVehicleInfo,
