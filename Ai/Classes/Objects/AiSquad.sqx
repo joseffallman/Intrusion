@@ -478,6 +478,7 @@ namespace Intrusion.Ai {
 		private method RespawnIfDead()
 		{
 			private ["_anyMemberAlive" as Boolean, "_oldUnits" as Array];
+			private ["_aiWeaponInfo" as AiWeaponInfo, "_atLaunchersInvented" as Boolean, "_aaLaunchersInvented" as Boolean];
 			
 			_anyMemberAlive = true;
 			if ({canMove _x} count _self.Members == 0) then {
@@ -489,7 +490,6 @@ namespace Intrusion.Ai {
 				
 				for "_i" from 1 to (count _oldUnits) do {
 					[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
-					//_mUnitInfo.UnitClassName createUnit [getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group];
 				};
 				
 				{
@@ -503,21 +503,27 @@ namespace Intrusion.Ai {
 				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 				
 				// Check if launchers are invented, and in that case equip AI with launchers.
-				if ([side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
-				{
-					private ["_aiWeaponInfo" as AiWeaponInfo];
-					
-					_aiWeaponInfo = [side _self.Group] call _mAiWeaponsConfig.GetWeaponInfo;
-					
-					{
-						if (random 100 > 33) then {
-							_x addBackpack "B_Kitbag_cbr";
-							(unitBackpack _x) addMagazineCargo [_aiWeaponInfo.LauncherAmmoClassName, 1];
-							_x addWeapon _aiWeaponInfo.LauncherClassName;
-						};
-					} foreach _self.Members as Object;
-				};
+				_aiWeaponInfo = [side _self.Group] call _mAiWeaponsConfig.GetWeaponInfo;
+				_atLaunchersInvented = [side _self.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+				_aaLaunchersInvented = [side _self.Group, Technology.AntiAir] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
 				
+				{
+					if (_atLaunchersInvented && random 1 > _aiWeaponInfo.ProbabilityAiTakesAtLauncher) then
+					{
+						_x addBackpack "B_Kitbag_cbr";
+						(unitBackpack _x) addMagazineCargo [_aiWeaponInfo.AtLauncherAmmoClassName, 1];
+						_x addWeapon _aiWeaponInfo.AtLauncherClassName;
+					}
+					else {
+						if (_aaLaunchersInvented && random 1 > _aiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
+							_x addBackpack "B_Kitbag_cbr";
+							(unitBackpack _x) addMagazineCargo [_aiWeaponInfo.AaLauncherAmmoClassName, 1];
+							_x addWeapon _aiWeaponInfo.AaLauncherClassName;
+						};
+					
+					};
+				} foreach _self.Members as Object;
+
 				_mState = AiSquadState.Idle;
 			};
 		};
