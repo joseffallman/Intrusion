@@ -24,6 +24,7 @@ namespace Intrusion.Ai
 				ProfessionType.Motorized,
 				ProfessionType.Mechanized,
 				ProfessionType.Armored,
+				ProfessionType.AttackHelicopter,
 			];
 		};
 		
