@@ -32,6 +32,7 @@ namespace Intrusion.Tests.Ai
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
 				"StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder",
+				"AttackOrder100m_MakeDecision_StartingMove"
 			]] call TestEngine.Register;
 		};
 		
@@ -63,15 +64,22 @@ namespace Intrusion.Tests.Ai
 		
 		private static method AttackOrder100m_MakeDecision_StartingMove
 		{
+			private ["_moveAction" as MoveAction];
+			
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 0, 100]] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 100, 0]] new Order;
 			
 			// Act
 			call _mBrain.MakeDecision;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "Brain did not make a decision."] call Assert.AreNotEqual;
+			[1, count _mWorld.Actions, "AI did not perform move action."] call Assert.AreEqual;
+			
+			if (count _mWorld.Actions >= 1) then {
+				_moveAction = _mWorld.Actions select 0;
+				[_moveAction is MoveAction, "AI did not perform move action."] call Assert.AreEqual;
+			};
 		};
 		
 		

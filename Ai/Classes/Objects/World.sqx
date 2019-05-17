@@ -22,5 +22,13 @@ namespace Intrusion.Ai
 		{
 			getPos leader _group
 		};
+		
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
+		{
+			_group addWaypoint [_moveAction.TargetPos];
+		};
 	};
 };

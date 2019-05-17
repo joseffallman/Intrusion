@@ -17,7 +17,10 @@ namespace Intrusion.Tests.Helpers
 		// Creates a TestWorld object.
 		public constructor {
 			_self.LeaderPos = [];
+			_self.Actions = [];
 		};
+		
+		public property Array Actions { get; private set; };
 		
 		public property Array LeaderPos { get; set; };
 		
@@ -27,6 +30,14 @@ namespace Intrusion.Tests.Helpers
 		public method Array GetLeaderPos("_group" as Group)
 		{
 			_self.LeaderPos
+		};
+		
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
+		{
+			_self.Actions pushBack _moveAction;
 		};
 	};
 };

@@ -1,0 +1,22 @@
+/*
+ * Name:	MoveAction
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all necessary information for a gorup to perform a move action.
+ */
+namespace Intrusion.Ai
+{
+	public class MoveAction : IAction
+	{
+		// Creates a MoveAction object.
+		public constructor("_targetPos" as Array)
+		{
+			_self.TargetPos = _targetPos;
+		};
+		
+		public property TargetPos { get; private set; };
+	};
+};
