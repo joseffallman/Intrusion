@@ -78,7 +78,7 @@ namespace Intrusion.Tests.Ai
 			
 			if (count _mWorld.Actions >= 1) then {
 				_moveAction = _mWorld.Actions select 0;
-				[_moveAction is MoveAction, "AI did not perform move action."] call Assert.AreEqual;
+				[_moveAction is MoveAction, "AI did not decide to perform move action."] call Assert.IsTrue;
 			};
 		};
 		

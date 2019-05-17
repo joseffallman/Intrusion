@@ -128,8 +128,10 @@ namespace Sqx.UnitTest
 			_valueSqxClass = _value as Assert;
 			_isNull = false;
 			
-			if (isNull _valueSqxClass || { isNull _value }) then {
-				_isNull = true;
+			if (_value is Object || _value is Control || _value is Display || _value is Group || _value is Location || _value is Task || _value is Config) then {
+				if (isNull _valueSqxClass || { isNull _value }) then {
+					_isNull = true;
+				};
 			};
 			
 			_isNull

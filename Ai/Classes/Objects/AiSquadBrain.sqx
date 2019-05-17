@@ -7,15 +7,19 @@
  * Description:
  * Models the brain of the squad leader that takes all decisions of the team.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld];
+		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld];
 	
 		// Creates a AiSquadBrain object.
 		public constructor("_group" as Group, "_world" as IWorld, ["_knowledge" as IKnowledge, classNull])
 		{
+			_mGroup = _group;
 			_mWorld = _world;
 			
 			if (!isNull _knowledge) then {
@@ -32,8 +36,16 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method MakeDecision()
 		{
+			private ["_moveAction" as MoveAction];
+		
 			if (_mKnowledge.State == AiSquadState.Idle) then {
 				_mKnowledge.State = AiSquadState.Moving;
+				_moveAction = [[0, 0, 0]] new MoveAction;
+				[_mGroup, _moveAction] call _mWorld.DoMove;
+			};
+			
+			if (isNull _mKnowledge.Order) then {
+				_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 0, 0]] new Order;
 			};
 		};
 	};
