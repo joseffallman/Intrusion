@@ -140,7 +140,7 @@ namespace Intrusion.Ai {
 					};
 				}
 				else {
-					// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
+					// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 					
 					_locations = call _resourceLocationCollection.GetResourceLocations;
 					_count = 0;
@@ -268,7 +268,7 @@ namespace Intrusion.Ai {
 				private ["_targets" as Array, "_seeEnemies" as Boolean, "_targetSide" as Side];
 				_seeEnemies = false;
 				
-				// If infantry have see enemy targets, get out of vehicle
+				// If infantry have seen enemy targets, get out of vehicle
 				
 				if (call _self.WholeGroupInVehicle && !_mVehicleIsSquadVehicle) then {
 					_targets = (leader _self.Group) nearTargets 250;

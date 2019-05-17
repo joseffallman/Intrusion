@@ -7,6 +7,9 @@
  * Description:
  * A class for the brain to have its decitions manifested in physical actions outside itself.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Ai
 {
 	public interface IWorld
@@ -17,6 +20,10 @@ namespace Intrusion.Ai
 		// _group (Group): The group to get the leader's position from.
 		// Returns (Array): The position of the leader.
 		method Array GetLeaderPos("_group" as Group);
+		
+		// Gets the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		method ResourceLocationCollection GetResourceLocationCollection();
 		
 		#endregion
 		

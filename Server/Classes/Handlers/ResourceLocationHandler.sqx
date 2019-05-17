@@ -35,13 +35,14 @@ namespace Intrusion.Server
 		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
 		// resource locations for them all.
 		public method AquireAllResourceLocations {
-			private ["_number" as Scalar];
+			private ["_number" as Scalar, "_markerName" as String];
 			
 			// Find all factory locations
 			_number = 1;
 			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do
 			{
-				[["Factory" + str _number, ResourceFacility.Factory] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+				_markerName = "Factory" + str _number;
+				[[_markerName, markerText _markerName, getMarkerPos _markerName, ResourceFacility.Factory, true] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			
@@ -51,7 +52,8 @@ namespace Intrusion.Server
 			_number = 1;
 			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
 			{
-				[["Office" + str _number, ResourceFacility.TechLab] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+				_markerName = "Office" + str _number;
+				[[_markerName, markerText _markerName, getMarkerPos _markerName, ResourceFacility.TechLab, true] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			

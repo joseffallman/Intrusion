@@ -24,6 +24,7 @@ namespace Intrusion.Tests.Ai
 			"_mWorld" as TestWorld,
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
+			"_mResourceLocationCollection" as ResourceLocationCollection,
 		];
 		
 		#endregion
@@ -38,9 +39,17 @@ namespace Intrusion.Tests.Ai
 		
 		private static method BeforeEach()
 		{
+			private ["_resourceLocationCollection" as ResourceLocationCollection];
+			
+			_resourceLocationCollection = new ResourceLocationCollection;
+			[["FACTORY1", "First factory", [0, 100, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["OFFICE1", "First office", [0, 200, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			
+			_mResourceLocationCollection = _resourceLocationCollection;
+			
 			_mGroup = createGroup west;
 			
-			_mWorld = new TestWorld;
+			_mWorld = [_resourceLocationCollection] new TestWorld;
 			_mKnowledge = [_mGroup] new Knowledge;
 			_mBrain = [_mGroup, _mWorld, _mKnowledge] new AiSquadBrain;
 		};
@@ -55,7 +64,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			
 			// Act
-			call _mBrain.MakeDecision;
+			call _mBrain.Act;
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI did not make a decision."] call Assert.AreNotEqual;
@@ -65,21 +74,19 @@ namespace Intrusion.Tests.Ai
 		private static method AttackOrder100m_MakeDecision_StartingMove
 		{
 			private ["_moveAction" as MoveAction];
-			
+		
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 100, 0]] new Order;
 			
 			// Act
-			call _mBrain.MakeDecision;
+			call _mBrain.Act;
 			
 			// Assert
-			[1, count _mWorld.Actions, "AI did not perform move action."] call Assert.AreEqual;
+			[1, count _mWorld.MoveActions, "AI did not decide to perform move action."] call Assert.AreEqual;
 			
-			if (count _mWorld.Actions >= 1) then {
-				_moveAction = _mWorld.Actions select 0;
-				[_moveAction is MoveAction, "AI did not decide to perform move action."] call Assert.IsTrue;
-			};
+			_moveAction = _mWorld.MoveActions select 0;
+			[[0, 100, 0], _moveAction.TargetPos, "AI moves to wrong place."] call Assert.AreEqual;
 		};
 		
 		

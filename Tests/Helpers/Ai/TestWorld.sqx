@@ -9,18 +9,21 @@
  */
 
 using Intrusion.Ai;
+using Intrusion.Common;
 
 namespace Intrusion.Tests.Helpers
 {
 	public class TestWorld : IWorld
 	{
+		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
+	
 		// Creates a TestWorld object.
-		public constructor {
+		public constructor("_resourceLocationCollection" as ResourceLocationCollection) {
 			_self.LeaderPos = [];
-			_self.Actions = [];
+			_self.MoveActions = [];
 		};
 		
-		public property Array Actions { get; private set; };
+		public property Array MoveActions { get; private set; };
 		
 		public property Array LeaderPos { get; set; };
 		
@@ -32,12 +35,19 @@ namespace Intrusion.Tests.Helpers
 			_self.LeaderPos
 		};
 		
+		// Gets the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		public method ResourceLocationCollection GetResourceLocationCollection()
+		{
+			_mResourceLocationCollection
+		};
+		
 		// Performs a move action for an AI group.
 		// _group (Group): The group to move.
 		// _moveAction (MoveAction): Information about the movement.
 		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
 		{
-			_self.Actions pushBack _moveAction;
+			_self.MoveActions pushBack _moveAction;
 		};
 	};
 };

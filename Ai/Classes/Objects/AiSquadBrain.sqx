@@ -33,19 +33,25 @@ namespace Intrusion.Ai
 			};
 		};
 		
-		// Gives the AI brain an opportunity to make a new decision.
-		public method MakeDecision()
+		private method MakeDecision()
 		{
 			private ["_moveAction" as MoveAction];
 		
-			if (_mKnowledge.State == AiSquadState.Idle) then {
-				_mKnowledge.State = AiSquadState.Moving;
-				_moveAction = [[0, 0, 0]] new MoveAction;
-				[_mGroup, _moveAction] call _mWorld.DoMove;
-			};
-			
+			_mKnowledge.State = AiSquadState.Moving;
+			_moveAction = [[0, 0, 0]] new MoveAction;
+			[_mGroup, _moveAction] call _mWorld.DoMove;
+		};
+		
+		// Gives the AI brain an opportunity to make a new decision.
+		public method Act()
+		{
 			if (isNull _mKnowledge.Order) then {
 				_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 0, 0]] new Order;
+			};
+			
+			switch (_mKnowledge.State) do {
+				case AiSquadState.Idle: { call _self.MakeDecision; };
+				//case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
 			};
 		};
 	};
