@@ -1,0 +1,48 @@
+/*
+ * Name:	AiBrainTests
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test class for AiBrain.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Tests.Helpers;
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Ai
+{
+	public class AiSquadBrainTests
+	{
+		#region Fields
+		
+		private static fields [
+			"_mWorld" as IWorld,
+			"_mBrain" as AiSquadBrain,
+		];
+		
+		#endregion
+
+		// Registeres all tests that should be run.
+		public static method Init {
+			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
+				"StateIdle_MakeDecision_NotIdle",
+			]] call TestEngine.Register;
+		};
+		
+		private static method StateIdle_MakeDecision_NotIdle
+		{
+			// Arrange
+			_mWorld = new TestWorld;
+			_mBrain = [_mWorld] new AiSquadBrain;
+			
+			// Act
+			call _mBrain.MakeDesicion;
+			
+			// Assert
+			[AiSquadState.Idle, _mBrain.State, "Brain did not make a desicion."] call Assert.AreNotEqual;
+		};
+	};
+};

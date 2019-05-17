@@ -1,0 +1,19 @@
+/*
+ * Name:	World
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class for the brain to have its decitions manifested in physical actions outside itself.
+ */
+namespace Intrusion.Ai
+{
+	public class World : IWorld
+	{
+		// Creates a World object.
+		public constructor {
+			
+		};
+	};
+};

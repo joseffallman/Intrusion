@@ -50,6 +50,7 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
 X.X Fixed: Change == to "isEqualTo" in Assert.AreEqual.
     The test report is now copied to clipboard.
     Added error message for when the test class does not exist.
+    Fixed: nil values was not handled.
 
 
 Good luck unit testing!

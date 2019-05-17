@@ -13,30 +13,62 @@ namespace Sqx.UnitTest
 	{
 		public static method AreEqual("_expected" as Any, "_actual" as Any, ["_message" as String, ""])
 		{
-			private ["_fullMsg" as String];
-
-			if (!(_expected isEqualTo _actual)) then {
-				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
-				};
+			private ["_fullMsg" as String, "_nilParameter" as String];
 			
+			_fullMsg = "";
+
+			if (isNil "_expected" || isNil "_actual") then {
+				if (isNil "_expected") then {
+					_nilParameter = "Expected ";
+				}
+				else {
+					_nilParameter = "Actual ";
+				};
+				
+				_fullMsg = _nilParameter + "value is nil. ";
+			}
+			else {
+				if (!(_expected isEqualTo _actual)) then {
+					_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
+				};
+			};
+			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 		
 		public static method AreNotEqual("_expected" as Any, "_actual" as Any, ["_message" as String, ""])
 		{
-			private ["_fullMsg" as String];
+			private ["_fullMsg" as String, "_nilParameter" as String];
 
-			if (_expected isEqualTo _actual) then {
-				_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
+			_fullMsg = "";
+
+			if (isNil "_expected" || isNil "_actual") then {
+				if (isNil "_expected") then {
+					_nilParameter = "Expected ";
+				}
+				else {
+					_nilParameter = "Actual ";
 				};
+				
+				_fullMsg = _nilParameter + "value is nil. ";
+			}
+			else {
+				if (_expected isEqualTo _actual) then {
+					_fullMsg = "Expected '" + str _expected + "' but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
+				};
+			};
 			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
@@ -45,13 +77,22 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
-			if (!_actual) then {
-				_fullMsg = "Expected 'true' but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
+			_fullMsg = "";
+
+			if (isNil "_actual") then {
+				_fullMsg = "Actual value is nil. ";
+			}
+			else {
+				if (!_actual) then {
+					_fullMsg = "Expected 'true' but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
 				};
+			};
 			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
@@ -60,13 +101,22 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
-			if (_actual) then {
-				_fullMsg = "Expected 'false' but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
+			_fullMsg = "";
+
+			if (isNil "_actual") then {
+				_fullMsg = "Actual value is nil. ";
+			}
+			else {
+				if (_actual) then {
+					_fullMsg = "Expected 'false' but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
 				};
+			};
 			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
@@ -89,27 +139,45 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 			
-			if (!([_actual] call _self.ValueIsNull)) then {
-				_fullMsg = "Expected NULL but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
+			_fullMsg = "";
+
+			if (isNil "_actual") then {
+				_fullMsg = "Actual value is nil. ";
+			}
+			else {
+				if (!([_actual] call _self.ValueIsNull)) then {
+					_fullMsg = "Expected NULL but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
 				};
+			};
 			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};
 		
 		public static method IsNotNull("_actual" as Any, ["_message" as String, ""]) {
 			private ["_fullMsg" as String];
-
-			if ([_actual] call _self.ValueIsNull) then {
-				_fullMsg = "Expected NOT NULL but got '" + str _actual + "'. ";
-				
-				if (_message != "") then {
-					_fullMsg = _fullMsg + _message;
-				};
 			
+			_fullMsg = "";
+
+			if (isNil "_actual") then {
+				_fullMsg = "Actual value is nil. ";
+			}
+			else {
+				if ([_actual] call _self.ValueIsNull) then {
+					_fullMsg = "Expected NOT NULL but got '" + str _actual + "'. ";
+					
+					if (_message != "") then {
+						_fullMsg = _fullMsg + _message;
+					};
+				};
+			};
+			
+			if (_fullMsg != "") then {
 				[_fullMsg] call TestEngine.WriteFailed;
 			};
 		};

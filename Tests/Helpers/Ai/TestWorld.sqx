@@ -1,0 +1,22 @@
+/*
+ * Name:	TestWorld
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A fake world class used in testing.
+ */
+
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestWorld : IWorld
+	{
+		// Creates a TestWorld object.
+		public constructor {
+			
+		};
+	};
+};
