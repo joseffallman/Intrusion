@@ -1,0 +1,38 @@
+/*
+ * Name:	Knowledge
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models an AI:s knowledge/memory.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class Knowledge : IKnowledge
+	{
+		// Creates a Knowledge object.
+		public constructor("_group" as Group)
+		{
+			_self.Group = _group;
+			_self.Members = units _group;
+			_self.State = AiSquadState.Idle;
+			_self.Order = classNull;
+		};
+		
+		// gets or sets the group associated with this AI knowledge.
+		public property Group Group { get; set; };
+		
+		// gets or sets the group members associated with this AI knowledge.
+		public property Array Members { get; set; };
+		
+		// Gets or sets the state of the AI team.
+		public property AiSquadState State { get; set; };
+		
+		// Gets or sets an order.
+		public property Order Order { get; set; };
+	};
+};

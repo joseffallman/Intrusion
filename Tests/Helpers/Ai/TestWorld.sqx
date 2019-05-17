@@ -16,7 +16,17 @@ namespace Intrusion.Tests.Helpers
 	{
 		// Creates a TestWorld object.
 		public constructor {
-			
+			_self.LeaderPos = [];
+		};
+		
+		public property Array LeaderPos { get; set; };
+		
+		// Gets a group's leader's position.
+		// _group (Group): The group to get the leader's position from.
+		// Returns (Array): The position of the leader.
+		public method Array GetLeaderPos("_group" as Group)
+		{
+			_self.LeaderPos
 		};
 	};
 };

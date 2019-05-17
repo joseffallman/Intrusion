@@ -7,6 +7,7 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitBalancer.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiWeaponInfo.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\World.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquadBrain.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\Knowledge.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
 using Intrusion.Common;

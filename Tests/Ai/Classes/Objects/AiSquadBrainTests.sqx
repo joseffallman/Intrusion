@@ -11,6 +11,7 @@
 using Sqx.UnitTest;
 using Intrusion.Tests.Helpers;
 using Intrusion.Ai;
+using Intrusion.Common;
 
 namespace Intrusion.Tests.Ai
 {
@@ -19,8 +20,10 @@ namespace Intrusion.Tests.Ai
 		#region Fields
 		
 		private static fields [
-			"_mWorld" as IWorld,
+			"_mGroup" as Group,
+			"_mWorld" as TestWorld,
 			"_mBrain" as AiSquadBrain,
+			"_mKnowledge" as IKnowledge,
 		];
 		
 		#endregion
@@ -28,21 +31,49 @@ namespace Intrusion.Tests.Ai
 		// Registeres all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
-				"StateIdle_MakeDecision_NotIdle",
+				"StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder",
 			]] call TestEngine.Register;
 		};
 		
-		private static method StateIdle_MakeDecision_NotIdle
+		private static method BeforeEach()
+		{
+			_mGroup = createGroup west;
+			
+			_mWorld = new TestWorld;
+			_mKnowledge = [_mGroup] new Knowledge;
+			_mBrain = [_mGroup, _mWorld, _mKnowledge] new AiSquadBrain;
+		};
+		
+		private static method AfterEach()
+		{
+			deleteGroup _mGroup;
+		};
+		
+		private static method StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder
 		{
 			// Arrange
-			_mWorld = new TestWorld;
-			_mBrain = [_mWorld] new AiSquadBrain;
 			
 			// Act
-			call _mBrain.MakeDesicion;
+			call _mBrain.MakeDecision;
 			
 			// Assert
-			[AiSquadState.Idle, _mBrain.State, "Brain did not make a desicion."] call Assert.AreNotEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not make a decision."] call Assert.AreNotEqual;
+			[_mKnowledge.Order, "AI did not create an order."] call Assert.IsNotNull;
 		};
+		
+		private static method AttackOrder100m_MakeDecision_StartingMove
+		{
+			// Arrange
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 0, 100]] new Order;
+			
+			// Act
+			call _mBrain.MakeDecision;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "Brain did not make a decision."] call Assert.AreNotEqual;
+		};
+		
+		
 	};
 };

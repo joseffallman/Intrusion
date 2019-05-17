@@ -5,29 +5,35 @@
  * Author:  Engima
  *
  * Description:
- * Models the brain of the squad leader that takes all desicions of the team.
+ * Models the brain of the squad leader that takes all decisions of the team.
  */
 namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mWorld" as IWorld];
+		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld];
 	
 		// Creates a AiSquadBrain object.
-		public constructor("_world" as IWorld)
+		public constructor("_group" as Group, "_world" as IWorld, ["_knowledge" as IKnowledge, classNull])
 		{
 			_mWorld = _world;
-			_self.State = AiSquadState.Idle;
+			
+			if (!isNull _knowledge) then {
+				_mKnowledge = _knowledge;
+				
+				_mKnowledge.Group = _group;
+				_mKnowledge.Members = units _group;
+			}
+			else {
+				_mKnowledge = [_group] new Knowledge;
+			};
 		};
 		
-		// Gets the current state of the squad.
-		public property AiSquadState State { get; private set; };
-		
 		// Gives the AI brain an opportunity to make a new decision.
-		public method MakeDesicion()
+		public method MakeDecision()
 		{
-			if (_self.State == AiSquadState.Idle) then {
-				_self.State = AiSquadState.Moving;
+			if (_mKnowledge.State == AiSquadState.Idle) then {
+				_mKnowledge.State = AiSquadState.Moving;
 			};
 		};
 	};

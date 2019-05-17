@@ -13,7 +13,14 @@ namespace Intrusion.Ai
 	{
 		// Creates a World object.
 		public constructor {
-			
+		};
+		
+		// Gets a group's leader's position.
+		// _group (Group): The group to get the leader's position from.
+		// Returns (Array): The position of the leader.
+		public method Array GetLeaderPos("_group" as Group)
+		{
+			getPos leader _group
 		};
 	};
 };
