@@ -16,9 +16,8 @@ namespace Intrusion.Common
         // Initializes all professions.
         public constructor {
         	_base = new ProfessionConfig;
-        	_self.Professions = _base.Professions;
         	
-        	_self.Professions = [
+        	_base.Professions = [
         		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, "b_inf", "o_inf", false] new Profession,
 			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, true, "b_service", "o_service", true] new Profession,
 			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
@@ -34,6 +33,8 @@ namespace Intrusion.Common
 			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Private, 1, 2, 9, 3, true, "b_armor", "o_armor", false] new Profession,
 			    [ProfessionType.AttackHelicopter, "Attack Helicopters", Technology.AirArmed, Rank.Private, 1, 1, 2, 2, true, "b_air", "o_air", false] new Profession
         	];
+        	
+        	_self.Professions = _base.Professions;
 		};
 		
 		// Gets all professions.
