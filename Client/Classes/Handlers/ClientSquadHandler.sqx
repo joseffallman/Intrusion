@@ -67,7 +67,6 @@ namespace Intrusion.Client
 //					player addRating _calculatedRating;
 					player addRating _rating;
 					ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
-					player sideChat "DEBUG: Rating=" + str rating player;
 				};
 			};
 		};
