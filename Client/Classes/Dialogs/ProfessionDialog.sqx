@@ -75,7 +75,7 @@ namespace Intrusion.Client
 				_mPlayersCurrentProfIndex = 0;
 				lbAdd [DialogControl.GroupProfessionListBox, _x.Name];
 				_options pushBack _x.Type;
-			} foreach (call _mProfessionConfig.GetAllProfessions) as Profession;
+			} foreach _mProfessionConfig.Professions as Profession;
             
             _mOptions = _options;
 		};

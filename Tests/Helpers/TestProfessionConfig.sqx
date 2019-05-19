@@ -14,13 +14,9 @@ namespace Intrusion.Tests.Helpers
 {
 	public class TestProfessionConfig : IProfessionConfig
 	{
-        // Field(s):
-		// _mProfessions (Array): All professions as an array of Profession objects.
-		private fields ["_mProfessions" as Array];
-
         // Initializes all professions.
         public constructor {
-        	_mProfessions = [];
+        	_self.Professions = [];
 		};
 		
 		// Gets a profession by profession type.
@@ -32,7 +28,7 @@ namespace Intrusion.Tests.Helpers
 				if (_x.Type == _professionType) then {
 					_x breakOut "main";
 				};
-			} foreach _mProfessions as Profession;
+			} foreach _self.Professions as Profession;
 			
 			classNull
 		};
@@ -51,16 +47,13 @@ namespace Intrusion.Tests.Helpers
 				if (_profession.Type == _professionType) then {
 					_profession breakOut "main";
 				};
-			} foreach _mProfessions as Profession;
+			} foreach _self.Professions as Profession;
 			
 			classNull
 		};
 		
 		// Gets all professions.
-		public method Array GetAllProfessions
-		{
-			+_mProfessions
-		};
+		public property Array Professions { get; set; };
 		
 		public method AddProfession(
     		"_type" as ProfessionType,
@@ -75,7 +68,7 @@ namespace Intrusion.Tests.Helpers
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
     	{
-    		_mProfessions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy, false] new Profession;
+    		_self.Professions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy, false] new Profession;
     	};
 	};
 };
