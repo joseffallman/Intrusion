@@ -119,6 +119,10 @@ namespace Intrusion.Client
 				params ["_unit" as Object, "_unit2" as Object, "_vehicle" as Object];
 				["ClientEventReciever.OnUnitChangedSeat", [_unit, _vehicle]] call Remote.Invoke;
 			}];
+			
+			player addEventHandler ["HandleRating", {
+				0
+			}];
 		};
 	};
 };

@@ -23,4 +23,7 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 if (isServer) then {
 	[gServer, gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
 	//call Sqx.UnitTest.TestEngine.RunDelayedAsync;
+	
+	_unit = ["O_Soldier_F", getMarkerPos "marker_22", createGroup east] call gServer.UnitSpawner.CreateUnit;
+	removeAllWeapons _unit;
 };
