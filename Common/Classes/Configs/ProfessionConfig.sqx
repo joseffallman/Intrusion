@@ -1,0 +1,71 @@
+/*
+ * Name:	ProfessionProdConfig
+ * Date:	2017-11-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that contains all relevant settings for professions.
+ */
+namespace Intrusion.Common
+{
+	public class ProfessionConfig : IProfessionConfig
+	{
+        // Initializes all professions.
+        public constructor {
+        	_self.Professions = [
+        		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, "b_inf", "o_inf", false] new Profession,
+			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, true, "b_service", "o_service", true] new Profession,
+			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
+			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
+			    [ProfessionType.Repair, "Repair Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_maint", "o_maint", false] new Profession,
+			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, Rank.Corpral, 3, 2, 10, 5, true, "b_motor_inf", "o_motor_inf", false] new Profession,
+			    [ProfessionType.Sniper, "Sniper Teams", Technology.Ordnance, Rank.Corpral, 1, 1, 2, 2, false, "b_support", "o_support", false] new Profession,
+			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, Rank.Corpral, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
+			    [ProfessionType.Uav, "UAV Teams", Technology.AirRecon, Rank.Corpral, 1, 1, 2, 2, false, "b_art", "o_art", true] new Profession,
+			    [ProfessionType.ReconChopper, "Recon Helicopters", Technology.AirRecon, Rank.Sergeant, 1, 1, 2, 4, true, "b_air", "o_air", true] new Profession,
+			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, Rank.Sergeant, 2, 1, 2, 4, false, "b_support", "o_support", true] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, Rank.Sergeant, 2, 2, 10, 10, true, "b_mech_inf", "o_mech_inf", false] new Profession,
+			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Lieutenant, 1, 2, 9, 3, true, "b_armor", "o_armor", false] new Profession,
+			    [ProfessionType.AttackHelicopter, "Attack Helicopters", Technology.AirArmed, Rank.Captain, 1, 1, 2, 2, true, "b_air", "o_air", false] new Profession
+        	];
+		};
+		
+		// Gets all professions.
+		public property Array Professions { get; set; };
+		
+		// Gets a profession by profession type.
+		// _professionType (ProfessionType): Profession type.
+		// Returns (Profession): The sought profession. null if the profession type was invalid.
+		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
+			scopeName "main";
+			
+			{
+				if (_x.Type == _professionType) then {
+					_x breakOut "main";
+				};
+			} foreach _self.Professions as Profession;
+			
+			classNull
+		};
+		
+		// Gets a profession.
+		// _professionType (ProfessionType): The profession type.
+		// Returns (Profession): The sought profession. classNull if the profession was not found.
+		public method Profession GetProfession("_professionType" as ProfessionType)
+		{
+			scopeName "main";
+			
+			{
+				private ["_profession" as Profession];
+				_profession = _x;
+				
+				if (_profession.Type == _professionType) then {
+					_profession breakOut "main";
+				};
+			} foreach _self.Professions as Profession;
+			
+			classNull
+		};
+	};
+};
