@@ -1,5 +1,5 @@
 /*
- * Name:	ProfessionTestConfig
+ * Name:	ProfessionProdConfig
  * Date:	2017-11-18
  * Version: 1.0
  * Author:  Engima
@@ -9,15 +9,16 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionTestConfig : IProfessionConfig
+	public class ProfessionTestConfig : IProfessionConfig /* Inherits template ProfessionVehicle */
 	{
-        // Field(s):
-		// _mProfessions (Array): All professions as an array of Profession objects.
-		private fields ["_mProfessions" as Array];
-
+		private fields ["_base" as ProfessionConfig];
+		
         // Initializes all professions.
         public constructor {
-        	_mProfessions = [
+        	_base = new ProfessionConfig;
+        	_self.Professions = _base.Professions;
+        	
+        	_self.Professions = [
         		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, "b_inf", "o_inf", false] new Profession,
 			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, true, "b_service", "o_service", true] new Profession,
 			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
@@ -35,19 +36,14 @@ namespace Intrusion.Common
         	];
 		};
 		
+		// Gets all professions.
+		public property Array Professions { get; set; };
+		
 		// Gets a profession by profession type.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Profession): The sought profession. null if the profession type was invalid.
 		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
-			scopeName "main";
-			
-			{
-				if (_x.Type == _professionType) then {
-					_x breakOut "main";
-				};
-			} foreach _mProfessions as Profession;
-			
-			classNull
+			[_professionType] call _base.GetVehicleClassNames
 		};
 		
 		// Gets a profession.
@@ -55,24 +51,7 @@ namespace Intrusion.Common
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
 		public method Profession GetProfession("_professionType" as ProfessionType)
 		{
-			scopeName "main";
-			
-			{
-				private ["_profession" as Profession];
-				_profession = _x;
-				
-				if (_profession.Type == _professionType) then {
-					_profession breakOut "main";
-				};
-			} foreach _mProfessions as Profession;
-			
-			classNull
-		};
-		
-		// Gets all professions.
-		public method Array GetAllProfessions
-		{
-			+_mProfessions
+			[_professionType] call _base.GetProfession
 		};
 	};
 };
