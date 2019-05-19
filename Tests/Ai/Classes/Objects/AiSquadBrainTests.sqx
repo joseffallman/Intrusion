@@ -22,9 +22,11 @@ namespace Intrusion.Tests.Ai
 		private static fields [
 			"_mGroup" as Group,
 			"_mWorld" as TestWorld,
+			"_mActionPerformer" as TestActionPerformer,
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
 			"_mResourceLocationCollection" as ResourceLocationCollection,
+			"_mRandomGenerator" as TestRandomGenerator,
 		];
 		
 		#endregion
@@ -42,16 +44,19 @@ namespace Intrusion.Tests.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection];
 			
 			_resourceLocationCollection = new ResourceLocationCollection;
-			[["FACTORY1", "First factory", [0, 100, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
-			[["OFFICE1", "First office", [0, 200, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["FACTORY1", "First factory", [100, 100, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["OFFICE1", "First office", [200, 200, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["FACTORY2", "Second factory", [300, 300, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["OFFICE2", "Second office", [400, 400, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			
 			_mResourceLocationCollection = _resourceLocationCollection;
 			
 			_mGroup = createGroup west;
 			
-			_mWorld = [_resourceLocationCollection] new TestWorld;
+			_mWorld = [_mResourceLocationCollection] new TestWorld;
+			_mActionPerformer = new TestActionPerformer;
 			_mKnowledge = [_mGroup] new Knowledge;
-			_mBrain = [_mGroup, _mWorld, _mKnowledge] new AiSquadBrain;
+			_mBrain = [_mGroup, _mActionPerformer, _mKnowledge] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()
@@ -78,17 +83,16 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 100, 0]] new Order;
+			_mRandomGenerator.Number = 0;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
-			[1, count _mWorld.MoveActions, "AI did not decide to perform move action."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not decide to perform a move action."] call Assert.AreEqual;
 			
-			_moveAction = _mWorld.MoveActions select 0;
-			[[0, 100, 0], _moveAction.TargetPos, "AI moves to wrong place."] call Assert.AreEqual;
-		};
-		
-		
+			_moveAction = _mActionPerformer.MoveActions select 0;
+			[[100, 100, 0], _moveAction.TargetPos, "AI moves to wrong place."] call Assert.AreEqual;
+		};	
 	};
 };

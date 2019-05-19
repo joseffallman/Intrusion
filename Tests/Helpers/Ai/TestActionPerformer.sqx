@@ -1,0 +1,32 @@
+/*
+ * Name:	TestActionPerformer
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Used to fake an action performer in testing.
+ */
+
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestActionPerformer : IActionPerformer
+	{
+		// Creates a TestActionPerformer object.
+		public constructor {
+			_self.MoveActions = [];
+		};
+		
+		public property Array MoveActions { get; private set; };
+		
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
+		{
+			_self.MoveActions pushBack _moveAction;
+		};
+	};
+};

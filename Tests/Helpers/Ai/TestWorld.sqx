@@ -20,10 +20,7 @@ namespace Intrusion.Tests.Helpers
 		// Creates a TestWorld object.
 		public constructor("_resourceLocationCollection" as ResourceLocationCollection) {
 			_self.LeaderPos = [];
-			_self.MoveActions = [];
 		};
-		
-		public property Array MoveActions { get; private set; };
 		
 		public property Array LeaderPos { get; set; };
 		
@@ -40,14 +37,6 @@ namespace Intrusion.Tests.Helpers
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
 			_mResourceLocationCollection
-		};
-		
-		// Performs a move action for an AI group.
-		// _group (Group): The group to move.
-		// _moveAction (MoveAction): Information about the movement.
-		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
-		{
-			_self.MoveActions pushBack _moveAction;
 		};
 	};
 };

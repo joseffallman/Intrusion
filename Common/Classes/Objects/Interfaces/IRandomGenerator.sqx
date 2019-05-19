@@ -1,0 +1,16 @@
+/*
+ * Name:	IRandomGenerator
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Generates a random number.
+ */
+namespace Intrusion.Common
+{
+	public interface IRandomGenerator
+	{
+		method GetNumber("_maxValue" as Scalar);
+	};
+};

@@ -14,8 +14,6 @@ namespace Intrusion.Ai
 {
 	public interface IWorld
 	{
-		#region Fetch
-		
 		// Gets a group's leader's position.
 		// _group (Group): The group to get the leader's position from.
 		// Returns (Array): The position of the leader.
@@ -24,16 +22,5 @@ namespace Intrusion.Ai
 		// Gets the resource location collection.
 		// Returns (ResourceLocationCollection): The resource location collection.
 		method ResourceLocationCollection GetResourceLocationCollection();
-		
-		#endregion
-		
-		#region Invoke
-		
-		// Performs a move action for an AI group.
-		// _group (Group): The group to move.
-		// _moveAction (MoveAction): Information about the movement.
-		method DoMove("_group" as Group, "_moveAction" as MoveAction);
-		
-		#endregion
 	};
 };

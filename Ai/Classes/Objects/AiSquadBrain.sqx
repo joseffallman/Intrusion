@@ -14,13 +14,14 @@ namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld];
+		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator];
 	
 		// Creates a AiSquadBrain object.
-		public constructor("_group" as Group, "_world" as IWorld, ["_knowledge" as IKnowledge, classNull])
+		public constructor("_group" as Group, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_randomGenerator" as IRandomGenerator, ["_knowledge" as IKnowledge, classNull])
 		{
 			_mGroup = _group;
-			_mWorld = _world;
+			_mActionPerformer = _actionPerformer;
+			_mRandomGenerator = _randomGenerator;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -33,13 +34,51 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		private method CreateOrderOnOwnInitiative()
+		{
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
+			private ["_count" as Scalar, "_index" as Scalar];
+			
+			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
+			
+			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
+			_locations = call _resourceLocationCollection.GetResourceLocations;
+			_count = 0;
+			_valuedLocations = [];
+			
+			{
+				_location = _x;
+				
+				if (_location.Side != side _mKnowledge.Group) then {
+					_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
+					_count = _count + 1;
+				};
+			} foreach _locations as ResourceLocation;
+			
+			_valuedLocations = [_valuedLocations] call Sorter.QSort;
+			
+			if (_count > 3) then {
+				_count = 3;
+			};
+			
+			if (_count > 0) then {
+				_index = floor ([_count] call _mRandomGenerator.GetNumber);
+				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+				
+				_mResourceLocation = _location;
+				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+				//_mOrderTime = time;
+				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			};
+		};
+		
 		private method MakeDecision()
 		{
 			private ["_moveAction" as MoveAction];
 		
 			_mKnowledge.State = AiSquadState.Moving;
 			_moveAction = [[0, 0, 0]] new MoveAction;
-			[_mGroup, _moveAction] call _mWorld.DoMove;
+			[_mGroup, _moveAction] call _mActionPerformer.DoMove;
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.

@@ -32,19 +32,5 @@ namespace Intrusion.Ai
 		{
 			classNull
 		};
-		
-		// Performs a move action for an AI group.
-		// _group (Group): The group to move.
-		// _moveAction (MoveAction): Information about the movement.
-		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
-		{
-			private ["_waypoint" as Array];
-			
-			_waypoint = _group addWaypoint [_moveAction.TargetPos];
-			_waypoint setWaypointSpeed "LIMITED";
-			_waypoint setWaypointType "HOLD";
-			_group setSpeedMode "LIMITED";
-			
-		};
 	};
 };

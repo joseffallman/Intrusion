@@ -1,0 +1,19 @@
+/*
+ * Name:	IActionPerformer
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Makes actions happen in the world.
+ */
+namespace Intrusion.Ai
+{
+	public interface IActionPerformer
+	{
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		method DoMove("_group" as Group, "_moveAction" as MoveAction);
+	};
+};
