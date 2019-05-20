@@ -16,7 +16,7 @@ namespace Intrusion.Ai
 	public class AiSquadBrain
 	{
 		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
-						"_mMapMarkerInfo" as MapMarkerInfo];
+						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler];
 	
 		// Creates a AiSquadBrain object.
 		public constructor(
@@ -24,13 +24,16 @@ namespace Intrusion.Ai
 			"_world" as IWorld, 
 			"_actionPerformer" as IActionPerformer, 
 			"_randomGenerator" as IRandomGenerator,
-			"_mapMarkerInfo" as MapMarkerInfo, 
+			"_mapMarkerInfo" as MapMarkerInfo,
+			"_markerHandler" as IMarkerHandler,
 			["_knowledge" as IKnowledge, classNull])
 		{
 			_mGroup = _group;
+			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
 			_mMapMarkerInfo = _mapMarkerInfo;
+			_mMarkerHandler = _markerHandler;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -50,8 +53,9 @@ namespace Intrusion.Ai
 			private ["_count" as Scalar, "_index" as Scalar];
 			
 			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
-			
+
 			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
+			
 			_locations = call _resourceLocationCollection.GetResourceLocations;
 			_count = 0;
 			_valuedLocations = [];
@@ -60,7 +64,7 @@ namespace Intrusion.Ai
 				_location = _x;
 				
 				if (_location.Side != side _mKnowledge.Group) then {
-					_valuedLocations pushBack [_location, getMarkerPos _location.MarkerName distance getMarkerPos _mMapMarkerInfo.BaseMarkerName] new ValuedObject;
+					_valuedLocations pushBack [_location, ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mMapMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos)] new ValuedObject;
 					_count = _count + 1;
 				};
 			} foreach _locations as ResourceLocation;
@@ -75,7 +79,7 @@ namespace Intrusion.Ai
 				_index = floor ([_count] call _mRandomGenerator.GetNumber);
 				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 				
-				_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+				//_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos] new Order;
 			};
 		};
 		

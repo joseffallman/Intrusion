@@ -20,6 +20,7 @@ namespace Intrusion.Tests.Helpers
 		// Creates a TestWorld object.
 		public constructor("_resourceLocationCollection" as ResourceLocationCollection) {
 			_self.LeaderPos = [];
+			_mResourceLocationCollection = _resourceLocationCollection;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -29,6 +30,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Array): The position of the leader.
 		public method Array GetLeaderPos("_group" as Group)
 		{
+			player sideChat "there";
 			_self.LeaderPos
 		};
 		
@@ -36,6 +38,8 @@ namespace Intrusion.Tests.Helpers
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
+			player sideChat "here";
+			player sideChat str _mResourceLocationCollection;
 			_mResourceLocationCollection
 		};
 	};

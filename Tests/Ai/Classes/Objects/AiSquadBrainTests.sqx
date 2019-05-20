@@ -26,7 +26,6 @@ namespace Intrusion.Tests.Ai
 			"_mActionPerformer" as TestActionPerformer,
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
-			"_mResourceLocationCollection" as ResourceLocationCollection,
 			"_mRandomGenerator" as TestRandomGenerator,
 		];
 		
@@ -50,22 +49,22 @@ namespace Intrusion.Tests.Ai
 			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			
+			_mMarkerHandler = new TestMarkerHandler;
+			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
 			["FACTORY1", [100, 100, 0]] call _mMarkerHandler.AddMarkerPos;
 			["OFFICE1", [200, 200, 0]] call _mMarkerHandler.AddMarkerPos;
 			["FACTORY2", [300, 300, 0]] call _mMarkerHandler.AddMarkerPos;
 			["OFFICE2", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
 			
-			_mResourceLocationCollection = _resourceLocationCollection;
-			
 			_mGroup = createGroup west;
-			
-			_mWorld = [_mResourceLocationCollection] new TestWorld;
+			_mWorld = [_resourceLocationCollection] new TestWorld;
 			_mActionPerformer = new TestActionPerformer;
+			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup] new Knowledge;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
 			
-			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mapMarkerInfo, _mKnowledge] new AiSquadBrain;
+			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mapMarkerInfo, _mMarkerHandler, _mKnowledge] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()
