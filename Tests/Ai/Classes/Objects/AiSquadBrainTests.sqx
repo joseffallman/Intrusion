@@ -41,7 +41,7 @@ namespace Intrusion.Tests.Ai
 		
 		private static method BeforeEach()
 		{
-			private ["_resourceLocationCollection" as ResourceLocationCollection];
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_mapMarkerInfo" as MapMarkerInfo];
 			
 			_resourceLocationCollection = new ResourceLocationCollection;
 			[["FACTORY1", "First factory", [100, 100, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
@@ -56,7 +56,10 @@ namespace Intrusion.Tests.Ai
 			_mWorld = [_mResourceLocationCollection] new TestWorld;
 			_mActionPerformer = new TestActionPerformer;
 			_mKnowledge = [_mGroup] new Knowledge;
-			_mBrain = [_mGroup, _mActionPerformer, _mKnowledge] new AiSquadBrain;
+			
+			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
+			
+			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mapMarkerInfo, _mKnowledge] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()

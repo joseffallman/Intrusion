@@ -9,19 +9,28 @@
  */
 
 using Intrusion.Common;
+using Sqx.Collections;
 
 namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator];
+		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
+						"_mMapMarkerInfo" as MapMarkerInfo];
 	
 		// Creates a AiSquadBrain object.
-		public constructor("_group" as Group, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_randomGenerator" as IRandomGenerator, ["_knowledge" as IKnowledge, classNull])
+		public constructor(
+			"_group" as Group, 
+			"_world" as IWorld, 
+			"_actionPerformer" as IActionPerformer, 
+			"_randomGenerator" as IRandomGenerator,
+			"_mapMarkerInfo" as MapMarkerInfo, 
+			["_knowledge" as IKnowledge, classNull])
 		{
 			_mGroup = _group;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
+			_mMapMarkerInfo = _mapMarkerInfo;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -34,6 +43,7 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
@@ -65,10 +75,7 @@ namespace Intrusion.Ai
 				_index = floor ([_count] call _mRandomGenerator.GetNumber);
 				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 				
-				_mResourceLocation = _location;
-				_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
-				//_mOrderTime = time;
-				[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+				_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
 			};
 		};
 		
@@ -84,8 +91,9 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
+			// If there is no order, create one on own initiative.
 			if (isNull _mKnowledge.Order) then {
-				_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 0, 0]] new Order;
+				call _self.CreateOrderOnOwnInitiative;
 			};
 			
 			switch (_mKnowledge.State) do {

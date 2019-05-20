@@ -7,9 +7,12 @@
  * Description:
  * Class used to make random number static during tests.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Tests.Helpers
 {
-	public class TestRandomGenerator
+	public class TestRandomGenerator : IRandomGenerator
 	{
 		// Creates a TestRandomGenerator object.
 		public constructor("_returnValue" as Scalar)
