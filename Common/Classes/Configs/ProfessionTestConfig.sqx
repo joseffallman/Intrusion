@@ -9,12 +9,13 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionTestConfig : IProfessionConfig /* Inherits template ProfessionVehicle */
+	public class ProfessionTestConfig : IProfessionConfig /* Pseudo inherits ProfessionConfig */
 	{
 		private fields ["_base" as ProfessionConfig];
 		
         // Initializes all professions.
         public constructor {
+        	// In a pseudo inheritment we first need to create and initialize the base class.
         	_base = new ProfessionConfig;
         	
         	_base.Professions = [
@@ -34,6 +35,7 @@ namespace Intrusion.Common
 			    [ProfessionType.AttackHelicopter, "Attack Helicopters", Technology.AirArmed, Rank.Private, 1, 1, 2, 2, true, "b_air", "o_air", false] new Profession
         	];
         	
+        	// In a pseudo interitment all 'inherited' properties must be set to the same as the base class.
         	_self.Professions = _base.Professions;
 		};
 		
