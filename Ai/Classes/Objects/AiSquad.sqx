@@ -684,7 +684,7 @@ namespace Intrusion.Ai {
 				{
 					_rating = _self.Group getVariable ["Rating", 0];
 					
-					if ([side _self.Group, _mWannaBeProfessionType, _rating] call _squadCollection.ProfessionTypeSelectable) then {
+					if ([side _self.Group, _mWannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
 						[_self.Group, _mWannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
 						_mProfessionType = _mWannaBeProfessionType;
 		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mProfessionType + "'."] call LogHandler.Debug;
