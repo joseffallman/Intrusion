@@ -49,6 +49,11 @@ namespace Intrusion.Tests.Ai
 			[["FACTORY2", "Second factory", [300, 300, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE2", "Second office", [400, 400, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			
+			["FACTORY1", [100, 100, 0]] call _mWorld.AddMarkerPos;
+			["OFFICE1", [200, 200, 0]] call _mWorld.AddMarkerPos;
+			["FACTORY2", [300, 300, 0]] call _mWorld.AddMarkerPos;
+			["OFFICE2", [400, 400, 0]] call _mWorld.AddMarkerPos;
+			
 			_mResourceLocationCollection = _resourceLocationCollection;
 			
 			_mGroup = createGroup west;
