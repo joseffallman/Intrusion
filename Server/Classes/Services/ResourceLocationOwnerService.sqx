@@ -59,10 +59,15 @@ namespace Intrusion.Server
 		// Returns (Side): The dominant side. civilian if sides are equally dominant.
 		private method Side CheckDominantSide("_markerName" as String)
 		{
-			private ["_side" as Side, "_points" as Scalar, "_bestSide" as Side, "_bestSidesPoints" as Scalar];
+			private ["_side" as Side, "_points" as Scalar, "_bestSide" as Side, "_bestSidesPoints" as Scalar, "_excludedUnits" as Array];
 			
 			_bestSide = civilian;
 			_bestSidesPoints = 0;
+			_excludedUnits = [];
+			{
+				// allUnitsUAV is returning all UAV-vehicles and not the units inside.
+				_excludedUnits = _excludedUnits + crew _x;
+			} forEach allUnitsUAV as Object;
 			
 			{
 				_side = _x;
@@ -75,7 +80,7 @@ namespace Intrusion.Server
 							_points = _points + 1;
 						};
 					};
-				} foreach allUnits as Object;
+				} foreach (allUnits - _excludedUnits) as Object;
 				
 				if (_points > _bestSidesPoints) then {
 					_bestSide = _side;
