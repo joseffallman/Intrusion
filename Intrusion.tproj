@@ -478,6 +478,10 @@
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Common\Classes\Handlers\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IMarkerHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\Interfaces\IMarkerHandler.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IMessageHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\Interfaces\IMessageHandler.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
@@ -493,6 +497,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="LogHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\LogHandler.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MarkerHandler.sqx" IsExpanded="false" FileName="Common\Classes\Handlers\MarkerHandler.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

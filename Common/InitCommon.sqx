@@ -56,6 +56,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Objects\RatingCalculator.
 call compile preprocessFileLineNumbers "Common\Classes\Objects\UniformInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\RandomGenerator.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\DictionaryItem.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Handlers\MarkerHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\UniformHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoItemInfo.sqx";
