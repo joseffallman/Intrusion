@@ -22,10 +22,5 @@ namespace Intrusion.Ai
 		// Gets the resource location collection.
 		// Returns (ResourceLocationCollection): The resource location collection.
 		method ResourceLocationCollection GetResourceLocationCollection();
-		
-		// Gets the position of a marker.
-		// _markerName (String): The name of the marker.
-		// Returns (Array): The position of the marker.
-		method GetMarkerPos("_markerName" as String);
 	};
 };

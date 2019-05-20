@@ -12,32 +12,23 @@ namespace Intrusion.Common
 	public class ResourceLocation
 	{
 		// Creates a ResourceLocation object and puts a resource on the map.
-		public constructor("_markerName" as String, "_markerText" as String, "_position" as Array, "_facilityType" as ResourceFacility, "_createFlag" as Boolean)
+		public constructor("_markerName" as String, "_facilityType" as ResourceFacility, "_flag" as Object)
 		{
 			_self.MarkerName = _markerName;
-			_self.Text = _markerText;
 			_self.Side = civilian;
 			_self.DominantSide = civilian;
 			_self.FacilityType = _facilityType;
 			_self.IsWinnersLocation = false;
+			_self.Flag = _flag;
 			
-			// Create the flag pole on the map
-			private _flag = objNull;
-			
-			if (_createFlag) then {
-				"Flag_Green_F" createVehicle _position;
+			if (!isNull _flag) then {
 				_flag setVariable ["MarkerName", _markerName, true];
 				_flag setVariable ["Side", civilian, true];
 			};
-			
-			_self.Flag = _flag;
 		};
 
 		// Gets the marker name.
 		public property String MarkerName { get; private set; };
-		
-		// Gets the marker's description text.
-		public property String Text { get; private set; };
 		
 		// Gets the location's flag object.
 		public property Object Flag { get; private set; };

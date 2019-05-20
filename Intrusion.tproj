@@ -1237,6 +1237,10 @@
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestMarkerHandler.sqx" IsExpanded="false" FileName="Tests\Helpers\TestMarkerHandler.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestMessageHandler.sqx" IsExpanded="false" FileName="Tests\Helpers\TestMessageHandler.sqx">
                 <IsSelected>false</IsSelected>
                 <SubNodes />

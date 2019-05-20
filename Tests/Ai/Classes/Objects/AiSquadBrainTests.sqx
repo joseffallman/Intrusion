@@ -22,6 +22,7 @@ namespace Intrusion.Tests.Ai
 		private static fields [
 			"_mGroup" as Group,
 			"_mWorld" as TestWorld,
+			"_mMarkerHandler" as TestMarkerHandler,
 			"_mActionPerformer" as TestActionPerformer,
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
@@ -44,15 +45,15 @@ namespace Intrusion.Tests.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_mapMarkerInfo" as MapMarkerInfo];
 			
 			_resourceLocationCollection = new ResourceLocationCollection;
-			[["FACTORY1", "First factory", [100, 100, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
-			[["OFFICE1", "First office", [200, 200, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
-			[["FACTORY2", "Second factory", [300, 300, 0], ResourceFacility.Factory, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
-			[["OFFICE2", "Second office", [400, 400, 0], ResourceFacility.TechLab, false] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			
-			["FACTORY1", [100, 100, 0]] call _mWorld.AddMarkerPos;
-			["OFFICE1", [200, 200, 0]] call _mWorld.AddMarkerPos;
-			["FACTORY2", [300, 300, 0]] call _mWorld.AddMarkerPos;
-			["OFFICE2", [400, 400, 0]] call _mWorld.AddMarkerPos;
+			["FACTORY1", [100, 100, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE1", [200, 200, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY2", [300, 300, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE2", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
 			
 			_mResourceLocationCollection = _resourceLocationCollection;
 			

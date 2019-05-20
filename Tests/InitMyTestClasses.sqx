@@ -16,6 +16,7 @@ call compile preprocessFileLineNumbers "Tests\Helpers\TestGameplayConfig.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestUnitCounter.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestResourceLocationHandler.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestRandomGenerator.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestMarkerHandler.sqx";
 
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestWorld.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestActionPerformer.sqx";

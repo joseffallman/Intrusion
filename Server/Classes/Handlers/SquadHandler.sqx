@@ -68,7 +68,7 @@ namespace Intrusion.Server
 			scopeName "main";
 
 			// Check if profession type is available (if not all taken by other squads).
-			if (!([side _group, _professionType] call _mSquadCollection.ProfessionTypeAvailable)) then {
+			if (!([side _group, _professionType, _mProfessionConfig] call _mSquadCollection.ProfessionTypeAvailable)) then {
 				["ClientSquadHandler.OnGroupProfessionChangeRejected", [_group, "Profession is already occupied."]] call Remote.Invoke;
 				breakOut "main";
 			};

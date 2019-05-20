@@ -16,13 +16,14 @@ namespace Intrusion.Server
 {
 	public class ResourceLocationHandler : IResourceLocationHandler
 	{
-		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mUnitSpawner" as IUnitSpawner];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mUnitSpawner" as IUnitSpawner, "_mMarkerHandler" as IMarkerHandler];
 		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 		
 		// Creates a ResourceLocationHandler object and seeds with all found factory- and techlab locations.
-		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_unitSpawner" as IUnitSpawner) {
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig, "_unitSpawner" as IUnitSpawner, "_markerHandler" as IMarkerHandler) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mUnitSpawner = _unitSpawner;
+			_mMarkerHandler = _markerHandler;
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_self.FactoryLocationsCount = 0;
@@ -42,7 +43,11 @@ namespace Intrusion.Server
 			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do
 			{
 				_markerName = "Factory" + str _number;
-				[[_markerName, markerText _markerName, getMarkerPos _markerName, ResourceFacility.Factory, true] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+				
+				// Create the flag pole on the map
+				private _flag = "Flag_Green_F" createVehicle ([_markerName] call _mMarkerHandler.GetMarkerPos);
+
+				[[_markerName, ResourceFacility.Factory, _flag] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			
@@ -53,7 +58,11 @@ namespace Intrusion.Server
 			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
 			{
 				_markerName = "Office" + str _number;
-				[[_markerName, markerText _markerName, getMarkerPos _markerName, ResourceFacility.TechLab, true] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+				
+				// Create the flag pole on the map
+				private _flag = "Flag_Green_F" createVehicle ([_markerName] call _mMarkerHandler.GetMarkerPos);
+
+				[[_markerName, ResourceFacility.TechLab, _flag] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 				_number = _number + 1;
 			};
 			
@@ -112,7 +121,7 @@ namespace Intrusion.Server
 				call _self.BroadcastResourceLocations;
 				
 				if (_dominantSide != civilian) then {
-					["ClientMessageHandler.ShowHint", [_resourceLocation.Text + " is being taken over by " + str _dominantSide]] call Remote.Invoke;
+					["ClientMessageHandler.ShowHint", [([_resourceLocation.MarkerName] call _mMarkerHandler.GetMarkerText) + " is being taken over by " + str _dominantSide]] call Remote.Invoke;
 				};
 			};
 		};
@@ -135,7 +144,7 @@ namespace Intrusion.Server
 				(_resourceLocation.Flag) setFlagTexture _markerInfo.FlagTexture;
 					
 				call _self.BroadcastResourceLocations;
-				["ClientMessageHandler.ShowHint", [_resourceLocation.Text + " was captured by " + str _side]] call Remote.Invoke;
+				["ClientMessageHandler.ShowHint", [([_resourceLocation.MarkerName] call _mMarkerHandler.GetMarkerText) + " was captured by " + str _side]] call Remote.Invoke;
 			};
 		};
 		

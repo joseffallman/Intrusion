@@ -15,12 +15,11 @@ namespace Intrusion.Tests.Helpers
 {
 	public class TestWorld : IWorld
 	{
-		private fields ["_mResourceLocationCollection" as ResourceLocationCollection, "_mMarkerPositions" as Array /* of DictionaryItem */];
+		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 	
 		// Creates a TestWorld object.
 		public constructor("_resourceLocationCollection" as ResourceLocationCollection) {
 			_self.LeaderPos = [];
-			_mMarkerPositions = [];
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -38,27 +37,6 @@ namespace Intrusion.Tests.Helpers
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
 			_mResourceLocationCollection
-		};
-		
-		public method AddMarkerPos("_markerName" as String, "_pos" as Array)
-		{
-			_mMarkerPositions pushBack [_markerName, _pos] new DictionaryItem;
-		};
-		
-		// Gets the position of a marker.
-		// _markerName (String): The name of the marker.
-		// Returns (Array): The position of the marker.
-		public method Array GetMarkerPos("_markerName" as String)
-		{
-			scopeName "main";
-			
-			{
-				if (_x.Key == _markerName) then {
-					_x.Value breakOut "main";
-				};
-			} foreach _mMarkerPositions as DictionaryItem;
-			
-			[]
 		};
 	};
 };
