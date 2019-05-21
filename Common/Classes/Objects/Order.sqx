@@ -12,18 +12,20 @@ namespace Intrusion.Common
 	public class Order
 	{
 		// Creates a Order object.
-		public constructor("_group" as Group, "_type" as OrderType, "_targetPosition" as Array)
+		public constructor("_group" as Group, "_type" as OrderType, "_targetPosition" as Array, "_resourceLocation" as ResourceLocation)
 		{
 			_self.Group = _group;
 			_self.Type = _type;
 			_self.TargetPosition = _targetPosition;
+			_self.ResourceLocation = _resourceLocation;
 		};
 		
 		public property Group Group { get; private set; };
 		
 		public property OrderType Type { get; private set; };
 		
-		public property TargetPosition { get; private set; };
+		public property Array TargetPosition { get; private set; };
+		
+		public property ResourceLocation ResourceLocation { get; private set; };
 	};
 };
-

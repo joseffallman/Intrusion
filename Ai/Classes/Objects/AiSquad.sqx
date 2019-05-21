@@ -133,7 +133,7 @@ namespace Intrusion.Ai {
 					
 					if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 						_mResourceLocation = _location;
-						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName, _location] new Order;
 						//_mOrderTime = time;
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 	//					player sideChat "End location order!";
@@ -166,7 +166,7 @@ namespace Intrusion.Ai {
 						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 						
 						_mResourceLocation = _location;
-						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName, _location] new Order;
 						//_mOrderTime = time;
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 					};
