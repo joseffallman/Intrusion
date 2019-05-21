@@ -12,8 +12,11 @@ namespace Intrusion.Ai
 	public interface IActionPerformer
 	{
 		// Performs a move action for an AI group.
-		// _group (Group): The group to move.
 		// _moveAction (MoveAction): Information about the movement.
-		method DoMove("_group" as Group, "_moveAction" as MoveAction);
+		method DoMove("_moveAction" as MoveAction);
+		
+		// Gets whether the last action has completed or not.
+		// Returns (Boolean): true if the last action has completed, otherwise false.
+		method Boolean GetHasCompleted();
 	};
 };

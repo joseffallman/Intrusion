@@ -24,9 +24,19 @@ namespace Intrusion.Tests.Helpers
 		// Performs a move action for an AI group.
 		// _group (Group): The group to move.
 		// _moveAction (MoveAction): Information about the movement.
-		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
+		public method DoMove("_moveAction" as MoveAction)
 		{
 			_self.MoveActions pushBack _moveAction;
+		};
+		
+		// Gets or sets the return value of method GetHasCompleted for the current test action performer.
+		public property Boolean HasCompleted { get; set; };
+		
+		// Gets whether the last action has completed or not.
+		// Returns (Boolean): true if the last action has completed, otherwise false.
+		public method Boolean GetHasCompleted()
+		{
+			_self.HasCompleted
 		};
 	};
 };

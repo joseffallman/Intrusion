@@ -7,26 +7,67 @@
  * Description:
  * Makes actions happen in the world.
  */
+
+using Sqx.Waypoints;
+
 namespace Intrusion.Ai
 {
 	public class ActionPerformer : IActionPerformer
 	{
+		private fields ["_mGroup" as Group, "_mCurrentAction" as IAction];
+		
 		// Creates a ActionManager object.
-		public constructor()
+		public constructor("_group" as Group)
 		{
+			_mGroup = _group;
+			_mCurrentAction = classNull;
 		};
 		
 		// Performs a move action for an AI group.
 		// _group (Group): The group to move.
 		// _moveAction (MoveAction): Information about the movement.
-		public method DoMove("_group" as Group, "_moveAction" as MoveAction)
+		public method DoMove("_moveAction" as MoveAction)
 		{
 			private ["_waypoint" as Array];
 			
-			_waypoint = _group addWaypoint [_moveAction.TargetPos];
+			_mCurrentAction = _moveAction;
+			
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			_waypoint = _mGroup addWaypoint [_moveAction.TargetPos];
 			_waypoint setWaypointSpeed "LIMITED";
 			_waypoint setWaypointType "HOLD";
-			_group setSpeedMode "LIMITED";
+			_mGroup setSpeedMode "LIMITED";
+		};
+		
+		// Gets whether the group has completed a move action.
+		private method Boolean HasCompletedMove()
+		{
+			private ["_moveAction" as MoveAction, "_hasCompleted" as Boolean];
+			
+			_hasCompleted = false;
+			
+			if (_mCurrentAction is MoveAction) then
+			{
+				_moveAction = _mCurrentAction as MoveAction;
+				
+				_hasCompleted = (vehicle leader _mGroup) distance _moveAction.TargetPos < 20
+			};
+			
+			_hasCompleted
+		};
+		
+		// Gets whether the last action has completed or not.
+		// Returns (Boolean): true if the last action has completed, otherwise false.
+		public method Boolean GetHasCompleted()
+		{
+			private ["_hasCompleted" as Boolean];
+			
+			if (_mCurrentAction is MoveAction) then {
+				_hasCompleted = call _self.HasCompletedMove;
+			};
+			
+			_hasCompleted
 		};
 	};
 };
