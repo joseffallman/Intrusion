@@ -79,7 +79,7 @@ namespace Intrusion.Ai
 				_index = floor ([_count] call _mRandomGenerator.GetNumber);
 				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 				
-				//_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos] new Order;
+				_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
 			};
 		};
 		

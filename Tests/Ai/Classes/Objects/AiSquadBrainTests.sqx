@@ -27,6 +27,7 @@ namespace Intrusion.Tests.Ai
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
 			"_mRandomGenerator" as TestRandomGenerator,
+			"_mLocationFactory1" as ResourceLocation,
 		];
 		
 		#endregion
@@ -44,7 +45,10 @@ namespace Intrusion.Tests.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_mapMarkerInfo" as MapMarkerInfo];
 			
 			_resourceLocationCollection = new ResourceLocationCollection;
-			[["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			
+			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
+			
+			[_mLocationFactory1] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
@@ -89,7 +93,7 @@ namespace Intrusion.Tests.Ai
 			private ["_moveAction" as MoveAction];
 		
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0]] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mKnowledge.State = AiSquadState.Idle;
 			_mRandomGenerator.Number = 0;
@@ -108,7 +112,7 @@ namespace Intrusion.Tests.Ai
 		private static method MovingToDestinationFarOff_MakeDecision_StatusMoving
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0]] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mWorld.LeaderPos = [10, 10, 0];
 			_mKnowledge.State = AiSquadState.Moving;
 			
@@ -122,7 +126,7 @@ namespace Intrusion.Tests.Ai
 		private static method ArrivingAtDestination_MakeDecision_StatusIdle
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0]] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mWorld.LeaderPos = [190, 190, 0];
 			_mKnowledge.State = AiSquadState.Moving;
 			
@@ -131,6 +135,21 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI moving to far."] call Assert.AreEqual;
+		};
+		
+		private static method AttackingLocation_LocationIsCapturedBeforeArrival_StatusIdle
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = west;
+			_mWorld.LeaderPos = [25, 25, 0];
+			_mKnowledge.State = AiSquadState.Moving;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
 		};
 	};
 };
