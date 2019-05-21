@@ -72,11 +72,14 @@ namespace Intrusion.Server
 			}];
 		};
 		
+		// This is called when a new Ai unit is spawned.
+		// Adds a unit entering vehicle event handler.
+		// _unit (Object): The unit to add eventhandler to.
 		public static method AddGetInManEventHandler("_unit" as Object)
 		{
 			_unit addEventHandler ["GetInMan", {
 				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
-				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, _role, _vehicle, _turret]] call Remote.Invoke;
+				[_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle] call ServerEventReciever.OnAiEnteredVehicle;
 			}];
 		};
 		
@@ -92,6 +95,27 @@ namespace Intrusion.Server
 				
 				0
 			}];
+		};
+		
+		// Adds a WeaponAssembled event handler to a player.
+		public static method AddWeaponAssembledEventHandlerToPlayer("_player" as Object)
+		{
+			_player addEventHandler ["WeaponAssembled", {
+				params ["_unit" as Object, "_staticWeapon" as Object];
+				private ["_intrusionVehicle" as IntrusionVehicle, "_squad" as Squad];
+				
+				// Known issue: this 'assigns' the assembling unit's profession to the static weapon. This should only be true 
+				// if the weapon belongs to a profession (which it will always do when this code was written). A solution when
+				// needed may be to assign a variable to the backpacks, to know to which profession this weapon really belongs.				
+				
+				_squad = [group _unit] call gServer.SquadHandler.GetSquadByGroup;
+				
+				if (!isNull _squad) then {
+					_intrusionVehicle = [_staticWeapon, side group _unit, _squad.ProfessionType, group _unit, 0] new IntrusionVehicle;
+					_staticWeapon setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+					["ClientEventReciever.OnStaticWeaponAssebled", [_staticWeapon, _unit]] call Remote.Invoke;
+				};
+			}];		
 		};
 	};
 };

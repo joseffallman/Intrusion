@@ -62,31 +62,6 @@ namespace Intrusion.Client
 				["ClientEventReciever.OnPlayerRespawn", [_player, _corpse]] call Remote.Invoke;
 			}];
 			
-			player addEventHandler ["Take", {
-				params ["_unit" as Object, "_container" as Object, "_item" as Object];
-				private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_itemIsRangeSniperRifle" as Boolean, "_itemIsRangeFinder" as Boolean];
-				
-				if (_unit == player) then
-				{
-					_itemIsRangeSniperRifle = (_item call BIS_fnc_itemtype) select 1 == "SniperRifle";
-					_itemIsRangeFinder = "RangeFinder" in  (vestItems player + uniformItems player + backpackItems player + assignedItems player);
-					
-					if ((_itemIsRangeFinder || _itemIsRangeSniperRifle) && call PublicVariableHandler.SquadCollectionHasValue) then
-					{
-						_squadCollection = call PublicVariableHandler.GetSquadCollection;
-						_squad = [group player] call _squadCollection.GetSquadByGroup;
-						
-						if (isNull _squad || {_squad.ProfessionType != ProfessionType.Sniper}) then {
-							player removeWeapon primaryWeapon player;
-							
-							removeGoggles player;
-							
-							["Only sniper teams are allowed to have that item.", player] call ClientMessageHandler.ShowMessage;
-						};
-					};
-				};
-			}];
-			
 			player addEventHandler ["GetInMan", {
 				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
 				//private ["_resourceLocationCollection" as ResourceLocationCollection] // SQX TODO: Why is this "never used"?
@@ -96,7 +71,7 @@ namespace Intrusion.Client
 					[_resourceLocationCollection] call ClientResourceLocationHandler.UpdateResourceLocations;
 				};
 
-				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, _role, _vehicle, _turret]] call Remote.Invoke;
+				["ClientEventReciever.OnUnitEnteredVehicle", [_unit, [_role] call VehicleRoleMeta.ToVehicleRole, _vehicle, _turret]] call Remote.Invoke;
 			}];
 			
 			player addEventHandler ["GetOutMan", {
@@ -121,6 +96,32 @@ namespace Intrusion.Client
 				params ["_unit" as Object, "_source", "_damage", "_instigator" as Object];
 				
 				ClientEventHandlers.LastInstigator = _instigator; // TODO SQX: LastInstigator is "inaccessible due to its protection level"?
+			}];
+			
+			player addEventHandler ["InventoryOpened", {
+				params ["_unit" as Object, "_container" as Object];
+				private ["_intrusionVehicle" as IntrusionVehicle, "_lockContainer" as Boolean];
+				
+				_intrusionVehicle = _container getVariable ["IntrusionVehicle", classNull];
+
+				_lockContainer = false;
+				if (!isNull _intrusionVehicle) then {
+					if (!isNull _intrusionVehicle.OwnerGroup && group player != _intrusionVehicle.OwnerGroup) then {
+						_lockContainer = true;
+						["This cargo space is locked."] call ClientMessageHandler.ShowMessage;
+					};
+				};
+				
+				_lockContainer
+			}];
+			
+			player addEventHandler ["SeatSwitchedMan", {
+				params ["_unit" as Object, "_unit2" as Object, "_vehicle" as Object];
+				["ClientEventReciever.OnUnitChangedSeat", [_unit, _vehicle]] call Remote.Invoke;
+			}];
+			
+			player addEventHandler ["HandleRating", {
+				0
 			}];
 		};
 	};

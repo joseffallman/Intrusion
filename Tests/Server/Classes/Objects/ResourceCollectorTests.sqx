@@ -65,7 +65,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[1000, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameFullServerWestlyFlags_After30Minutes_Correct
@@ -81,7 +81,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameFullServerCivilianFlags_After60Minutes_Correct
@@ -97,7 +97,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameFullServerCivilianFlags_After30Minutes_Correct
@@ -113,7 +113,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameHalfServerWestlyFlags_After60Minutes_Correct
@@ -130,7 +130,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameHalfServerWestlyFlags_After30Minutes_Correct
@@ -147,7 +147,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameHalfServerCivilianFlags_After60Minutes_Correct
@@ -164,7 +164,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 60MinutesGameHalfServerCivilianFlags_After30Minutes_Correct
@@ -181,7 +181,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameFullServerWestlyFlags_After30Minutes_Correct
@@ -197,7 +197,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[500, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameFullServerWestlyFlags_After15Minutes_Correct
@@ -213,7 +213,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameFullServerCivilianFlags_After30Minutes_Correct
@@ -229,7 +229,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameFullServerCivilianFlags_After15Minutes_Correct
@@ -245,7 +245,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameHalfServerWestlyFlags_After30Minutes_Correct
@@ -262,7 +262,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[250, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[1000, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[1000, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameHalfServerWestlyFlags_After15Minutes_Correct
@@ -279,7 +279,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameHalfServerCivilianFlags_After30Minutes_Correct
@@ -296,7 +296,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[125, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[500, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 		
 		private static method 30MinutesGameHalfServerCivilianFlags_After15Minutes_Correct
@@ -313,7 +313,7 @@ namespace Intrusion.Tests.Server
 			
 			// Assert
 			[62.5, _mResourceBook.TotalProduction, "Wrong production amount."] call Assert.AreEqual;
-			[250, _mResourceBook.TotalResearch, "Wrong administration amount."] call Assert.AreEqual;
+			[250, _mResourceBook.TotalResearch, "Wrong technology amount."] call Assert.AreEqual;
 		};
 	};
 };

@@ -1,0 +1,32 @@
+/*
+ * Name:	VehicleBoxAttachmentInfo
+ * Date:	2019-05-05
+ * Version: 1.0
+ * Author:  Josef
+ *
+ * Description:
+ * Config information about objects attached to a vehicle
+ */
+namespace Intrusion.Common
+{
+	public class VehicleBoxAttachmentInfo
+	{
+		// Creates a VehicleAttachmentInfo object.
+		public constructor(
+			"_className" as String,
+			"_attachOffset" as Array
+		) {
+			_self.ClassName = _className;
+			_self.AttachOffset = _attachOffset;
+
+		};
+		
+		// The object to create that will be attached.
+		public property ClassName { get; private set; };
+		
+		// The information to the attachTo command.
+		public property AttachOffset { get; private set; };
+
+	};
+};
+

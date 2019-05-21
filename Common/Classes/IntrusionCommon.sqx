@@ -16,9 +16,11 @@ namespace Intrusion.Common
 		public constructor() {
 			_self.MissionParametersHandler = new MissionParametersHandler;
 			_self.RatingCalculator = [new RatingConfig] new RatingCalculator;
+			_self.UniformHandler = [new UniformConfig] new UniformHandler;
 		};
 	
 		public property MissionParametersHandler MissionParametersHandler { get; private set; };
 		public property RatingCalculator RatingCalculator { get; private set; };
+		public property UniformHandler UniformHandler { get; private set; };
 	};
 };

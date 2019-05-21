@@ -5,6 +5,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx"
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfigFactory.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Configs\ResourceLocationConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
@@ -21,6 +22,8 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sq
 call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitSpawner.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceLocationDominanceInfo.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\SideObject.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\VehicleSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\SquadHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\BrigadeLeadershipHandler.sqx";
@@ -34,6 +37,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.s
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\ResourceLocationOwnerService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Ai\InitAi.sqx";
@@ -60,6 +64,7 @@ call WeaponBoxTypeMeta.Init;
 call WeaponsConfig.Init;
 call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
+[gCommon.UniformHandler] call ServerEventReciever.Init;
 
 gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
 gServer = [] new IntrusionServer;

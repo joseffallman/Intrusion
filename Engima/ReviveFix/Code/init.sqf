@@ -1,4 +1,4 @@
-ENGINA_RESPAWNFIX_playerIsIncapacitated = false;
+ENGIMA_RESPAWNFIX_playerIsIncapacitated = false;
 	
 if (!isDedicated) then {
 	call compile preprocessFile "Engima\ReviveFix\Config.sqf";

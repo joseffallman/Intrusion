@@ -1,0 +1,57 @@
+/*
+ * About the coding policy
+ */
+
+The coding policy is not fully followed, even by me. The reason for that is that the policy did not exist
+from the start of the project, but has been developed during the mission development. However all new code
+that is contributed in this project are to follow all the guidelines beneath.
+
+/*
+ * General
+ */
+ 
+All logic goes into classes that by name. No code should be outside a class.
+
+/*
+ * Identifier Names
+ */
+
+All Type names, methods and properties are written in upper camel case (pascal case). Class variables and 
+local variables in camel case but with a leading underscore (_). Class variables also add letter "m"
+(for "member") after the leading underscore.
+
+The same is true for words that are abbreviations, like ProfessionType.Uav.
+
+/*
+ * Classes
+ */
+ 
+ Methods and properties should always have their return types specified. It is ok to leave return type 
+ for methods out if the method is not returning anything of interest (like a C++ void).
+ 
+ /*
+ * Code should be commented
+ */
+ 
+All classes, methods and properties are to be commented with a general line describing what a consumer is 
+expected to ge from the class/method/property, and at least a single line for each method parameter.
+
+Property's comment should start with "Gets ..." or "Gets or sets ..." dependent on if the setter is 
+private or public.
+
+/*
+ * Use the event recievers to handle Network Events
+ */
+ 
+There are two classes that are used to collect events fired on different machines in the network. These
+are the Intrusion.Client.ClientEventReciever and the Intrusion.Server.ServerEventReciever, handling 
+network events targeted to the client and the server respectively.
+
+All methods in these classes are lightweight method with a single purpose to convert the event information
+to a method call to a class with its own purpose. The only logic that is allowed in an event reciever
+method is side, group and unit filtering.
+
+/*
+ * Properties
+ */
+ 

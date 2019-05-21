@@ -11,7 +11,93 @@ namespace Intrusion.Client
 	public class BriefingHandler
 	{
         // Creates the briefing texts for the player.
-        public static method CreateBriefing {
+        public static method CreateBriefing()
+        {
+        	// Topics
+        	
+        	// Welcome!
+        	// Background And Main Story
+        	// Overview - Who wins?
+        	// Intrusion Menu
+        	// Resources - General
+        	// (Resources - Production)
+        	// (Resources - Technology)
+        	// Weapons
+        	// Squads
+        	// Professions - General
+        	// (Professions - Each One)
+        	// Rank And Rating
+        	// Vehicles +info about production lane
+        	// Brigade Commanders
+        	// AI
+        	// Intrusion - The Philosophy
+			
+			player createDiaryRecord ["Diary", ["Intrusion - The Philosophy",
+			"The main philosophy behind Intrusion is to encourage a gameplay style that simulates the use of weapons and vehicle in how they are used in real life, and at the same time offer a fun and easy gameplay relatively easy to embrace. Like in real life, the use of teams, roles, communications and leadership strategy on different levels are essential to form a winning army. What ia single unit does may be of importance, but not compared to what a team can accomplish, when its members supporting each other in all kinds of situations. In a real battle there are often limited amount of resources, but even an outcounted group of people may beat event the works odds if fighting well together."]];
+
+			player createDiaryRecord ["Diary", ["Rank and Rating",
+			"RANK AND RATING<br /><br />" +
+			"Each player has a rank, and each player's starting rank is 'Private'. The more the player's group performs, the more rating is generated to its members, and at certains levels the players 'rank' is increased. The ranks are Private, Corpral, Seargent, Leutenant, Captain, Major and Colonel. Note that rating is shared equally among the members of the group, so the ability that increases the rating morstly is cooperation. The possibility for the leader to select a profession is sometimes limited by his or her rank.<br /><br />" +
+			"SQUAD BONUS<br /><br />" +
+			"The more members a squad has, the more rating is generated for its deeds.<br /><br />" +
+			"RATING IS SOMETIMES BLOCKED<br /><br />" +
+			"The squad's rating generation will be blocked for some minutes under the following circumstances:<br /><br />" +
+			" - Group members are to far apart<br />" +
+			" - A group member respawns<br />" +
+			" - The group loses its squad vehicle<br />" +
+			" - A group member team kills<br />"]];
+
+			player createDiaryRecord ["Diary", ["Weapons",
+			"HANDHELD WEAPONS<br /><br />" +
+			"All hand held weapons show up in ammo boxes in the base. In the beginning, the only weapons that exist are basic weapons. The longer the mission progresses - and the more technology that is collected from offices - the more advanced weapons will show up later in the game.<br /><br />" +
+			"Note that some of the weapons are associated with certain professions, and cannot be used by everyone.<br /><br />" +
+			"WEAPONS IN VEHICLES<br /><br />" +
+			"The heavy weapons (static weapons like mortars and anti armor) that belong to some of the professions as loaded in the squad vehicles' cargo space."]];
+
+			player createDiaryRecord ["Diary", ["Professions",
+			"A squad assigned to a profession will get the vehicles and weapons that are associated with the profession. However, weapons and vehicles will not be delivered from start, but when the side has earned enough of both kinds of resources. A few requirements must be met before a group leader can select a profession. Such requirements are among max. and min. number of players in the group, limited number of groups on a side, and required rank of the players. All information is listed in the profession dialog.<br /><br />" +
+			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use.<br /><br />"+
+			"HOW TO SELECT A PROFESSION<br />" +
+			"1. Only the squad leader can select a profession for the squad.<br />" +
+			"2. From the Intrusion menu, select 'Set group profession'.<br />" +
+			"3. On the profession dialog, select a profession that is not greyed out and press 'Select'."]];
+
+			player createDiaryRecord ["Diary", ["Squads",
+			"All players are divided into squads. From start each inidividual player is the leader of his or her own squad. Creating squads enable some of the professions and makes it easier to increase player's rank.<br /><br />"+
+			"HOW TO GROUP UP WITH ANOTHER PLAYER<br />" +
+			"1. Move next to another player. The player need to be alone in his or her group.<br />" +
+			"2. Turn to the player and from the action menu select 'Invite player to group'."]];
+
+			player createDiaryRecord ["Diary", ["Resources",
+			"For each side to get more advanced vehicles and weapons they will need to bring in resources by securing the resource locations marked on the map. The resources are of two types, production and technology. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
+			"PRODUCTION<br /><br />" +
+			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'.<br /><br />" +
+			"When a squad assigns to a profession that has a vehicle, a vehicle order/reservation is placed in a queue at the side's production manager. The first vehicle in the queue are delivered when tha vehicle's required technology is established and when the side has enough production to create it. Then the next order in the queueu is treated. A produced vehicle's cost is withdrawn from the side's total production. And the production cost of a vehicle that is removed by the framework (e.g. its owner logged out) will be returned to the side upon removal.<br /><br />" +
+			"TECHNOLOGY<br /><br />" +
+			"Offices generate technology, and technology leads to 'establishments'. Technology is the resource needed for the brigade to establish more and more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of technology."]];
+
+			player createDiaryRecord ["Diary", ["The Intrusion Menu",
+			"All special Intrusion actions that can be taken is put into the Intrusion Menu, which is a context based action menu that can be reached from anyone and anywhere. The Intrusion menu is context based, which means that only maningful actions is shown. E.g. only a group leader has an option for selecting a profession for its squad, and a brigade commander has an option for moving the base."]];
+			
+			player createDiaryRecord ["Diary", ["Overview",
+			"An intrusion battle is limited in time and played like a match between two sides - east and west. A game has a clear progression, which means that both sides starts out with basic weapons and primitive vehicles, but the longer the game progresses the more advanced vehicles and wepons will come into play.<br /><br />" +
+			"The map contains resource locations, and the more resources that a side can bring in, the quicker its squads with different specializations (professions) will be equipped with stronger weapons and vehicles that increase the side's chances of winning the battle.<br /><br />" +
+			"One of the resource locations are randomly selected as the winner's location. The side holding the winner's location when the time is up will be the winning side of the battle."]];
+			
+			
+			
+/*
+			player createDiaryRecord ["Diary", ["Professions - Each One",
+			"TRANSPORT<br />" +
+			"Requires 'Transport' (Se technologies). Vehicle is a transport truck which is used to transport troops from the base to the field.<br /><br />"+
+			"AMMO/REFUEL/REPAIR<br />" +
+			"Requires 'Services'. Vehicle is a truck which is used to assist troops in the field.<br /><br />"+
+			"MOTORIZED TROOPS<br />" +
+			"Requires 'Motorized'. Vehicle is a car with some kind of heavy mounted gun.<br /><br />" +
+			"MECHANIZED TROOPS<br />" +
+			"Requires 'Mechanized'. Vehicle is a light armored vehicle with a heavy mounted gun, used to transport and support an infantry group.<br /><br />"
+			]];
+*/
 /*
 			player createDiaryRecord ["Diary", ["Mission Mechanics *IMPORTANT*", "GROUPS<br /><br />" + 
 			"Players can arrange their groups by themselves. A player who invites another player to his/her group becomes the group leader. To invite another alone player, move near him and use action command Invite.<br /><br />" + 

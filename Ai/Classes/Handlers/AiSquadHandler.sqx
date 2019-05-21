@@ -24,6 +24,7 @@ namespace Intrusion.Ai
 				ProfessionType.Motorized,
 				ProfessionType.Mechanized,
 				ProfessionType.Armored,
+				ProfessionType.AttackHelicopter,
 			];
 		};
 		
@@ -74,6 +75,21 @@ namespace Intrusion.Ai
 		public method Array GetAllSquads()
 		{
 			_mSquads
+		};
+		
+		// Gives a new order to an AI group.
+		// _group (Group): The group to recieve the order.
+		// _order (Order): The order.
+		public method GiveOrderToGroup("_group" as Group, "_order" as Order)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Group == _group) then {
+					[_order] call _x.GiveOrder;
+					breakOut "main";
+				};
+			} foreach _mSquads as AiSquad;
 		};
 	};
 };

@@ -19,16 +19,19 @@ namespace Intrusion.Common
 		Maintenance = 3,
 		Ordnance = 4,
 		Motorized = 5,
-		LightArmor = 6,
-		Artillery = 7,
-		HeavyArmor = 8
+		AntiAir = 6,
+		AirRecon = 7,
+		LightArmor = 8,
+		Artillery = 9,
+		HeavyArmor = 10,
+		AirArmed = 11,
 	};
 	
 	public class TechnologyMeta
 	{
 		public static method Init()
 		{
-			_self.LastTechnology = Technology.HeavyArmor;
+			_self.LastTechnology = Technology.AirArmed;
 		};
 		
 		public static property Technology LastTechnology { get; private set; };

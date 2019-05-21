@@ -22,10 +22,13 @@ namespace Intrusion.Common
 			private _westRepairCarTypes = ["B_Truck_01_Repair_F"];
 			private _westMotorizedVehicleTypes = ["B_MRAP_01_gmg_F", "B_MRAP_01_hmg_F"];
 			private _westMortarsVehicleTypes = ["B_MRAP_01_F"];
+			private _westUavVehicleTypes = ["B_MRAP_01_F"];
 			private _westSniperVehicleTypes = ["B_Quadbike_01_F"];
+			private _westReconHelicopterVehicleTypes = ["B_Heli_Light_01_F"];
 			private _westAntiArmorVehicleTypes = ["B_MRAP_01_F"];
 			private _westMechanizedVehicleTypes = ["B_APC_Wheeled_01_cannon_F", "B_APC_Tracked_01_rcws_F", "B_APC_Tracked_01_CRV_F"];
 			private _westArmorVehicleTypes = ["B_APC_Tracked_01_AA_F", "B_MBT_01_cannon_F"];
+			private _westAttackHelicopterVehicleTypes = ["B_Heli_Attack_01_dynamicLoadout_F", "B_Heli_Attack_01_dynamicLoadout_F"];
 
 			private _eastFreeVehicleCarTypes = ["O_MRAP_02_F", "O_Quadbike_01_F"];
 			private _eastTransportCarTypes = ["O_Truck_02_transport_F", "O_Truck_02_covered_F"];
@@ -34,35 +37,88 @@ namespace Intrusion.Common
 			private _eastRepairCarTypes = ["O_Truck_02_box_F"];
 			private _eastMotorizedVehicleTypes = ["O_MRAP_02_gmg_F", "O_MRAP_02_hmg_F"];
 			private _eastMortarsVehicleTypes = ["O_MRAP_02_F"];
+			private _eastUavVehicleTypes = ["O_MRAP_02_F"];
 			private _eastSniperVehicleTypes = ["O_Quadbike_01_F"];
+			private _eastReconHelicopterVehicleTypes = ["O_Heli_Light_02_unarmed_F"];
 			private _eastAntiArmorVehicleTypes = ["O_MRAP_02_F"];
 			private _eastMechanizedVehicleTypes = ["O_APC_Tracked_02_cannon_F", "O_APC_Wheeled_02_rcws_F"];
 			private _eastArmorVehicleTypes = ["O_MBT_02_cannon_F", "O_APC_Tracked_02_AA_F"];
+			private _eastAttackHelicopterVehicleTypes = ["O_Heli_Light_02_dynamicLoadout_F", "O_Heli_Attack_02_dynamicLoadout_F"];
+			
+			private _westMortarCargo = [
+				["B_Mortar_01_support_F"] new VehicleCargoItemInfo,
+				["B_Mortar_01_weapon_F"] new VehicleCargoItemInfo
+			];
+			private _westSniperCargo = [
+				["srifle_LRR_LRPS_F"] new VehicleCargoItemInfo,
+				["7Rnd_408_Mag", 6] new VehicleCargoItemInfo,
+				["Laserdesignator"] new VehicleCargoItemInfo,
+				["Laserbatteries", 2] new VehicleCargoItemInfo
+			];
+			private _westSniperAttachments = [
+				["Box_NATO_Wps_F", [0,0.85,-0.40]] new VehicleBoxAttachmentInfo
+			];
+			private _westAntiArmorCargo = [
+				["B_AT_01_weapon_F"] new VehicleCargoItemInfo,
+				["B_HMG_01_support_F"] new VehicleCargoItemInfo
+			];
+			private _westUavCargo = [
+				["B_UAV_01_backpack_F", 4] new VehicleCargoItemInfo,
+				["B_UavTerminal", 2] new VehicleCargoItemInfo
+			];
+			
+			private _eastMortarCargo = [
+				["O_Mortar_01_support_F"] new VehicleCargoItemInfo,
+				["O_Mortar_01_weapon_F"] new VehicleCargoItemInfo
+			];
+			private _eastSniperCargo = [
+				["srifle_GM6_camo_LRPS_F"] new VehicleCargoItemInfo,
+				["5Rnd_127x108_Mag", 6] new VehicleCargoItemInfo,
+				["Laserdesignator_02"] new VehicleCargoItemInfo,
+				["Laserbatteries", 2] new VehicleCargoItemInfo
+			];
+			private _eastSniperAttachments = [
+				["Box_East_Wps_F", [0,0.85,-0.40]] new VehicleBoxAttachmentInfo
+			];
+			private _eastAntiArmorCargo = [
+				["O_AT_01_weapon_F"] new VehicleCargoItemInfo,
+				["O_HMG_01_support_F"] new VehicleCargoItemInfo
+			];
+			private _eastUavCargo = [
+				["O_UAV_01_backpack_F", 4] new VehicleCargoItemInfo,
+				["O_UavTerminal", 2] new VehicleCargoItemInfo
+			];
 			
 			_mClassNamesInfos = [
-				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Transport, _westTransportCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Fuel, _westFuelCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Ammo, _westAmmoCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Repair, _westRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, ["B_Mortar_01_support_F", "B_Mortar_01_weapon_F"]] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Sniper, _westSniperVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, ["B_AT_01_weapon_F", "B_HMG_01_support_F"]] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[west, ProfessionType.Armored, _westArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Undefined, _westFreeVehicleCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Transport, _westTransportCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Fuel, _westFuelCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Ammo, _westAmmoCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Repair, _westRepairCarTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Motorized, _westMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Mortars, _westMortarsVehicleTypes, _westMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Uav, _westUavVehicleTypes, _westUavCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Sniper, _westSniperVehicleTypes, _westSniperCargo, _westSniperAttachments] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.ReconChopper, _westReconHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.AntiArmor, _westAntiArmorVehicleTypes, _westAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Mechanized, _westMechanizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.Armored, _westArmorVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[west, ProfessionType.AttackHelicopter, _westAttackHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
 				
-				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Transport, _eastTransportCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Fuel, _eastFuelCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Ammo, _eastAmmoCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Repair, _eastRepairCarTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, ["O_Mortar_01_support_F", "O_Mortar_01_weapon_F"]] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, ["O_AT_01_weapon_F", "O_HMG_01_support_F"]] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
-				[east, ProfessionType.Armored, _eastArmorVehicleTypes, []] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Undefined, _eastFreeVehicleCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Transport, _eastTransportCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Fuel, _eastFuelCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Ammo, _eastAmmoCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Repair, _eastRepairCarTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Motorized, _eastMotorizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Mortars, _eastMortarsVehicleTypes, _eastMortarCargo] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Uav, _eastUavVehicleTypes, _eastUavCargo] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Sniper, _eastSniperVehicleTypes, _eastSniperCargo, _eastSniperAttachments] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.ReconChopper, _eastReconHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.AntiArmor, _eastAntiArmorVehicleTypes, _eastAntiArmorCargo] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Mechanized, _eastMechanizedVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.Armored, _eastArmorVehicleTypes] new ProfessionVehicleClassNamesInfo,
+				[east, ProfessionType.AttackHelicopter, _eastAttackHelicopterVehicleTypes] new ProfessionVehicleClassNamesInfo,
 			];
 		};
 		
@@ -82,5 +138,6 @@ namespace Intrusion.Common
 			
 			classNull
 		};
+
 	};
 };

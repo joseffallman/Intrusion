@@ -17,8 +17,8 @@ namespace Intrusion.Ai
 		public constructor()
 		{
 			_mWeaponInfos = [];
-			_mWeaponInfos pushBack [west, "launch_NLAW_F", "NLAW_F"] new AiWeaponInfo;
-			_mWeaponInfos pushBack [east, "launch_RPG32_F", "RPG32_F"] new AiWeaponInfo;
+			_mWeaponInfos pushBack [west, "launch_NLAW_F", "NLAW_F", 0.3, "launch_B_Titan_F", "Titan_AA", 0.5] new AiWeaponInfo;
+			_mWeaponInfos pushBack [east, "launch_RPG32_F", "RPG32_F", 0.3, "launch_O_Titan_F", "Titan_AA", 0.5] new AiWeaponInfo;
 		};
 		
 		// Gets the weapon info for a side.

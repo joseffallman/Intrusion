@@ -15,12 +15,12 @@ namespace Intrusion.Client
 {
 	public class MoveBaseHandler
 	{
-		private fields ["_mBaseConfig" as BaseConfig];
+		private fields ["_mBaseConfig" as IBaseConfig];
 		private fields ["_mRespawnPoint" as ViewPos, "_mCarParkPoint" as ViewPos, "_mWeaponDepotPoint" as ViewPos];
 		private fields ["_mRespawnArrow" as Object, "_mCarParkArrow" as Object, "_mWeaponDepotArrow" as Object];
 
 		// Creates a MoveBaseHandler object.
-		public constructor("_baseConfig" as BaseConfig) {
+		public constructor("_baseConfig" as IBaseConfig) {
 			_mBaseConfig = _baseConfig;
 			
 			_mRespawnArrow = objNull;

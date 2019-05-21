@@ -15,9 +15,38 @@ namespace Intrusion.Client
 	{
 		private fields ["_mGroupMarkers" as Array /* of Object */];
 		
-		public constructor()
+		public constructor("_professionConfig" as IProfessionConfig)
 		{
 			_mGroupMarkers = [];
+		};
+		
+		public static method CheckAndActIfVehicleIsLocked("_vehicle" as Object, "_player" as Object)
+		{
+		    private ["_intrusionVehicle" as IntrusionVehicle, "_profession" as Profession];
+		    
+        	_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+			if (!isNull _intrusionVehicle) then
+			{
+				call gClient.ClientVehicleHandler.RemoveGroupMarkerFromVehicles;
+			
+				if (!(group _player isEqualTo _intrusionVehicle.OwnerGroup)) then
+				{
+					_profession = [_intrusionVehicle.OwnerProfession] call gCommonConfig.Professions.GetProfession;
+					
+					if (!isNull _profession) then {
+						if (_profession.AllowedToTransport) then {
+							if (_intrusionVehicle.Vehicle getCargoIndex _player < 0) then {
+								moveOut _player;
+		                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
+							};
+						}
+						else {
+							moveOut _player;
+	                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
+						};
+					};
+				};
+			};
 		};
 	
 		// Adds the GetIn event handler to all vehicles in an array.
@@ -27,28 +56,19 @@ namespace Intrusion.Client
 		    {
 		        _x addEventHandler ["GetIn", {
 		        	params ["_vehicle" as Object, "_bla" as Any, "_player" as Object];
-				    private ["_intrusionVehicle" as IntrusionVehicle];
-				    
-                	_intrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
-
-					if (!isNull _intrusionVehicle) then
-					{
-						call gClient.ClientVehicleHandler.RemoveGroupMarkerFromVehicles;
-					
-						if (!(group _player isEqualTo _intrusionVehicle.OwnerGroup)) then {
-							if (_intrusionVehicle.OwnerProfession == ProfessionType.Transport) then {
-								if (_player == driver _intrusionVehicle.Vehicle) then {
-									moveOut _player;
-			                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
-								};
-							}
-							else {
-								moveOut _player;
-		                        ["You are not licenced for this vehicle.", _player] call ClientMessageHandler.ShowMessage;
-							};
-						};
-					};
+		        	
+		        	if (player == _player) then {
+			        	[_vehicle, _player] call ClientVehicleHandler.CheckAndActIfVehicleIsLocked;
+		        	};
 		        }];
+		        
+		        _x addEventHandler ["SeatSwitched", {
+					params ["_vehicle" as Object, "_unit1" as Object, "_unit2" as Object];
+					
+					if (player in [_unit1, _unit2]) then {
+			        	[_vehicle, player] call ClientVehicleHandler.CheckAndActIfVehicleIsLocked;
+					};
+				}];
 		    } foreach _vehicleArray as Object;
 		};
 		

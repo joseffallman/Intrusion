@@ -22,10 +22,13 @@ namespace Intrusion.Common
 				[ProfessionType.Repair, 150] new ProfessionVehicleInfo,
 				[ProfessionType.Motorized, 700] new ProfessionVehicleInfo,
 				[ProfessionType.Sniper, 300] new ProfessionVehicleInfo,
+				[ProfessionType.ReconChopper, 800] new ProfessionVehicleInfo,
 				[ProfessionType.Mortars, 400] new ProfessionVehicleInfo,
+				[ProfessionType.Uav, 400] new ProfessionVehicleInfo,
 				[ProfessionType.Mechanized, 800] new ProfessionVehicleInfo,
 				[ProfessionType.AntiArmor, 400] new ProfessionVehicleInfo,
 				[ProfessionType.Armored, 1000] new ProfessionVehicleInfo,
+				[ProfessionType.AttackHelicopter, 1200] new ProfessionVehicleInfo,
 			];
 		};
 		

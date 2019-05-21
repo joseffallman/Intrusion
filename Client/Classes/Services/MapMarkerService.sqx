@@ -112,14 +112,14 @@ namespace Intrusion.Client
 					_profession = [_professionType] call _mProfessionConfig.GetProfession;
         			
         			if (isNull _marker) then {
-						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", "(" + str count units _group + ")"] call Marker.CreateIconMarkerLocal;
+						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", name leader _group + " (" + str count units _group + ")"] call Marker.CreateIconMarkerLocal;
 						_marker.Tag = _group;
 						_mMapMarkers pushBack _marker;
         			}
         			else {
         				[getPos _leader] call _marker.SetPosition;
         				[_profession.MarkerTypeFriendly] call _marker.SetType;
-        				["(" + str count units _group + ")"] call _marker.SetText;
+        				[name leader _group + " (" + str count units _group + ")"] call _marker.SetText;
         			};
 				};
     		} foreach allGroups as Group;
@@ -228,9 +228,9 @@ namespace Intrusion.Client
 					_marker = [getPos _x, _mSquadMarkersConfig.SquadMemberMarkerType, "ColorBlufor"] call Marker.CreateIconMarkerLocal;
 					_marker.Tag = _x;
 					
-					if (_x == player) then {
-						["Me"] call _marker.SetText;
-					};
+//					if (_x == player) then {
+//						["Me"] call _marker.SetText;
+//					};
 					
 					_markersToKeep pushBack _marker;
 					_markedUnits pushBack _x;

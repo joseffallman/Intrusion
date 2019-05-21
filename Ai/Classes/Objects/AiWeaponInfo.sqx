@@ -12,18 +12,38 @@ namespace Intrusion.Ai
 	public class AiWeaponInfo
 	{
 		// Creates a AiWeaponInfo object.
-		public constructor("_side" as Side, "_launcherClassName" as String, "_launcherAmmoClassName" as String)
+		public constructor(
+			"_side" as Side, 
+			"_atLauncherClassName" as String, 
+			"_atLauncherAmmoClassName" as String, 
+			"_probabilityAiTakesAtLauncher" as Scalar,
+			"_aaLauncherClassName" as String, 
+			"_aaLauncherAmmoClassName" as String,
+			"_probabilityeAiTakesAaLauncher" as Scalar)
 		{
 			_self.Side = _side;
-			_self.LauncherClassName = _launcherClassName;
-			_self.LauncherAmmoClassName = _launcherAmmoClassName;
+			_self.AtLauncherClassName = _atLauncherClassName;
+			_self.AtLauncherAmmoClassName = _atLauncherAmmoClassName;
+			_self.AaLauncherClassName = _aaLauncherClassName;
+			_self.AaLauncherAmmoClassName = _aaLauncherAmmoClassName;
+			_self.ProbabilityAiTakesAtLauncher = _probabilityAiTakesAtLauncher;
+			_self.ProbabilityAiTakesAaLauncher = _probabilityeAiTakesAaLauncher;
 		};
 		
 		public property Side Side { get; private set; };
 		
-		public property LauncherClassName { get; private set; };
+		public property AtLauncherClassName { get; private set; };
 		
-		public property LauncherAmmoClassName { get; private set; };
+		public property AtLauncherAmmoClassName { get; private set; };
+		
+		// Gets the probability that AI picking up an AT launcher on respawn (if AT launchers have been invented).
+		public property ProbabilityAiTakesAtLauncher { get; private set; };
+		
+		public property AaLauncherClassName { get; private set; };
+		
+		public property AaLauncherAmmoClassName { get; private set; };
+		
+		// Gets the probability that AI picking up an AA launcher on respawn (if AA launchers have been invented and it did not pick up an AT launcher).
+		public property ProbabilityAiTakesAaLauncher { get; private set; };
 	};
 };
-

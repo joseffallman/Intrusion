@@ -1,0 +1,24 @@
+/*
+ * Name:	IMarkerHandler
+ * Date:	2019-05-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Low level class that handles markers on the map.
+ */
+namespace Intrusion.Common
+{
+	public interface IMarkerHandler
+	{
+		// Gets a marker's position.
+		// _markerName (String): Name of the marker.
+		// Returns (Array): The marker's position.
+		method Array GetMarkerPos("_markerName" as String);
+		
+		// Gets a marker's text.
+		// _markerName (String): Name of the marker.
+		// Returns (String): The marker's text.
+		method String GetMarkerText("_markerName" as String);
+	};
+};

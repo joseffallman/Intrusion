@@ -93,6 +93,10 @@ namespace Intrusion.Tests.Helpers
 		{
 		};
 		
+		public method SetNewDominantSide("_markerName" as String, "_side" as Side)
+		{
+		};
+		
 		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
 		// resource locations for them all.
 		public method AquireAllResourceLocations()

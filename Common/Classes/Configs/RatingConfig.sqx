@@ -14,8 +14,8 @@ namespace Intrusion.Common
 		// Creates a RatingConfig object.
 		public constructor {
 			_self.CapturingFlag = 200;
-			_self.EnemyUnitKill = 200;
-			_self.GroupExtraMemberRatingFactor = 0.5;
+			_self.EnemyUnitKill = 150;
+			_self.GroupExtraMemberRatingFactor = 0.4;
 		};
 		
 		// How much rating dealt to a group (with one person) for when the group captures a flag.
@@ -23,7 +23,6 @@ namespace Intrusion.Common
 		
 		// How much rating dealt to a group (with one person) when the group kills an enemy unit.
 		public property Scalar EnemyUnitKill { get; private set; };
-		
 		
 		// Gets how much bonus rating is given for each extra team member in the team (0 is like 
 		// group having one member, and 1 is like the rating doubles for each extra team member).

@@ -1,0 +1,29 @@
+/*
+ * Name:	SideObject
+ * Date:	2019-05-09
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Object that can store an object together with a side.
+ */
+namespace Intrusion.Server
+{
+	public class SideObject
+	{
+		// Creates a SideObject object.
+		// _side (Side): The object's side.
+		// _object (Object): The object itself.
+		public constructor("_side" as Side, "_object" as Object)
+		{
+			_self.Side = _side;
+			_self.Object = _object;
+		};
+		
+		// Gets the object's side.
+		public property Side Side { get; private set; };
+		
+		// Gets the object.
+		public property Object Object { get; private set; };
+	};
+};
