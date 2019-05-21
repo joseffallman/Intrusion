@@ -13,6 +13,7 @@ namespace Intrusion.Ai
 	{
 		Idle,
 		Moving,
+		Capturing,
 		BoardingVehicle,
 		ExitingVehicle,
 		SingleUnitGettingFlag,

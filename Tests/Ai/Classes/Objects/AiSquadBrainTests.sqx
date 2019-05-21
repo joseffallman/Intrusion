@@ -35,8 +35,8 @@ namespace Intrusion.Tests.Ai
 		// Registeres all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
-				"StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder",
-				"AtBaseAttackOrder_MakeDecision_StatusMove",
+				"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
+				"AtBaseAttackOrder_Act_StatusMove",
 			]] call TestEngine.Register;
 		};
 		
@@ -76,7 +76,7 @@ namespace Intrusion.Tests.Ai
 			deleteGroup _mGroup;
 		};
 		
-		private static method StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder
+		private static method StateIdleAndNoOrder_Act_NotIdleAndHasOrder
 		{
 			// Arrange
 			
@@ -88,7 +88,7 @@ namespace Intrusion.Tests.Ai
 			[_mKnowledge.Order, "AI did not create an order."] call Assert.IsNotNull;
 		};
 		
-		private static method AtBaseAttackOrder_MakeDecision_StatusMove
+		private static method AtBaseAttackOrder_Act_StatusMove
 		{
 			private ["_moveAction" as MoveAction];
 		
@@ -109,7 +109,7 @@ namespace Intrusion.Tests.Ai
 			[[200, 200, 0], _moveAction.TargetPos, "AI moves to the wrong destination."] call Assert.AreEqual;
 		};
 		
-		private static method MovingToDestinationFarOff_MakeDecision_StatusMoving
+		private static method MovingToDestinationFarOff_Act_StatusMoving
 		{
 			// Arrange
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
@@ -123,10 +123,11 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Moving, _mKnowledge.State, "AI movement was interrupted."] call Assert.AreEqual;
 		};
 		
-		private static method ArrivingAtDestination_MakeDecision_StatusIdle
+		private static method ArrivingAtDestination_Act_StatusCapturing
 		{
 			// Arrange
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = east;
 			_mWorld.LeaderPos = [190, 190, 0];
 			_mKnowledge.State = AiSquadState.Moving;
 			
@@ -134,10 +135,25 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI moving to far."] call Assert.AreEqual;
+			[AiSquadState.Capturing, _mKnowledge.State, "AI does not halt at flag."] call Assert.AreEqual;
 		};
 		
-		private static method AttackingLocation_LocationIsCapturedBeforeArrival_StatusIdle
+		private static method CapturingLocation_Act_StatusIdle
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = west;
+			_mWorld.LeaderPos = [190, 190, 0];
+			_mKnowledge.State = AiSquadState.Capturing;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI trying to capture own flag."] call Assert.AreEqual;
+		};
+		
+		private static method AttackingLocationCapturedBeforeArrival_Act_StatusIdle
 		{
 			// Arrange
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
