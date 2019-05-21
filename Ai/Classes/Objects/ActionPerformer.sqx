@@ -40,6 +40,28 @@ namespace Intrusion.Ai
 			_mGroup setSpeedMode "LIMITED";
 		};
 		
+		// Performs a capture action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoCapture("_captureAction" as CaptureAction)
+		{
+			private ["_waypoint" as Array];
+			
+			_mCurrentAction = _captureAction;
+			
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			_waypoint = _mGroup addWaypoint [_captureAction.Position];
+			_waypoint setWaypointSpeed "LIMITED";
+			_waypoint setWaypointCombatMode "YELLOW";
+			_waypoint setWaypointBehaviour "COMBAT";
+			_waypoint setWaypointType "SAD";
+			
+			_mGroup setSpeedMode "LIMITED";
+			_mGroup setCombatMode "YELLOW";
+			_mGroup setBehaviour "COMBAT";
+		};
+		
 		// Gets whether the group has completed a move action.
 		private method Boolean HasCompletedMove()
 		{

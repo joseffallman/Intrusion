@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Server
 {
-	public class ResourceLocationConfig
+	public class ResourceLocationConfig : IResourceLocationConfig
 	{
 		// Creates a ResourceLocationConfig object.
 		public constructor {

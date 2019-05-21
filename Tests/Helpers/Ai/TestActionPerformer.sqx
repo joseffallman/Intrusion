@@ -17,6 +17,7 @@ namespace Intrusion.Tests.Helpers
 		// Creates a TestActionPerformer object.
 		public constructor {
 			_self.MoveActions = [];
+			_self.CaptureActions = [];
 		};
 		
 		public property Array MoveActions { get; private set; };
@@ -27,6 +28,16 @@ namespace Intrusion.Tests.Helpers
 		public method DoMove("_moveAction" as MoveAction)
 		{
 			_self.MoveActions pushBack _moveAction;
+		};
+		
+		public property Array CaptureActions { get; private set; };
+		
+		// Performs a capture action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoCapture("_captureAction" as CaptureAction)
+		{
+			_self.CaptureActions pushBack _captureAction;
 		};
 		
 		// Gets or sets the return value of method GetHasCompleted for the current test action performer.

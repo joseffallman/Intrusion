@@ -10,6 +10,7 @@
 
 using Intrusion.Ai;
 using Intrusion.Common;
+using Intrusion.Server;
 
 namespace Intrusion.Tests.Helpers
 {
@@ -18,9 +19,10 @@ namespace Intrusion.Tests.Helpers
 		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
 	
 		// Creates a TestWorld object.
-		public constructor("_resourceLocationCollection" as ResourceLocationCollection) {
-			_self.LeaderPos = [];
+		public constructor("_resourceLocationCollection" as ResourceLocationCollection)
+		{
 			_mResourceLocationCollection = _resourceLocationCollection;
+			_self.LeaderPos = [];
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -30,7 +32,6 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Array): The position of the leader.
 		public method Array GetLeaderPos("_group" as Group)
 		{
-			player sideChat "there";
 			_self.LeaderPos
 		};
 		
@@ -38,9 +39,18 @@ namespace Intrusion.Tests.Helpers
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
-			player sideChat "here";
-			player sideChat str _mResourceLocationCollection;
 			_mResourceLocationCollection
+		};
+		
+		public property Boolean SquadPresenceAtResourceLocation { get; set; };
+		
+		// Checks if a group is inside the perimiters of one or more resource locations.
+		// _group (Group): The group to check.
+		// _location (ResourceLocation): The resource location to check.
+		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
+		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
+		{
+			_self.SquadPresenceAtResourceLocation
 		};
 	};
 };

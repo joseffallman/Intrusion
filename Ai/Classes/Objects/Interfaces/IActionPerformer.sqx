@@ -15,6 +15,10 @@ namespace Intrusion.Ai
 		// _moveAction (MoveAction): Information about the movement.
 		method DoMove("_moveAction" as MoveAction);
 		
+		// Performs a move action for an AI group.
+		// _captureAction (CaptureAction): Information about the capturing.
+		method DoCapture("_captureAction" as CaptureAction);
+		
 		// Gets whether the last action has completed or not.
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		method Boolean GetHasCompleted();

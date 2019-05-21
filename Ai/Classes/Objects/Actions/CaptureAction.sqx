@@ -1,0 +1,23 @@
+/*
+ * Name:	CaptureAction
+ * Date:	2019-05-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains information about capture actions.
+ */
+namespace Intrusion.Ai
+{
+	public class CaptureAction : IAction
+	{
+		// Creates a CaptureAction object.
+		public constructor("_position" as Array)
+		{
+			_self.Position = _position;
+		};
+		
+		// Gets the position that are about to be captured.
+		public property Array Position { get; private set; };
+	};
+};

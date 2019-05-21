@@ -22,5 +22,11 @@ namespace Intrusion.Ai
 		// Gets the resource location collection.
 		// Returns (ResourceLocationCollection): The resource location collection.
 		method ResourceLocationCollection GetResourceLocationCollection();
+		
+		// Checks if a group is inside the perimiters of one or more resource locations.
+		// _group (Group): The group to check.
+		// _location (ResourceLocation): The resource location to check.
+		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
+		method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation);
 	};
 };

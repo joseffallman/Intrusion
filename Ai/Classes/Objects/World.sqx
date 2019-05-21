@@ -9,13 +9,18 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
 	public class World : IWorld
 	{
+		private fields ["_mResourceLocationConfig" as IResourceLocationConfig];
+		
 		// Creates a World object.
-		public constructor {
+		public constructor("_resourceLocationConfig" as IResourceLocationConfig)
+		{
+			_mResourceLocationConfig = _resourceLocationConfig;
 		};
 		
 		// Gets a group's leader's position.
@@ -30,7 +35,24 @@ namespace Intrusion.Ai
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
-			classNull
+			call PublicVariableHandler.GetResourceLocationCollection
+		};
+		
+		// Checks if a group is inside the perimiters of one or more resource locations.
+		// _group (Group): The group to check.
+		// _location (ResourceLocation): The resource location to check.
+		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
+		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
+		{
+			scopeName "main";
+
+			{
+				if (_x distance (getMarkerPos _location.MarkerName) < _mResourceLocationConfig.AreaRadius) then {
+					true breakOut "main";
+				};
+			} foreach units _group;
+			
+			false
 		};
 	};
 };

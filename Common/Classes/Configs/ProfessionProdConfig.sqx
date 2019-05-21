@@ -28,7 +28,8 @@ namespace Intrusion.Common
 		// Gets a profession by profession type.
 		// _professionType (ProfessionType): Profession type.
 		// Returns (Profession): The sought profession. null if the profession type was invalid.
-		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
+		public method Array GetVehicleClassNames("_professionType" as ProfessionType)
+		{
 			[_professionType] call _base.GetVehicleClassNames
 		};
 		

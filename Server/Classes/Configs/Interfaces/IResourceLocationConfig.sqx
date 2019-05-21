@@ -1,0 +1,20 @@
+/*
+ * Name:	IResourceLocationConfig
+ * Date:	2019-05-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configurations about resource locations.
+ */
+namespace Intrusion.Server
+{
+	public interface IResourceLocationConfig
+	{
+		// Gets the area radious of a resource location.
+		property Scalar AreaRadius { get; };
+		
+		// Gets the time a side must be dominating the resource location area before it is captured.
+		property Scalar DominanceTimeBeforeCaptureSek { get; };
+	};
+};
