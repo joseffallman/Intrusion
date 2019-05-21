@@ -24,6 +24,7 @@ namespace Intrusion.Client
 		
 			waitUntil { call PublicVariableHandler.PlayerInfoCollectionHasValue && player == player };
 			
+			(group player) setVariable ["MapName", name player, true];
 			["ServerEventReciever.OnJipPlayerEnteredGame", [player]] call Remote.Invoke;
 
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;

@@ -31,6 +31,10 @@ namespace Intrusion.Server
 			_unit setSkill ([_mSkillLevel] call SkillLevelMeta.SkillToScalar);
 			[_unit] call ServerEventHandlers.AddKilledEventHandler;
 			[_unit] call ServerEventHandlers.AddGetInManEventHandler;
+			
+			if (_group getVariable ["MapName", ""] == "") then {
+				_group setVariable ["MapName", name _unit, true];
+			};
 
 			_unit
 		};
