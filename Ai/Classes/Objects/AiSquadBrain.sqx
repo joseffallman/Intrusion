@@ -15,11 +15,12 @@ namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mGroup" as Group, "_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
+		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler];
 	
 		// Creates a AiSquadBrain object.
-		public constructor(
+		public constructor
+		(
 			"_group" as Group, 
 			"_world" as IWorld, 
 			"_actionPerformer" as IActionPerformer, 
@@ -28,7 +29,6 @@ namespace Intrusion.Ai
 			"_markerHandler" as IMarkerHandler,
 			["_knowledge" as IKnowledge, classNull])
 		{
-			_mGroup = _group;
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
@@ -79,7 +79,7 @@ namespace Intrusion.Ai
 				_index = floor ([_count] call _mRandomGenerator.GetNumber);
 				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 				
-				//_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos] new Order;
+				_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
 			};
 		};
 		
@@ -89,20 +89,30 @@ namespace Intrusion.Ai
 		
 			_mKnowledge.State = AiSquadState.Moving;
 			_moveAction = [[0, 0, 0]] new MoveAction;
-			[_mGroup, _moveAction] call _mActionPerformer.DoMove;
+			[_moveAction] call _mActionPerformer.DoMove;
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
-			// If there is no order, create one on own initiative.
+			// If there is no order, create one on own initiative so the group has something to do.
+			
 			if (isNull _mKnowledge.Order) then {
 				call _self.CreateOrderOnOwnInitiative;
 			};
 			
-			switch (_mKnowledge.State) do {
-				case AiSquadState.Idle: { call _self.MakeDecision; };
-				//case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
+			// If the squad is doing something, check if it has completed doing it.
+			
+			if (_mKnowledge.State != AiSquadState.Idle) then {
+				if (call _mActionPerformer.GetHasCompleted) then {
+					_mKnowledge.State = AiSquadState.Idle;
+				};
+			};
+			
+			// If the squad is not doing anything, make a new decision.
+			
+			if (_mKnowledge.State == AiSquadState.Idle) then {
+				call _self.MakeDecision;
 			};
 		};
 	};

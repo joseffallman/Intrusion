@@ -27,6 +27,7 @@ namespace Intrusion.Tests.Ai
 			"_mBrain" as AiSquadBrain,
 			"_mKnowledge" as IKnowledge,
 			"_mRandomGenerator" as TestRandomGenerator,
+			"_mLocationFactory1" as ResourceLocation,
 		];
 		
 		#endregion
@@ -34,8 +35,8 @@ namespace Intrusion.Tests.Ai
 		// Registeres all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
-				"StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder",
-				"AttackOrder100m_MakeDecision_StartingMove"
+				"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
+				"AtBaseAttackOrder_Act_StatusMove",
 			]] call TestEngine.Register;
 		};
 		
@@ -44,17 +45,20 @@ namespace Intrusion.Tests.Ai
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_mapMarkerInfo" as MapMarkerInfo];
 			
 			_resourceLocationCollection = new ResourceLocationCollection;
-			[["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			
+			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
+			
+			[_mLocationFactory1] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
 			
 			_mMarkerHandler = new TestMarkerHandler;
 			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
-			["FACTORY1", [100, 100, 0]] call _mMarkerHandler.AddMarkerPos;
-			["OFFICE1", [200, 200, 0]] call _mMarkerHandler.AddMarkerPos;
-			["FACTORY2", [300, 300, 0]] call _mMarkerHandler.AddMarkerPos;
-			["OFFICE2", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY1", [200, 200, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE1", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY2", [600, 600, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE2", [800, 800, 0]] call _mMarkerHandler.AddMarkerPos;
 			
 			_mGroup = createGroup west;
 			_mWorld = [_resourceLocationCollection] new TestWorld;
@@ -72,7 +76,7 @@ namespace Intrusion.Tests.Ai
 			deleteGroup _mGroup;
 		};
 		
-		private static method StateIdleAndNoOrder_MakeDecision_NotIdleAndHasOrder
+		private static method StateIdleAndNoOrder_Act_NotIdleAndHasOrder
 		{
 			// Arrange
 			
@@ -84,23 +88,84 @@ namespace Intrusion.Tests.Ai
 			[_mKnowledge.Order, "AI did not create an order."] call Assert.IsNotNull;
 		};
 		
-		private static method AttackOrder100m_MakeDecision_StartingMove
+		private static method AtBaseAttackOrder_Act_StatusMove
 		{
 			private ["_moveAction" as MoveAction];
 		
 			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mWorld.LeaderPos = [0, 0, 0];
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [0, 100, 0]] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
 			_mRandomGenerator.Number = 0;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI did not start movement."] call Assert.AreEqual;
 			[1, count _mActionPerformer.MoveActions, "AI did not decide to perform a move action."] call Assert.AreEqual;
 			
 			_moveAction = _mActionPerformer.MoveActions select 0;
-			[[100, 100, 0], _moveAction.TargetPos, "AI moves to wrong place."] call Assert.AreEqual;
-		};	
+			[[200, 200, 0], _moveAction.TargetPos, "AI moves to the wrong destination."] call Assert.AreEqual;
+		};
+		
+		private static method MovingToDestinationFarOff_Act_StatusMoving
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mWorld.LeaderPos = [10, 10, 0];
+			_mKnowledge.State = AiSquadState.Moving;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI movement was interrupted."] call Assert.AreEqual;
+		};
+		
+		private static method ArrivingAtDestination_Act_StatusCapturing
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = east;
+			_mWorld.LeaderPos = [190, 190, 0];
+			_mKnowledge.State = AiSquadState.Moving;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Capturing, _mKnowledge.State, "AI does not halt at flag."] call Assert.AreEqual;
+		};
+		
+		private static method CapturingLocation_Act_StatusIdle
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = west;
+			_mWorld.LeaderPos = [190, 190, 0];
+			_mKnowledge.State = AiSquadState.Capturing;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI trying to capture own flag."] call Assert.AreEqual;
+		};
+		
+		private static method AttackingLocationCapturedBeforeArrival_Act_StatusIdle
+		{
+			// Arrange
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mLocationFactory1.Side = west;
+			_mWorld.LeaderPos = [25, 25, 0];
+			_mKnowledge.State = AiSquadState.Moving;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
+		};
 	};
 };
