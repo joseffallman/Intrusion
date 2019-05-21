@@ -18,7 +18,8 @@ namespace Intrusion.Client
 		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType];
 	
 		// Creates a GiveOrderService object.
-		public constructor() {
+		public constructor()
+		{
 			call _self.Reset;
 		};
 		
@@ -64,9 +65,18 @@ namespace Intrusion.Client
 		    _group
 		};
 		
+		private method ResourceLocation FindClosestResourceLocation("_pos" as Array)
+		{
+			private ["_locationCollection" as ResourceLocationCollection];
+			
+			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+			
+			([_pos] call _locationCollection.GetClosestResourceLocation)
+		};
+		
 		private method Run()
 		{
-			private ["_orderResult" as String, "_enoughWaitingTime" as Scalar];
+			private ["_orderResult" as String, "_enoughWaitingTime" as Scalar, "_location" as ResourceLocation];
 				
 			_orderResult = "Order cancelled.";
 		
@@ -94,12 +104,19 @@ namespace Intrusion.Client
 					waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime};
 					
 					if (!_mWaitingForMapClick) then {
+						// Is the target area a resource location?
+						_location = [_mMapPos] call _self.FindClosestResourceLocation;
+						
+						if (player distance getMarkerPos _location.MarkerName > 100) then {
+							_location = classNull;
+						};
+					
 						if (!(isPlayer leader _mSelectedGroup)) then {
-							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
+							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos, _location] new Order]] call Remote.Invoke;
 							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' have a new order.");
 						}
 						else {
-							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos] new Order]] call Remote.Invoke;
+							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos, _location] new Order]] call Remote.Invoke;
 							_orderResult = ("Human group '" + name leader _mSelectedGroup + "' have a new order.");
 						};
 					};
