@@ -22,6 +22,7 @@ namespace Intrusion.Ai
 			_self.State = AiSquadState.Idle;
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
+			_self.OrderIsGivenByBrigadeLeader = false;
 		};
 		
 		// gets or sets the group associated with this AI knowledge.
@@ -38,5 +39,8 @@ namespace Intrusion.Ai
 		
 		// Gets or sets the squad's current action
 		public property IAction CurrentAction { get; set; };
+		
+		// Gets whether the order is given by the brigade leader or if it is on own initiative.
+		public property Boolean OrderIsGivenByBrigadeLeader { get; set; };
 	};
 };

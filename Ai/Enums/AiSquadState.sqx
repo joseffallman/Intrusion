@@ -17,5 +17,6 @@ namespace Intrusion.Ai
 		BoardingVehicle,
 		ExitingVehicle,
 		SingleUnitGettingFlag,
+		Defending,
 	};
 };

@@ -28,5 +28,8 @@ namespace Intrusion.Ai
 		
 		// Gets or sets the squad's current action
 		property IAction CurrentAction { get; set; };
+		
+		// Gets whether the order is given by the brigade leader or if it is on own initiative.
+		property Boolean OrderIsGivenByBrigadeLeader { get; set; };
 	};
 };
