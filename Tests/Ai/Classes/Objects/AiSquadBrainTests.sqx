@@ -137,10 +137,11 @@ namespace Intrusion.Tests.Ai
 		private static method ArrivingAtDestination_Act_StatusIdle
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
-			_mLocationFactory1.Side = east;
 			_mWorld.LeaderPos = [190, 190, 0];
+			_mLocationFactory1.Side = east;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [[200, 200, 0], "FACTORY1"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;

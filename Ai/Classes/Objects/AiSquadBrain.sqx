@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 	public class AiSquadBrain
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
-						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler, "_mCurrentAction" as IAction];
+						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler];
 	
 		// Creates a AiSquadBrain object.
 		public constructor
@@ -35,7 +35,6 @@ namespace Intrusion.Ai
 			_mRandomGenerator = _randomGenerator;
 			_mMapMarkerInfo = _mapMarkerInfo;
 			_mMarkerHandler = _markerHandler;
-			_mCurrentAction = classNull;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -101,8 +100,8 @@ namespace Intrusion.Ai
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
 					_mKnowledge.State = AiSquadState.Capturing;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_mCurrentAction = [_pos, _x.MarkerName] new CaptureAction;
-					[_mCurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
+					_mKnowledge.CurrentAction = [_pos, _x.MarkerName] new CaptureAction;
+					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
@@ -117,8 +116,8 @@ namespace Intrusion.Ai
 				_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
 			};
 			
-			_mCurrentAction = [_mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
-			[_mCurrentAction as MoveAction] call _mActionPerformer.DoMove;
+			_mKnowledge.CurrentAction = [_mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+			[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
 			breakOut "main";
 			
 			// ...
@@ -130,17 +129,18 @@ namespace Intrusion.Ai
 		private method Boolean HasCompletedMove()
 		{
 			private ["_moveAction" as MoveAction, "_hasCompleted" as Boolean, "_leaderPos" as Array];
-			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
 			_hasCompleted = false;
 			
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
+			_currentAction = _mKnowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
 			
-			if (_mCurrentAction is MoveAction) then
+			if (_currentAction is MoveAction) then
 			{
 				// Move is completed if the squad is at the destination position
 				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
-				_moveAction = _mCurrentAction as MoveAction;				
+				_moveAction = _currentAction as MoveAction;				
 				_hasCompleted = _leaderPos distance _moveAction.Position < 20;
 				
 				// Move is completed if the order movement is related to a resource location that is already ours
@@ -163,13 +163,14 @@ namespace Intrusion.Ai
 		private method Boolean HasCompletedCapture()
 		{
 			private ["_captureAction" as CaptureAction, "_hasCompleted" as Boolean];
-			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
 			_hasCompleted = false;
+			_currentAction = _mKnowledge.CurrentAction;
 			
-			if (_mCurrentAction is CaptureAction) then
+			if (_currentAction is CaptureAction) then
 			{
-				_captureAction = _mCurrentAction as CaptureAction;
+				_captureAction = _currentAction as CaptureAction;
 				
 				_locationCollection = call _mWorld.GetResourceLocationCollection;
 				_location = [_captureAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
@@ -193,13 +194,16 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		public method Boolean GetHasCompleted()
 		{
-			private ["_hasCompleted" as Boolean];
+			private ["_hasCompleted" as Boolean, "_currentAction" as IAction];
 			
-			if (_mCurrentAction is MoveAction) then {
+			_hasCompleted = false;
+			_currentAction = _mKnowledge.CurrentAction;
+			
+			if (_currentAction is MoveAction) then {
 				_hasCompleted = call _self.HasCompletedMove;
 			};
 			
-			if (_mCurrentAction is CaptureAction) then {
+			if (_currentAction is CaptureAction) then {
 				_hasCompleted = call _self.HasCompletedCapture;
 			};
 			
