@@ -25,5 +25,8 @@ namespace Intrusion.Ai
 		
 		// Gets or sets an order.
 		property Order Order { get; set; };
+		
+		// Gets or sets the squad's current action
+		property IAction CurrentAction { get; set; };
 	};
 };

@@ -12,11 +12,20 @@ namespace Intrusion.Ai
 	public class MoveAction : IAction
 	{
 		// Creates a MoveAction object.
-		public constructor("_targetPos" as Array)
+		public constructor("_position" as Array, "_locationMarkerName" as String)
 		{
-			_self.TargetPos = _targetPos;
+			_self.Position = _position;
+			_self.LocationMarkerName = _locationMarkerName;
+			_self.RelatedResourceLocation = (_locationMarkerName != "");
 		};
 		
-		public property TargetPos { get; private set; };
+		// Gets the destination position.
+		public property Position { get; private set; };
+		
+		// Gets the marker name of the resource location to be captured.
+		public property String LocationMarkerName { get; private set; };
+		
+		// Gets wether this move action is related to a resource location or not.
+		public property Boolean RelatedResourceLocation { get; private set; };
 	};
 };

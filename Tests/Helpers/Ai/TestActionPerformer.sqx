@@ -39,15 +39,5 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.CaptureActions pushBack _captureAction;
 		};
-		
-		// Gets or sets the return value of method GetHasCompleted for the current test action performer.
-		public property Boolean HasCompleted { get; set; };
-		
-		// Gets whether the last action has completed or not.
-		// Returns (Boolean): true if the last action has completed, otherwise false.
-		public method Boolean GetHasCompleted()
-		{
-			_self.HasCompleted
-		};
 	};
 };

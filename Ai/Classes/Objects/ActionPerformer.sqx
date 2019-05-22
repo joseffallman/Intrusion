@@ -9,18 +9,18 @@
  */
 
 using Sqx.Waypoints;
+using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
 	public class ActionPerformer : IActionPerformer
 	{
-		private fields ["_mGroup" as Group, "_mCurrentAction" as IAction];
+		private fields ["_mGroup" as Group];
 		
 		// Creates a ActionManager object.
-		public constructor("_group" as Group)
+		public constructor("_group" as Group, "_resourceLocationHandler" as IResourceLocationHandler)
 		{
 			_mGroup = _group;
-			_mCurrentAction = classNull;
 		};
 		
 		// Performs a move action for an AI group.
@@ -30,11 +30,9 @@ namespace Intrusion.Ai
 		{
 			private ["_waypoint" as Array];
 			
-			_mCurrentAction = _moveAction;
-			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
-			_waypoint = _mGroup addWaypoint [_moveAction.TargetPos];
+			_waypoint = _mGroup addWaypoint [_moveAction.Position];
 			_waypoint setWaypointSpeed "LIMITED";
 			_waypoint setWaypointType "HOLD";
 			_mGroup setSpeedMode "LIMITED";
@@ -47,49 +45,17 @@ namespace Intrusion.Ai
 		{
 			private ["_waypoint" as Array];
 			
-			_mCurrentAction = _captureAction;
-			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
 			_waypoint = _mGroup addWaypoint [_captureAction.Position];
 			_waypoint setWaypointSpeed "LIMITED";
 			_waypoint setWaypointCombatMode "YELLOW";
-			_waypoint setWaypointBehaviour "COMBAT";
+			_waypoint setWaypointBehaviour "AWARE";
 			_waypoint setWaypointType "SAD";
 			
 			_mGroup setSpeedMode "LIMITED";
 			_mGroup setCombatMode "YELLOW";
-			_mGroup setBehaviour "COMBAT";
-		};
-		
-		// Gets whether the group has completed a move action.
-		private method Boolean HasCompletedMove()
-		{
-			private ["_moveAction" as MoveAction, "_hasCompleted" as Boolean];
-			
-			_hasCompleted = false;
-			
-			if (_mCurrentAction is MoveAction) then
-			{
-				_moveAction = _mCurrentAction as MoveAction;
-				
-				_hasCompleted = (vehicle leader _mGroup) distance _moveAction.TargetPos < 20
-			};
-			
-			_hasCompleted
-		};
-		
-		// Gets whether the last action has completed or not.
-		// Returns (Boolean): true if the last action has completed, otherwise false.
-		public method Boolean GetHasCompleted()
-		{
-			private ["_hasCompleted" as Boolean];
-			
-			if (_mCurrentAction is MoveAction) then {
-				_hasCompleted = call _self.HasCompletedMove;
-			};
-			
-			_hasCompleted
+			_mGroup setBehaviour "AWARE";
 		};
 	};
 };

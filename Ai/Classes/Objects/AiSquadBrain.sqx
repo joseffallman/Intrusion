@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 	public class AiSquadBrain
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
-						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler];
+						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler, "_mCurrentAction" as IAction];
 	
 		// Creates a AiSquadBrain object.
 		public constructor
@@ -35,6 +35,7 @@ namespace Intrusion.Ai
 			_mRandomGenerator = _randomGenerator;
 			_mMapMarkerInfo = _mapMarkerInfo;
 			_mMarkerHandler = _markerHandler;
+			_mCurrentAction = classNull;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -85,13 +86,13 @@ namespace Intrusion.Ai
 		
 		private method MakeDecision()
 		{
-			private ["_moveAction" as MoveAction, "_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
-			private ["_captureAction" as CaptureAction, "_pos" as Array];
+			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
+			private ["_locationMarkerName" as String];
 			
 			scopeName "main";
 			
 			
-			// Check if inside the perimiters of a location that should be captured
+			// If inside the perimiters of a resource location that should be captured, capture it!
 			
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
 			_locations = call _locationCollection.GetResourceLocations;
@@ -100,22 +101,112 @@ namespace Intrusion.Ai
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
 					_mKnowledge.State = AiSquadState.Capturing;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_captureAction = [_pos] new CaptureAction;
-					[_captureAction] call _mActionPerformer.DoCapture;
+					_mCurrentAction = [_pos, _x.MarkerName] new CaptureAction;
+					[_mCurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
 			
 			
-			//_mResourceLocationConfig.AreaRadius
-		
+			// Move towards order's target!
+			
 			_mKnowledge.State = AiSquadState.Moving;
-			_moveAction = [_mKnowledge.Order.TargetPosition] new MoveAction;
-			[_moveAction] call _mActionPerformer.DoMove;
+			_locationMarkerName = "";
+			
+			if (!isNull _mKnowledge.Order.ResourceLocation) then {
+				_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
+			};
+			
+			_mCurrentAction = [_mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+			[_mCurrentAction as MoveAction] call _mActionPerformer.DoMove;
 			breakOut "main";
 			
 			// ...
 		};
+		
+		#region Completion Checks
+		
+		// Gets whether the group has completed a move action.
+		private method Boolean HasCompletedMove()
+		{
+			private ["_moveAction" as MoveAction, "_hasCompleted" as Boolean, "_leaderPos" as Array];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection];
+			
+			_hasCompleted = false;
+			
+			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
+			
+			if (_mCurrentAction is MoveAction) then
+			{
+				// Move is completed if the squad is at the destination position
+				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
+				_moveAction = _mCurrentAction as MoveAction;				
+				_hasCompleted = _leaderPos distance _moveAction.Position < 20;
+				
+				// Move is completed if the order movement is related to a resource location that is already ours
+				if (!_hasCompleted) then
+				{
+					_locationCollection = call _mWorld.GetResourceLocationCollection;
+					_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+					
+					if (_location.Side == side _mKnowledge.Group) then
+					{
+						_hasCompleted = true;
+					};
+				};
+			};
+			
+			_hasCompleted
+		};
+		
+		// Gets whether the group has completed a capture action, i.e. it is no longer present at a resource location with enemy side.
+		private method Boolean HasCompletedCapture()
+		{
+			private ["_captureAction" as CaptureAction, "_hasCompleted" as Boolean];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection];
+			
+			_hasCompleted = false;
+			
+			if (_mCurrentAction is CaptureAction) then
+			{
+				_captureAction = _mCurrentAction as CaptureAction;
+				
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_location = [_captureAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_location.Side == side _mKnowledge.Group) then {
+					_hasCompleted = true;
+				};
+				
+				
+				if (!_hasCompleted) then {
+					if (!([_mKnowledge.Group, _location] call _mWorld.CheckSquadPresenceAtResourceLocation)) then {
+						_hasCompleted = true;
+					};
+				};
+			};
+			
+			_hasCompleted
+		};
+		
+		// Gets whether the last action has completed or not.
+		// Returns (Boolean): true if the last action has completed, otherwise false.
+		public method Boolean GetHasCompleted()
+		{
+			private ["_hasCompleted" as Boolean];
+			
+			if (_mCurrentAction is MoveAction) then {
+				_hasCompleted = call _self.HasCompletedMove;
+			};
+			
+			if (_mCurrentAction is CaptureAction) then {
+				_hasCompleted = call _self.HasCompletedCapture;
+			};
+			
+			_hasCompleted
+		};
+		
+		#endregion
 		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
@@ -135,7 +226,7 @@ namespace Intrusion.Ai
 			{
 				// If the squad is doing something, check if it has completed doing it.
 				
-				if (call _mActionPerformer.GetHasCompleted) then {
+				if (call _self.GetHasCompleted) then {
 					_mKnowledge.State = AiSquadState.Idle;
 				};
 			};

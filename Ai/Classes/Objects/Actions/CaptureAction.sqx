@@ -12,12 +12,16 @@ namespace Intrusion.Ai
 	public class CaptureAction : IAction
 	{
 		// Creates a CaptureAction object.
-		public constructor("_position" as Array)
+		public constructor("_position" as Array, "_locationMarkerName" as String)
 		{
 			_self.Position = _position;
+			_self.LocationMarkerName = _locationMarkerName;
 		};
 		
 		// Gets the position that are about to be captured.
 		public property Array Position { get; private set; };
+		
+		// Gets the marker name of the resource location to be captured.
+		public property String LocationMarkerName { get; private set; };
 	};
 };

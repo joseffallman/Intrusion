@@ -115,7 +115,7 @@ namespace Intrusion.Tests.Ai
 			[1, count _mActionPerformer.MoveActions, "AI did not decide to perform a move action."] call Assert.AreEqual;
 			
 			_moveAction = _mActionPerformer.MoveActions select 0;
-			[[200, 200, 0], _moveAction.TargetPos, "AI moves to the wrong destination."] call Assert.AreEqual;
+			[[200, 200, 0], _moveAction.Position, "AI moves to the wrong destination."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToDestinationFarOff_Act_StatusMoving
@@ -139,7 +139,6 @@ namespace Intrusion.Tests.Ai
 			_mLocationFactory1.Side = east;
 			_mWorld.LeaderPos = [190, 190, 0];
 			_mKnowledge.State = AiSquadState.Moving;
-			_mActionPerformer.HasCompleted = true;
 			
 			// Act
 			call _mBrain.Act;
@@ -165,13 +164,14 @@ namespace Intrusion.Tests.Ai
 			[1, count _mActionPerformer.CaptureActions, "AI is not capturing."] call Assert.AreEqual;
 		};
 		
-		private static method CapturingLocation_Act_StatusIdle
+		private static method AfterCapturingLocation_Act_StatusIdle
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
-			_mLocationFactory1.Side = west;
 			_mWorld.LeaderPos = [190, 190, 0];
+			_mWorld.SquadPresenceAtResourceLocation = true;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Capturing;
+			_mLocationFactory1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
@@ -183,10 +183,10 @@ namespace Intrusion.Tests.Ai
 		private static method AttackingLocationCapturedBeforeArrival_Act_StatusIdle
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
-			_mLocationFactory1.Side = west;
 			_mWorld.LeaderPos = [25, 25, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
+			_mLocationFactory1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
