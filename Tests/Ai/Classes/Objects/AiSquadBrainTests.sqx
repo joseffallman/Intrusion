@@ -29,6 +29,7 @@ namespace Intrusion.Tests.Ai
 			"_mRandomGenerator" as TestRandomGenerator,
 			"_mLocationFactory1" as ResourceLocation,
 			"_mLocationOffice1" as ResourceLocation,
+			"_mResourceLocationCollection" as ResourceLocationCollection,
 		];
 		
 		#endregion
@@ -41,22 +42,25 @@ namespace Intrusion.Tests.Ai
 				"MovingToDestinationFarOff_Act_StatusMoving",
 				"ArrivingAtDestination_Act_StatusIdle",
 				"AtEnemyLocation_Act_StatusCapturing",
+				"AfterCapturingLocation_Act_StatusIdle",
+				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
+				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
 			]] call TestEngine.Register;
 		};
 		
 		private static method BeforeEach()
 		{
-			private ["_resourceLocationCollection" as ResourceLocationCollection, "_mapMarkerInfo" as MapMarkerInfo];
+			private ["_mapMarkerInfo" as MapMarkerInfo];
 			
-			_resourceLocationCollection = new ResourceLocationCollection;
+			_mResourceLocationCollection = new ResourceLocationCollection;
 			
 			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
 			_mLocationOffice1 = ["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation;
 			
-			[_mLocationFactory1] call _resourceLocationCollection.AddResourceLocation;
-			[_mLocationOffice1] call _resourceLocationCollection.AddResourceLocation;
-			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
-			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _resourceLocationCollection.AddResourceLocation;
+			[_mLocationFactory1] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice1] call _mResourceLocationCollection.AddResourceLocation;
+			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
 			
 			_mMarkerHandler = new TestMarkerHandler;
 			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
@@ -66,7 +70,7 @@ namespace Intrusion.Tests.Ai
 			["OFFICE2", [800, 800, 0]] call _mMarkerHandler.AddMarkerPos;
 			
 			_mGroup = createGroup west;
-			_mWorld = [_resourceLocationCollection] new TestWorld;
+			_mWorld = [_mResourceLocationCollection] new TestWorld;
 			_mActionPerformer = new TestActionPerformer;
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup] new Knowledge;
@@ -155,9 +159,9 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [210, 210, 0];
 			_mWorld.SquadPresenceAtResourceLocation = true;
+			_mLocationFactory1.Side = east;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
-			_mLocationFactory1.Side = east;
 			
 			// Act
 			call _mBrain.Act;
@@ -172,9 +176,10 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [190, 190, 0];
 			_mWorld.SquadPresenceAtResourceLocation = true;
+			_mLocationFactory1.Side = west;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Capturing;
-			_mLocationFactory1.Side = west;
+			_mKnowledge.CurrentAction = [[200, 200, 0], "FACTORY1"] new CaptureAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -189,7 +194,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [25, 25, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mLocationFactory1.Side = west;
+			//_mLocationFactory1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
@@ -198,44 +203,56 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Moving, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
 		};
 		
-		private static method OwnOrderToAttackOwnLocationAlreadyPresent_Act_NewOrderStatusMoving
+		private static method OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle
 		{
+			private ["_action" as MoveAction];
+		
 			// Arrange
 			_mWorld.LeaderPos = [410, 410, 0];
-			_mLocationFactory1.Side = west;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
 			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			
+			//_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			//[_action is MoveAction, "AI creates wrong type of action."] call Assert.IsTrue;
+			//[[600, 600, 0], _action.Position, "AI's move action has wrong position."] call Assert.AreEqual;
+			//[_action.RelatedResourceLocation, "AI's action's resource location is null."] call Assert.IsNotNull;
+			//hint str _action.RelatedResourceLocation.MarkerName;
+			//["FACTORY2", _action.RelatedResourceLocation.MarkerName, "AI's action has wrong marker name."] call Assert.AreEqual;
 			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
 			[[600, 600, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			["FACTORY2", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
 		
-		private static method ExplicitOrderToAttackOwnLocationAlreadyPresent_Act_DefendOrderStatusDefending
+		/*
+		private static method ExplicitOrderToAttackOwnLocationAlreadyPresent_Act_DefendOrderStatusIdle
 		{
 			// Arrange
 			_mWorld.LeaderPos = [410, 410, 0];
-			_mLocationFactory1.Side = west;
+			_mLocationOffice1.Side = west;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 			_mRandomGenerator.Number = 0;
 			
 			// Act
-			call _mBrain.Act;
+			[[_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order] call _mBrain.GiveOrder;
 			
 			// Assert
-			[AiSquadState.Defending, _mKnowledge.State, "AI is not defending."] call Assert.AreEqual;
-			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not defending."] call Assert.AreEqual;
+			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not a defent order."] call Assert.AreEqual;
 			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
+		*/
 	};
 };

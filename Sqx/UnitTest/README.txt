@@ -50,6 +50,8 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
 X.X Fixed: Change == to "isEqualTo" in Assert.AreEqual.
     The test report is now copied to clipboard.
     Added error message for when the test class does not exist.
+    Test framework now warns if a test method does not reach Assert.
+    Fixed: The Assert did not really assert, i.e. now when a test fails, execution of the current test is ended.
     Fixed: nil values was not handled.
 
 

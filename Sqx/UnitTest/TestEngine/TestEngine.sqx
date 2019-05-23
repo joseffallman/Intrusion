@@ -11,8 +11,8 @@ namespace Sqx.UnitTest
 {
 	public class TestEngine
 	{
-		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean, "_mAllOutput" as String];
-		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String];
+		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean, "_mAssertDone" as Boolean, "_mAllOutput" as String];
+		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String, "_mFoundTestMethod" as Boolean];
 		
 		// Initializes the test engine.
 		public static method Init {
@@ -45,6 +45,11 @@ namespace Sqx.UnitTest
 			copyToClipboard _mAllOutput;
 		};
 		
+		public static method SetAssertDone()
+		{
+			_mAssertDone = true;
+		};
+		
 		// Asserting a test and registeres it as failed.
 		// Only used by the test framework, and should never be called explicitly.
 		// _message (String): The test's error message to be shown for the test user.
@@ -56,6 +61,8 @@ namespace Sqx.UnitTest
 				[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - " + _message)] call _self.Output;
 				_mMethodSucceeded = false;
 			};
+			
+			throw false;
 		};
 		
 		// Replaces a sub string within a string with another string.
@@ -83,7 +90,7 @@ namespace Sqx.UnitTest
 		private static method Run("_delayed" as Boolean)
 		{
 			private ["_sqfTestMethod" as String, "_successCount" as Scalar, "_failedCount" as Scalar, "_testUnit" as TestUnit, "_sqfClassName" as String, "_sConstructorFunction" as String, "_sqfBeforeEach" as String, "_sqfAfterEach" as String];
-			private ["_startTime" as Scalar];
+			private ["_startTime" as Scalar, "_processId" as Handle];
 			
 			_successCount = 0;
 			_failedCount = 0;
@@ -114,6 +121,8 @@ namespace Sqx.UnitTest
 					{
 						_mCurrentMethodName = _x;
 						_mMethodSucceeded = true;
+						_mAssertDone = false;
+						_mFoundTestMethod = true;
 						
 						_sqfBeforeEach = _sqfClassName + "_BeforeEach";
 						if (!isNil _sqfBeforeEach) then {
@@ -124,18 +133,31 @@ namespace Sqx.UnitTest
 						
 						if (isNil compile _sqfTestMethod) then {
 							_mMethodSucceeded = false;
+							_mFoundTestMethod = false;
 							[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
 						}
 						else {
-							call compile ("call " + _sqfTestMethod);
+							_processId = _sqfTestMethod spawn {
+								try {
+									call compile ("call " + _this);
+								}
+								catch {
+								};
+							};
+							
+							waitUntil { scriptDone _processId; };
 						};
 						
-						if (_mMethodSucceeded) then {
+						if (_mMethodSucceeded && _mAssertDone) then {
 							_successCount = _successCount + 1;
 							[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
 						}
 						else {
 							_failedCount = _failedCount + 1;
+							
+							if (!_mAssertDone && _mFoundTestMethod) then {
+								[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Assert never reached. (Forgot Assert?)"), false] call _self.Output;
+							};
 						};
 						
 						_sqfAfterEach = _sqfClassName + "_AfterEach";

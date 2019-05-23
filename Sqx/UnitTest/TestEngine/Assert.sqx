@@ -15,6 +15,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String, "_nilParameter" as String];
 			
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_expected" || isNil "_actual") then {
@@ -46,6 +47,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String, "_nilParameter" as String];
 
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_expected" || isNil "_actual") then {
@@ -77,6 +79,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_actual") then {
@@ -101,6 +104,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_actual") then {
@@ -125,6 +129,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_valueSqxClass" as Assert, "_isNull" as Boolean];
 
+			call TestEngine.SetAssertDone;
 			_valueSqxClass = _value as Assert;
 			_isNull = false;
 			
@@ -141,6 +146,7 @@ namespace Sqx.UnitTest
 		{
 			private ["_fullMsg" as String];
 			
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_actual") then {
@@ -164,6 +170,7 @@ namespace Sqx.UnitTest
 		public static method IsNotNull("_actual" as Any, ["_message" as String, ""]) {
 			private ["_fullMsg" as String];
 			
+			call TestEngine.SetAssertDone;
 			_fullMsg = "";
 
 			if (isNil "_actual") then {
