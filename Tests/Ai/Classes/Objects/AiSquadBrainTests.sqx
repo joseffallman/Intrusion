@@ -46,6 +46,9 @@ namespace Intrusion.Tests.Ai
 				"AfterCapturingLocation_Act_StatusIdle",
 				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
 				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
+				"SquadStationary_Act_TimeoutStatusIdle",
+				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
+				"MovingButNeverArrives_Act_TimeoutStatusIdle",
 			]] call TestEngine.Register;
 		};
 		
@@ -147,7 +150,7 @@ namespace Intrusion.Tests.Ai
 			_mLocationFactory1.Side = east;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -181,7 +184,7 @@ namespace Intrusion.Tests.Ai
 			_mLocationFactory1.Side = west;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Capturing;
-			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new CaptureAction;
+			_mKnowledge.CurrentAction = [60, [200, 200, 0], "FACTORY1"] new CaptureAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -239,7 +242,25 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [120, 120, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.CurrentAction = [350, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.LeaderPos = [120, 120, 0];
+			_mKnowledge.LeaderPosTime = 295;
+			_mTime.MissionTime = 300;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not stationary enough but timed out."] call Assert.AreEqual;
+		};
+		
+		private static method SquadTemporaryStationary_Act_NoTimeoutStatusMoving
+		{
+			// Arrange
+			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
 			_mKnowledge.LeaderPos = [120, 120, 0];
 			_mKnowledge.LeaderPosTime = 285;
 			_mTime.MissionTime = 300;
@@ -257,7 +278,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [120, 120, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
 			_mTime.MissionTime = 300;
 			
 			// Act

@@ -23,7 +23,7 @@ namespace Intrusion.Ai
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
 			_self.OrderIsGivenByBrigadeLeader = false;
-			_self.MapMarkerInfo = classNull;
+			//_self.MapMarkerInfo = classNull;
 			_self.LeaderPos = [0, 0, 0];
 			_self.LeaderPosTime = 0;
 		};
@@ -47,7 +47,7 @@ namespace Intrusion.Ai
 		public property Boolean OrderIsGivenByBrigadeLeader { get; set; };
 		
 		// Gets or sets the information about base markers.
-		public property MapMarkerInfo MapMarkerInfo { get; set; };
+		//public property MapMarkerInfo MapMarkerInfo { get; set; };
 		
 		// Gets or sets the leader's position.
 		public property Array LeaderPos { get; set; };

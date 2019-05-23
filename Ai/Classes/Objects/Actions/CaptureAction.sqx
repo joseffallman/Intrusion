@@ -12,15 +12,15 @@ namespace Intrusion.Ai
 	public class CaptureAction : IAction
 	{
 		// Creates a CaptureAction object.
-		public constructor("_startTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
+		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
 		{
-			_self.StartTime = _startTime;
+			_self.TimeoutTime = _timeoutTime;
 			_self.Position = _position;
 			_self.LocationMarkerName = _locationMarkerName;
 		};
 		
-		// Gets the time when the action started.
-		public property Scalar StartTime { get; private set; };
+		// Gets the time when the action is regarded as timed out.
+		public property Scalar TimeoutTime { get; private set; };
 		
 		// Gets the position that are about to be captured.
 		public property Array Position { get; private set; };

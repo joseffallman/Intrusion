@@ -11,7 +11,7 @@ namespace Intrusion.Ai
 {
 	public interface IAction
 	{
-		// Gets the time when the action started.
-		property Scalar StartTime { get; };
+		// Gets the time when the action is regarded as timed out.
+		property Scalar TimeoutTime { get; };
 	};
 };

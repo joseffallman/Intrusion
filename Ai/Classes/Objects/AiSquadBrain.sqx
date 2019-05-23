@@ -35,7 +35,7 @@ namespace Intrusion.Ai
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
-			_mKnowledge.MapMarkerInfo = _mapMarkerInfo;
+			//_mKnowledge.MapMarkerInfo = _mapMarkerInfo;
 			_mMarkerHandler = _markerHandler;
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
@@ -105,7 +105,7 @@ namespace Intrusion.Ai
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
 					_mKnowledge.State = AiSquadState.Capturing;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_mKnowledge.CurrentAction = [call _mTime.GetMissionTime, _pos, _x.MarkerName] new CaptureAction;
+					_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
@@ -122,7 +122,7 @@ namespace Intrusion.Ai
 					_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
 				};
 				
-				_mKnowledge.CurrentAction = [call _mTime.GetMissionTime, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+				_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
 				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
 				breakOut "main";
 			};
@@ -223,6 +223,38 @@ namespace Intrusion.Ai
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 		};
 		
+		// Tracks the leader's movement, and stationary for so long time that squad status should be set to idle.
+		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
+		private method Boolean CheckActionTimeout()
+		{
+			private ["_leaderPos" as Array, "_action" as IAction];
+			
+			scopeName "main";
+			
+			// If leader has moved since last time, update position and time
+			
+			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
+			
+			if (!(_leaderPos isEqualTo _mKnowledge.LeaderPos)) then {
+				_mKnowledge.LeaderPos
+			}
+			else
+			{
+				// If leader has not moved since last time, check if current action should time out
+				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
+					true breakOut "main";
+				};
+			};
+			
+			// Check if the current action has timed out
+			_action = _mKnowledge.CurrentAction;
+			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
+				true breakOut "main";
+			};
+			
+			false
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
@@ -249,14 +281,14 @@ namespace Intrusion.Ai
 			else
 			{
 				hint "4";
-				// If the squad is doing something, check if it has completed doing it.
 				
-				if (call _self.GetHasCompleted) then {
+				// If there has been a timeout or if the squad is complete doing something, set to idle.
+				
+				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
 					hint "5";
 					_mKnowledge.State = AiSquadState.Idle;
 				};
 			};
-			
 		};
 	};
 };

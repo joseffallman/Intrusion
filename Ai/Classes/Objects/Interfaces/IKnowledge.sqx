@@ -33,7 +33,7 @@ namespace Intrusion.Ai
 		property Boolean OrderIsGivenByBrigadeLeader { get; set; };
 		
 		// Gets or sets the information about base markers.
-		property MapMarkerInfo MapMarkerInfo { get; set; };
+		//property MapMarkerInfo MapMarkerInfo { get; set; };
 		
 		// Gets or sets the leader's position.
 		property Array LeaderPos { get; set; };
