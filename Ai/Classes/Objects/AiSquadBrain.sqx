@@ -17,7 +17,7 @@ namespace Intrusion.Ai
 	public class AiSquadBrain
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
-						"_mMapMarkerInfo" as MapMarkerInfo, "_mMarkerHandler" as IMarkerHandler];
+						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime];
 	
 		// Creates a AiSquadBrain object.
 		public constructor
@@ -28,13 +28,17 @@ namespace Intrusion.Ai
 			"_randomGenerator" as IRandomGenerator,
 			"_mapMarkerInfo" as MapMarkerInfo,
 			"_markerHandler" as IMarkerHandler,
+			"_actionTimeoutConfig" as IActionTimeoutConfig,
+			"_time" as IMissionTime,
 			["_knowledge" as IKnowledge, classNull])
 		{
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
-			_mMapMarkerInfo = _mapMarkerInfo;
+			_mKnowledge.MapMarkerInfo = _mapMarkerInfo;
 			_mMarkerHandler = _markerHandler;
+			_mActionTimeoutConfig = _actionTimeoutConfig;
+			_mTime = _time;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -101,7 +105,7 @@ namespace Intrusion.Ai
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
 					_mKnowledge.State = AiSquadState.Capturing;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_mKnowledge.CurrentAction = [_pos, _x.MarkerName] new CaptureAction;
+					_mKnowledge.CurrentAction = [call _mTime.GetMissionTime, _pos, _x.MarkerName] new CaptureAction;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
@@ -118,7 +122,7 @@ namespace Intrusion.Ai
 					_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
 				};
 				
-				_mKnowledge.CurrentAction = [_mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+				_mKnowledge.CurrentAction = [call _mTime.GetMissionTime, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
 				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
 				breakOut "main";
 			};

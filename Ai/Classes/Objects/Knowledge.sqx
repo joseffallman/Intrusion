@@ -23,6 +23,9 @@ namespace Intrusion.Ai
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
 			_self.OrderIsGivenByBrigadeLeader = false;
+			_self.MapMarkerInfo = classNull;
+			_self.LeaderPos = [0, 0, 0];
+			_self.LeaderPosTime = 0;
 		};
 		
 		// gets or sets the group associated with this AI knowledge.
@@ -42,5 +45,14 @@ namespace Intrusion.Ai
 		
 		// Gets whether the order is given by the brigade leader or if it is on own initiative.
 		public property Boolean OrderIsGivenByBrigadeLeader { get; set; };
+		
+		// Gets or sets the information about base markers.
+		public property MapMarkerInfo MapMarkerInfo { get; set; };
+		
+		// Gets or sets the leader's position.
+		public property Array LeaderPos { get; set; };
+		
+		// Gets the time when the leader got its new pos.
+		public property Scalar LeaderPosTime { get; set; };
 	};
 };

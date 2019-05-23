@@ -30,6 +30,7 @@ namespace Intrusion.Tests.Ai
 			"_mLocationFactory1" as ResourceLocation,
 			"_mLocationOffice1" as ResourceLocation,
 			"_mResourceLocationCollection" as ResourceLocationCollection,
+			"_mTime" as TestMissionTime,
 		];
 		
 		#endregion
@@ -74,10 +75,11 @@ namespace Intrusion.Tests.Ai
 			_mActionPerformer = new TestActionPerformer;
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup] new Knowledge;
+			_mTime = [0] new TestMissionTime;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
 			
-			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mapMarkerInfo, _mMarkerHandler, _mKnowledge] new AiSquadBrain;
+			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mapMarkerInfo, _mMarkerHandler, new TestActionTimeoutConfig, _mTime, _mKnowledge] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()
@@ -145,7 +147,7 @@ namespace Intrusion.Tests.Ai
 			_mLocationFactory1.Side = east;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [[200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -179,7 +181,7 @@ namespace Intrusion.Tests.Ai
 			_mLocationFactory1.Side = west;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Capturing;
-			_mKnowledge.CurrentAction = [[200, 200, 0], "FACTORY1"] new CaptureAction;
+			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new CaptureAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -205,8 +207,6 @@ namespace Intrusion.Tests.Ai
 		
 		private static method OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle
 		{
-			private ["_action" as MoveAction];
-		
 			// Arrange
 			_mWorld.LeaderPos = [410, 410, 0];
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
@@ -231,6 +231,40 @@ namespace Intrusion.Tests.Ai
 			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
 			[[600, 600, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			["FACTORY2", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+		
+		private static method SquadStationary_Act_TimeoutStatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mKnowledge.LeaderPos = [120, 120, 0];
+			_mKnowledge.LeaderPosTime = 285;
+			_mTime.MissionTime = 300;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI stationary but did not timeout."] call Assert.AreEqual;
+		};
+		
+		private static method MovingButNeverArrives_Act_TimeoutStatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [0, [200, 200, 0], "FACTORY1"] new MoveAction;
+			_mTime.MissionTime = 300;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI movement did not timeout."] call Assert.AreEqual;
 		};
 		
 		/*

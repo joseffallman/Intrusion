@@ -1,5 +1,6 @@
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiUnitsConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Configs\AiWeaponsConfig.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Configs\ActionTimeoutConfig.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Handlers\AiSquadHandler.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquad.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiUnitInfo.sqx";
