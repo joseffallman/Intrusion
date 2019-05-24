@@ -308,7 +308,7 @@ namespace Intrusion.Ai {
 					
 					_mUnit doMove getPos _mResourceLocation.Flag;
 					_mUnit setBehaviour "AWARE";
-					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
+					//[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 //					player sideChat "SingleUnitGettingFlag";
 					
 					[_mUnit, getMarkerPos _mResourceLocation.MarkerName] spawn {
@@ -733,7 +733,7 @@ namespace Intrusion.Ai {
 			
 			switch (_mState) do {
 				case AiSquadState.Idle: { call _self.MakeNewDecision; };
-				case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
+				//case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
 				case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
 				case AiSquadState.BoardingVehicle: { call _self.CheckIfFinishedBoardingVehicle; };
 				case AiSquadState.ExitingVehicle: { call _self.CheckIfFinishedExitingVehicle; };

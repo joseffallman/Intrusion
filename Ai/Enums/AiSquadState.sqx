@@ -16,7 +16,26 @@ namespace Intrusion.Ai
 		Capturing,
 		BoardingVehicle,
 		ExitingVehicle,
-		SingleUnitGettingFlag,
 		Defending,
+	};
+	
+	public class AiSquadStateMeta
+	{
+		public static method String ToString("_state" as AiSquadState)
+		{
+			private ["_s" as String];
+		
+			switch (_state) do {
+				case AiSquadState.Idle: { _s = "Idle"; };
+				case AiSquadState.Moving: { _s = "Moving"; };
+				case AiSquadState.Capturing: { _s = "Capturing"; };
+				case AiSquadState.BoardingVehicle: { _s = "BoardingVehicle"; };
+				case AiSquadState.ExitingVehicle: { _s = "ExitingVehicle"; };
+				case AiSquadState.Defending: { _s = "Defending"; };
+				default { _s = "[AiSquadState has no entry]" };
+			};
+			
+			_s
+		};
 	};
 };

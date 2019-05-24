@@ -74,9 +74,13 @@ namespace Intrusion.Ai
         		["_maxUnitsCount: " + str _maxUnitsCount] call LogHandler.Debug;
         		["_unitCount: " + str _unitCount] call LogHandler.Debug;
         	
-				if (_existingUnitsCount < _unitCount) then
+				if (_existingUnitsCount < _maxUnitsCount) then
 				{
 					_group = createGroup _x;
+					
+					if (_existingUnitsCount + _unitCount > _maxUnitsCount) then {
+						_unitCount = _maxUnitsCount - _existingUnitsCount;
+					};
 					
 					for "_i" from 1 to _unitCount do {
 						[_unitInfo.UnitClassName, getMarkerPos _mapMarkerInfo.BaseMarkerName, _group] call _mUnitSpawner.CreateUnit;
@@ -125,6 +129,36 @@ namespace Intrusion.Ai
 		{
 			_self.IsRunning = true;
 			[] spawn _self.Run;
+		};
+		
+		public static method Start()
+		{
+			private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
+			
+			sleep 5;
+		
+			_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+			
+			_aiService = [
+				gServer.AiSquadHandler,
+				//_aiUnitBalancer, 
+				new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+				gServerConfig.Gameplay,
+				gCommonConfig.MapMarkers,
+				//gServer.VehicleSpawner,
+				gCommonConfig.Professions,
+				gServer.SquadHandler, 
+				//gCommon.MissionParametersHandler.AiSkillLevel, 
+				gServer.ResourceLocationHandler,
+				//gServer.InventedTechnologiesCollection,
+				gServer.UnitSpawner,
+				new ResourceLocationConfig,
+				//gCommonConfig.Professions,
+				new AiUnitsConfig, 
+				//new AiWeaponsConfig
+			] new AiService;
+			
+			call _aiService.RunAsync;
 		};
 	};
 };

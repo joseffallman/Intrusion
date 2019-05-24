@@ -35,7 +35,13 @@ namespace Intrusion.Ai
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
-			call PublicVariableHandler.GetResourceLocationCollection
+			scopeName "main";
+			
+			if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
+				(call PublicVariableHandler.GetResourceLocationCollection) breakOut "main";
+			};
+			
+			classNull
 		};
 		
 		// Checks if a group is inside the perimiters of one or more resource locations.

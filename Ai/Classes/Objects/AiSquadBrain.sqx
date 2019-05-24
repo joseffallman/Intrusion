@@ -68,30 +68,33 @@ namespace Intrusion.Ai
 
 			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
 			
-			_locations = call _resourceLocationCollection.GetResourceLocations;
-			_count = 0;
-			_valuedLocations = [];
-			
+			if (!isNull _resourceLocationCollection) then
 			{
-				_location = _x;
+				_locations = call _resourceLocationCollection.GetResourceLocations;
+				_count = 0;
+				_valuedLocations = [];
 				
-				if (_location.Side != side _mKnowledge.Group) then {
-					_distance = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.Group] call _mWorld.GetLeaderPos);
-					_valuedLocations pushBack [_location, _distance] new ValuedObject;
-					_count = _count + 1;
+				{
+					_location = _x;
+					
+					if (_location.Side != side _mKnowledge.Group) then {
+						_distance = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.Group] call _mWorld.GetLeaderPos);
+						_valuedLocations pushBack [_location, _distance] new ValuedObject;
+						_count = _count + 1;
+					};
+				} foreach _locations as ResourceLocation;
+				
+				_valuedLocations = [_valuedLocations] call Sorter.QSort;
+				
+				if (_count > 3) then {
+					_count = 3;
 				};
-			} foreach _locations as ResourceLocation;
-			
-			_valuedLocations = [_valuedLocations] call Sorter.QSort;
-			
-			if (_count > 3) then {
-				_count = 3;
-			};
-			
-			if (_count > 0) then {
-				_index = floor ([_count] call _mRandomGenerator.GetNumber);
-				_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
-				_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+				
+				if (_count > 0) then {
+					_index = floor ([_count] call _mRandomGenerator.GetNumber);
+					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+				};
 			};
 		};
 		
@@ -110,7 +113,7 @@ namespace Intrusion.Ai
 			
 			{
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
-					_mKnowledge.State = AiSquadState.Capturing;
+					[AiSquadState.Capturing] call _self.SetState;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
 					_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
@@ -122,7 +125,7 @@ namespace Intrusion.Ai
 			
 			if (([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance _mKnowledge.Order.TargetPosition > 25) then
 			{
-				_mKnowledge.State = AiSquadState.Moving;
+				[AiSquadState.Moving] call _self.SetState;
 				_locationMarkerName = "";
 				
 				if (!isNull _mKnowledge.Order.ResourceLocation) then {
@@ -262,38 +265,37 @@ namespace Intrusion.Ai
 			false
 		};
 		
+		private method SetState("_state" as AiSquadState) 
+		{
+			_mKnowledge.State = _state;
+			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
 			// If there is no order, create one on own initiative so the group has something to do.
 			
-			hint "0";
 			if (isNull _mKnowledge.Order) then {
-				hint "1";
 				call _self.CreateOrderOnOwnInitiative;
 			};
 			
 			// If the squad is not doing anything, make a new decision.
 		
 			if (_mKnowledge.State == AiSquadState.Idle) then {
-				hint "2";
 				call _self.MakeDecision;
 				
 				// If still idle, create a new order
 				if (_mKnowledge.State == AiSquadState.Idle) then {
-					hint "3";
 					call _self.CreateOrderOnOwnInitiative;
 				};
 			}
 			else
 			{
-				hint "4";
-				
 				// If there has been a timeout or if the squad is complete doing something, set to idle.
 				
 				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
-					hint "5";
-					_mKnowledge.State = AiSquadState.Idle;
+					[AiSquadState.Idle] call _self.SetState;
 				};
 			};
 		};
