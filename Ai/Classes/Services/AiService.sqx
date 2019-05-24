@@ -15,41 +15,33 @@ namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{
-		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
-		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mProfessionConfig" as IProfessionConfig, "_mAiWeaponsConfig" as IAiWeaponsConfig];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mUnitSpawner" as IUnitSpawner];
+		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
+		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig];
 		
 		// Creates a AiService object.
 		public constructor(
 			"_aiSquadHandler" as IAiSquadHandler, 
 			"_unitBalancer" as IAiUnitBalancer, 
 			"_gameplayConfig" as IGameplayConfig, 
-			"_unitsConfig" as IAiUnitsConfig, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
-			"_vehicleSpawner" as IVehicleSpawner, 
 			"_professinConfig" as IProfessionConfig, 
 			"_squadHandler" as ISquadHandler, 
-			"_skillLevel" as SkillLevel, 
 			"_resourceLocationHandler" as IResourceLocationHandler, 
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_unitSpawner" as IUnitSpawner,
-			"_professionConfig" as IProfessionConfig,
-			"_aiWeaponsConfig" as IAiWeaponsConfig)
+			"_resourceLocationConfig" as IResourceLocationConfig,
+			"_unitsConfig" as IAiUnitsConfig)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
-			_mUnitsConfig = _unitsConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
-			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadHandler = _squadHandler;
-			_mSkillLevel = _skillLevel;
 			_mResourceLocationHandler = _resourceLocationHandler;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mUnitSpawner = _unitSpawner;
-			_mProfessionConfig = _professinConfig;
-			_mAiWeaponsConfig = _aiWeaponsConfig;
+			_mResourceLocationConfig = _resourceLocationConfig;
+			_mUnitsConfig = _unitsConfig;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -67,33 +59,40 @@ namespace Intrusion.Ai
 		// Creates a new squad if more squads are alive.
 		private method CreateNewSquads()
 		{
-			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquad];
+			private ["_group" as Group, "_mapMarkerInfo" as MapMarkerInfo, "_unitInfo" as AiUnitInfo];
+			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquadBrain];
 
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
 				_unitCount = selectRandom [1, 2, 2, 2, 3];
+				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
+				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
 
         		["Create new squads variables:"] call LogHandler.Debug;
         		["_existingUnitsCount: " + str _existingUnitsCount] call LogHandler.Debug;
         		["_maxUnitsCount: " + str _maxUnitsCount] call LogHandler.Debug;
         		["_unitCount: " + str _unitCount] call LogHandler.Debug;
         	
-				if (_existingUnitsCount < _maxUnitsCount) then {
+				if (_existingUnitsCount < _unitCount) then
+				{
+					_group = createGroup _x;
+					
+					for "_i" from 1 to _unitCount do {
+						[_unitInfo.UnitClassName, getMarkerPos _mapMarkerInfo.BaseMarkerName, _group] call _mUnitSpawner.CreateUnit;
+					};
 				
 					_aiSquad = [
-						_mUnitsConfig,
-						_mProfessionConfig,
-						_mResourceLocationHandler, 
-						_mMapMarkersConfig, 
-						_mVehicleSpawner, 
-						_x, 
-						_unitCount, 
-						_mSkillLevel, 
-						_mInventedTechnologiesCollection, 
-						_mSquadHandler,
-						_mUnitSpawner,
-						_mAiWeaponsConfig] new AiSquad;
+						_group,
+						[_mResourceLocationConfig] new World,
+						[_group, _mResourceLocationHandler] new ActionPerformer, 
+						new RandomGenerator, 
+						_mapMarkerInfo, 
+						new MarkerHandler, 
+						new ActionTimeoutConfig, 
+						new MissionTime] new AiSquadBrain;
+					
+					
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;
@@ -114,7 +113,7 @@ namespace Intrusion.Ai
 				{
 					call _x.Act;
 					sleep 0.1;
-				} foreach _allSquads as AiSquad;
+				} foreach _allSquads as AiSquadBrain;
 				
 				sleep 1;
 			};

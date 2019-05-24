@@ -16,6 +16,7 @@ call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 
 using Intrusion.Common;
 using Intrusion.Ai;
+using Intrusion.Server;
 
 [] spawn {
 	private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
@@ -23,21 +24,25 @@ using Intrusion.Ai;
 	sleep 5;
 
 	_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+	
 	_aiService = [
 		gServer.AiSquadHandler,
-		_aiUnitBalancer, 
-		gServerConfig.Gameplay, 
-		new AiUnitsConfig, 
+		//_aiUnitBalancer, 
+		new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+		gServerConfig.Gameplay,
 		gCommonConfig.MapMarkers,
-		gServer.VehicleSpawner, 
+		//gServer.VehicleSpawner,
 		gCommonConfig.Professions,
 		gServer.SquadHandler, 
-		gCommon.MissionParametersHandler.AiSkillLevel, 
+		//gCommon.MissionParametersHandler.AiSkillLevel, 
 		gServer.ResourceLocationHandler,
-		gServer.InventedTechnologiesCollection,
+		//gServer.InventedTechnologiesCollection,
 		gServer.UnitSpawner,
-		gCommonConfig.Professions,
-		new AiWeaponsConfig] new AiService;
+		new ResourceLocationConfig,
+		//gCommonConfig.Professions,
+		new AiUnitsConfig, 
+		//new AiWeaponsConfig
+	] new AiService;
 	
 	call _aiService.RunAsync;
 };

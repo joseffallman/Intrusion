@@ -22,7 +22,7 @@ namespace Intrusion.Ai
 		// Creates a AiSquadBrain object.
 		public constructor
 		(
-			"_group" as Group, 
+			"_group" as Group,
 			"_world" as IWorld, 
 			"_actionPerformer" as IActionPerformer, 
 			"_randomGenerator" as IRandomGenerator,
@@ -32,6 +32,7 @@ namespace Intrusion.Ai
 			"_time" as IMissionTime,
 			["_knowledge" as IKnowledge, classNull])
 		{
+			_self.Group = _group;
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
@@ -44,12 +45,18 @@ namespace Intrusion.Ai
 				_mKnowledge = _knowledge;
 				
 				_mKnowledge.Group = _group;
-				_mKnowledge.Members = units _group;
 			}
 			else {
 				_mKnowledge = [_group] new Knowledge;
 			};
 		};
+		
+		public method Scalar GetMemberCount()
+		{
+			_mKnowledge.MembersCount
+		};
+		
+		public property Group Group { get; private set; };
 		
 		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()

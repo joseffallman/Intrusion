@@ -14,7 +14,7 @@ using Sqx.Collections;
 using Sqx.Waypoints;
 
 namespace Intrusion.Ai {
-	public class AiSquad
+	public class AiSquadOld
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];

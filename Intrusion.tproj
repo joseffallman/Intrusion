@@ -1235,6 +1235,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestAiUnitBalancer.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestAiUnitBalancer.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestWorld.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestWorld.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />

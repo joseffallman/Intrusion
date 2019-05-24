@@ -32,10 +32,10 @@ namespace Intrusion.Ai
 			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
-			_waypoint = _mGroup addWaypoint [_moveAction.Position];
-			_waypoint setWaypointSpeed "LIMITED";
+			_waypoint = _mGroup addWaypoint [_moveAction.Position, 10];
+			_waypoint setWaypointSpeed "NORMAL";
 			_waypoint setWaypointType "HOLD";
-			_mGroup setSpeedMode "LIMITED";
+			_mGroup setSpeedMode "NORMAL";
 		};
 		
 		// Performs a capture action for an AI group.
@@ -47,7 +47,7 @@ namespace Intrusion.Ai
 			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
-			_waypoint = _mGroup addWaypoint [_captureAction.Position];
+			_waypoint = _mGroup addWaypoint [_captureAction.Position, 10];
 			_waypoint setWaypointSpeed "LIMITED";
 			_waypoint setWaypointCombatMode "YELLOW";
 			_waypoint setWaypointBehaviour "AWARE";

@@ -16,7 +16,7 @@ namespace Intrusion.Ai
 	{
 		// Adds an AI squad to the AI squad handler.
 		// _aiSquad (AiSquad): The AI squad to add.
-		method AddSquad("_aiSquad" as AiSquad);
+		method AddSquad("_aiSquad" as AiSquadBrain);
 		
 		// Counts all AI units of a side. Alive as well as dead units "waiting for respawn".
 		// _side (Side): The side to ask for.
