@@ -26,17 +26,16 @@ namespace Intrusion.Ai
 			"_world" as IWorld, 
 			"_actionPerformer" as IActionPerformer, 
 			"_randomGenerator" as IRandomGenerator,
-			"_mapMarkerInfo" as MapMarkerInfo,
 			"_markerHandler" as IMarkerHandler,
 			"_actionTimeoutConfig" as IActionTimeoutConfig,
 			"_time" as IMissionTime,
+			"_baseMarkerInfo" as MapMarkerInfo,
 			["_knowledge" as IKnowledge, classNull])
 		{
 			_self.Group = _group;
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
 			_mRandomGenerator = _randomGenerator;
-			//_mKnowledge.MapMarkerInfo = _mapMarkerInfo;
 			_mMarkerHandler = _markerHandler;
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
@@ -49,6 +48,8 @@ namespace Intrusion.Ai
 			else {
 				_mKnowledge = [_group] new Knowledge;
 			};
+			
+			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
 		};
 		
 		public method Scalar GetMemberCount()
@@ -78,7 +79,7 @@ namespace Intrusion.Ai
 					_location = _x;
 					
 					if (_location.Side != side _mKnowledge.Group) then {
-						_distance = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.Group] call _mWorld.GetLeaderPos);
+						_distance = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
 						_valuedLocations pushBack [_location, _distance] new ValuedObject;
 						_count = _count + 1;
 					};
@@ -129,6 +130,7 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
+			
 			
 			// If not already there, move towards order's target!
 			

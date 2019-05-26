@@ -91,10 +91,10 @@ namespace Intrusion.Ai
 						[_mResourceLocationConfig] new World,
 						[_group, _mResourceLocationHandler] new ActionPerformer, 
 						new RandomGenerator, 
-						_mapMarkerInfo, 
 						new MarkerHandler, 
 						new ActionTimeoutConfig, 
-						new MissionTime] new AiSquadBrain;
+						new MissionTime,
+						_mapMarkerInfo] new AiSquadBrain;
 					
 					
 					

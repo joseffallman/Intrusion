@@ -40,5 +40,8 @@ namespace Intrusion.Ai
 		
 		// Gets the time when the leader got its new pos.
 		property Scalar LeaderPosTime { get; set; };
+		
+		// Gets the base marker information associated with the brigade.
+		property MapMarkerInfo BaseMarkerInfo { get; set; };
 	};
 };
