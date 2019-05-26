@@ -34,5 +34,10 @@ namespace Intrusion.Ai
 		// _pos (Array): The relative position.
 		// _squadSize (Scalar): The number of members in the squad.
 		method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar);
+		
+		// Checks if all squad members are aboard a vehicle.
+		// _group (Group): The group to check.
+		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
+		method Boolean CheckAllSquadMembersOnBoard("_group");
 	};
 };

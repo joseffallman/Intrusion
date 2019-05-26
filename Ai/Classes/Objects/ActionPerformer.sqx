@@ -64,7 +64,27 @@ namespace Intrusion.Ai
 		// _boardAction (BoardAction): Information about the boarding.
 		public method DoBoard("_boardAction" as BoardAction)
 		{
-			
+			{
+				if (isNull (assignedVehicle _x) && isNull (assignedDriver _boardAction.Vehicle.Vehicle)) then {
+					_x assignAsDriver _boardAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+				};
+				
+				if (isNull (assignedVehicle _x) && isNull (assignedCommander _boardAction.Vehicle.Vehicle)) then {
+					_x assignAsCommander _boardAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+				};
+				
+				if (isNull (assignedVehicle _x) && isNull (assignedGunner _boardAction.Vehicle.Vehicle)) then {
+					_x assignAsGunner _boardAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+				};
+				
+				if (isNull (assignedVehicle _x)) then {
+					_x assignAsCargo _boardAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+				};
+			} foreach units _mGroup;
 		};
 	};
 };

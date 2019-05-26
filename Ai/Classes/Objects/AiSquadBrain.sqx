@@ -111,12 +111,14 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
 			private ["_locationMarkerName" as String, "_aiVehicle" as AiVehicle, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
+			private ["_action" as IAction, "_squadInVehicle" as Boolean];
 			
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_side = side _mKnowledge.Group;
 			_time = call _mTime.GetMissionTime;
+			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
 			
 			// If inside the perimiters of a resource location that should be captured, capture it!
 			
@@ -126,23 +128,40 @@ namespace Intrusion.Ai
 			{
 				if (_x.Side != _side && { [_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation }) then
 				{
-					[AiSquadState.Capturing] call _self.SetState;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_mKnowledge.CurrentAction = [_time + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
+					_action = [_time + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
+					[AiSquadState.Capturing, _action] call _self.SetState;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
 			
 			
-			// If an empty vehicle is nearby, board it.
+			if (!_squadInVehicle) then
+			{
+				// If squad is beside an empty vehicle, board it.
 			
-			_aiVehicle = [_side, _leaderPos, _mKnowledge.MembersCount] call _mWorld.GetClosestEmptyFreeVehicle;
-			
-			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then {
-				[AiSquadState.BoardingVehicle] call _self.SetState;
-				[[20, _aiVehicle] new BoardAction] call _mActionPerformer.DoBoard;
-				breakOut "main";
+				_aiVehicle = [_side, _leaderPos, _mKnowledge.MembersCount] call _mWorld.GetClosestEmptyFreeVehicle;
+				
+				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
+				{
+					_action = [_time + 20, _aiVehicle] new BoardAction;
+					[AiSquadState.BoardingVehicle, _action] call _self.SetState;
+					[_action as BoardAction] call _mActionPerformer.DoBoard;
+					breakOut "main";
+				};
+				
+				
+				// If an empty vehicle is nearby, move to it.
+				
+				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos;
+				
+				if (!isNull _aiVehicle && { _distanceToVehicle <= 250 }) then {
+					_action = [_time + _distanceToVehicle + 10, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _mActionPerformer.DoMove;
+					breakOut "main";
+				};
 			};
 			
 			
@@ -150,14 +169,15 @@ namespace Intrusion.Ai
 			
 			if ((_leaderPos) distance _mKnowledge.Order.TargetPosition > 25) then
 			{
-				[AiSquadState.Moving] call _self.SetState;
 				_locationMarkerName = "";
 				
 				if (!isNull _mKnowledge.Order.ResourceLocation) then {
 					_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
 				};
 				
-				_mKnowledge.CurrentAction = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				
 				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
 				breakOut "main";
 			};
@@ -172,7 +192,7 @@ namespace Intrusion.Ai
 			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
 			_hasCompleted = false;
-			
+
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
 			_currentAction = _mKnowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
 			
@@ -230,21 +250,41 @@ namespace Intrusion.Ai
 			_hasCompleted
 		};
 		
+		// Gets whether the group has completed a board vehicle action, i.e. all members are in the same vehicle.
+		private method Boolean HasCompletedBoard()
+		{
+			private ["_currentAction" as IAction];
+		
+			private _hasCompleted = false;
+			_currentAction = _mKnowledge.CurrentAction;
+		
+			if (_currentAction is BoardAction) then
+			{
+				_hasCompleted = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+			};
+			
+			_hasCompleted
+		};
+		
 		// Gets whether the last action has completed or not.
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		public method Boolean GetHasCompleted()
 		{
 			private ["_hasCompleted" as Boolean, "_currentAction" as IAction];
-			
+
 			_hasCompleted = false;
 			_currentAction = _mKnowledge.CurrentAction;
-			
+
 			if (_currentAction is MoveAction) then {
 				_hasCompleted = call _self.HasCompletedMove;
 			};
 			
 			if (_currentAction is CaptureAction) then {
 				_hasCompleted = call _self.HasCompletedCapture;
+			};
+			
+			if (_currentAction is BoardAction) then {
+				_hasCompleted = call _self.HasCompletedBoard;
 			};
 			
 			_hasCompleted
@@ -290,9 +330,17 @@ namespace Intrusion.Ai
 			false
 		};
 		
-		private method SetState("_state" as AiSquadState) 
+		private method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
 			_mKnowledge.State = _state;
+			
+			if (_state == AiSquadState.Idle) then {
+				_mKnowledge.CurrentAction = classNull;
+			}
+			else {
+				_mKnowledge.CurrentAction = _action;
+			};
+			
 			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
 		};
 		
@@ -320,7 +368,7 @@ namespace Intrusion.Ai
 				// If there has been a timeout or if the squad is complete doing something, set to idle.
 				
 				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
-					[AiSquadState.Idle] call _self.SetState;
+					[AiSquadState.Idle, classNull] call _self.SetState;
 				};
 			};
 		};

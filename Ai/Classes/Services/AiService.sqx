@@ -43,6 +43,7 @@ namespace Intrusion.Ai
 			_mUnitSpawner = _unitSpawner;
 			_mResourceLocationConfig = _resourceLocationConfig;
 			_mUnitsConfig = _unitsConfig;
+			_mVehicleSpawner = _vehicleSpawner;
 		};
 		
 		public property Boolean IsRunning { get; private set; };

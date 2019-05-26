@@ -74,5 +74,21 @@ namespace Intrusion.Ai
 			
 			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _squadSize] new AiVehicle;
 		};
+		
+		// Checks if all squad members are aboard a vehicle.
+		// _group (Group): The group to check.
+		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
+		public method Boolean CheckAllSquadMembersOnBoard("_group")
+		{
+			scopeName "main";
+			
+			{
+				if (vehicle _x == _x) then {
+					false breakOut "main";
+				};
+			} foreach units _group as Object;
+			
+			true
+		};
 	};
 };

@@ -24,6 +24,7 @@ namespace Intrusion.Tests.Helpers
 			_mResourceLocationCollection = _resourceLocationCollection;
 			_self.LeaderPos = [];
 			_self.ClosestEmptyFreeVehicle = classNull;
+			_self.AllSquadMembersOnBoard = false;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -64,6 +65,16 @@ namespace Intrusion.Tests.Helpers
 		public method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
 		{
 			_self.ClosestEmptyFreeVehicle
+		};
+		
+		public property Boolean AllSquadMembersOnBoard { get; set; };
+		
+		// Checks if all squad members are aboard a vehicle.
+		// _group (Group): The group to check.
+		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
+		public method Boolean CheckAllSquadMembersOnBoard("_group")
+		{
+			_self.AllSquadMembersOnBoard
 		};
 	};
 };
