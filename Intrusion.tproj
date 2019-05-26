@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProjectRootNode Name="Intrusion" IsExpanded="true" FileName="">
-    <IsSelected>true</IsSelected>
+    <IsSelected>false</IsSelected>
     <SubNodes>
-      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Ai" IsExpanded="false" FileName="Ai">
+      <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Ai" IsExpanded="true" FileName="Ai">
         <IsSelected>false</IsSelected>
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="false" FileName="Ai\Classes">
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Classes" IsExpanded="true" FileName="Ai\Classes">
             <IsSelected>false</IsSelected>
             <SubNodes>
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Configs" IsExpanded="false" FileName="Ai\Classes\Configs">
@@ -61,7 +61,7 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Ai\Classes\Objects">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="true" FileName="Ai\Classes\Objects">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Actions" IsExpanded="false" FileName="Ai\Classes\Objects\Actions">
@@ -136,11 +136,11 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Ai\Classes\Services">
+              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="true" FileName="Ai\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiService.sqx" IsExpanded="false" FileName="Ai\Classes\Services\AiService.sqx">
-                    <IsSelected>false</IsSelected>
+                    <IsSelected>true</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
                 </SubNodes>

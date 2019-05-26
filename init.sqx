@@ -22,7 +22,9 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {
-	//[gServer, gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
-	//AiService.Start();
-	call Sqx.UnitTest.TestEngine.RunDelayedAsync;
+	[gServer, gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
+	
+	sleep 2;
+	call AiService.StartAsync();
+	//call Sqx.UnitTest.TestEngine.RunDelayedAsync;
 };

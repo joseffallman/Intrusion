@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=480;
+		nextID=483;
 	};
 	class MarkerIDProvider
 	{
@@ -262,7 +262,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=76;
+		items=79;
 		class Item0
 		{
 			dataType="Marker";
@@ -2666,6 +2666,39 @@ class Mission
 			{
 			};
 			id=467;
+		};
+		class Item76
+		{
+			dataType="Marker";
+			position[]={3181.825,87.827003,6344.4521};
+			name="FACTORY4";
+			text="TE Transports Inc (Factory)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=480;
+			atlOffset=80.215942;
+		};
+		class Item77
+		{
+			dataType="Marker";
+			position[]={3082.7749,88.172997,6332.2358};
+			name="FACTORY6";
+			text="TE Transports Inc (Factory)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=481;
+			atlOffset=80.216301;
+		};
+		class Item78
+		{
+			dataType="Marker";
+			position[]={3177.9651,93.495003,6422.2441};
+			name="FACTORY5";
+			text="TE Transports Inc (Factory)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=482;
+			atlOffset=80.215889;
 		};
 	};
 };

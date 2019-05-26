@@ -95,6 +95,14 @@ namespace Intrusion.Ai
 					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
 				};
+				
+				["AiSquadBrain.CreateOrderOnOwnInitiative"] call LogHandler.Debug;
+				["_this: " + str _this] call LogHandler.Debug;
+				["_locations: " + str _locations] call LogHandler.Debug;
+				["_count: " + str _count] call LogHandler.Debug;
+				["_valuedLocations: " + str _valuedLocations] call LogHandler.Debug;
+				["_index: " + str _index] call LogHandler.Debug;
+				["_mKnowledge.Order: " + str _mKnowledge.Order] call LogHandler.Debug;
 			};
 		};
 		
@@ -112,7 +120,8 @@ namespace Intrusion.Ai
 			_locations = call _locationCollection.GetResourceLocations;
 			
 			{
-				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
+				if (_x.Side != side _mKnowledge.Group && { [_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation }) then
+				{
 					[AiSquadState.Capturing] call _self.SetState;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
 					_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;

@@ -107,6 +107,7 @@ namespace Intrusion.Ai
 		
 		private method Run()
 		{
+			hint "3";
 			private ["_allSquads" as Array];
 			
 			while { true } do
@@ -127,12 +128,14 @@ namespace Intrusion.Ai
 		
 		public method RunAsync()
 		{
+			hint "2";
 			_self.IsRunning = true;
 			[] spawn _self.Run;
 		};
 		
-		public static method Start()
+		private static method Start()
 		{
+			hint "1";
 			private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
 			
 			sleep 5;
@@ -159,6 +162,12 @@ namespace Intrusion.Ai
 			] new AiService;
 			
 			call _aiService.RunAsync;
+		};
+		
+		public static method StartAsync()
+		{
+			hint "0";
+			[] spawn _self.Start;
 		};
 	};
 };
