@@ -47,8 +47,9 @@ namespace Intrusion.Server
 		// Gets the nearest working empty free vehicle in relation to a position.
 		// _side (Side): The vehicle's side.
 		// _pos (Array): The relative position.
+		// _requiredCrewPlacesCount (Scalar): Required number of crew places.
 		// Returns (IntrusionVehicle): The intrusion vehicle closest to the group.
-		method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array);
+		method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_requiredCrewPlacesCount" as Scalar);
 		
 		// Deletes all profession vehicles that have no owner on a side.
 		// _side (Side): The side to delete vehicles from.

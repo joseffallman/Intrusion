@@ -28,5 +28,11 @@ namespace Intrusion.Ai
 		// _location (ResourceLocation): The resource location to check.
 		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
 		method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation);
+		
+		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
+		// _side (Side): Side of the vehicle.
+		// _pos (Array): The relative position.
+		// _squadSize (Scalar): The number of members in the squad.
+		method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar);
 	};
 };

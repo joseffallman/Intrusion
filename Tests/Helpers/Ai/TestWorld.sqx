@@ -23,6 +23,7 @@ namespace Intrusion.Tests.Helpers
 		{
 			_mResourceLocationCollection = _resourceLocationCollection;
 			_self.LeaderPos = [];
+			_self.ClosestEmptyFreeVehicle = classNull;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -51,6 +52,18 @@ namespace Intrusion.Tests.Helpers
 		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
 		{
 			_self.SquadPresenceAtResourceLocation
+		};
+		
+		public property AiVehicle ClosestEmptyFreeVehicle { get; set; };
+
+		
+		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
+		// _side (Side): Side of the vehicle.
+		// _pos (Array): The relative position.
+		// _squadSize (Scalar): The number of members in the squad.
+		public method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
+		{
+			_self.ClosestEmptyFreeVehicle
 		};
 	};
 };

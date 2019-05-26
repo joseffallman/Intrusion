@@ -1,0 +1,31 @@
+/*
+ * Name:	AiVehicle
+ * Date:	2019-05-26
+ * Version: 1.0
+ * Author:  Engime
+ *
+ * Description:
+ * Models a vehicle that can be used by an AI squad.
+ */
+namespace Intrusion.Ai
+{
+	public class AiVehicle
+	{
+		// Creates a AiVehicle object.
+		public constructor("_vehicle" as Object, "_position" as Array, "_seatsCount" as Scalar)
+		{
+			_self.Vehicle = _vehicle;
+			_self.Position = _position;
+			_self.SeatsCount = _seatsCount;			
+		};
+		
+		// Gets the vehicle's position.
+		public property Array Position { get; private set; };
+		
+		// Gets the vehicle's number of seats.
+		public property Scalar SeatsCount { get; private set; };
+		
+		// Gets the actual vehicle.
+		public property Object Vehicle { get; private set; };
+	};
+};

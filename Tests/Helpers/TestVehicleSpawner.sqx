@@ -66,8 +66,9 @@ namespace Intrusion.Tests.Helpers
 		// Gets the nearest working empty free vehicle in relation to a position.
 		// _side (Side): The vehicle's side.
 		// _pos (Array): The relative position.
+		// _requiredCrewPlacesCount (Scalar): Required number of crew places.
 		// Returns (IntrusionVehicle): The intrusion vehicle closest to the group.
-		public method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array)
+		public method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_requiredCrewPlacesCount" as Scalar)
 		{
 			classNull
 		};

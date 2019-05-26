@@ -57,5 +57,14 @@ namespace Intrusion.Ai
 			_mGroup setCombatMode "YELLOW";
 			_mGroup setBehaviour "AWARE";
 		};
+		
+		
+		// Performs a board action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _boardAction (BoardAction): Information about the boarding.
+		public method DoBoard("_boardAction" as BoardAction)
+		{
+			
+		};
 	};
 };

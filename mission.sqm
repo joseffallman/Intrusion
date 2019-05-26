@@ -2670,35 +2670,35 @@ class Mission
 		class Item76
 		{
 			dataType="Marker";
-			position[]={3181.825,87.827003,6344.4521};
+			position[]={3237.1379,103.464,6291.7339};
 			name="FACTORY4";
-			text="TE Transports Inc (Factory)";
+			text="Test Place 2";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=480;
-			atlOffset=80.215942;
+			atlOffset=80.215897;
 		};
 		class Item77
 		{
 			dataType="Marker";
-			position[]={3082.7749,88.172997,6332.2358};
+			position[]={3049.3301,79.507004,6269.231};
 			name="FACTORY6";
-			text="TE Transports Inc (Factory)";
+			text="Test Place 3";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=481;
-			atlOffset=80.216301;
+			atlOffset=62.909462;
 		};
 		class Item78
 		{
 			dataType="Marker";
-			position[]={3177.9651,93.495003,6422.2441};
+			position[]={3268.009,93.495003,6418.3872};
 			name="FACTORY5";
-			text="TE Transports Inc (Factory)";
+			text="Test Place 1";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=482;
-			atlOffset=80.215889;
+			atlOffset=69.645721;
 		};
 	};
 };

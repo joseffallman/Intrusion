@@ -366,7 +366,7 @@ namespace Intrusion.Ai {
 				// If there is a vehicle nearby and no enemies, and group fit, then board it.
 				
 				if (!_seeEnemies) then {
-					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group, count _self.Members] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
 					
 					if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
 						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {

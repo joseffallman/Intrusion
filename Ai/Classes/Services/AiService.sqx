@@ -18,7 +18,7 @@ namespace Intrusion.Ai
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */];
 		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
-		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig];
+		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		
 		// Creates a AiService object.
 		public constructor(
@@ -31,7 +31,8 @@ namespace Intrusion.Ai
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_unitSpawner" as IUnitSpawner,
 			"_resourceLocationConfig" as IResourceLocationConfig,
-			"_unitsConfig" as IAiUnitsConfig)
+			"_unitsConfig" as IAiUnitsConfig,
+			"_vehicleSpawner" as IVehicleSpawner)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -88,7 +89,7 @@ namespace Intrusion.Ai
 				
 					_aiSquad = [
 						_group,
-						[_mResourceLocationConfig] new World,
+						[_mResourceLocationConfig, _mVehicleSpawner] new World,
 						[_group, _mResourceLocationHandler] new ActionPerformer, 
 						new RandomGenerator, 
 						new MarkerHandler, 
@@ -107,7 +108,6 @@ namespace Intrusion.Ai
 		
 		private method Run()
 		{
-			hint "3";
 			private ["_allSquads" as Array];
 			
 			while { true } do
@@ -128,14 +128,12 @@ namespace Intrusion.Ai
 		
 		public method RunAsync()
 		{
-			hint "2";
 			_self.IsRunning = true;
 			[] spawn _self.Run;
 		};
 		
 		private static method Start()
 		{
-			hint "1";
 			private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
 			
 			sleep 5;
@@ -148,7 +146,6 @@ namespace Intrusion.Ai
 				new Intrusion.Tests.Helpers.TestAiUnitBalancer,
 				gServerConfig.Gameplay,
 				gCommonConfig.MapMarkers,
-				//gServer.VehicleSpawner,
 				gCommonConfig.Professions,
 				gServer.SquadHandler, 
 				//gCommon.MissionParametersHandler.AiSkillLevel, 
@@ -159,6 +156,7 @@ namespace Intrusion.Ai
 				//gCommonConfig.Professions,
 				new AiUnitsConfig, 
 				//new AiWeaponsConfig
+				gServer.VehicleSpawner,
 			] new AiService;
 			
 			call _aiService.RunAsync;
@@ -166,7 +164,6 @@ namespace Intrusion.Ai
 		
 		public static method StartAsync()
 		{
-			hint "0";
 			[] spawn _self.Start;
 		};
 	};

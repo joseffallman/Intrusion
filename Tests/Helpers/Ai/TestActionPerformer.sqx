@@ -18,6 +18,7 @@ namespace Intrusion.Tests.Helpers
 		public constructor {
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
+			_self.BoardActions = [];
 		};
 		
 		public property Array MoveActions { get; private set; };
@@ -38,6 +39,16 @@ namespace Intrusion.Tests.Helpers
 		public method DoCapture("_captureAction" as CaptureAction)
 		{
 			_self.CaptureActions pushBack _captureAction;
+		};
+		
+		public property Array BoardActions { get; private set; };
+		
+		// Performs a board action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _boardAction (BoardAction): Information about the boarding.
+		public method DoBoard("_boardAction" as BoardAction)
+		{
+			_self.BoardActions pushBack _boardAction;
 		};
 	};
 };

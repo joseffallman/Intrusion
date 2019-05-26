@@ -15,12 +15,13 @@ namespace Intrusion.Ai
 {
 	public class World : IWorld
 	{
-		private fields ["_mResourceLocationConfig" as IResourceLocationConfig];
+		private fields ["_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		
 		// Creates a World object.
-		public constructor("_resourceLocationConfig" as IResourceLocationConfig)
+		public constructor("_resourceLocationConfig" as IResourceLocationConfig, "_vehicleSpawner" as IVehicleSpawner)
 		{
 			_mResourceLocationConfig = _resourceLocationConfig;
+			_mVehicleSpawner = _vehicleSpawner;
 		};
 		
 		// Gets a group's leader's position.
@@ -59,6 +60,19 @@ namespace Intrusion.Ai
 			} foreach units _group;
 			
 			false
+		};
+
+		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
+		// _side (Side): Side of the vehicle.
+		// _pos (Array): The relative position.
+		// _squadSize (Scalar): The number of members in the squad.
+		public method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
+		{
+			private ["_intrusionVehicle" as IntrusionVehicle];
+			
+			_intrusionVehicle = [_side, _pos, _squadSize] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+			
+			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _squadSize] new AiVehicle;
 		};
 	};
 };

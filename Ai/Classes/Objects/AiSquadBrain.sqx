@@ -110,10 +110,13 @@ namespace Intrusion.Ai
 		private method MakeDecision()
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
-			private ["_locationMarkerName" as String];
+			private ["_locationMarkerName" as String, "_aiVehicle" as AiVehicle, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
 			
 			scopeName "main";
 			
+			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
+			_side = side _mKnowledge.Group;
+			_time = call _mTime.GetMissionTime;
 			
 			// If inside the perimiters of a resource location that should be captured, capture it!
 			
@@ -121,20 +124,31 @@ namespace Intrusion.Ai
 			_locations = call _locationCollection.GetResourceLocations;
 			
 			{
-				if (_x.Side != side _mKnowledge.Group && { [_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation }) then
+				if (_x.Side != _side && { [_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation }) then
 				{
 					[AiSquadState.Capturing] call _self.SetState;
 					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
+					_mKnowledge.CurrentAction = [_time + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
 			
 			
+			// If an empty vehicle is nearby, board it.
+			
+			_aiVehicle = [_side, _leaderPos, _mKnowledge.MembersCount] call _mWorld.GetClosestEmptyFreeVehicle;
+			
+			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then {
+				[AiSquadState.BoardingVehicle] call _self.SetState;
+				[[20, _aiVehicle] new BoardAction] call _mActionPerformer.DoBoard;
+				breakOut "main";
+			};
+			
+			
 			// If not already there, move towards order's target!
 			
-			if (([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance _mKnowledge.Order.TargetPosition > 25) then
+			if ((_leaderPos) distance _mKnowledge.Order.TargetPosition > 25) then
 			{
 				[AiSquadState.Moving] call _self.SetState;
 				_locationMarkerName = "";
@@ -143,7 +157,7 @@ namespace Intrusion.Ai
 					_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
 				};
 				
-				_mKnowledge.CurrentAction = [(call _mTime.GetMissionTime) + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+				_mKnowledge.CurrentAction = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
 				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
 				breakOut "main";
 			};

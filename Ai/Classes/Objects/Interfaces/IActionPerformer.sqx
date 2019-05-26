@@ -18,5 +18,9 @@ namespace Intrusion.Ai
 		// Performs a move action for an AI group.
 		// _captureAction (CaptureAction): Information about the capturing.
 		method DoCapture("_captureAction" as CaptureAction);
+		
+		// Performs a board action for an AI group.
+		// _boardAction (BoardAction): Information about the boarding.
+		method DoBoard("_boardAction" as BoardAction);
 	};
 };

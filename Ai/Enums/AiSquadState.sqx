@@ -11,12 +11,12 @@ namespace Intrusion.Ai
 {
 	public enum AiSquadState
 	{
-		Idle,
-		Moving,
-		Capturing,
-		BoardingVehicle,
-		ExitingVehicle,
-		Defending,
+		Idle = 0,
+		Moving = 1,
+		Capturing = 2,
+		BoardingVehicle = 3,
+		ExitingVehicle = 4,
+		Defending = 5,
 	};
 	
 	public class AiSquadStateMeta

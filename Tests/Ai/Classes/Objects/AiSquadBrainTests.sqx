@@ -29,6 +29,8 @@ namespace Intrusion.Tests.Ai
 			"_mRandomGenerator" as TestRandomGenerator,
 			"_mLocationFactory1" as ResourceLocation,
 			"_mLocationOffice1" as ResourceLocation,
+			"_mLocationFactory2" as ResourceLocation,
+			"_mLocationOffice2" as ResourceLocation,
 			"_mResourceLocationCollection" as ResourceLocationCollection,
 			"_mTime" as TestMissionTime,
 		];
@@ -49,6 +51,7 @@ namespace Intrusion.Tests.Ai
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
+				"MovingFarVehicleNearby_Act_StatusBoardingVehicle",
 			]] call TestEngine.Register;
 		};
 		
@@ -60,11 +63,13 @@ namespace Intrusion.Tests.Ai
 			
 			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
 			_mLocationOffice1 = ["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation;
+			_mLocationFactory2 = ["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation;
+			_mLocationOffice2 = ["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation;
 			
 			[_mLocationFactory1] call _mResourceLocationCollection.AddResourceLocation;
 			[_mLocationOffice1] call _mResourceLocationCollection.AddResourceLocation;
-			[["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
-			[["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationFactory2] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice2] call _mResourceLocationCollection.AddResourceLocation;
 			
 			_mMarkerHandler = new TestMarkerHandler;
 			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
@@ -281,6 +286,28 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI movement did not timeout."] call Assert.AreEqual;
+		};
+		
+		private static method MovingFarVehicleNearby_Act_StatusBoardingVehicle
+		{
+			//private ["_boardAction" as BoardAction];
+		
+			// Arrange
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [10, 10, 0], 2] new AiVehicle;
+			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.BoardingVehicle, _mKnowledge.State, "AI not boarding nearby vehicle."] call Assert.AreEqual;
+			
+			[1, count _mActionPerformer.BoardActions, "AI did not perform a board action."] call Assert.AreEqual;
+			//_moveAction = _mActionPerformer.MoveActions select 0;
+			//[[200, 200, 0], _moveAction.Position, "AI moves to the wrong destination."] call Assert.AreEqual;
 		};
 		
 		/*
