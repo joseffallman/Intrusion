@@ -37,7 +37,7 @@ namespace Intrusion.Tests.Ai
 		
 		#endregion
 
-		// Registeres all tests that should be run.
+		// Registers all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
 				"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
@@ -52,9 +52,11 @@ namespace Intrusion.Tests.Ai
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
 				"MovingFarAtVehicle_Act_StatusBoardingVehicle",
-				"MovingFarHasBoardedVehicle_Act_StatusMoving",
 				"MovingFarVehicleNearby_Act_StatusMoving",
 				"MovingToNearbyVehicle_Act_StatusIdle",
+				"MovingFarHasBoardedVehicle_Act_StatusMoving",
+				"MountedArrivingFarMoving_Act_StatusIdle",
+				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 			]] call TestEngine.Register;
 		};
 		
@@ -309,22 +311,22 @@ namespace Intrusion.Tests.Ai
 			[1, count _mActionPerformer.BoardActions, "AI did not perform a board action."] call Assert.AreEqual;
 		};
 		
-		private static method MovingFarHasBoardedVehicle_Act_StatusMoving
+		private static method MovingToNearbyVehicle_Act_StatusIdle
 		{
 			// Arrange
-			_mWorld.LeaderPos = [10, 10, 0];
-			_mWorld.ClosestEmptyFreeVehicle = [objNull, [15, 15, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = true;
-			_mKnowledge.MembersCount = 2;
+			_mWorld.LeaderPos = [25, 25, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new AiVehicle;
+			_mWorld.AllSquadMembersOnBoard = false;
+			_mKnowledge.MembersCount = 1;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
-			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [30, [30, 30, 0], "FACTORY2"] new MoveAction;
+			_mKnowledge.State = AiSquadState.Moving;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Moving, _mKnowledge.State, "AI not moving with vehicle."] call Assert.AreEqual;
-			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI dit not stop at vehicle."] call Assert.AreEqual;
 		};
 		
 		private static method MovingFarVehicleNearby_Act_StatusMoving
@@ -352,22 +354,58 @@ namespace Intrusion.Tests.Ai
 			[[30, 30, 0], _moveAction.Position, "AI did not perform a board action."] call Assert.AreEqual;
 		};
 		
-		private static method MovingToNearbyVehicle_Act_StatusIdle
+		private static method MovingFarHasBoardedVehicle_Act_StatusMoving
 		{
 			// Arrange
-			_mWorld.LeaderPos = [25, 25, 0];
-			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = false;
-			_mKnowledge.MembersCount = 1;
+			_mWorld.LeaderPos = [10, 10, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [15, 15, 0], 2] new AiVehicle;
+			_mWorld.AllSquadMembersOnBoard = true;
+			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
-			_mKnowledge.CurrentAction = [30, [30, 30, 0], "FACTORY2"] new MoveAction;
-			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI dit not stop at vehicle."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI not moving with vehicle."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+		};
+		
+		private static method MountedArrivingFarMoving_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.AllSquadMembersOnBoard = true;
+			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop moving."] call Assert.AreEqual;
+			//[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+		};
+		
+		private static method MountedCloseToDestinationIdle_Act_StatusDisembarking
+		{
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.AllSquadMembersOnBoard = true;
+			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Disembarking, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
+			[1, count _mActionPerformer.DisembarkActions, "AI did not perform a disembark action."] call Assert.AreEqual;
 		};
 		
 		/*

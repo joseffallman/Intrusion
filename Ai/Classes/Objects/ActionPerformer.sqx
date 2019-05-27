@@ -10,6 +10,7 @@
 
 using Sqx.Waypoints;
 using Intrusion.Server;
+using Intrusion.Common;
 
 namespace Intrusion.Ai
 {
@@ -85,6 +86,13 @@ namespace Intrusion.Ai
 					[_x] orderGetIn true;
 				};
 			} foreach units _mGroup;
+		};
+		
+		// Performs a disembark action for an AI group.
+		// _disembarkAction (DisembarkAction): Information about the disembarkment.
+		public method IService DoDisembark("_disembarkAction" as DisembarkAction)
+		{
+			//doStop _disembarkAction.Vehicle.Vehicle;
 		};
 	};
 };

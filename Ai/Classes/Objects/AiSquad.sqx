@@ -27,7 +27,7 @@ namespace Intrusion.Ai {
 		// _noOfUnits (Scalar): Number of units to spawn.
 		public constructor(
 			"_unitsConfig" as IAiUnitsConfig,
-			"_professionConfig" as IProfessionConfig,			
+			"_professionConfig" as IProfessionConfig,
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
 			"_vehicleSpawner" as IVehicleSpawner, 

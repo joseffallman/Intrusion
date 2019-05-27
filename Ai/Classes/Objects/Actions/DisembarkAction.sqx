@@ -1,0 +1,27 @@
+/*
+ * Name:	DisembarkAction
+ * Date:	2019-05-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contans all necessary information about Ai disembark actions.
+ */
+namespace Intrusion.Ai
+{
+	public class DisembarkAction : IAction
+	{
+		// Creates a BoardAction object.
+		public constructor("_timeoutTime" as Scalar, "_vehicle" as AiVehicle)
+		{
+			_self.TimeoutTime = _timeoutTime;
+			_self.Vehicle = _vehicle;
+		};
+		
+		// Gets the time when the action is regarded as timed out.
+		public property Scalar TimeoutTime { get; private set; };
+		
+		// Gets the AI squad's vehicle.
+		public property AiVehicle Vehicle { get; private set; };
+	};
+};

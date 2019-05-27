@@ -17,6 +17,7 @@ namespace Intrusion.Ai
 		BoardingVehicle = 3,
 		ExitingVehicle = 4,
 		Defending = 5,
+		Disembarking = 6,
 	};
 	
 	public class AiSquadStateMeta
@@ -32,6 +33,7 @@ namespace Intrusion.Ai
 				case AiSquadState.BoardingVehicle: { _s = "BoardingVehicle"; };
 				case AiSquadState.ExitingVehicle: { _s = "ExitingVehicle"; };
 				case AiSquadState.Defending: { _s = "Defending"; };
+				case AiSquadState.Disembarking: { _s = "Disembarking"; };
 				default { _s = "[AiSquadState has no entry]" };
 			};
 			

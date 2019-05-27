@@ -18,7 +18,9 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime];
-	
+		
+		#region Initialization
+		
 		// Creates a AiSquadBrain object.
 		public constructor
 		(
@@ -58,6 +60,10 @@ namespace Intrusion.Ai
 		};
 		
 		public property Group Group { get; private set; };
+		
+		#endregion
+		
+		#region Decision Making
 		
 		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()
@@ -119,9 +125,24 @@ namespace Intrusion.Ai
 			_side = side _mKnowledge.Group;
 			_time = call _mTime.GetMissionTime;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+			_action = _mKnowledge.CurrentAction;
+			
+			// If squad is mounted and near a destination, disembark.
+			
+			if (_squadInVehicle && _action is MoveAction) then
+			{
+				private ["_moveAction" as MoveAction];
+				_moveAction = _action as MoveAction;
+				
+				hint str (_leaderPos distance _moveAction.Position);
+				if (_leaderPos distance _moveAction.Position <= 150) then {
+					[AiSquadState.Disembarking, classNull] call _self.SetState;
+					breakOut "main";
+				};
+			};
 			
 			// If inside the perimiters of a resource location that should be captured, capture it!
-			
+
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
 			_locations = call _locationCollection.GetResourceLocations;
 			
@@ -136,11 +157,11 @@ namespace Intrusion.Ai
 				};
 			} foreach _locations as ResourceLocation;
 			
+			hint "02";
+			// If squad is on foot beside an empty vehicle, board it.
 			
 			if (!_squadInVehicle) then
 			{
-				// If squad is beside an empty vehicle, board it.
-			
 				_aiVehicle = [_side, _leaderPos, _mKnowledge.MembersCount] call _mWorld.GetClosestEmptyFreeVehicle;
 				
 				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
@@ -150,10 +171,13 @@ namespace Intrusion.Ai
 					[_action as BoardAction] call _mActionPerformer.DoBoard;
 					breakOut "main";
 				};
+			};
 				
 				
-				// If an empty vehicle is nearby, move to it.
-				
+			// If squad is on foot and an empty vehicle is nearby, move to it.
+			hint "03";
+			if (!_squadInVehicle) then
+			{
 				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos;
 				
 				if (!isNull _aiVehicle && { _distanceToVehicle <= 250 }) then {
@@ -183,40 +207,63 @@ namespace Intrusion.Ai
 			};
 		};
 		
-		#region Completion Checks
+		private method SetState("_state" as AiSquadState, "_action" as IAction) 
+		{
+			_mKnowledge.State = _state;
+			
+			if (_state == AiSquadState.Idle) then {
+				_mKnowledge.CurrentAction = classNull;
+			}
+			else {
+				_mKnowledge.CurrentAction = _action;
+			};
+			
+			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+		};
+		
+		#endregion
+		
+		#region Completion and Timeout
 		
 		// Gets whether the group has completed a move action.
 		private method Boolean HasCompletedMove()
 		{
-			private ["_moveAction" as MoveAction, "_hasCompleted" as Boolean, "_leaderPos" as Array];
+			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean];
 			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
-			_hasCompleted = false;
+			scopeName "main";
 
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
 			_currentAction = _mKnowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
 			
 			if (_currentAction is MoveAction) then
 			{
-				// Move is completed if the squad is at the destination position
 				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
-				_moveAction = _currentAction as MoveAction;				
-				_hasCompleted = _leaderPos distance _moveAction.Position < 20;
+				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+				_moveAction = _currentAction as MoveAction;
+				
+				// Move is completed if the squad is mounted and near the destination
+				if (_squadInVehicle && _leaderPos distance _moveAction.Position <= 150) then {
+					true breakOut "main";
+				};
+				
+				// Move is completed if the squad is at the destination position
+				
+				if (_leaderPos distance _moveAction.Position < 20) then {
+					true breakOut "main";
+				};
 				
 				// Move is completed if the order movement is related to a resource location that is already ours
-				if (!_hasCompleted) then
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_location.Side == side _mKnowledge.Group) then
 				{
-					_locationCollection = call _mWorld.GetResourceLocationCollection;
-					_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
-					
-					if (_location.Side == side _mKnowledge.Group) then
-					{
-						_hasCompleted = true;
-					};
+					true breakOut "main";
 				};
 			};
 			
-			_hasCompleted
+			false
 		};
 		
 		// Gets whether the group has completed a capture action, i.e. it is no longer present at a resource location with enemy side.
@@ -290,14 +337,6 @@ namespace Intrusion.Ai
 			_hasCompleted
 		};
 		
-		#endregion
-		
-		public method GiveOrder("_order" as Order)
-		{
-			_mKnowledge.Order = _order;
-			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
-		};
-		
 		// Tracks the leader's movement, and stationary for so long time that squad status should be set to idle.
 		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
 		private method Boolean CheckActionTimeout()
@@ -330,47 +369,50 @@ namespace Intrusion.Ai
 			false
 		};
 		
-		private method SetState("_state" as AiSquadState, "_action" as IAction) 
+		#endregion
+		
+		#region Public Methods
+		
+		public method GiveOrder("_order" as Order)
 		{
-			_mKnowledge.State = _state;
-			
-			if (_state == AiSquadState.Idle) then {
-				_mKnowledge.CurrentAction = classNull;
-			}
-			else {
-				_mKnowledge.CurrentAction = _action;
-			};
-			
-			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+			_mKnowledge.Order = _order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
 			// If there is no order, create one on own initiative so the group has something to do.
-			
+hint "001";
 			if (isNull _mKnowledge.Order) then {
+hint "002";
 				call _self.CreateOrderOnOwnInitiative;
 			};
 			
 			// If the squad is not doing anything, make a new decision.
 		
 			if (_mKnowledge.State == AiSquadState.Idle) then {
+hint "003";
 				call _self.MakeDecision;
 				
 				// If still idle, create a new order
 				if (_mKnowledge.State == AiSquadState.Idle) then {
+hint "004";
 					call _self.CreateOrderOnOwnInitiative;
 				};
 			}
 			else
 			{
 				// If there has been a timeout or if the squad is complete doing something, set to idle.
+hint "005";
 				
 				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
+hint "006";
 					[AiSquadState.Idle, classNull] call _self.SetState;
 				};
 			};
 		};
+		
+		#endregion
 	};
 };

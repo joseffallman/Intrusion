@@ -1,0 +1,44 @@
+/*
+ * Name:	DisembarkActionService
+ * Date:	2019-05-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service that disembarks units from a vehicle.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class DisembarkActionService : IService
+	{
+		private fields ["_mWorld" as IWorld, "_mGroup" as Group];
+	
+		// Creates a DisembarkActionService object.
+		public constructor("_world" as IWorld, "_group" as Group)
+		{
+			_mWorld = _world;
+			_mGroup = _group;
+			_self.IsRunning = false;
+		};
+		
+		public property Boolean IsRunning { get; private set; };
+		
+		private method Run()
+		{
+			// while ([_mGroup] call _mWorld.SquadsVehicleIsMoving) do {
+			//    sleep 0.5;
+			//};
+			
+			// [_mGroup] call _mActionPerformer.MoveOutFromVehicle;
+		};
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+			[] spawn _self.Run;
+		};
+	};
+};

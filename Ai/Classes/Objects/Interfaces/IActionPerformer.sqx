@@ -22,5 +22,9 @@ namespace Intrusion.Ai
 		// Performs a board action for an AI group.
 		// _boardAction (BoardAction): Information about the boarding.
 		method DoBoard("_boardAction" as BoardAction);
+		
+		// Performs a disembark action for an AI group.
+		// _disembarkAction (DisembarkAction): Information about the disembarkment.
+		method DoDisembark("_disembarkAction" as DisembarkAction);
 	};
 };
