@@ -24,7 +24,7 @@ namespace Intrusion.Tests.Helpers
 			_mResourceLocationCollection = _resourceLocationCollection;
 			_self.LeaderPos = [];
 			_self.ClosestEmptyFreeVehicle = classNull;
-			_self.AllSquadMembersOnBoard = false;
+			_self.SquadMounted = false;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -67,14 +67,14 @@ namespace Intrusion.Tests.Helpers
 			_self.ClosestEmptyFreeVehicle
 		};
 		
-		public property Boolean AllSquadMembersOnBoard { get; set; };
+		public property Boolean SquadMounted { get; set; };
 		
 		// Checks if all squad members are aboard a vehicle.
 		// _group (Group): The group to check.
 		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
-		public method Boolean CheckAllSquadMembersOnBoard("_group")
+		public method Boolean CheckSquadMounted("_group")
 		{
-			_self.AllSquadMembersOnBoard
+			_self.SquadMounted
 		};
 		
 		
@@ -83,6 +83,12 @@ namespace Intrusion.Tests.Helpers
 		public method Scalar GetSpeed("_vehicle" as Object)
 		{
 			0
+		};
+		
+		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
+		public method AiVehicle GetMountedVehicle("_group" as Group)
+		{
+			classNull
 		};
 	};
 };

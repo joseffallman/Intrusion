@@ -117,14 +117,14 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
 			private ["_locationMarkerName" as String, "_aiVehicle" as AiVehicle, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
-			private ["_action" as IAction, "_squadInVehicle" as Boolean];
+			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService];
 			
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_side = side _mKnowledge.Group;
 			_time = call _mTime.GetMissionTime;
-			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			_action = _mKnowledge.CurrentAction;
 			
 			// If squad is mounted and near a destination, disembark.
@@ -134,9 +134,13 @@ namespace Intrusion.Ai
 				private ["_moveAction" as MoveAction];
 				_moveAction = _action as MoveAction;
 				
-				hint str (_leaderPos distance _moveAction.Position);
-				if (_leaderPos distance _moveAction.Position <= 150) then {
-					[AiSquadState.Disembarking, classNull] call _self.SetState;
+				if (_leaderPos distance _moveAction.Position <= 150) then
+				{
+					_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
+					_actionService = [_mTime, (call _mTime.GetMissionTime) + 10, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] new DisembarkActionService;
+					call _actionService.RunAsync;
+					_action = [300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+					[AiSquadState.Disembarking, _action] call _self.SetState;
 					breakOut "main";
 				};
 			};
@@ -239,7 +243,7 @@ namespace Intrusion.Ai
 			if (_currentAction is MoveAction) then
 			{
 				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
-				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 				_moveAction = _currentAction as MoveAction;
 				
 				// Move is completed if the squad is mounted and near the destination
@@ -307,7 +311,7 @@ namespace Intrusion.Ai
 		
 			if (_currentAction is BoardAction) then
 			{
-				_hasCompleted = [_mKnowledge.Group] call _mWorld.CheckAllSquadMembersOnBoard;
+				_hasCompleted = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			};
 			
 			_hasCompleted

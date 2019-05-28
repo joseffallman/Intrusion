@@ -298,7 +298,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [10, 10, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = false;
+			_mWorld.SquadMounted = false;
 			_mKnowledge.MembersCount = 1;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
@@ -316,7 +316,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [25, 25, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = false;
+			_mWorld.SquadMounted = false;
 			_mKnowledge.MembersCount = 1;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.CurrentAction = [30, [30, 30, 0], "FACTORY2"] new MoveAction;
@@ -336,7 +336,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = false;
+			_mWorld.SquadMounted = false;
 			_mKnowledge.MembersCount = 1;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
@@ -359,7 +359,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [15, 15, 0], 2] new AiVehicle;
-			_mWorld.AllSquadMembersOnBoard = true;
+			_mWorld.SquadMounted = true;
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
@@ -376,7 +376,7 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
-			_mWorld.AllSquadMembersOnBoard = true;
+			_mWorld.SquadMounted = true;
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
@@ -391,10 +391,12 @@ namespace Intrusion.Tests.Ai
 		};
 		
 		private static method MountedCloseToDestinationIdle_Act_StatusDisembarking
-		{
+		{	
+			private ["_action" as DisembarkAction];
+			
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
-			_mWorld.AllSquadMembersOnBoard = true;
+			_mWorld.SquadMounted = true;
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
@@ -405,7 +407,29 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Disembarking, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
-			[1, count _mActionPerformer.DisembarkActions, "AI did not perform a disembark action."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as DisembarkAction;
+			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
+		};
+		
+		private static method CloseToDestinationDisembarked_Act_StatusIdle
+		{	
+			private ["_action" as DisembarkAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			//_mKnowledge.CurrentAction = [300, 0, 0] new DisembarkAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Disembarking, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as DisembarkAction;
+			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
 		};
 		
 		/*

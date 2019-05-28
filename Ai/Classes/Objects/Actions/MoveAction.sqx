@@ -35,5 +35,8 @@ namespace Intrusion.Ai
 		
 		// Gets wether this move action is related to a resource location or not.
 		public property Boolean RelatedResourceLocation { get; private set; };
+		
+		// Gets the squad's vehicle.
+		public property AiVehicle Vehicle { get; private set; };
 	};
 };

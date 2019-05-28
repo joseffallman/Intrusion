@@ -57,8 +57,7 @@ namespace Intrusion.Ai
 			_mGroup setSpeedMode "LIMITED";
 			_mGroup setCombatMode "YELLOW";
 			_mGroup setBehaviour "AWARE";
-		};
-		
+		};		
 		
 		// Performs a board action for an AI group.
 		// _group (Group): The group to capture a location.
@@ -90,9 +89,9 @@ namespace Intrusion.Ai
 		
 		// Performs a disembark action for an AI group.
 		// _disembarkAction (DisembarkAction): Information about the disembarkment.
-		public method IService DoDisembark("_disembarkAction" as DisembarkAction)
+		public method DoDisembark("_disembarkAction" as DisembarkAction)
 		{
-			//doStop _disembarkAction.Vehicle.Vehicle;
+			call _disembarkAction.Service.RunAsync;
 		};
 		
 		

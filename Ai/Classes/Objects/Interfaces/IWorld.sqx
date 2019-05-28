@@ -38,10 +38,13 @@ namespace Intrusion.Ai
 		// Checks if all squad members are aboard a vehicle.
 		// _group (Group): The group to check.
 		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
-		method Boolean CheckAllSquadMembersOnBoard("_group");
+		method Boolean CheckSquadMounted("_group");
 		
 		// Gets the speed of a vehicle.
 		// _vehicle (Object): The vehicle.
 		method Scalar GetSpeed("_vehicle" as Object);
+		
+		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
+		method AiVehicle GetMountedVehicle("_group" as Group);
 	};
 };
