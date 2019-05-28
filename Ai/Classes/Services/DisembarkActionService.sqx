@@ -12,32 +12,62 @@ using Intrusion.Common;
 
 namespace Intrusion.Ai
 {
-	public class DisembarkActionService : IService
+	public class DisembarkActionService : IActionService
 	{
-		private fields ["_mWorld" as IWorld, "_mGroup" as Group];
+		private fields ["_mTime" as IMissionTime, "_mTimeoutTime" as Scalar, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mGroup" as Group, "_mAiVehicle" as AiVehicle];
 	
 		// Creates a DisembarkActionService object.
-		public constructor("_world" as IWorld, "_group" as Group)
+		public constructor("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as AiVehicle)
 		{
+			_mTime = _time;
+			_mTimeoutTime = _timeoutTime;
 			_mWorld = _world;
+			_mActionPerformer = _actionPerformer;
 			_mGroup = _group;
+			_mAiVehicle = _aiVehicle;
 			_self.IsRunning = false;
 		};
 		
+		// Gets whether the service reached its goals or not (if it timed out).
+		public property Boolean Success { get; private set; };
+		
+		// Gets whether the service is still running nor not.
 		public property Boolean IsRunning { get; private set; };
+		
+		private method Boolean CheckActionTimeout()
+		{
+			scopeName "main";
+			
+			if (_mTimeoutTime > call _mTime.GetMissionTime) then {
+				_self.Success = false;
+				true breakOut "main";
+			};
+			
+			false
+		};
 		
 		private method Run()
 		{
-			// while ([_mGroup] call _mWorld.SquadsVehicleIsMoving) do {
-			//    sleep 0.5;
-			//};
+			scopeName "main";
 			
-			// [_mGroup] call _mActionPerformer.MoveOutFromVehicle;
+			[_mAiVehicle.Vehicle, 0] call _mActionPerformer.LimitSpeed;
+			
+			while {([_mAiVehicle.Vehicle] call _mWorld.GetSpeed) > 3} do
+			{
+				if (call _self.CheckActionTimeout) then {
+					breakOut "main";
+				};
+				
+				sleep 0.5;
+			};
+			
+			[_mGroup] call _mActionPerformer.MoveOutFromVehicle;
 		};
 		
 		public method RunAsync()
 		{
 			_self.IsRunning = true;
+			_self.Success = true;
 			[] spawn _self.Run;
 		};
 	};

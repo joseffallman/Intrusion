@@ -21,4 +21,3 @@ namespace Intrusion.Ai
 		property Scalar CaptureActionTimeout { get; private set; };
 	};
 };
-

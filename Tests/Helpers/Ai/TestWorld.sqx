@@ -76,5 +76,13 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.AllSquadMembersOnBoard
 		};
+		
+		
+		// Gets the speed of a vehicle.
+		// _vehicle (Object): The vehicle.
+		public method Scalar GetSpeed("_vehicle" as Object)
+		{
+			0
+		};
 	};
 };

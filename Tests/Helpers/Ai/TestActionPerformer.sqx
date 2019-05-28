@@ -35,7 +35,7 @@ namespace Intrusion.Tests.Helpers
 		
 		// Performs a capture action for an AI group.
 		// _group (Group): The group to capture a location.
-		// _moveAction (MoveAction): Information about the movement.
+		// _moveAction (MoveAction): Information about the capture.
 		public method DoCapture("_captureAction" as CaptureAction)
 		{
 			_self.CaptureActions pushBack _captureAction;
@@ -49,6 +49,29 @@ namespace Intrusion.Tests.Helpers
 		public method DoBoard("_boardAction" as BoardAction)
 		{
 			_self.BoardActions pushBack _boardAction;
+		};
+		
+		public property Array DisembarkActions { get; private set; };
+		
+		// Performs a disembark action for an AI group.
+		// _group (Group): The group to disembark from its vehicle.
+		// _action (DisembarkAction): Information about the disembarkment.
+		public method DoDisembark("_action" as DisembarkAction)
+		{
+			_self.DisembarkActions pushBack _action;
+		};
+		
+		// Limits the speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		public method LimitSpeed("_vehicle" as Object, "_speed" as Scalar)
+		{
+		};
+		
+		// Moves the members of a group out of its vehicles immediately.
+		// _group (Group): The group to move out.
+		public method MoveOutFromVehicle("_group" as Group)
+		{
 		};
 	};
 };

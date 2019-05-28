@@ -39,5 +39,9 @@ namespace Intrusion.Ai
 		// _group (Group): The group to check.
 		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
 		method Boolean CheckAllSquadMembersOnBoard("_group");
+		
+		// Gets the speed of a vehicle.
+		// _vehicle (Object): The vehicle.
+		method Scalar GetSpeed("_vehicle" as Object);
 	};
 };

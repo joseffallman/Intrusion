@@ -26,5 +26,14 @@ namespace Intrusion.Ai
 		// Performs a disembark action for an AI group.
 		// _disembarkAction (DisembarkAction): Information about the disembarkment.
 		method DoDisembark("_disembarkAction" as DisembarkAction);
+		
+		// Limits the speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		method LimitSpeed("_vehicle" as Object, "_speed" as Scalar);
+		
+		// Moves the members of a group out of its vehicles immediately.
+		// _group (Group): The group to move out.
+		method MoveOutFromVehicle("_group" as Group);
 	};
 };

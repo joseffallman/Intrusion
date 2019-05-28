@@ -12,14 +12,18 @@ namespace Intrusion.Ai
 	public class DisembarkAction : IAction
 	{
 		// Creates a BoardAction object.
-		public constructor("_timeoutTime" as Scalar, "_vehicle" as AiVehicle)
+		public constructor("_timeoutTime" as Scalar, "_vehicle" as AiVehicle, "_service" as DisembarkActionService)
 		{
 			_self.TimeoutTime = _timeoutTime;
 			_self.Vehicle = _vehicle;
+			_Self.Service = _service;
 		};
 		
 		// Gets the time when the action is regarded as timed out.
 		public property Scalar TimeoutTime { get; private set; };
+		
+		// Gets the service associated with the action. classNull if there are no service associated.
+		public property IActionService Service { get; private set; };
 		
 		// Gets the AI squad's vehicle.
 		public property AiVehicle Vehicle { get; private set; };

@@ -94,5 +94,24 @@ namespace Intrusion.Ai
 		{
 			//doStop _disembarkAction.Vehicle.Vehicle;
 		};
+		
+		
+		// Limits the speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		public method LimitSpeed("_vehicle" as Object, "_speed" as Scalar)
+		{
+			_vehicle limitSpeed _speed;
+		};
+		
+		// Moves the members of a group out of its vehicles and unassigns them immediately.
+		// _group (Group): The group to move out.
+		public method MoveOutFromVehicle("_group" as Group)
+		{
+			{
+				unassignVehicle _x;
+				moveOut _x;
+			} foreach units _group as Object;
+		};
 	};
 };
