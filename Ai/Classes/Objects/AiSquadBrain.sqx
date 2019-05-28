@@ -17,7 +17,8 @@ namespace Intrusion.Ai
 	public class AiSquadBrain
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
-						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime];
+						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
+						"_mActionServiceFactory" as IActionServiceFactory];
 		
 		#region Initialization
 		
@@ -32,6 +33,7 @@ namespace Intrusion.Ai
 			"_actionTimeoutConfig" as IActionTimeoutConfig,
 			"_time" as IMissionTime,
 			"_baseMarkerInfo" as MapMarkerInfo,
+			"_actionServiceFactory" as IActionServiceFactory,
 			["_knowledge" as IKnowledge, classNull])
 		{
 			_self.Group = _group;
@@ -41,6 +43,7 @@ namespace Intrusion.Ai
 			_mMarkerHandler = _markerHandler;
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
+			_mActionServiceFactory = _actionServiceFactory;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -137,7 +140,7 @@ namespace Intrusion.Ai
 				if (_leaderPos distance _moveAction.Position <= 150) then
 				{
 					_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-					_actionService = [_mTime, (call _mTime.GetMissionTime) + 10, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] new DisembarkActionService;
+					_actionService = [_mTime, (call _mTime.GetMissionTime) + 10, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
 					call _actionService.RunAsync;
 					_action = [300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
 					[AiSquadState.Disembarking, _action] call _self.SetState;

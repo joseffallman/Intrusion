@@ -33,6 +33,7 @@ namespace Intrusion.Tests.Ai
 			"_mLocationOffice2" as ResourceLocation,
 			"_mResourceLocationCollection" as ResourceLocationCollection,
 			"_mTime" as TestMissionTime,
+			"_mActionServiceFactory" as TestActionServiceFactory;
 		];
 		
 		#endregion
@@ -65,6 +66,7 @@ namespace Intrusion.Tests.Ai
 			private ["_mapMarkerInfo" as MapMarkerInfo];
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
+			_mActionServiceFactory = new TestActionServiceFactory;
 			
 			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
 			_mLocationOffice1 = ["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation;
@@ -92,7 +94,7 @@ namespace Intrusion.Tests.Ai
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
 			
-			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mMarkerHandler, new TestActionTimeoutConfig, _mTime, _mapMarkerInfo, _mKnowledge] new AiSquadBrain;
+			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mMarkerHandler, new TestActionTimeoutConfig, _mTime, _mapMarkerInfo, _mActionServiceFactory, _mKnowledge] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()
@@ -400,7 +402,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			//_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -411,17 +413,25 @@ namespace Intrusion.Tests.Ai
 			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
 		};
 		
-		private static method CloseToDestinationDisembarked_Act_StatusIdle
+		private static method CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle
 		{	
-			private ["_action" as DisembarkAction];
+			private ["_action" as DisembarkAction, "_aiVehicle" as AiVehicle, "_actionService" as TestActionService];
 			
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = false;
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
-			_mKnowledge.State = AiSquadState.Idle;
-			//_mKnowledge.CurrentAction = [300, 0, 0] new DisembarkAction;
+			_mKnowledge.State = AiSquadState.Disembarking;
+			
+			_aiVehicle = [objNull, [550, 550, 0], 2] new AiVehicle;
+			
+			_actionService = new TestActionService;
+			_actionService.IsRunning = false;
+			_actionService.Success = true;
+			_mActionServiceFactory.Service = _actionService;
+			
+			_mKnowledge.CurrentAction = [300, _aiVehicle, _actionService] new DisembarkAction;
 			
 			// Act
 			call _mBrain.Act;

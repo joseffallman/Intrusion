@@ -96,6 +96,10 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IActionServiceFactory.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Interfaces\IActionServiceFactory.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IAiUnitBalancer.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Interfaces\IAiUnitBalancer.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
@@ -111,6 +115,10 @@
                     </SubNodes>
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionPerformer.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\ActionPerformer.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionServiceFactory.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\ActionServiceFactory.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -1256,6 +1264,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActionService.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestActionService.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActionTimeoutConfig.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestActionTimeoutConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -1279,6 +1291,10 @@
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActions.sqx" IsExpanded="false" FileName="Tests\Helpers\TestActions.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActionServiceFactory.sqx" IsExpanded="false" FileName="Tests\Helpers\TestActionServiceFactory.sqx">
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>

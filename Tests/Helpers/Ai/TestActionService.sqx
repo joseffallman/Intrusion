@@ -1,0 +1,32 @@
+/*
+ * Name:	TestActionService
+ * Date:	2019-05-28
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A fake action service class used in unit testing.
+ */
+
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestActionService : IActionService
+	{
+		// Creates a TestActionService object.
+		public constructor {
+			_self.IsRunning = false;
+			_self.Success = true;
+		};
+		
+		public property Boolean Success { get; set; };
+		
+		public property Boolean IsRunning { get; set; };
+		
+		public method RunAsync()
+		{
+			_self.IsRunning = true;
+		};
+	};
+};

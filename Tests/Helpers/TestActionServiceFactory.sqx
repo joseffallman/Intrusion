@@ -1,0 +1,31 @@
+/*
+ * Name:	ActionServiceFactory
+ * Date:	2019-05-28
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that create the action services.
+ */
+
+using Intrusion.Common;
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestActionServiceFactory : IActionServiceFactory
+	{
+		// Creates a ActionServiceFactory object.
+		public constructor()
+		{
+			_self.Service = new TestActionService;
+		};
+		
+		public property IActionService Service { get; set; };
+		
+		public method IActionService CreateDisembarkService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as AiVehicle)
+		{
+			_self.Service
+		};
+	};
+};

@@ -96,7 +96,8 @@ namespace Intrusion.Ai
 						new MarkerHandler, 
 						new ActionTimeoutConfig, 
 						new MissionTime,
-						_mapMarkerInfo] new AiSquadBrain;
+						_mapMarkerInfo,
+						new ActionServiceFactory] new AiSquadBrain;
 					
 					
 					

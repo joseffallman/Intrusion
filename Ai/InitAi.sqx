@@ -12,6 +12,7 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiSquadBrain.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Knowledge.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\AiVehicle.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\ActionPerformer.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\ActionServiceFactory.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\MoveAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\CaptureAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\BoardAction.sqx";
