@@ -59,6 +59,7 @@ namespace Intrusion.Tests.Ai
 				"MovingFarHasBoardedVehicle_Act_StatusMoving",
 				"MountedArrivingFarMoving_Act_StatusIdle",
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
+				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
 			]] call TestEngine.Register;
 		};
 		
@@ -404,6 +405,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.MembersCount = 2;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -436,7 +438,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not disembark."] call Assert.AreEqual;
 		};
 		
 		private static method CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle

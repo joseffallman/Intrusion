@@ -16,7 +16,7 @@ namespace Intrusion.Ai
 		{
 			_self.TimeoutTime = _timeoutTime;
 			_self.Vehicle = _vehicle;
-			_Self.Service = _service;
+			_self.Service = _service;
 		};
 		
 		// Gets the time when the action is regarded as timed out.

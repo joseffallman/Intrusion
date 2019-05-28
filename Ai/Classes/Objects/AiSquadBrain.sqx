@@ -324,21 +324,36 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		public method Boolean GetHasCompleted()
 		{
-			private ["_hasCompleted" as Boolean, "_currentAction" as IAction];
+			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
 
 			_hasCompleted = false;
-			_currentAction = _mKnowledge.CurrentAction;
+			
+			if (!isNull _mKnowledge.CurrentAction) then {
+				_actionService = _mKnowledge.CurrentAction.Service;
+	        	["_actionService: " + str _actionService] call LogHandler.Debug;
+				
+				if (!isNull _actionService) then {
+					if (!_actionService.IsRunning) then {
+						_hasCompleted = true;
+			        	["_hasCompleted: " + str _hasCompleted] call LogHandler.Debug;
+					};
+				};
+			};
 
-			if (_currentAction is MoveAction) then {
-				_hasCompleted = call _self.HasCompletedMove;
-			};
-			
-			if (_currentAction is CaptureAction) then {
-				_hasCompleted = call _self.HasCompletedCapture;
-			};
-			
-			if (_currentAction is BoardAction) then {
-				_hasCompleted = call _self.HasCompletedBoard;
+			if (!_hasCompleted) then {
+				_currentAction = _mKnowledge.CurrentAction;
+	
+				if (_currentAction is MoveAction) then {
+					_hasCompleted = call _self.HasCompletedMove;
+				};
+				
+				if (_currentAction is CaptureAction) then {
+					_hasCompleted = call _self.HasCompletedCapture;
+				};
+				
+				if (_currentAction is BoardAction) then {
+					_hasCompleted = call _self.HasCompletedBoard;
+				};
 			};
 			
 			_hasCompleted
@@ -390,31 +405,25 @@ namespace Intrusion.Ai
 		public method Act()
 		{
 			// If there is no order, create one on own initiative so the group has something to do.
-hint "001";
 			if (isNull _mKnowledge.Order) then {
-hint "002";
 				call _self.CreateOrderOnOwnInitiative;
 			};
 			
 			// If the squad is not doing anything, make a new decision.
 		
 			if (_mKnowledge.State == AiSquadState.Idle) then {
-hint "003";
 				call _self.MakeDecision;
 				
 				// If still idle, create a new order
 				if (_mKnowledge.State == AiSquadState.Idle) then {
-hint "004";
 					call _self.CreateOrderOnOwnInitiative;
 				};
 			}
 			else
 			{
 				// If there has been a timeout or if the squad is complete doing something, set to idle.
-hint "005";
 				
 				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
-hint "006";
 					[AiSquadState.Idle, classNull] call _self.SetState;
 				};
 			};
