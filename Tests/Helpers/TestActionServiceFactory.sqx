@@ -16,9 +16,9 @@ namespace Intrusion.Tests.Helpers
 	public class TestActionServiceFactory : IActionServiceFactory
 	{
 		// Creates a ActionServiceFactory object.
-		public constructor()
+		public constructor("_factory" as TestActionService)
 		{
-			_self.Service = new TestActionService;
+			_self.Service = _factory as IActionService;
 		};
 		
 		public property IActionService Service { get; set; };
