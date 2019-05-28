@@ -130,23 +130,26 @@ namespace Intrusion.Ai
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			_action = _mKnowledge.CurrentAction;
 			
-			// If squad is mounted and near a destination, disembark.
+        	["_squadInVehicle: " + str _squadInVehicle] call LogHandler.Debug;
+        	["_action: " + str _action] call LogHandler.Debug;
+        	["_leaderPos: " + str _leaderPos] call LogHandler.Debug;
+
+
+			// If squad is mounted and near a destination (<150m), set disembark.
 			
-			if (_squadInVehicle && _action is MoveAction) then
+			if (_squadInVehicle) then
 			{
-				private ["_moveAction" as MoveAction];
-				_moveAction = _action as MoveAction;
-				
-				if (_leaderPos distance _moveAction.Position <= 150) then
+				if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
 				{
 					_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-					_actionService = [_mTime, (call _mTime.GetMissionTime) + 10, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
+					_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
 					call _actionService.RunAsync;
-					_action = [300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+					_action = [_time + 300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
 					[AiSquadState.Disembarking, _action] call _self.SetState;
 					breakOut "main";
 				};
 			};
+			
 			
 			// If inside the perimiters of a resource location that should be captured, capture it!
 
@@ -163,8 +166,19 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
+
 			
-			hint "02";
+			// If distance to ordered position is less than far, move to it (by foot).
+			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 250) then
+			{
+				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action as MoveAction] call _mActionPerformer.DoMove;
+				breakOut "main";
+			};
+
+
 			// If squad is on foot beside an empty vehicle, board it.
 			
 			if (!_squadInVehicle) then
@@ -179,16 +193,16 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			};
-				
-				
+
+			
 			// If squad is on foot and an empty vehicle is nearby, move to it.
-			hint "03";
+			
 			if (!_squadInVehicle) then
 			{
 				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos;
 				
 				if (!isNull _aiVehicle && { _distanceToVehicle <= 250 }) then {
-					_action = [_time + _distanceToVehicle + 10, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+					_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 					[AiSquadState.Moving, _action] call _self.SetState;
 					[_action as MoveAction] call _mActionPerformer.DoMove;
 					breakOut "main";
@@ -220,9 +234,11 @@ namespace Intrusion.Ai
 			
 			if (_state == AiSquadState.Idle) then {
 				_mKnowledge.CurrentAction = classNull;
+				hint str _mKnowledge.CurrentAction;
 			}
 			else {
 				_mKnowledge.CurrentAction = _action;
+				hint str _mKnowledge.CurrentAction;
 			};
 			
 			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
@@ -324,22 +340,10 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		public method Boolean GetHasCompleted()
 		{
-			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
+			private ["_hasCompleted" as Boolean, "_currentAction" as IAction];
 
 			_hasCompleted = false;
 			
-			if (!isNull _mKnowledge.CurrentAction) then {
-				_actionService = _mKnowledge.CurrentAction.Service;
-	        	["_actionService: " + str _actionService] call LogHandler.Debug;
-				
-				if (!isNull _actionService) then {
-					if (!_actionService.IsRunning) then {
-						_hasCompleted = true;
-			        	["_hasCompleted: " + str _hasCompleted] call LogHandler.Debug;
-					};
-				};
-			};
-
 			if (!_hasCompleted) then {
 				_currentAction = _mKnowledge.CurrentAction;
 	
@@ -363,21 +367,34 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
 		private method Boolean CheckActionTimeout()
 		{
-			private ["_leaderPos" as Array, "_action" as IAction];
+			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService];
 			
 			scopeName "main";
+			
+			if (!isNull _mKnowledge.CurrentAction) then {
+				_actionService = _mKnowledge.CurrentAction.Service;
+	        	["_actionService: " + str _actionService] call LogHandler.Debug;
+				
+				if (!isNull _actionService) then {
+					if (!_actionService.IsRunning) then {
+						true breakOut "main";
+					};
+				};
+			};
 			
 			// If leader has moved since last time, update position and time
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			
 			if (!(_leaderPos isEqualTo _mKnowledge.LeaderPos)) then {
-				_mKnowledge.LeaderPos
+				_mKnowledge.LeaderPos = _leaderPos;
+				_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
 			}
 			else
 			{
 				// If leader has not moved since last time, check if current action should time out
 				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
+					player sideChat "timeout";
 					true breakOut "main";
 				};
 			};
@@ -385,6 +402,7 @@ namespace Intrusion.Ai
 			// Check if the current action has timed out
 			_action = _mKnowledge.CurrentAction;
 			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
+				player sideChat "timeout";
 				true breakOut "main";
 			};
 			

@@ -100,7 +100,7 @@ namespace Intrusion.Ai
 		// _speed (Scalar): The speed to set.
 		public method LimitSpeed("_vehicle" as Object, "_speed" as Scalar)
 		{
-			_vehicle limitSpeed _speed;
+			_vehicle forceSpeed _speed;
 		};
 		
 		// Moves the members of a group out of its vehicles and unassigns them immediately.

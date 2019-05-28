@@ -2670,35 +2670,35 @@ class Mission
 		class Item76
 		{
 			dataType="Marker";
-			position[]={3237.1379,103.464,6291.7339};
+			position[]={3322.9893,82.55558,6560.6245};
 			name="FACTORY4";
 			text="Test Place 2";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=480;
-			atlOffset=80.215897;
+			atlOffset=80.215904;
 		};
 		class Item77
 		{
 			dataType="Marker";
-			position[]={3049.3301,79.507004,6269.231};
+			position[]={3445.8826,66.538849,6602.6885};
 			name="FACTORY6";
 			text="Test Place 3";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=481;
-			atlOffset=62.909462;
+			atlOffset=62.909401;
 		};
 		class Item78
 		{
 			dataType="Marker";
-			position[]={3268.009,93.495003,6418.3872};
+			position[]={3197.6921,81.283447,6612.9038};
 			name="FACTORY5";
 			text="Test Place 1";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=482;
-			atlOffset=69.645721;
+			atlOffset=69.645645;
 		};
 	};
 };

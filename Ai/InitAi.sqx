@@ -18,3 +18,4 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\CaptureAction
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\BoardAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\DisembarkAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Services\DisembarkActionService.sqx";

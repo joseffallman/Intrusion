@@ -9,6 +9,7 @@
  */
 
 using Intrusion.Common;
+using Sqx.Waypoints;
 
 namespace Intrusion.Ai
 {
@@ -38,7 +39,7 @@ namespace Intrusion.Ai
 		{
 			scopeName "main";
 			
-			if (_mTimeoutTime > call _mTime.GetMissionTime) then {
+			if ((call _mTime.GetMissionTime) > _mTimeoutTime) then {
 				_self.Success = false;
 				true breakOut "main";
 			};
@@ -50,18 +51,24 @@ namespace Intrusion.Ai
 		{
 			scopeName "main";
 			
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			[_mAiVehicle.Vehicle, 0] call _mActionPerformer.LimitSpeed;
 			
-			while {([_mAiVehicle.Vehicle] call _mWorld.GetSpeed) > 3} do
+			while {([_mAiVehicle.Vehicle] call _mWorld.GetSpeed) > 1} do
 			{
 				if (call _self.CheckActionTimeout) then {
+					[_mAiVehicle.Vehicle, -1] call _mActionPerformer.LimitSpeed;
 					breakOut "main";
 				};
 				
-				sleep 0.5;
+				sleep 0.1;
 			};
 			
+			[_mAiVehicle.Vehicle, -1] call _mActionPerformer.LimitSpeed;
 			[_mGroup] call _mActionPerformer.MoveOutFromVehicle;
+			
+			_self.Success = true;
+			_self.IsRunning = false;
 		};
 		
 		public method RunAsync()

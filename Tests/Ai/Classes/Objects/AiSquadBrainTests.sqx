@@ -53,6 +53,7 @@ namespace Intrusion.Tests.Ai
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
+				"MovingMediumAtVehicle_Act_StatusMoving",
 				"MovingFarAtVehicle_Act_StatusBoardingVehicle",
 				"MovingFarVehicleNearby_Act_StatusMoving",
 				"MovingToNearbyVehicle_Act_StatusIdle",
@@ -60,6 +61,7 @@ namespace Intrusion.Tests.Ai
 				"MountedArrivingFarMoving_Act_StatusIdle",
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
+				"CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle",
 			]] call TestEngine.Register;
 		};
 		
@@ -237,7 +239,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			//[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
 			
 			//_action = _mKnowledge.CurrentAction as MoveAction;
 			
@@ -296,6 +298,24 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI movement did not timeout."] call Assert.AreEqual;
+		};
+		
+		private static method MovingMediumAtVehicle_Act_StatusMoving
+		{
+			// Arrange
+			_mWorld.LeaderPos = [600, 400, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 401, 0], 2] new AiVehicle;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not leaving vehicle and moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 		};
 		
 		private static method MovingFarAtVehicle_Act_StatusBoardingVehicle
