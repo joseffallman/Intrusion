@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=483;
+		nextID=485;
 	};
 	class MarkerIDProvider
 	{
@@ -262,7 +262,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=79;
+		items=78;
 		class Item0
 		{
 			dataType="Marker";
@@ -2670,35 +2670,24 @@ class Mission
 		class Item76
 		{
 			dataType="Marker";
-			position[]={3322.9893,82.55558,6560.6245};
-			name="FACTORY4";
-			text="Test Place 2";
+			position[]={2950.8831,106.825,6206.396};
+			name="FACTORY5";
+			text="Church (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
-			id=480;
-			atlOffset=80.215904;
+			id=483;
+			atlOffset=78.497787;
 		};
 		class Item77
 		{
 			dataType="Marker";
-			position[]={3445.8826,66.538849,6602.6885};
-			name="FACTORY6";
-			text="Test Place 3";
+			position[]={3031.6541,105.778,6190.6968};
+			name="FACTORY4";
+			text="The Mast (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
-			id=481;
-			atlOffset=62.909401;
-		};
-		class Item78
-		{
-			dataType="Marker";
-			position[]={3197.6921,81.283447,6612.9038};
-			name="FACTORY5";
-			text="Test Place 1";
-			type="mil_objective";
-			colorName="ColorIndependent";
-			id=482;
-			atlOffset=69.645645;
+			id=484;
+			atlOffset=78.498543;
 		};
 	};
 };

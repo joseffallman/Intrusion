@@ -49,6 +49,7 @@ namespace Intrusion.Tests.Ai
 				"AtEnemyLocation_Act_StatusCapturing",
 				"AfterCapturingLocation_Act_StatusIdle",
 				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
+				"OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
@@ -223,6 +224,29 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Moving, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
+		};
+		
+		private static method OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [110, 110, 0];
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI is moving."] call Assert.AreEqual;
+			
+			//_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
+			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
+			["FACTORY1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
 		
 		private static method OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle

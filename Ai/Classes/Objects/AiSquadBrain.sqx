@@ -123,6 +123,7 @@ namespace Intrusion.Ai
 			private ["_locationMarkerName" as String, "_aiVehicle" as AiVehicle, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
 			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService];
 			
+        	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
@@ -134,16 +135,17 @@ namespace Intrusion.Ai
         	["_squadInVehicle: " + str _squadInVehicle] call LogHandler.Debug;
         	["_action: " + str _action] call LogHandler.Debug;
         	["_leaderPos: " + str _leaderPos] call LogHandler.Debug;
-
 			
 			
-			// If inside the perimiters of a resource location that's already captured, and the order was on own initiative, request a new order!
+			// If target resource location is already captured, and the order was on own initiative, request a new order!
 
 			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
-			{hint "03";
-				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && { _leaderPos distance ([_mKnowledge.Order.ResourceLocation.MarkerName] call _mMarkerHandler.GetMarkerPos) < 25 }) then
-				{hint "04";
+			{
+				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
+				{
 					call _self.CreateOrderOnOwnInitiative;
+					player sideChat ("New order: " + _mKnowledge.Order.ResourceLocation.MarkerName);
+		        	["Order created: " + str _mKnowledge.Order] call LogHandler.Debug;
 					breakOut "main";
 				};
 			};
@@ -159,6 +161,7 @@ namespace Intrusion.Ai
 					call _actionService.RunAsync;
 					_action = [_time + 300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
 					[AiSquadState.Disembarking, _action] call _self.SetState;
+		        	["Disembark action created: " + str _action] call LogHandler.Debug;
 					breakOut "main";
 				};
 			};
@@ -176,6 +179,7 @@ namespace Intrusion.Ai
 					_action = [_time + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
 					[AiSquadState.Capturing, _action] call _self.SetState;
 					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
+		        	["Capture action created: " + str _action] call LogHandler.Debug;
 					breakOut "main";
 				};
 			} foreach _locations as ResourceLocation;
@@ -188,6 +192,7 @@ namespace Intrusion.Ai
 				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _mActionPerformer.DoMove;
+	        	["Move action created #1: " + str _action] call LogHandler.Debug;
 				breakOut "main";
 			};
 
@@ -203,6 +208,7 @@ namespace Intrusion.Ai
 					_action = [_time + 20, _aiVehicle] new MountAction;
 					[AiSquadState.MountingVehicle, _action] call _self.SetState;
 					[_action as MountAction] call _mActionPerformer.DoMount;
+		        	["Mount action created: " + str _action] call LogHandler.Debug;
 					breakOut "main";
 				};
 			};
@@ -218,6 +224,7 @@ namespace Intrusion.Ai
 					_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 					[AiSquadState.Moving, _action] call _self.SetState;
 					[_action as MoveAction] call _mActionPerformer.DoMove;
+		        	["Move action created #2: " + str _action] call LogHandler.Debug;
 					breakOut "main";
 				};
 			};
@@ -235,8 +242,8 @@ namespace Intrusion.Ai
 				
 				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
-				
 				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
+	        	["Move action created #3: " + str _action] call LogHandler.Debug;
 				breakOut "main";
 			};
 		};
@@ -278,12 +285,16 @@ namespace Intrusion.Ai
 				
 				// Move is completed if the squad is mounted and near the destination
 				if (_squadInVehicle && _leaderPos distance _moveAction.Position <= 150) then {
+		        	["Completed move #1"] call LogHandler.Debug;
+					player sideChat "Completed #1";
 					true breakOut "main";
 				};
 				
 				// Move is completed if the squad is at the destination position
 				
 				if (_leaderPos distance _moveAction.Position < 20) then {
+					player sideChat "Completed #2";
+		        	["Completed move #2"] call LogHandler.Debug;
 					true breakOut "main";
 				};
 				
@@ -293,6 +304,8 @@ namespace Intrusion.Ai
 				
 				if (_location.Side == side _mKnowledge.Group) then
 				{
+					player sideChat "Completed #3";
+		        	["Completed move #3"] call LogHandler.Debug;
 					true breakOut "main";
 				};
 			};
@@ -402,6 +415,7 @@ namespace Intrusion.Ai
 				
 				if (!isNull _actionService) then {
 					if (!_actionService.IsRunning && !_actionService.Success) then {
+			        	["Timeout occurred #1"] call LogHandler.Debug;
 						true breakOut "main";
 					};
 				};
@@ -419,7 +433,7 @@ namespace Intrusion.Ai
 			{
 				// If leader has not moved since last time, check if current action should time out
 				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
-					player sideChat "timeout";
+		        	["Timeout occurred #2"] call LogHandler.Debug;
 					true breakOut "main";
 				};
 			};
@@ -427,7 +441,7 @@ namespace Intrusion.Ai
 			// Check if the current action has timed out
 			_action = _mKnowledge.CurrentAction;
 			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
-				player sideChat "timeout";
+	        	["Timeout occurred #3"] call LogHandler.Debug;
 				true breakOut "main";
 			};
 			
