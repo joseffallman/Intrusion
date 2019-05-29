@@ -134,6 +134,18 @@ namespace Intrusion.Ai
         	["_action: " + str _action] call LogHandler.Debug;
         	["_leaderPos: " + str _leaderPos] call LogHandler.Debug;
 
+			
+			
+			// If inside the perimiters of a resource location that's already captured, and the order was on own initiative, request a new order!
+			
+			if (_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
+			{
+				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && { _leaderPos distance ([_mKnowledge.Order.ResourceLocation.MarkerName] call _mMarkerHandler.GetMarkerPos) < 25 }) then
+				{
+					call _self.CreateOrderOnOwnInitiative;
+					breakOut "main";
+				};
+			};
 
 			// If squad is mounted and near a destination (<150m), set disembark.
 			
@@ -150,7 +162,7 @@ namespace Intrusion.Ai
 				};
 			};
 			
-			
+
 			// If inside the perimiters of a resource location that should be captured, capture it!
 
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
@@ -212,7 +224,7 @@ namespace Intrusion.Ai
 			
 			// If not already there, move towards order's target!
 			
-			if ((_leaderPos) distance _mKnowledge.Order.TargetPosition > 25) then
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
 			{
 				_locationMarkerName = "";
 				
@@ -422,7 +434,7 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
-			// If there is no order, create one on own initiative so the group has something to do.
+			// If there is no order, create one on own initiative so the squad always has an order.
 			if (isNull _mKnowledge.Order) then {
 				call _self.CreateOrderOnOwnInitiative;
 			};
@@ -431,11 +443,6 @@ namespace Intrusion.Ai
 		
 			if (_mKnowledge.State == AiSquadState.Idle) then {
 				call _self.MakeDecision;
-				
-				// If still idle, create a new order
-				if (_mKnowledge.State == AiSquadState.Idle) then {
-					call _self.CreateOrderOnOwnInitiative;
-				};
 			}
 			else
 			{
