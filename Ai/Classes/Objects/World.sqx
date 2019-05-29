@@ -78,9 +78,9 @@ namespace Intrusion.Ai
 			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new AiVehicle;
 		};
 		
-		// Checks if all squad members are aboard a vehicle.
+		// Checks if all squad members are mounted in a vehicle.
 		// _group (Group): The group to check.
-		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
+		// Returns (Boolean): true if all members are mounted, otherwise false.
 		public method Boolean CheckSquadMounted("_group")
 		{
 			scopeName "main";

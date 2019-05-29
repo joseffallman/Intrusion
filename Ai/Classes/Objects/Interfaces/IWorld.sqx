@@ -35,9 +35,9 @@ namespace Intrusion.Ai
 		// _squadSize (Scalar): The number of members in the squad.
 		method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar);
 		
-		// Checks if all squad members are aboard a vehicle.
+		// Checks if all squad members are mounted to a vehicle.
 		// _group (Group): The group to check.
-		// Returns (Boolean): true if all members are aboard a vehicle, otherwise false.
+		// Returns (Boolean): true if all members are mounted to a vehicle, otherwise false.
 		method Boolean CheckSquadMounted("_group");
 		
 		// Gets the speed of a vehicle.

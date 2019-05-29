@@ -326,12 +326,12 @@ namespace Intrusion.Ai {
 					breakOut "main";
 				};
 				
-				// If squad is unmounted and have their intrusion vehicle, board it
+				// If squad is unmounted and have their intrusion vehicle, then mount
 				
 				if (!(call _self.WholeGroupInVehicle) && _mVehicleIsSquadVehicle && alive _mVehicle) then {
 					if ([_mVehicle] call _self.GroupFitInVehicle) then {
 						[_mVehicle] call _self.EnterVehicle;
-						[AiSquadState.BoardingVehicle, 30] call _self.SetState;
+						[AiSquadState.MountingVehicle, 30] call _self.SetState;
 //						player sideChat "Entering vehicle";
 						breakOut "main";
 					};
@@ -363,7 +363,7 @@ namespace Intrusion.Ai {
 					breakOut "main";
 				};
 				
-				// If there is a vehicle nearby and no enemies, and group fit, then board it.
+				// If there is a vehicle nearby and no enemies, and group fit, then mount.
 				
 				if (!_seeEnemies) then {
 					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group, count _self.Members] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
@@ -371,8 +371,7 @@ namespace Intrusion.Ai {
 					if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
 						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {
 							[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
-							[AiSquadState.BoardingVehicle, 60] call _self.SetState;
-//							player sideChat "BoardingVehicle";
+							[AiSquadState.MountingVehicle, 60] call _self.SetState;
 							breakOut "main";
 						};
 					};
@@ -452,7 +451,7 @@ namespace Intrusion.Ai {
 			};
 		};
 		
-		private method CheckIfFinishedBoardingVehicle()
+		private method CheckIfFinishedMountingVehicle()
 		{
 			if ({ vehicle _x == _mVehicle } count units _self.Group == count units _self.Group) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
@@ -597,7 +596,7 @@ namespace Intrusion.Ai {
 					_mVehicle = _vehicle.Vehicle;
 					_mVehicleIsSquadVehicle = true;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-					[AiSquadState.BoardingVehicle, 90] call _self.SetState;
+					[AiSquadState.MountingVehicle, 90] call _self.SetState;
 					call _self.CreateOrderOnOwnInitiative;
 //					player sideChat "Beaming. Idle...";
 				};
@@ -735,7 +734,7 @@ namespace Intrusion.Ai {
 				case AiSquadState.Idle: { call _self.MakeNewDecision; };
 				//case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
 				case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
-				case AiSquadState.BoardingVehicle: { call _self.CheckIfFinishedBoardingVehicle; };
+				case AiSquadState.MountingVehicle: { call _self.CheckIfFinishedMountingVehicle; };
 				case AiSquadState.ExitingVehicle: { call _self.CheckIfFinishedExitingVehicle; };
 			};
 		};

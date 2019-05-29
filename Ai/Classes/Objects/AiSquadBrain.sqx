@@ -191,7 +191,7 @@ namespace Intrusion.Ai
 			};
 
 
-			// If squad is on foot beside an empty vehicle, board it.
+			// If squad is on foot beside an empty vehicle, then mount.
 			
 			if (!_squadInVehicle) then
 			{
@@ -199,9 +199,9 @@ namespace Intrusion.Ai
 				
 				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 				{
-					_action = [_time + 20, _aiVehicle] new BoardAction;
-					[AiSquadState.BoardingVehicle, _action] call _self.SetState;
-					[_action as BoardAction] call _mActionPerformer.DoBoard;
+					_action = [_time + 20, _aiVehicle] new MountAction;
+					[AiSquadState.MountingVehicle, _action] call _self.SetState;
+					[_action as MountAction] call _mActionPerformer.DoMount;
 					breakOut "main";
 				};
 			};
@@ -332,15 +332,15 @@ namespace Intrusion.Ai
 			_hasCompleted
 		};
 		
-		// Gets whether the group has completed a board vehicle action, i.e. all members are in the same vehicle.
-		private method Boolean HasCompletedBoard()
+		// Gets whether the group has completed a mount vehicle action, i.e. all members are in the same vehicle.
+		private method Boolean HasCompletedMount()
 		{
 			private ["_currentAction" as IAction];
 		
 			private _hasCompleted = false;
 			_currentAction = _mKnowledge.CurrentAction;
 		
-			if (_currentAction is BoardAction) then
+			if (_currentAction is MountAction) then
 			{
 				_hasCompleted = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			};
@@ -352,24 +352,36 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if the last action has completed, otherwise false.
 		public method Boolean GetHasCompleted()
 		{
-			private ["_hasCompleted" as Boolean, "_currentAction" as IAction];
+			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
 
+			scopeName "main";
+			
 			_hasCompleted = false;
 			
-			if (!_hasCompleted) then {
-				_currentAction = _mKnowledge.CurrentAction;
-	
-				if (_currentAction is MoveAction) then {
-					_hasCompleted = call _self.HasCompletedMove;
-				};
+			// If the action has a service, check if that service has completed or not.
+			
+			if (!isNull _mKnowledge.CurrentAction) then {
+				_actionService = _mKnowledge.CurrentAction.Service;
 				
-				if (_currentAction is CaptureAction) then {
-					_hasCompleted = call _self.HasCompletedCapture;
+				if (!isNull _actionService) then {
+					if (!_actionService.IsRunning && _actionService.Success) then {
+						true breakOut "main";
+					};
 				};
-				
-				if (_currentAction is BoardAction) then {
-					_hasCompleted = call _self.HasCompletedBoard;
-				};
+			};
+			
+			_currentAction = _mKnowledge.CurrentAction;
+
+			if (_currentAction is MoveAction) then {
+				_hasCompleted = call _self.HasCompletedMove;
+			};
+			
+			if (_currentAction is CaptureAction) then {
+				_hasCompleted = call _self.HasCompletedCapture;
+			};
+			
+			if (_currentAction is MountAction) then {
+				_hasCompleted = call _self.HasCompletedMount;
 			};
 			
 			_hasCompleted
@@ -383,12 +395,14 @@ namespace Intrusion.Ai
 			
 			scopeName "main";
 			
+			// If the action has a service, check if that service has timed out or not.
+			
 			if (!isNull _mKnowledge.CurrentAction) then {
 				_actionService = _mKnowledge.CurrentAction.Service;
 	        	["_actionService: " + str _actionService] call LogHandler.Debug;
 				
 				if (!isNull _actionService) then {
-					if (!_actionService.IsRunning) then {
+					if (!_actionService.IsRunning && !_actionService.Success) then {
 						true breakOut "main";
 					};
 				};

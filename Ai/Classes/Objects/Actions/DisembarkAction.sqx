@@ -11,7 +11,7 @@ namespace Intrusion.Ai
 {
 	public class DisembarkAction : IAction
 	{
-		// Creates a BoardAction object.
+		// Creates a MountAction object.
 		public constructor("_timeoutTime" as Scalar, "_vehicle" as AiVehicle, "_service" as IActionService)
 		{
 			_self.TimeoutTime = _timeoutTime;

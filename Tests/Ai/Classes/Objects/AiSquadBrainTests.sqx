@@ -54,10 +54,10 @@ namespace Intrusion.Tests.Ai
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
 				"MovingMediumAtVehicle_Act_StatusMoving",
-				"MovingFarAtVehicle_Act_StatusBoardingVehicle",
+				"MovingFarAtVehicle_Act_StatusMountingVehicle",
 				"MovingFarVehicleNearby_Act_StatusMoving",
 				"MovingToNearbyVehicle_Act_StatusIdle",
-				"MovingFarHasBoardedVehicle_Act_StatusMoving",
+				"MovingFarHasMountedVehicle_Act_StatusMoving",
 				"MountedArrivingFarMoving_Act_StatusIdle",
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
@@ -318,7 +318,7 @@ namespace Intrusion.Tests.Ai
 			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 		};
 		
-		private static method MovingFarAtVehicle_Act_StatusBoardingVehicle
+		private static method MovingFarAtVehicle_Act_StatusMountingVehicle
 		{
 			// Arrange
 			_mWorld.LeaderPos = [0, 0, 0];
@@ -332,8 +332,8 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.BoardingVehicle, _mKnowledge.State, "AI not boarding nearby vehicle."] call Assert.AreEqual;
-			[1, count _mActionPerformer.BoardActions, "AI did not perform a board action."] call Assert.AreEqual;
+			[AiSquadState.MountingVehicle, _mKnowledge.State, "AI not mounting nearby vehicle."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MountActions, "AI did not perform a mount action."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToNearbyVehicle_Act_StatusIdle
@@ -372,14 +372,14 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.Moving, _mKnowledge.State, "AI not moving towards nearby vehicle."] call Assert.AreEqual;
 			[_mKnowledge.CurrentAction, "Current action not set."] call Assert.IsNotNull;
-			[1, count _mActionPerformer.MoveActions, "AI did not perform a board action."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 			
 			_moveAction = _mActionPerformer.MoveActions select 0;
 			
-			[[30, 30, 0], _moveAction.Position, "AI did not perform a board action."] call Assert.AreEqual;
+			[[30, 30, 0], _moveAction.Position, "Wrong position."] call Assert.AreEqual;
 		};
 		
-		private static method MovingFarHasBoardedVehicle_Act_StatusMoving
+		private static method MovingFarHasMountedVehicle_Act_StatusMoving
 		{
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];

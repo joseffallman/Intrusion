@@ -14,7 +14,7 @@ namespace Intrusion.Ai
 		Idle = 0,
 		Moving = 1,
 		Capturing = 2,
-		BoardingVehicle = 3,
+		MountingVehicle = 3,
 		ExitingVehicle = 4,
 		Defending = 5,
 		Disembarking = 6,
@@ -30,7 +30,7 @@ namespace Intrusion.Ai
 				case AiSquadState.Idle: { _s = "Idle"; };
 				case AiSquadState.Moving: { _s = "Moving"; };
 				case AiSquadState.Capturing: { _s = "Capturing"; };
-				case AiSquadState.BoardingVehicle: { _s = "BoardingVehicle"; };
+				case AiSquadState.MountingVehicle: { _s = "MountingVehicle"; };
 				case AiSquadState.ExitingVehicle: { _s = "ExitingVehicle"; };
 				case AiSquadState.Defending: { _s = "Defending"; };
 				case AiSquadState.Disembarking: { _s = "Disembarking"; };

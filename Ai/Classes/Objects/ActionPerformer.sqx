@@ -59,29 +59,29 @@ namespace Intrusion.Ai
 			_mGroup setBehaviour "AWARE";
 		};		
 		
-		// Performs a board action for an AI group.
+		// Performs a mount action for an AI group.
 		// _group (Group): The group to capture a location.
-		// _boardAction (BoardAction): Information about the boarding.
-		public method DoBoard("_boardAction" as BoardAction)
+		// _mountAction (MountAction): Information about the mounting.
+		public method DoMount("_mountAction" as MountAction)
 		{
 			{
-				if (isNull (assignedVehicle _x) && isNull (assignedDriver _boardAction.Vehicle.Vehicle)) then {
-					_x assignAsDriver _boardAction.Vehicle.Vehicle;
+				if (isNull (assignedVehicle _x) && isNull (assignedDriver _mountAction.Vehicle.Vehicle)) then {
+					_x assignAsDriver _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
 				};
 				
-				if (isNull (assignedVehicle _x) && isNull (assignedCommander _boardAction.Vehicle.Vehicle)) then {
-					_x assignAsCommander _boardAction.Vehicle.Vehicle;
+				if (isNull (assignedVehicle _x) && isNull (assignedCommander _mountAction.Vehicle.Vehicle)) then {
+					_x assignAsCommander _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
 				};
 				
-				if (isNull (assignedVehicle _x) && isNull (assignedGunner _boardAction.Vehicle.Vehicle)) then {
-					_x assignAsGunner _boardAction.Vehicle.Vehicle;
+				if (isNull (assignedVehicle _x) && isNull (assignedGunner _mountAction.Vehicle.Vehicle)) then {
+					_x assignAsGunner _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
 				};
 				
 				if (isNull (assignedVehicle _x)) then {
-					_x assignAsCargo _boardAction.Vehicle.Vehicle;
+					_x assignAsCargo _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
 				};
 			} foreach units _mGroup;
@@ -98,7 +98,7 @@ namespace Intrusion.Ai
 		// Limits the speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
 		// _speed (Scalar): The speed to set.
-		public method LimitSpeed("_vehicle" as Object, "_speed" as Scalar)
+		public method ForceSpeed("_vehicle" as Object, "_speed" as Scalar)
 		{
 			_vehicle forceSpeed _speed;
 		};
