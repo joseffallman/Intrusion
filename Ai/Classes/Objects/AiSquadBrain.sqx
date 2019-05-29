@@ -72,7 +72,7 @@ namespace Intrusion.Ai
 		private method CreateOrderOnOwnInitiative()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index" as Scalar, "_distance" as Scalar];
+			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar];
 			
 			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 
@@ -88,13 +88,14 @@ namespace Intrusion.Ai
 					_location = _x;
 					
 					if (_location.Side != side _mKnowledge.Group) then {
-						_distance = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
-						_valuedLocations pushBack [_location, _distance] new ValuedObject;
+						_distanceFromBase = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+						_valuedLocations pushBack [_location, _distanceFromBase] new ValuedObject;
 						_count = _count + 1;
 					};
 				} foreach _locations as ResourceLocation;
 				
 				_valuedLocations = [_valuedLocations] call Sorter.QSort;
+				hint str _valuedLocations;
 				
 				if (_count > 3) then {
 					_count = 3;
@@ -137,11 +138,11 @@ namespace Intrusion.Ai
 			
 			
 			// If inside the perimiters of a resource location that's already captured, and the order was on own initiative, request a new order!
-			
-			if (_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
-			{
+
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
+			{hint "03";
 				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && { _leaderPos distance ([_mKnowledge.Order.ResourceLocation.MarkerName] call _mMarkerHandler.GetMarkerPos) < 25 }) then
-				{
+				{hint "04";
 					call _self.CreateOrderOnOwnInitiative;
 					breakOut "main";
 				};
@@ -246,11 +247,9 @@ namespace Intrusion.Ai
 			
 			if (_state == AiSquadState.Idle) then {
 				_mKnowledge.CurrentAction = classNull;
-				hint str _mKnowledge.CurrentAction;
 			}
 			else {
 				_mKnowledge.CurrentAction = _action;
-				hint str _mKnowledge.CurrentAction;
 			};
 			
 			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
