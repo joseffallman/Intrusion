@@ -15,13 +15,14 @@ namespace Intrusion.Ai
 {
 	public class World : IWorld
 	{
-		private fields ["_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceLocationHandler" as IResourceLocationHandler];
 		
 		// Creates a World object.
-		public constructor("_resourceLocationConfig" as IResourceLocationConfig, "_vehicleSpawner" as IVehicleSpawner)
+		public constructor("_resourceLocationConfig" as IResourceLocationConfig, "_vehicleSpawner" as IVehicleSpawner, "_resourceLocationHandler" as IResourceLocationHandler)
 		{
 			_mResourceLocationConfig = _resourceLocationConfig;
 			_mVehicleSpawner = _vehicleSpawner;
+			_mResourceLocationHandler = _resourceLocationHandler;
 		};
 		
 		// Gets a group's leader's position.
@@ -36,6 +37,7 @@ namespace Intrusion.Ai
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
+			/*
 			scopeName "main";
 			
 			if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then {
@@ -43,6 +45,9 @@ namespace Intrusion.Ai
 			};
 			
 			classNull
+			*/
+			
+			call _mResourceLocationHandler.GetResourceLocationCollection
 		};
 		
 		// Checks if a group is inside the perimiters of one or more resource locations.

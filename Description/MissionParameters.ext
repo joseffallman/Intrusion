@@ -24,7 +24,7 @@ class Params
 		title="Guerilla guarding resource locations";
 		values[]={1, 0};
 		texts[]={"Yes", "No"};
-		default = 1;
+		default = 0;
 	};
 	
 	class AiWest

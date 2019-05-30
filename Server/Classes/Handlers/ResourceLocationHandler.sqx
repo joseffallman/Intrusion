@@ -205,5 +205,12 @@ namespace Intrusion.Server
 				
 			} foreach _resourceLocations as ResourceLocation;
 		};
+		
+		// Get the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		public method ResourceLocationCollection GetResourceLocationCollection()
+		{
+			_mResourceLocationCollection
+		};
 	};
 };
