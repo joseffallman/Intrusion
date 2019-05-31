@@ -49,7 +49,8 @@ namespace Sqx.Collections
 				_putLeft = true;
 				
 				{
-					_compareValue = [_middleItem] call (_x as IComparer).Compare;
+					_compareValue = [_middleItem] call _x.Compare;
+					
 					if (_compareValue == 0) then {
 						if (_putLeft) then {
 							_array1 pushBack _x;
@@ -69,7 +70,7 @@ namespace Sqx.Collections
 						};
 					};
 				
-				} foreach _array;
+				} foreach _array as IComparer;
 				
 				_result = ([_array1] call _self.QSort) + ([_array2] call _self.QSort);
 			};

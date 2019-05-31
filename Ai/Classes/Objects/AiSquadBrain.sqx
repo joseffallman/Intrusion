@@ -104,6 +104,11 @@ namespace Intrusion.Ai
 				if (_count > 0) then {
 					_index = floor ([_count] call _mRandomGenerator.GetNumber);
 					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+					
+					// _location is here a copied object, since it has been sorted. But we want it to be a reference.
+					_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+					
+					// Create the order
 					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
 				};
 				
