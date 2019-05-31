@@ -21,7 +21,7 @@ namespace Intrusion.Ai
 						"_mActionServiceFactory" as IActionServiceFactory];
 		
 		#region Initialization
-		
+
 		// Creates a AiSquadBrain object.
 		public constructor
 		(
@@ -139,8 +139,15 @@ namespace Intrusion.Ai
 			
 			// If target resource location is already captured, and the order was on own initiative, request a new order!
 
+        	["_mKnowledge.OrderIsGivenByBrigadeLeader: " + str (_mKnowledge.OrderIsGivenByBrigadeLeader)] call LogHandler.Debug;
+        	["isNull _mKnowledge.Order.ResourceLocation: " + str (isNull _mKnowledge.Order.ResourceLocation)] call LogHandler.Debug;
+
+
 			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
 			{
+	        	["_mKnowledge.Order.ResourceLocation.Side: " + str (_mKnowledge.Order.ResourceLocation.Side)] call LogHandler.Debug;
+	        	["side _mKnowledge.Group: " + str (side _mKnowledge.Group)] call LogHandler.Debug;
+	        	
 				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
 				{
 					call _self.CreateOrderOnOwnInitiative;
