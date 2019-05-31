@@ -434,6 +434,7 @@ namespace Intrusion.Ai
 				// If leader has not moved since last time, check if current action should time out
 				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
 		        	["Timeout occurred #2"] call LogHandler.Debug;
+					_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
 					true breakOut "main";
 				};
 			};
