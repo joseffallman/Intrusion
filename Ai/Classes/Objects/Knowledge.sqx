@@ -49,9 +49,6 @@ namespace Intrusion.Ai
 		// Gets whether the order is given by the brigade leader or if it is on own initiative.
 		public property Boolean OrderIsGivenByBrigadeLeader { get; set; };
 		
-		// Gets or sets the information about base markers.
-		//public property MapMarkerInfo MapMarkerInfo { get; set; };
-		
 		// Gets or sets the leader's position.
 		public property Array LeaderPos { get; set; };
 		

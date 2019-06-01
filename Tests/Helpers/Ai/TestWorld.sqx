@@ -26,6 +26,7 @@ namespace Intrusion.Tests.Helpers
 			_self.ClosestEmptyFreeVehicle = classNull;
 			_self.SquadMounted = false;
 			_self.DetectedEnemiesClose = false;
+			_self.AllSquadMembersDead = false;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -99,6 +100,16 @@ namespace Intrusion.Tests.Helpers
 		public method Boolean GetDetectedEnemiesClose("_group" as Group)
 		{
 			_self.DetectedEnemiesClose
+		};
+		
+		public property Boolean AllSquadMembersDead { get; set; };
+		
+		// Gets whether all squad members are dead or not.
+		// _group (Group): The group to test.
+		// Returns (Boolean): true if all the group's members are dead, otherwise false.
+		public method Boolean GetAllSquadMembersDead("_group" as Group)
+		{
+			_self.AllSquadMembersDead
 		};
 	};
 };

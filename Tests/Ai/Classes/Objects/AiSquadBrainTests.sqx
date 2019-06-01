@@ -538,13 +538,30 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.MembersCount = 3;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
 			[AiSquadState.Disembarking, _mKnowledge.State, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
+		};
+		
+		private static method AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.MembersCount = 3;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
 		};
 		
 		/*

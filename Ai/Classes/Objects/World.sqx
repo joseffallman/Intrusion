@@ -114,7 +114,7 @@ namespace Intrusion.Ai
 			classNull
 		};
 		
-		// Gets whether a group has detected near enemies.
+		// Gets whether a group has detected near enemies or not.
 		// _group (Group): The group to test.
 		// Returns (Boolean): true if the group has detected enemies within a close range, otherwise false.
 		public method Boolean GetDetectedEnemiesClose("_group" as Group)
@@ -128,6 +128,14 @@ namespace Intrusion.Ai
 			} foreach (leader _group nearTargets 200) as Object;
 			
 			false
+		};
+		
+		// Gets whether all squad members are dead or not.
+		// _group (Group): The group to test.
+		// Returns (Boolean): true if all the group's members are dead, otherwise false.
+		public method Boolean GetAllSquadMembersDead("_group" as Group)
+		{
+			count units _group == 0
 		};
 	};
 };

@@ -50,5 +50,10 @@ namespace Intrusion.Ai
 		// Gets whether a group has detected near enemies.
 		// _group (Group): The group to test.
 		method Boolean GetDetectedEnemiesClose("_group" as Group);
+		
+		// Gets whether all squad members are dead or not.
+		// _group (Group): The group to test.
+		// Returns (Boolean): true if all the group's members are dead, otherwise false.
+		method Boolean GetAllSquadMembersDead("_group" as Group);
 	};
 };
