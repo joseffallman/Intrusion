@@ -25,6 +25,7 @@ namespace Intrusion.Tests.Helpers
 			_self.LeaderPos = [];
 			_self.ClosestEmptyFreeVehicle = classNull;
 			_self.SquadMounted = false;
+			_self.DetectedEnemiesClose = false;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -89,6 +90,15 @@ namespace Intrusion.Tests.Helpers
 		public method AiVehicle GetMountedVehicle("_group" as Group)
 		{
 			classNull
+		};
+		
+		public property DetectedEnemiesClose { get; set; };
+		
+		// Gets whether a group has detected near enemies.
+		// _group (Group): The group to test.
+		public method Boolean GetDetectedEnemiesClose("_group" as Group)
+		{
+			_self.DetectedEnemiesClose
 		};
 	};
 };

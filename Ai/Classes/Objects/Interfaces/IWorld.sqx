@@ -46,5 +46,9 @@ namespace Intrusion.Ai
 		
 		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
 		method AiVehicle GetMountedVehicle("_group" as Group);
+		
+		// Gets whether a group has detected near enemies.
+		// _group (Group): The group to test.
+		method Boolean GetDetectedEnemiesClose("_group" as Group);
 	};
 };

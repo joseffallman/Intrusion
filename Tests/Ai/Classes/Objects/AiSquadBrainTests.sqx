@@ -511,6 +511,42 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
 		};
 		
+		private static method MountedMovingDetectedEnemies_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.DetectedEnemiesClose = true;
+			_mKnowledge.MembersCount = 3;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop when detecting enemies."] call Assert.AreEqual;
+		};
+		
+		private static method MountedIdleDetectedEnemies_Act_StatusDisembarking
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.DetectedEnemiesClose = true;
+			_mKnowledge.MembersCount = 3;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Disembarking, _mKnowledge.State, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
+		};
+		
 		/*
 		private static method ExplicitOrderToAttackOwnLocationAlreadyPresent_Act_DefendOrderStatusIdle
 		{
