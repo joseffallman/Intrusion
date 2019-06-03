@@ -161,6 +161,21 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			};
+			
+
+			// If squad is mounted and enemies spotted near, disembark
+			
+			if (_squadInVehicle && { [_mKnowledge.Group] call _mWorld.GetDetectedEnemiesClose }) then
+			{
+				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
+				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
+				call _actionService.RunAsync;
+				_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+				breakOut "main";
+			};
+			
 
 			// If squad is mounted and near a destination (<150m), set disembark.
 			
@@ -171,7 +186,7 @@ namespace Intrusion.Ai
 					_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 					_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
 					call _actionService.RunAsync;
-					_action = [_time + 300, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+					_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
 					[AiSquadState.Disembarking, _action] call _self.SetState;
 		        	["Disembark action created: " + str _action] call LogHandler.Debug;
 					breakOut "main";
@@ -294,6 +309,13 @@ namespace Intrusion.Ai
 				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 				_moveAction = _currentAction as MoveAction;
+				
+				// Move is completed if the squad is mounted and se nearby enemies
+				if (_squadInVehicle && [_mKnowledge.Group] call _mWorld.GetDetectedEnemiesClose) then {
+		        	["Completed move #0"] call LogHandler.Debug;
+					player sideChat "Completed #0";
+					true breakOut "main";
+				};
 				
 				// Move is completed if the squad is mounted and near the destination
 				if (_squadInVehicle && _leaderPos distance _moveAction.Position <= 150) then {
