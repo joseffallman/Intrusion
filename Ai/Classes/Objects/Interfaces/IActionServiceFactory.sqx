@@ -14,6 +14,6 @@ namespace Intrusion.Ai
 {
 	public interface IActionServiceFactory
 	{
-		method IActionService CreateDisembarkService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as AiVehicle);
+		method IActionService CreateDisembarkService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as VehicleContainer);
 	};
 };

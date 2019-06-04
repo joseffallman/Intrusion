@@ -15,10 +15,10 @@ namespace Intrusion.Ai
 {
 	public class DisembarkActionService : IActionService
 	{
-		private fields ["_mTime" as IMissionTime, "_mTimeoutTime" as Scalar, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mGroup" as Group, "_mAiVehicle" as AiVehicle];
+		private fields ["_mTime" as IMissionTime, "_mTimeoutTime" as Scalar, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mGroup" as Group, "_mAiVehicle" as VehicleContainer];
 	
 		// Creates a DisembarkActionService object.
-		public constructor("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as AiVehicle)
+		public constructor("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as VehicleContainer)
 		{
 			_mTime = _time;
 			_mTimeoutTime = _timeoutTime;

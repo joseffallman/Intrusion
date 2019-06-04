@@ -33,7 +33,8 @@ namespace Intrusion.Ai
 		// _side (Side): Side of the vehicle.
 		// _pos (Array): The relative position.
 		// _squadSize (Scalar): The number of members in the squad.
-		method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar);
+		// Returns (VehicleContainer): The closest empty and free vehicle.
+		method VehicleContainer GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar);
 		
 		// Checks if all squad members are mounted to a vehicle.
 		// _group (Group): The group to check.
@@ -45,11 +46,13 @@ namespace Intrusion.Ai
 		method Scalar GetSpeed("_vehicle" as Object);
 		
 		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
-		method AiVehicle GetMountedVehicle("_group" as Group);
+		// Returns (VehicleContainer): The vehicle the the group is currently mounted on.
+		method VehicleContainer GetMountedVehicle("_group" as Group);
 		
-		// Gets whether a group has detected near enemies.
+		// Gets the closest detected enemy unit.
 		// _group (Group): The group to test.
-		method Boolean GetDetectedEnemiesClose("_group" as Group);
+		// Returns (UnitContainter): The detected unit that is closest to the group.
+		method UnitContainer GetClosestDetectedEnemy("_group" as Group);
 		
 		// Gets whether all squad members are dead or not.
 		// _group (Group): The group to test.

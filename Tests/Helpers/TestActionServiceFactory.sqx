@@ -23,7 +23,7 @@ namespace Intrusion.Tests.Helpers
 		
 		public property IActionService Service { get; set; };
 		
-		public method IActionService CreateDisembarkService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as AiVehicle)
+		public method IActionService CreateDisembarkService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as VehicleContainer)
 		{
 			_self.Service
 		};

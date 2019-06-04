@@ -1,0 +1,27 @@
+/*
+ * Name:	UnitContainer
+ * Date:	2019-06-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class containing a unit abstracted from reality.
+ */
+namespace Intrusion.Ai
+{
+	public class UnitContainer
+	{
+		// Creates a UnitContainer object.
+		public constructor("_position" as Array, "_unit" as Object)
+		{
+			_self.Position = _position;
+			_self.Unit = _unit;
+		};
+		
+		// Gets the unit's position.
+		public property Array Position { get; private set; };
+		
+		// Gets the unit object.
+		public property Object Unit { get; private set; };
+	};
+};

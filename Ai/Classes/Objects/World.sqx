@@ -61,7 +61,8 @@ namespace Intrusion.Ai
 		// _side (Side): Side of the vehicle.
 		// _pos (Array): The relative position.
 		// _squadSize (Scalar): The number of members in the squad.
-		public method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
+		// Returns (VehicleContainer): The closest empty and free vehicle.
+		public method VehicleContainer GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
 		{
 			private ["_intrusionVehicle" as IntrusionVehicle, "_seatsCount" as Scalar, "_vehicle" as Object];
 			
@@ -70,7 +71,7 @@ namespace Intrusion.Ai
 			
 			_seatsCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
 
-			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new AiVehicle;
+			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
 		};
 		
 		// Checks if all squad members are mounted in a vehicle.
@@ -97,7 +98,8 @@ namespace Intrusion.Ai
 		};
 		
 		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
-		public method AiVehicle GetMountedVehicle("_group" as Group)
+		// Returns (VehicleContainer): The vehicle the the group is currently mounted on.
+		public method VehicleContainer GetMountedVehicle("_group" as Group)
 		{
 			private ["_vehicle" as Object, "_seatsCount" as Scalar];
 		
@@ -107,27 +109,40 @@ namespace Intrusion.Ai
 				if (vehicle _x != _x) then {
 					_vehicle = vehicle _x;
 					_seatsCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
-					([vehicle _x, getPos vehicle _x, _seatsCount] new AiVehicle) breakOut "main";
+					([vehicle _x, getPos vehicle _x, _seatsCount] new VehicleContainer) breakOut "main";
 				};
 			} foreach units _group as Object;
 			
 			classNull
 		};
 		
-		// Gets whether a group has detected near enemies or not.
+		// Gets the closest detected enemy unit.
 		// _group (Group): The group to test.
-		// Returns (Boolean): true if the group has detected enemies within a close range, otherwise false.
-		public method Boolean GetDetectedEnemiesClose("_group" as Group)
+		// Returns (UnitContainter): The detected unit that is closest to the group. null if no units are detected.
+		public method UnitContainer GetClosestDetectedEnemy("_group" as Group)
 		{
-			scopeName "main";
-		
+			private ["_closestUnit" as Object, "_unitContainer" as UnitContainer, "_closestDistance" as Scalar];
+			
+			_closestUnit = objNull;
+			_unitContainer = classNull;
+			_closestDistance = 99999999;
+
 			{
-				if ([side _x, side _group] call BIS_fnc_sideIsEnemy && _group knowsAbout _x > 1 && !(vehicle _x isKindOf "Air")) then {
-					true breakOut "main";
+				if (_group knowsAbout _x > 1 &&	
+					{ !(vehicle _x isKindOf "Air") &&
+						{ _x distance leader _group < _closestDistance &&
+							{ [side _x, side _group] call BIS_fnc_sideIsEnemy }}}) then
+				{
+					_closestDistance = _x distance leader _group;
+					_closestUnit = _x;
 				};
 			} foreach (leader _group nearTargets 200) as Object;
-			
-			false
+
+			if (!isNull _closestUnit) then {
+				_unitContainer = [getPos _closestUnit, _closestUnit] new UnitContainer;
+			};
+
+			_unitContainer
 		};
 		
 		// Gets whether all squad members are dead or not.

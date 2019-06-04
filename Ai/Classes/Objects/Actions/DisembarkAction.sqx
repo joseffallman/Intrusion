@@ -12,7 +12,7 @@ namespace Intrusion.Ai
 	public class DisembarkAction : IAction
 	{
 		// Creates a MountAction object.
-		public constructor("_timeoutTime" as Scalar, "_vehicle" as AiVehicle, "_service" as IActionService)
+		public constructor("_timeoutTime" as Scalar, "_vehicle" as VehicleContainer, "_service" as IActionService)
 		{
 			_self.TimeoutTime = _timeoutTime;
 			_self.Vehicle = _vehicle;
@@ -26,6 +26,6 @@ namespace Intrusion.Ai
 		public property IActionService Service { get; private set; };
 		
 		// Gets the AI squad's vehicle.
-		public property AiVehicle Vehicle { get; private set; };
+		public property VehicleContainer Vehicle { get; private set; };
 	};
 };

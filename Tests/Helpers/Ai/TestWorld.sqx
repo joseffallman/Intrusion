@@ -25,7 +25,7 @@ namespace Intrusion.Tests.Helpers
 			_self.LeaderPos = [];
 			_self.ClosestEmptyFreeVehicle = classNull;
 			_self.SquadMounted = false;
-			_self.DetectedEnemiesClose = false;
+			_self.ClosestDetectedEnemy = classNull;
 			_self.AllSquadMembersDead = false;
 		};
 		
@@ -57,14 +57,14 @@ namespace Intrusion.Tests.Helpers
 			_self.SquadPresenceAtResourceLocation
 		};
 		
-		public property AiVehicle ClosestEmptyFreeVehicle { get; set; };
+		public property VehicleContainer ClosestEmptyFreeVehicle { get; set; };
 
 		
 		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
 		// _side (Side): Side of the vehicle.
 		// _pos (Array): The relative position.
 		// _squadSize (Scalar): The number of members in the squad.
-		public method AiVehicle GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
+		public method VehicleContainer GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
 		{
 			_self.ClosestEmptyFreeVehicle
 		};
@@ -88,18 +88,19 @@ namespace Intrusion.Tests.Helpers
 		};
 		
 		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
-		public method AiVehicle GetMountedVehicle("_group" as Group)
+		public method VehicleContainer GetMountedVehicle("_group" as Group)
 		{
 			classNull
 		};
 		
-		public property DetectedEnemiesClose { get; set; };
+		public property UnitContainer ClosestDetectedEnemy { get; set; };
 		
-		// Gets whether a group has detected near enemies.
+		// Gets the closest detected enemy unit.
 		// _group (Group): The group to test.
-		public method Boolean GetDetectedEnemiesClose("_group" as Group)
+		// Returns (UnitContainter): The detected unit that is closest to the group. null if no units are detected.
+		public method UnitContainer GetClosestDetectedEnemy("_group" as Group)
 		{
-			_self.DetectedEnemiesClose
+			_self.ClosestDetectedEnemy
 		};
 		
 		public property Boolean AllSquadMembersDead { get; set; };

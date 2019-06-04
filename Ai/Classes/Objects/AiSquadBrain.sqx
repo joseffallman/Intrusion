@@ -125,8 +125,8 @@ namespace Intrusion.Ai
 		private method MakeDecision()
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
-			private ["_locationMarkerName" as String, "_aiVehicle" as AiVehicle, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
-			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService];
+			private ["_locationMarkerName" as String, "_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
+			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService, "_unitContainer" as UnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
@@ -165,7 +165,9 @@ namespace Intrusion.Ai
 
 			// If squad is mounted and enemies spotted near, disembark
 			
-			if (_squadInVehicle && { [_mKnowledge.Group] call _mWorld.GetDetectedEnemiesClose }) then
+			_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
+			
+			if (_squadInVehicle && !isNull _unitContainer && { (leader _mKnowledge.Group) distance _unitContainer.Position < 100 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
@@ -296,7 +298,7 @@ namespace Intrusion.Ai
 		// Gets whether the group has completed a move action.
 		private method Boolean HasCompletedMove()
 		{
-			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean];
+			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean, "_unitContainer" as UnitContainer];
 			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
 			scopeName "main";
@@ -310,8 +312,10 @@ namespace Intrusion.Ai
 				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 				_moveAction = _currentAction as MoveAction;
 				
-				// Move is completed if the squad is mounted and se nearby enemies
-				if (_squadInVehicle && [_mKnowledge.Group] call _mWorld.GetDetectedEnemiesClose) then {
+				_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
+			
+				// Move is completed if the squad is mounted and can see nearby enemies
+				if (_squadInVehicle && { (leader _mKnowledge.Group) distance _unitContainer.Position < 100 }) then {
 		        	["Completed move #0"] call LogHandler.Debug;
 					player sideChat "Completed #0";
 					true breakOut "main";

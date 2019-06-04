@@ -37,6 +37,6 @@ namespace Intrusion.Ai
 		public property Boolean RelatedResourceLocation { get; private set; };
 		
 		// Gets the squad's vehicle.
-		public property AiVehicle Vehicle { get; private set; };
+		public property VehicleContainer Vehicle { get; private set; };
 	};
 };
