@@ -165,9 +165,11 @@ namespace Intrusion.Ai
 			
 			_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
 			
+        	["_unitContainer: " + str _unitContainer] call LogHandler.Debug;
+			
 			if (!_squadInVehicle && !isNull _unitContainer && { _leaderPos distance _unitContainer.Position < 100 }) then
 			{
-				_action = [_time + 20, classNull, classNull] new DisembarkAction;
+				_action = [_time + 20, _unitContainer.Position] new EngageAction;
 				[AiSquadState.Engaging, _action] call _self.SetState;
 	        	["Engage action created: " + str _action] call LogHandler.Debug;
 				breakOut "main";
