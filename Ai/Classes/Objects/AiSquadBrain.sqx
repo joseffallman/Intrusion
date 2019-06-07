@@ -95,7 +95,6 @@ namespace Intrusion.Ai
 				} foreach _locations as ResourceLocation;
 				
 				_valuedLocations = [_valuedLocations] call Sorter.QSort;
-				hint str _valuedLocations;
 				
 				if (_count > 3) then {
 					_count = 3;
@@ -162,12 +161,22 @@ namespace Intrusion.Ai
 				};
 			};
 			
-
-			// If squad is mounted and enemies spotted near, disembark
+			// If squad is not mounted and enemies spotted near, engage
 			
 			_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
 			
-			if (_squadInVehicle && !isNull _unitContainer && { (leader _mKnowledge.Group) distance _unitContainer.Position < 100 }) then
+			if (!_squadInVehicle && !isNull _unitContainer && { _leaderPos distance _unitContainer.Position < 100 }) then
+			{
+				_action = [_time + 20, classNull, classNull] new DisembarkAction;
+				[AiSquadState.Engaging, _action] call _self.SetState;
+	        	["Engage action created: " + str _action] call LogHandler.Debug;
+				breakOut "main";
+			};
+			
+
+			// If squad is mounted and enemies spotted near, disembark
+			
+			if (_squadInVehicle && !isNull _unitContainer && { _leaderPos distance _unitContainer.Position < 100 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
@@ -315,7 +324,7 @@ namespace Intrusion.Ai
 				_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
 			
 				// Move is completed if the squad is mounted and can see nearby enemies
-				if (_squadInVehicle && { (leader _mKnowledge.Group) distance _unitContainer.Position < 100 }) then {
+				if (_squadInVehicle && { _leaderPos distance _unitContainer.Position < 100 }) then {
 		        	["Completed move #0"] call LogHandler.Debug;
 					player sideChat "Completed #0";
 					true breakOut "main";

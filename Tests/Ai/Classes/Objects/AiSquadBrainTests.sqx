@@ -42,7 +42,7 @@ namespace Intrusion.Tests.Ai
 		// Registers all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainTests", [
-				/*"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
+				"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
 				"AtBaseAttackOrder_Act_StatusMove",
 				"MovingToDestinationFarOff_Act_StatusMoving",
 				"ArrivingAtDestination_Act_StatusIdle",
@@ -63,7 +63,7 @@ namespace Intrusion.Tests.Ai
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
 				"CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle",
-				"MountedMovingDetectedEnemies_Act_StatusIdle",*/
+				"MountedMovingDetectedEnemies_Act_StatusIdle",
 				"MountedIdleDetectedEnemies_Act_StatusDisembarking",
 				"MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging",
 			]] call TestEngine.Register;
@@ -534,6 +534,8 @@ namespace Intrusion.Tests.Ai
 		
 		private static method MountedIdleDetectedEnemies_Act_StatusDisembarking
 		{
+			private ["_action" as DisembarkAction];
+		
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = true;
@@ -547,6 +549,9 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[AiSquadState.Disembarking, _mKnowledge.State, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as DisembarkAction;
+			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
 		};
 		
 		private static method MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging
@@ -555,7 +560,7 @@ namespace Intrusion.Tests.Ai
 		
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
-			_mWorld.ClosestDetectedEnemy = classNull;
+			_mWorld.ClosestDetectedEnemy = [[50, 50, 0], objNull] new UnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
