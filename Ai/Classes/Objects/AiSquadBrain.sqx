@@ -109,15 +109,15 @@ namespace Intrusion.Ai
 					
 					// Create the order
 					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
-				};
 				
-				["AiSquadBrain.CreateOrderOnOwnInitiative"] call LogHandler.Debug;
-				["_this: " + str _this] call LogHandler.Debug;
-				["_locations: " + str _locations] call LogHandler.Debug;
-				["_count: " + str _count] call LogHandler.Debug;
-				["_valuedLocations: " + str _valuedLocations] call LogHandler.Debug;
-				["_index: " + str _index] call LogHandler.Debug;
-				["_mKnowledge.Order: " + str _mKnowledge.Order] call LogHandler.Debug;
+					["AiSquadBrain.CreateOrderOnOwnInitiative"] call LogHandler.Debug;
+					["_this: " + str _this] call LogHandler.Debug;
+					["_locations: " + str _locations] call LogHandler.Debug;
+					["_count: " + str _count] call LogHandler.Debug;
+					["_valuedLocations: " + str _valuedLocations] call LogHandler.Debug;
+					["_index: " + str _index] call LogHandler.Debug;
+					["_mKnowledge.Order: " + str _mKnowledge.Order] call LogHandler.Debug;
+				};
 			};
 		};
 		
