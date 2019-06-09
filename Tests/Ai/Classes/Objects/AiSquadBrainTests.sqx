@@ -66,6 +66,7 @@ namespace Intrusion.Tests.Ai
 				"MountedMovingDetectedEnemies_Act_StatusIdle",
 				"MountedIdleDetectedEnemies_Act_StatusDisembarking",
 				"MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging",
+				"AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle",
 			]] call TestEngine.Register;
 		};
 		

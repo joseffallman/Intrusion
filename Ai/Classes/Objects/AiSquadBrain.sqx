@@ -511,6 +511,10 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
+			// If all members are dead, respawn.
+			
+			
+		
 			// If there is no order, create one on own initiative so the squad always has an order.
 			if (isNull _mKnowledge.Order) then {
 				call _self.CreateOrderOnOwnInitiative;

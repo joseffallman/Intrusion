@@ -35,5 +35,11 @@ namespace Intrusion.Ai
 		// Moves the members of a group out of its vehicles immediately.
 		// _group (Group): The group to move out.
 		method MoveOutFromVehicle("_group" as Group);
+		
+		// Respawns a group to base.
+		// _group (Group): The group to respawn.
+		// _unitsCount (Scalar): The number of units in the group, i.e. the number of units to spawn.
+		// _baseMarkerName (String): The marker name of the group's base.
+		method RespawnGroupToBase("_group" as Group, "_unitsCount" as Scalar, "_baseMarkerName" as String);
 	};
 };

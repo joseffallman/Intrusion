@@ -112,5 +112,16 @@ namespace Intrusion.Ai
 				moveOut _x;
 			} foreach units _group as Object;
 		};
+		
+		// Respawns a group to base.
+		// _group (Group): The group to respawn.
+		// _unitsCount (Scalar): The number of units in the group, i.e. the number of units to spawn.
+		// _baseMarkerName (String): The marker name of the group's base.
+		public method RespawnGroupToBase("_group" as Group, "_unitsCount" as Scalar, "_baseMarkerName" as String)
+		{
+//			for "_i" from 1 to (count _oldUnits) do {
+//				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
+//			};
+		};
 	};
 };
