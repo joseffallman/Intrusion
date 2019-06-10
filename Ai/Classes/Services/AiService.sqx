@@ -91,7 +91,7 @@ namespace Intrusion.Ai
 					_aiSquad = [
 						_group,
 						[_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World,
-						[_group, _mResourceLocationHandler] new ActionPerformer, 
+						[_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer, 
 						new RandomGenerator, 
 						new MarkerHandler, 
 						new ActionTimeoutConfig, 

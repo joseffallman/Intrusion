@@ -120,6 +120,10 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IUnitContainer.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Interfaces\IUnitContainer.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionPerformer.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\ActionPerformer.sqx">
@@ -1281,6 +1285,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestAiUnitBalancer.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestAiUnitBalancer.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestUnitContainer.sqx" IsExpanded="false" FileName="Tests\Helpers\Ai\TestUnitContainer.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

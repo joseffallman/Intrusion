@@ -17,8 +17,8 @@ namespace Intrusion.Ai
 		// gets or sets the group associated with this AI knowledge.
 		property Group Group { get; set; };
 		
-		// gets or sets the group members associated with this AI knowledge.
-		property Scalar MembersCount { get; set; };
+		// Gets how the original members of the group (might be excluded from the group because they are dead).
+		property Array Members { get; set; };
 		
 		// Gets or sets the state of the AI team.
 		property AiSquadState State { get; set; };

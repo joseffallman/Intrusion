@@ -9,17 +9,19 @@
  */
 namespace Intrusion.Ai
 {
-	public class UnitContainer
+	public class UnitContainer : IUnitContainer
 	{
 		// Creates a UnitContainer object.
-		public constructor("_position" as Array, "_unit" as Object)
+		public constructor("_unit" as Object)
 		{
-			_self.Position = _position;
 			_self.Unit = _unit;
 		};
 		
 		// Gets the unit's position.
-		public property Array Position { get; private set; };
+		public method Array GetPosition()
+		{
+			getPos _self.Unit
+		};
 		
 		// Gets the unit object.
 		public property Object Unit { get; private set; };

@@ -38,8 +38,8 @@ namespace Intrusion.Ai
 		
 		// Respawns a group to base.
 		// _group (Group): The group to respawn.
-		// _unitsCount (Scalar): The number of units in the group, i.e. the number of units to spawn.
+		// _members (Array of IUnitContainer): The original members of the group.
 		// _baseMarkerName (String): The marker name of the group's base.
-		method RespawnGroupToBase("_group" as Group, "_unitsCount" as Scalar, "_baseMarkerName" as String);
+		method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String);
 	};
 };

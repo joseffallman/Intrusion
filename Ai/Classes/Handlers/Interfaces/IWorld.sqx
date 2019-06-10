@@ -51,8 +51,8 @@ namespace Intrusion.Ai
 		
 		// Gets the closest detected enemy unit.
 		// _group (Group): The group to test.
-		// Returns (UnitContainter): The detected unit that is closest to the group.
-		method UnitContainer GetClosestDetectedEnemy("_group" as Group);
+		// Returns (IUnitContainter): The detected unit that is closest to the group.
+		method IUnitContainer GetClosestDetectedEnemy("_group" as Group);
 		
 		// Gets whether all squad members are dead or not.
 		// _group (Group): The group to test.

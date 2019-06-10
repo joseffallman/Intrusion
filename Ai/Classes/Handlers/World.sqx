@@ -119,15 +119,15 @@ namespace Intrusion.Ai
 		// Gets the closest detected enemy unit.
 		// _group (Group): The group to test.
 		// Returns (UnitContainter): The detected unit that is closest to the group. null if no units are detected.
-		public method UnitContainer GetClosestDetectedEnemy("_group" as Group)
+		public method IUnitContainer GetClosestDetectedEnemy("_group" as Group)
 		{
-			private ["_closestUnit" as Object, "_unitContainer" as UnitContainer];
+			private ["_closestUnit" as Object, "_unitContainer" as IUnitContainer];
 			
 			_unitContainer = classNull;
 			_closestUnit = (leader _group) findNearestEnemy getPos leader _group;
 
 			if (!isNull _closestUnit) then {
-				_unitContainer = [getPos _closestUnit, _closestUnit] new UnitContainer;
+				_unitContainer = [_closestUnit] new UnitContainer;
 			};
 
 			_unitContainer

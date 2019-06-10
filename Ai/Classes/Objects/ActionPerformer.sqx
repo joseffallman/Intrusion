@@ -16,12 +16,15 @@ namespace Intrusion.Ai
 {
 	public class ActionPerformer : IActionPerformer
 	{
-		private fields ["_mGroup" as Group];
+		private fields ["_mGroup" as Group, "_mUnitSpawner" as IUnitSpawner, "_mUnitInfo" as AiUnitInfo];
 		
 		// Creates a ActionManager object.
-		public constructor("_group" as Group, "_resourceLocationHandler" as IResourceLocationHandler)
+		public constructor("_group" as Group, "_resourceLocationHandler" as IResourceLocationHandler, "_unitSpawner" as IUnitSpawner, "_unitsConfig" as IAiUnitsConfig)
 		{
 			_mGroup = _group;
+			_mUnitSpawner = _unitSpawner;
+			
+			_mUnitInfo = [side _group] call _unitsConfig.GetUnitInfo;
 		};
 		
 		// Performs a move action for an AI group.
@@ -115,13 +118,13 @@ namespace Intrusion.Ai
 		
 		// Respawns a group to base.
 		// _group (Group): The group to respawn.
-		// _unitsCount (Scalar): The number of units in the group, i.e. the number of units to spawn.
+		// _members (Array of IUnitContainer): The original members of the group.
 		// _baseMarkerName (String): The marker name of the group's base.
-		public method RespawnGroupToBase("_group" as Group, "_unitsCount" as Scalar, "_baseMarkerName" as String)
+		public method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
 		{
-//			for "_i" from 1 to (count _oldUnits) do {
-//				[_mUnitInfo.UnitClassName, getMarkerPos _mMapMarkerInfo.BaseMarkerName, _self.Group] call _mUnitSpawner.CreateUnit;
-//			};
+			for "_i" from 1 to (count _members) do {
+				[_mUnitInfo.UnitClassName, getMarkerPos _baseMarkerName, _group] call _mUnitSpawner.CreateUnit;
+			};
 		};
 	};
 };

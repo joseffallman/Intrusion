@@ -99,7 +99,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld = [_mResourceLocationCollection] new TestWorld;
 			_mActionPerformer = new TestActionPerformer;
 			_mRandomGenerator = [0] new TestRandomGenerator;
-			_mKnowledge = [_mGroup] new Knowledge;
+			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
@@ -334,7 +334,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [600, 400, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 401, 0], 2] new VehicleContainer;
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Members pushBack [[600, 400, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -352,7 +352,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [10, 10, 0], 2] new VehicleContainer;
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -370,7 +370,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [25, 25, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new VehicleContainer;
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Members pushBack [[25, 25, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.CurrentAction = [30, [30, 30, 0], "FACTORY2"] new MoveAction;
 			_mKnowledge.State = AiSquadState.Moving;
@@ -390,7 +390,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [0, 0, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new VehicleContainer;
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 1;
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -413,7 +413,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [10, 10, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [15, 15, 0], 2] new VehicleContainer;
 			_mWorld.SquadMounted = true;
-			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -430,7 +430,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = true;
-			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
@@ -450,7 +450,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = true;
-			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
@@ -471,7 +471,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Disembarking;
 			
@@ -496,7 +496,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = true;
-			_mKnowledge.MembersCount = 2;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Disembarking;
 			
@@ -520,8 +520,8 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = true;
-			_mWorld.ClosestDetectedEnemy = [[250, 300, 0], objNull] new UnitContainer;
-			_mKnowledge.MembersCount = 3;
+			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
@@ -540,8 +540,8 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = true;
-			_mWorld.ClosestDetectedEnemy = [[250, 300, 0], objNull] new UnitContainer;
-			_mKnowledge.MembersCount = 3;
+			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[250, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -561,7 +561,7 @@ namespace Intrusion.Tests.Ai
 		
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
-			_mWorld.ClosestDetectedEnemy = [[50, 50, 0], objNull] new UnitContainer;
+			_mWorld.ClosestDetectedEnemy = [[50, 50, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -580,7 +580,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = false;
-			_mKnowledge.MembersCount = 3;
+			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;

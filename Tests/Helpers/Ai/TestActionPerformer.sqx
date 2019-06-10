@@ -73,5 +73,13 @@ namespace Intrusion.Tests.Helpers
 		public method MoveOutFromVehicle("_group" as Group)
 		{
 		};
+		
+		// Respawns a group to base.
+		// _group (Group): The group to respawn.
+		// _members (Array of IUnitContainer): The original members of the group.
+		// _baseMarkerName (String): The marker name of the group's base.
+		public method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
+		{
+		};
 	};
 };

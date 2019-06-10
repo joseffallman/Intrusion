@@ -15,10 +15,10 @@ namespace Intrusion.Ai
 	public class Knowledge : IKnowledge
 	{
 		// Creates a Knowledge object.
-		public constructor("_group" as Group)
+		public constructor("_group" as Group, "_members" as Array /* of IUnitContainer */)
 		{
 			_self.Group = _group;
-			_self.MembersCount = count units _group;
+			_self.Members = [];
 			_self.State = AiSquadState.Idle;
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
@@ -31,10 +31,7 @@ namespace Intrusion.Ai
 		// gets or sets the group associated with this AI knowledge.
 		public property Group Group { get; set; };
 		
-		// Gets how many members it is in the group.
-		public property Scalar MembersCount { get; set; };
-		
-		// gets or sets the group members associated with this AI knowledge.
+		// Gets how the original members of the group (might be excluded from the group because they are dead).
 		public property Array Members { get; set; };
 		
 		// Gets or sets the state of the AI team.
