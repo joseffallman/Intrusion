@@ -134,7 +134,7 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
 			private ["_locationMarkerName" as String, "_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
-			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService, "_enemyContainer" as IUnitContainer, "_enemyPos" as Array];
+			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService, "_enemyContainer" as IUnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
@@ -173,13 +173,12 @@ namespace Intrusion.Ai
 			// If squad is not mounted and enemies spotted near, engage
 			
 			_enemyContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
-			_enemyPos = call _enemyContainer.GetPosition;
 			
         	["_unitContainer: " + str _enemyContainer] call LogHandler.Debug;
 			
-			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance _enemyPos < 100 }) then
+			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
-				_action = [_time + 20, _enemyPos] new EngageAction;
+				_action = [_time + 20, (call _enemyContainer.GetPosition)] new EngageAction;
 				[AiSquadState.Engaging, _action] call _self.SetState;
 	        	["Engage action created: " + str _action] call LogHandler.Debug;
 				breakOut "main";
@@ -188,7 +187,7 @@ namespace Intrusion.Ai
 
 			// If squad is mounted and enemies spotted near, disembark
 			
-			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance _enemyPos < 100 }) then
+			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
@@ -336,7 +335,7 @@ namespace Intrusion.Ai
 				_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
 			
 				// Move is completed if the squad is mounted and can see nearby enemies
-				if (_squadInVehicle && { _leaderPos distance (call _unitContainer.GetPosition) < 100 }) then {
+				if (_squadInVehicle &&  !isNull _unitContainer && { _leaderPos distance (call _unitContainer.GetPosition) < 100 }) then {
 		        	["Completed move #0"] call LogHandler.Debug;
 					player sideChat "Completed #0";
 					true breakOut "main";
@@ -518,12 +517,29 @@ namespace Intrusion.Ai
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 		};
 		
+		private method Boolean GetAllMembersAreDead()
+		{
+			scopeName "main";
+			
+			{
+				if (call _x.GetIsAlive) then {
+					false breakOut "main";
+				};
+			} foreach _mKnowledge.Members as IUnitContainer;
+			
+			true
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
+			scopeName "main";
+			
 			// If all members are dead, respawn.
-			
-			
+			if (call _self.GetAllMembersAreDead) then {
+				[AiSquadState.Idle, classNull] call _self.SetState;
+				breakOut "main";
+			};
 		
 			// If there is no order, create one on own initiative so the squad always has an order.
 			if (isNull _mKnowledge.Order) then {

@@ -580,10 +580,10 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = false;
-			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
 			
 			// Act
 			call _mBrain.Act;

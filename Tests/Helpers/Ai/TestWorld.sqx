@@ -17,7 +17,7 @@ namespace Intrusion.Tests.Helpers
 	public class TestWorld : IWorld
 	{
 		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
-	
+
 		// Creates a TestWorld object.
 		public constructor("_resourceLocationCollection" as ResourceLocationCollection)
 		{

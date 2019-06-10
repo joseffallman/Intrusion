@@ -25,5 +25,12 @@ namespace Intrusion.Ai
 		
 		// Gets the unit object.
 		public property Object Unit { get; private set; };
+		
+		// Get whether the unit is alive or not.
+		// Returns (Boolean): true if the unit is alive, otherwise false.
+		public method Boolean GetIsAlive()
+		{
+			alive _self.Unit
+		};
 	};
 };

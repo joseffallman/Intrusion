@@ -13,7 +13,8 @@ using Intrusion.Server;
 using Sqx.Collections;
 using Sqx.Waypoints;
 
-namespace Intrusion.Ai {
+namespace Intrusion.Ai
+{
 	public class AiSquadOld
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
@@ -22,7 +23,7 @@ namespace Intrusion.Ai {
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
 		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler, "_mAiWeaponsConfig" as IAiWeaponsConfig];
 		private fields ["_mOrderSetByLeader" as Boolean];
-		
+
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
 		public constructor(
