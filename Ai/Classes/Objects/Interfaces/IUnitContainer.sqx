@@ -1,0 +1,20 @@
+/*
+ * Name:	IUnitContainer
+ * Date:	2019-06-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * An object containing a unit abstracted from reality.
+ */
+namespace Intrusion.Ai
+{
+	public interface IUnitContainer
+	{
+		// Gets the unit object.
+		property Object Unit { get; private set; };
+		
+		// Gets the unit's position.
+		method Array GetPosition();
+	};
+};

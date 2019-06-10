@@ -1,0 +1,35 @@
+/*
+ * Name:	TestUnitContainer
+ * Date:	2019-06-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class containing a unit abstracted from reality and used for test purpososes.
+ */
+
+using Intrusion.Ai;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestUnitContainer : IUnitContainer
+	{
+		// Creates a UnitContainer object.
+		public constructor("_position" as Array)
+		{
+			_self.Position = _position;
+			_self.Unit = objNull;
+		};
+		
+		public property Array Position { get; set; };
+		
+		// Gets the unit's position.
+		public method Array GetPosition()
+		{
+			_self.Position
+		};
+		
+		// Gets the unit object.
+		public property Object Unit { get; private set; };
+	};
+};
