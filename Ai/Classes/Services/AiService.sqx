@@ -144,8 +144,8 @@ namespace Intrusion.Ai
 			
 			_aiService = [
 				gServer.AiSquadHandler,
-				_aiUnitBalancer, 
-				//new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+				//_aiUnitBalancer, 
+				new Intrusion.Tests.Helpers.TestAiUnitBalancer,
 				gServerConfig.Gameplay,
 				gCommonConfig.MapMarkers,
 				gCommonConfig.Professions,

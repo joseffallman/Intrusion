@@ -9,13 +9,16 @@
  */
 
 using Intrusion.Ai;
+using Intrusion.Common;
 
 namespace Intrusion.Tests.Helpers
 {
-	private fields ["_mWorld" as TestWorld];
+	//private fields ["_mWorld" as TestWorld]; // TODO SQX: Declaring variables outside class MUST generate an error!
 
 	public class TestActionPerformer : IActionPerformer
 	{
+		private fields ["_mWorld" as TestWorld];
+
 		// Creates a TestActionPerformer object.
 		public constructor("_world" as TestWorld)
 		{
@@ -23,6 +26,9 @@ namespace Intrusion.Tests.Helpers
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
 			_self.MountActions = [];
+			
+	        ["_world: " + str _world] call LogHandler.Debug;
+	        ["_mWorld: " + str _mWorld] call LogHandler.Debug;
 		};
 		
 		public property Array MoveActions { get; private set; };
@@ -85,7 +91,19 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Array of IUnitContainer): All new units.
 		public method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
 		{
+			private ["_newMembers" as Array];
+			
+	        ["_mWorld: " + str _mWorld] call LogHandler.Debug;
+	        
 			_mWorld.LeaderPos = [0, 0, 0];
+			
+			_newMembers = [];
+			
+			{
+				_newMembers pushBack [[0, 0, 0], true] new TestUnitContainer;
+			} foreach _members as IUnitContainer;
+			
+			_newMembers
 		};
 	};
 };

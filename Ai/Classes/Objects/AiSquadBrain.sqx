@@ -55,7 +55,6 @@ namespace Intrusion.Ai
 			else {
 				_members = [];
 				
-				
 				{
 					_members pushBack [_x] new UnitContainer;
 				} foreach units _group;
@@ -236,10 +235,7 @@ namespace Intrusion.Ai
 			
 			// If distance to ordered position is less than far, move to it (by foot).
 			
-			/*
-			_closestVehicleContainer = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
-			
-			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 250) then
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 150) then
 			{
 				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
@@ -247,10 +243,11 @@ namespace Intrusion.Ai
 	        	["Move action created #1: " + str _action] call LogHandler.Debug;
 				breakOut "main";
 			};
-			*/
 
 
-			// If squad is on foot beside an empty vehicle, then mount.
+			// If squad is on foot and standing right beside an empty vehicle, then mount.
+			
+			_aiVehicle = classNull;
 			
 			if (!_squadInVehicle) then
 			{
@@ -270,11 +267,14 @@ namespace Intrusion.Ai
 			// If squad is on foot and an empty vehicle is nearby, move to it.
 			// Nearby means one fourth of the distance to the aimed location
 			
-			if (!_squadInVehicle) then
+			if (!_squadInVehicle && { !isNull _aiVehicle }) then
 			{
 				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
-				private _distanceToTargetPos = _mKnowledge.Order.TargetPosition as Scalar;
+				private _distanceToTargetPos = _mKnowledge.Order.TargetPosition distance _leaderPos as Scalar;
 				
+	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
+	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
+		        	
 				if (!isNull _aiVehicle && { (_distanceToVehicle / _distanceToTargetPos) < 0.25 }) then {
 					_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 					[AiSquadState.Moving, _action] call _self.SetState;

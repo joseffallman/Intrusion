@@ -18,7 +18,7 @@ namespace Intrusion.Ai
 		public constructor("_group" as Group, "_members" as Array /* of IUnitContainer */)
 		{
 			_self.Group = _group;
-			_self.Members = [];
+			_self.Members = _members;
 			_self.State = AiSquadState.Idle;
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
