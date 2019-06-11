@@ -12,6 +12,7 @@ using Sqx.UnitTest;
 using Intrusion.Tests.Helpers;
 using Intrusion.Ai;
 using Intrusion.Common;
+using Intrusion.Server;
 
 namespace Intrusion.Tests.Ai
 {
@@ -34,7 +35,8 @@ namespace Intrusion.Tests.Ai
 			"_mResourceLocationCollection" as ResourceLocationCollection,
 			"_mTime" as TestMissionTime,
 			"_mActionService" as TestActionService,
-			"_mActionServiceFactory" as TestActionServiceFactory;
+			"_mActionServiceFactory" as TestActionServiceFactory,
+			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection;
 		];
 		
 		#endregion
@@ -68,6 +70,8 @@ namespace Intrusion.Tests.Ai
 				"MountedIdleDetectedEnemies_Act_StatusDisembarking",
 				"MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging",
 				"AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle",
+				"SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn",
+				"SingleSquadMemberIsDead_Act_DoesNotTakeAtLauncherAtRespawn",
 			]] call TestEngine.Register;
 		};
 		
@@ -102,10 +106,23 @@ namespace Intrusion.Tests.Ai
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
+			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
 			
-			_mBrain = [_mGroup, _mWorld, _mActionPerformer, _mRandomGenerator, _mMarkerHandler, new TestActionTimeoutConfig, _mTime, _mapMarkerInfo, _mActionServiceFactory, _mKnowledge] new AiSquadBrain;
+			_mBrain = [
+				_mGroup, 
+				_mWorld, 
+				_mActionPerformer, 
+				_mRandomGenerator, 
+				_mMarkerHandler, 
+				new TestActionTimeoutConfig, 
+				_mTime, 
+				_mapMarkerInfo, 
+				_mActionServiceFactory,
+				new TestAiWeaponsConfig,
+				_mKnowledge
+			] new AiSquadBrain;
 		};
 		
 		private static method AfterEach()
@@ -630,12 +647,60 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
 			
+			[west, Technology.Transport] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+		};
+		
+		private static method SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			[west, Technology.Ordnance] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			_mRandomGenerator.Number = 0.2;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI did not pick a launcher."] call Assert.IsTrue;
+			["launch_NLAW_F", _mActionPerformer.EquippedLauncherClassName, "AI did not pick correct launcher."] call Assert.AreEqual;
+			["NLAW_F", _mActionPerformer.EquippedLauncherMagazineClassName, "AI did not pick correct launcher ammo."] call Assert.AreEqual;
+		};
+		
+		private static method SingleSquadMemberIsDead_Act_DoesNotTakeAtLauncherAtRespawn
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			[west, Technology.Ordnance] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			_mRandomGenerator.Number = 0.4;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher."] call Assert.IsFalse;
 		};
 	};
 };

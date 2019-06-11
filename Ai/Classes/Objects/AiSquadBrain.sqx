@@ -18,7 +18,7 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
-						"_mActionServiceFactory" as IActionServiceFactory];
+						"_mActionServiceFactory" as IActionServiceFactory, "_mAiWeaponInfo" as AiWeaponInfo];
 		
 		#region Initialization
 
@@ -34,6 +34,7 @@ namespace Intrusion.Ai
 			"_time" as IMissionTime,
 			"_baseMarkerInfo" as MapMarkerInfo,
 			"_actionServiceFactory" as IActionServiceFactory,
+			"_aiWeaponsConfig" as IAiWeaponsConfig,
 			["_knowledge" as IKnowledge, classNull])
 		{
 			private ["_members" as Array];
@@ -46,6 +47,7 @@ namespace Intrusion.Ai
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
 			_mActionServiceFactory = _actionServiceFactory;
+			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
 			
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;
@@ -543,6 +545,12 @@ namespace Intrusion.Ai
 			_newMembers = [_mKnowledge.Group, _mKnowledge.Members, _mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mActionPerformer.RespawnAiSquad;
 		
 			_mKnowledge.Members = _newMembers;
+			
+			{
+				if (([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
+					[_x, _mAiWeaponInfo.AtLauncherClassName, _mAiWeaponInfo.AtLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
+				};
+			} foreach _newMembers as IUnitContainer;
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.

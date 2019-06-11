@@ -22,6 +22,7 @@ call compile preprocessFileLineNumbers "Tests\Helpers\TestActionServiceFactory.s
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestWorld.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestActionPerformer.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestActionTimeoutConfig.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestAiWeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestAiUnitBalancer.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestActionService.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestUnitContainer.sqx";
