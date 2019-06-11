@@ -12,10 +12,14 @@ using Intrusion.Ai;
 
 namespace Intrusion.Tests.Helpers
 {
+	private fields ["_mWorld" as TestWorld];
+
 	public class TestActionPerformer : IActionPerformer
 	{
 		// Creates a TestActionPerformer object.
-		public constructor {
+		public constructor("_world" as TestWorld)
+		{
+			_mWorld = _world;
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
 			_self.MountActions = [];
@@ -74,12 +78,14 @@ namespace Intrusion.Tests.Helpers
 		{
 		};
 		
-		// Respawns a group to base.
+		// Kills the AI units and creates new units at base.
 		// _group (Group): The group to respawn.
-		// _members (Array of IUnitContainer): The original members of the group.
+		// _members (Array of IUnitContainer): The squad's members.
 		// _baseMarkerName (String): The marker name of the group's base.
-		public method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
+		// Returns (Array of IUnitContainer): All new units.
+		public method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
 		{
+			_mWorld.LeaderPos = [0, 0, 0];
 		};
 	};
 };

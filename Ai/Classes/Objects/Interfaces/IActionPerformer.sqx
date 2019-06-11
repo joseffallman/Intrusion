@@ -36,10 +36,11 @@ namespace Intrusion.Ai
 		// _group (Group): The group to move out.
 		method MoveOutFromVehicle("_group" as Group);
 		
-		// Respawns a group to base.
+		// Kills the AI units and creates new units at base.
 		// _group (Group): The group to respawn.
-		// _members (Array of IUnitContainer): The original members of the group.
+		// _members (Array of IUnitContainer): The squad's members.
 		// _baseMarkerName (String): The marker name of the group's base.
-		method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String);
+		// Returns (Array of IUnitContainer): All new units.
+		method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String);
 	};
 };

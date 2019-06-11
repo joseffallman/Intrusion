@@ -116,15 +116,38 @@ namespace Intrusion.Ai
 			} foreach units _group as Object;
 		};
 		
-		// Respawns a group to base.
+		// Kills the AI units and creates new units at base.
 		// _group (Group): The group to respawn.
-		// _members (Array of IUnitContainer): The original members of the group.
+		// _members (Array of IUnitContainer): The squad's members.
 		// _baseMarkerName (String): The marker name of the group's base.
-		public method RespawnGroupToBase("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
+		// Returns (Array of IUnitContainer): All new units.
+		public method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
 		{
-			for "_i" from 1 to (count _members) do {
-				[_mUnitInfo.UnitClassName, getMarkerPos _baseMarkerName, _group] call _mUnitSpawner.CreateUnit;
-			};
+			private ["_oldUnits" as Array, "_newUnits" as Array, "_unit" as Object];
+			
+			_oldUnits = [];
+			_newUnits = [];
+			
+			// Remove any current waypoint
+			[_group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			// Create new units at base
+			{
+				_oldUnits pushBack _x.Unit;
+				
+				_unit = [_mUnitInfo.UnitClassName, getMarkerPos _baseMarkerName, _group] call _mUnitSpawner.CreateUnit;
+				_newUnits pushBack [_unit] new UnitContainer;
+			} foreach _members as IUnitContainer;
+			
+			// Make sure the old units are dead.
+			{
+				_x setDamage 1;
+			} foreach _oldUnits as Object;
+			
+			// Make sure none of the old units belong to the group
+			(_oldUnits) joinSilent grpNull;
+			
+			_newUnits
 		};
 	};
 };

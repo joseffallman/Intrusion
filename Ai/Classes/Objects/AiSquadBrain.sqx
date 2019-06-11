@@ -530,6 +530,15 @@ namespace Intrusion.Ai
 			true
 		};
 		
+		private method RespawnToBase()
+		{
+			private ["_newMembers" as Array /* of IUnitContainer */];
+			
+			_newMembers = [_mKnowledge.Group, _mKnowledge.Members, _mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mActionPerformer.RespawnAiSquad;
+		
+			_mKnowledge.Members = _newMembers;
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
@@ -537,6 +546,7 @@ namespace Intrusion.Ai
 			
 			// If all members are dead, respawn.
 			if (call _self.GetAllMembersAreDead) then {
+				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _self.SetState;
 				breakOut "main";
 			};

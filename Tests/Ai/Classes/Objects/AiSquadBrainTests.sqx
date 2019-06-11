@@ -97,7 +97,7 @@ namespace Intrusion.Tests.Ai
 			
 			_mGroup = createGroup west;
 			_mWorld = [_mResourceLocationCollection] new TestWorld;
-			_mActionPerformer = new TestActionPerformer;
+			_mActionPerformer = [_mWorld] new TestActionPerformer;
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
@@ -606,27 +606,5 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
 		};
-		
-		/*
-		private static method ExplicitOrderToAttackOwnLocationAlreadyPresent_Act_DefendOrderStatusIdle
-		{
-			// Arrange
-			_mWorld.LeaderPos = [410, 410, 0];
-			_mLocationOffice1.Side = west;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
-			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
-			_mRandomGenerator.Number = 0;
-			
-			// Act
-			[[_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order] call _mBrain.GiveOrder;
-			
-			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is not defending."] call Assert.AreEqual;
-			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not a defent order."] call Assert.AreEqual;
-			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
-			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
-		};
-		*/
 	};
 };
