@@ -54,7 +54,8 @@ namespace Intrusion.Tests.Ai
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
-				"MovingMediumAtVehicle_Act_StatusMoving",
+				"MovingMediumAtVehicle_Act_StatusMovingToVehicle",
+				"MovingMediumVehicleHalfNear_Act_StatusMovingToLocation",
 				"MovingFarAtVehicle_Act_StatusMountingVehicle",
 				"MovingFarVehicleNearby_Act_StatusMoving",
 				"MovingToNearbyVehicle_Act_StatusIdle",
@@ -341,8 +342,10 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI movement did not timeout."] call Assert.AreEqual;
 		};
 		
-		private static method MovingMediumAtVehicle_Act_StatusMoving
+		private static method MovingMediumAtVehicle_Act_StatusMovingToVehicle
 		{
+			private ["_action" as MoveAction];
+			
 			// Arrange
 			_mWorld.LeaderPos = [600, 400, 0];
 			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 401, 0], 2] new VehicleContainer;
@@ -357,6 +360,34 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.Moving, _mKnowledge.State, "AI not leaving vehicle and moving."] call Assert.AreEqual;
 			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[_action.Position, [601, 401, 0], "AI moved to the wrong position."] call Assert.AreEqual;
+		};
+		
+		private static method MovingMediumVehicleHalfNear_Act_StatusMovingToLocation
+		{
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 400, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 500, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[600, 400, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not leaving vehicle and moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[_action.Position, [600, 600, 0], "AI moved to the wrong position."] call Assert.AreEqual;
 		};
 		
 		private static method MovingFarAtVehicle_Act_StatusMountingVehicle
@@ -417,7 +448,7 @@ namespace Intrusion.Tests.Ai
 			
 			_moveAction = _mActionPerformer.MoveActions select 0;
 			
-			[[30, 30, 0], _moveAction.Position, "Wrong position."] call Assert.AreEqual;
+			[[30, 30, 0], _moveAction.Position, "Squad moving to wrong position."] call Assert.AreEqual;
 		};
 		
 		private static method MovingFarHasMountedVehicle_Act_StatusMoving
