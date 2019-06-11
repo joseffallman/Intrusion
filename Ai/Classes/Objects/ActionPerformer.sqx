@@ -149,5 +149,16 @@ namespace Intrusion.Ai
 			
 			_newUnits
 		};
+		
+		// Equips an AI squad member with a backpack and a launcher.
+		// _member (IUnitContainer): The member to equip.
+		// _launcherClassName (String): The class name of the launcher.
+		// _ammoClassName (String): The class name of the launcher's ammo.
+		public method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String)
+		{
+			_member.Unit addBackpack "B_Kitbag_cbr";
+			(unitBackpack _member.Unit) addMagazineCargo [_ammoClassName, 1];
+			_member.Unit addWeapon _launcherClassName;
+		};
 	};
 };

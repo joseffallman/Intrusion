@@ -26,6 +26,9 @@ namespace Intrusion.Tests.Helpers
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
 			_self.MountActions = [];
+			_self.EquipMemberWithLauncherCalled = false;
+			_self.EquippedLauncherClassName = "";
+			_self.EquippedLauncherMagazineClassName = "";
 			
 	        ["_world: " + str _world] call LogHandler.Debug;
 	        ["_mWorld: " + str _mWorld] call LogHandler.Debug;
@@ -104,6 +107,23 @@ namespace Intrusion.Tests.Helpers
 			} foreach _members as IUnitContainer;
 			
 			_newMembers
+		};
+		
+		public property Boolean EquipMemberWithLauncherCalled { get; private set; };
+		
+		public property String EquippedLauncherClassName { get; private set; };
+		
+		public property String EquippedLauncherMagazineClassName { get; private set; };
+		
+		// Equips an AI squad member with a backpack and a launcher.
+		// _member (IUnitContainer): The member to equip.
+		// _launcherClassName (String): The class name of the launcher.
+		// _ammoClassName (String): The class name of the launcher's ammo.
+		public method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String)
+		{
+			_self.EquippedLauncherClassName = _launcherClassName;
+			_self.EquippedLauncherMagazineClassName = _ammoClassName;
+			_self.EquipMemberWithLauncherCalled = true;
 		};
 	};
 };
