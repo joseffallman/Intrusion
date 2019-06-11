@@ -115,9 +115,10 @@ namespace Intrusion.Tests.Ai
 		private static method StateIdleAndNoOrder_Act_NotIdleAndHasOrder
 		{
 			// Arrange
-			_mWorld.LeaderPos = [0, 0, 0];
-			_mKnowledge.State = AiSquadState.Idle;
 			_mRandomGenerator.Number = 0;
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
+			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
 			call _mBrain.Act;
@@ -135,10 +136,11 @@ namespace Intrusion.Tests.Ai
 			private ["_moveAction" as MoveAction];
 		
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
-			_mWorld.LeaderPos = [0, 0, 0];
-			_mKnowledge.State = AiSquadState.Idle;
 			_mRandomGenerator.Number = 0;
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
 			call _mBrain.Act;
@@ -154,8 +156,9 @@ namespace Intrusion.Tests.Ai
 		private static method MovingToDestinationFarOff_Act_StatusMoving
 		{
 			// Arrange
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mWorld.LeaderPos = [10, 10, 0];
+			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			
 			// Act
@@ -168,8 +171,9 @@ namespace Intrusion.Tests.Ai
 		private static method ArrivingAtDestination_Act_StatusIdle
 		{
 			// Arrange
-			_mWorld.LeaderPos = [190, 190, 0];
 			_mLocationFactory1.Side = east;
+			_mWorld.LeaderPos = [190, 190, 0];
+			_mKnowledge.Members pushBack [[190, 190, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
@@ -184,9 +188,10 @@ namespace Intrusion.Tests.Ai
 		private static method AtEnemyLocation_Act_StatusCapturing
 		{
 			// Arrange
+			_mLocationFactory1.Side = east;
 			_mWorld.LeaderPos = [210, 210, 0];
 			_mWorld.SquadPresenceAtResourceLocation = true;
-			_mLocationFactory1.Side = east;
+			_mKnowledge.Members pushBack [[210, 210, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -201,9 +206,10 @@ namespace Intrusion.Tests.Ai
 		private static method AfterCapturingLocation_Act_StatusIdle
 		{
 			// Arrange
+			_mLocationFactory1.Side = west;
 			_mWorld.LeaderPos = [190, 190, 0];
 			_mWorld.SquadPresenceAtResourceLocation = true;
-			_mLocationFactory1.Side = west;
+			_mKnowledge.Members pushBack [[190, 190, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Capturing;
 			_mKnowledge.CurrentAction = [60, [200, 200, 0], "FACTORY1"] new CaptureAction;
@@ -219,9 +225,9 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [25, 25, 0];
+			_mKnowledge.Members pushBack [[25, 25, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			//_mLocationFactory1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
@@ -233,12 +239,13 @@ namespace Intrusion.Tests.Ai
 		private static method OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle
 		{
 			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
 			_mWorld.LeaderPos = [110, 110, 0];
+			_mKnowledge.Members pushBack [[110, 110, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
-			_mRandomGenerator.Number = 0;
-			_mLocationOffice1.Side = west;
 			
 			// Act
 			call _mBrain.Act;
@@ -256,12 +263,13 @@ namespace Intrusion.Tests.Ai
 		private static method OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle
 		{
 			// Arrange
-			_mWorld.LeaderPos = [410, 410, 0];
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
-			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
 			_mRandomGenerator.Number = 0;
 			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = [410, 410, 0];
+			_mKnowledge.Members pushBack [[410, 410, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [400, 400, 0], _mLocationOffice1] new Order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
 			call _mBrain.Act;
@@ -280,9 +288,11 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Members pushBack [[120, 120, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [350, [200, 200, 0], "FACTORY1"] new MoveAction;
+			
 			_mKnowledge.LeaderPos = [120, 120, 0];
 			_mKnowledge.LeaderPosTime = 295;
 			_mTime.MissionTime = 300;
@@ -298,9 +308,11 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Members pushBack [[120, 120, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
+			
 			_mKnowledge.LeaderPos = [120, 120, 0];
 			_mKnowledge.LeaderPosTime = 285;
 			_mTime.MissionTime = 300;
@@ -316,6 +328,7 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [120, 120, 0];
+			_mKnowledge.Members pushBack [[120, 120, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [120, [200, 200, 0], "FACTORY1"] new MoveAction;
@@ -541,7 +554,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = true;
 			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
-			_mKnowledge.Members pushBack [[250, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -562,6 +575,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
 			_mWorld.ClosestDetectedEnemy = [[50, 50, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -580,10 +594,10 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
-			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
 			
 			// Act
 			call _mBrain.Act;
