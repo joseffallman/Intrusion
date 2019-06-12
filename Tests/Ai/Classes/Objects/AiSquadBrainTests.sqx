@@ -72,6 +72,8 @@ namespace Intrusion.Tests.Ai
 				"AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle",
 				"SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn",
 				"SingleSquadMemberIsDead_Act_DoesNotTakeAtLauncherAtRespawn",
+				"SingleSquadMemberIsDead_Act_TakesAaLauncherAtRespawn",
+				"SingleSquadMemberIsDead_Act_DoesNotTakeAaLauncherAtRespawn",
 			]] call TestEngine.Register;
 		};
 		
@@ -696,6 +698,52 @@ namespace Intrusion.Tests.Ai
 			
 			[west, Technology.Ordnance] call _mInventedTechnologiesCollection.AddInventedTechnology;
 			_mRandomGenerator.Number = 0.4;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher."] call Assert.IsFalse;
+		};
+		
+		private static method SingleSquadMemberIsDead_Act_TakesAaLauncherAtRespawn
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			[west, Technology.AntiAir] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			_mRandomGenerator.Number = 0.4;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI did not pick a launcher."] call Assert.IsTrue;
+			["launch_B_Titan_F", _mActionPerformer.EquippedLauncherClassName, "AI did not pick correct launcher."] call Assert.AreEqual;
+			["Titan_AA", _mActionPerformer.EquippedLauncherMagazineClassName, "AI did not pick correct launcher ammo."] call Assert.AreEqual;
+		};
+		
+		private static method SingleSquadMemberIsDead_Act_DoesNotTakeAaLauncherAtRespawn
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[300, 300, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			[west, Technology.AntiAir] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			_mRandomGenerator.Number = 0.7;
 			
 			// Act
 			call _mBrain.Act;

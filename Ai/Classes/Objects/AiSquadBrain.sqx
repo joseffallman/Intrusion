@@ -555,7 +555,7 @@ namespace Intrusion.Ai
 					[_x, _mAiWeaponInfo.AtLauncherClassName, _mAiWeaponInfo.AtLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 				}
 				else {
-					if (_aaLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) > _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
+					if (_aaLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
 						[_x, _mAiWeaponInfo.AaLauncherClassName, _mAiWeaponInfo.AaLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 					};
 				};
