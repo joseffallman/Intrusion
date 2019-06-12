@@ -105,8 +105,6 @@ namespace Intrusion.Ai
 						_mInventedTechnologiesCollection
 					] new AiSquadBrain;
 					
-					
-					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;
 					//[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;
