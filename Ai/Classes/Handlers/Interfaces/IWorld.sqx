@@ -58,5 +58,10 @@ namespace Intrusion.Ai
 		// _group (Group): The group to test.
 		// Returns (Boolean): true if all the group's members are dead, otherwise false.
 		method Boolean GetAllSquadMembersDead("_group" as Group);
+		
+		// Gets the squad's squad vehicle.
+		// _group (Group): The group.
+		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
+		method VehicleContainer GetSquadVehicle("_group" as Group);
 	};
 };

@@ -1247,7 +1247,11 @@
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" IsExpanded="false" FileName="Tests\Ai\Classes\Objects">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrainTests.sqx" IsExpanded="false" FileName="Tests\Ai\Classes\Objects\AiSquadBrainTests.sqx">
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrainBasicTests.sqx" IsExpanded="false" FileName="Tests\Ai\Classes\Objects\AiSquadBrainBasicTests.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrainVehiclesTests.sqx" IsExpanded="false" FileName="Tests\Ai\Classes\Objects\AiSquadBrainVehiclesTests.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>

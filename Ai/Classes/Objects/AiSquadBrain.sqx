@@ -565,15 +565,19 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
+			private ["_squadVehicle" as VehicleContainer];
+			
 			scopeName "main";
 			
-			// If all members are dead, respawn.
-			if (call _self.GetAllMembersAreDead) then {
+			// If all members are dead, or if group has got their squad vehicle, then respawn.
+			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;			
+			
+			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200 }) then {
 				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _self.SetState;
 				breakOut "main";
 			};
-		
+			
 			// If there is no order, create one on own initiative so the squad always has an order.
 			if (isNull _mKnowledge.Order) then {
 				call _self.CreateOrderOnOwnInitiative;

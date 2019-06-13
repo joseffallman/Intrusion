@@ -27,6 +27,7 @@ namespace Intrusion.Tests.Helpers
 			_self.SquadMounted = false;
 			_self.ClosestDetectedEnemy = classNull;
 			_self.AllSquadMembersDead = false;
+			_self.SquadVehicle = classNull;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -111,6 +112,16 @@ namespace Intrusion.Tests.Helpers
 		public method Boolean GetAllSquadMembersDead("_group" as Group)
 		{
 			_self.AllSquadMembersDead
+		};
+		
+		public property VehicleContainer SquadVehicle { get; set; };
+		
+		// Gets the squad's squad vehicle.
+		// _group (Group): The group.
+		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
+		public method VehicleContainer GetSquadVehicle("_group" as Group)
+		{
+			_self.SquadVehicle
 		};
 	};
 };

@@ -56,6 +56,11 @@ namespace Intrusion.Ai
 			
 			false
 		};
+		
+		private method Scalar CountSeats("_vehicle" as Object)
+		{
+			(count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]))
+		};
 
 		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
 		// _side (Side): Side of the vehicle.
@@ -69,7 +74,7 @@ namespace Intrusion.Ai
 			_intrusionVehicle = [_side, _pos, _squadSize] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
 			_vehicle = _intrusionVehicle.Vehicle;
 			
-			_seatsCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
+			_seatsCount = [_vehicle] call _self.CountSeats;
 
 			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
 		};
@@ -139,6 +144,24 @@ namespace Intrusion.Ai
 		public method Boolean GetAllSquadMembersDead("_group" as Group)
 		{
 			count units _group == 0
+		};
+		
+		// Gets the squad's squad vehicle.
+		// _group (Group): The group.
+		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
+		public method VehicleContainer GetSquadVehicle("_group" as Group)
+		{
+			private ["_vehicles" as Array /* of Object */, "_vehicleContainer" as VehicleContainer];
+			
+			_vehicleContainer = classNull;
+			
+			_vehicles = [_group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
+			
+			if (count _vehicles > 0) then {
+				[(_vehicles select 0), getPos (_vehicles select 0), [_vehicles select 0] call _self.CountSeats] new VehicleContainer;
+			};
+			
+			_vehicleContainer
 		};
 	};
 };

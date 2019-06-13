@@ -116,7 +116,7 @@ namespace Intrusion.Ai
 			} foreach units _group as Object;
 		};
 		
-		// Kills the AI units and creates new units at base.
+		// Respawns a squad at base. Creates new units and removes the old (if alive).
 		// _group (Group): The group to respawn.
 		// _members (Array of IUnitContainer): The squad's members.
 		// _baseMarkerName (String): The marker name of the group's base.
@@ -139,13 +139,15 @@ namespace Intrusion.Ai
 				_newUnits pushBack [_unit] new UnitContainer;
 			} foreach _members as IUnitContainer;
 			
-			// Make sure the old units are dead.
-			{
-				_x setDamage 1;
-			} foreach _oldUnits as Object;
-			
 			// Make sure none of the old units belong to the group
 			(_oldUnits) joinSilent grpNull;
+			
+			// Make sure the old units are dead or removed.
+			{
+				if (alive _x) then {
+					deleteVehicle _x;
+				};
+			} foreach _oldUnits as Object;
 			
 			_newUnits
 		};

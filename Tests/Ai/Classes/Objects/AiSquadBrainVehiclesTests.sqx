@@ -1,0 +1,139 @@
+/*
+ * Name:	AiSquadBrainVehiclesTests
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test class for AiBrain, that tests behaviour for squads with a squad vehicle.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Tests.Helpers;
+using Intrusion.Ai;
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Ai
+{
+	public class AiSquadBrainVehiclesTests
+	{
+		#region Fields
+		
+		private static fields [
+			"_mGroup" as Group,
+			"_mWorld" as TestWorld,
+			"_mMarkerHandler" as TestMarkerHandler,
+			"_mActionPerformer" as TestActionPerformer,
+			"_mBrain" as AiSquadBrain,
+			"_mKnowledge" as IKnowledge,
+			"_mRandomGenerator" as TestRandomGenerator,
+			"_mLocationFactory1" as ResourceLocation,
+			"_mLocationOffice1" as ResourceLocation,
+			"_mLocationFactory2" as ResourceLocation,
+			"_mLocationOffice2" as ResourceLocation,
+			"_mResourceLocationCollection" as ResourceLocationCollection,
+			"_mTime" as TestMissionTime,
+			"_mActionService" as TestActionService,
+			"_mActionServiceFactory" as TestActionServiceFactory,
+			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection;
+		];
+		
+		#endregion
+
+		// Registers all tests that should be run.
+		public static method Init {
+			["Intrusion.Tests.Ai", "AiSquadBrainVehiclesTests", [
+				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
+				"AtBaseAndStateIdle_SquadVehicleReady_NoRespawn",
+			]] call TestEngine.Register;
+		};
+		
+		private static method BeforeEach()
+		{
+			private ["_mapMarkerInfo" as MapMarkerInfo];
+			
+			_mResourceLocationCollection = new ResourceLocationCollection;
+			_mActionService = new TestActionService;
+			_mActionServiceFactory = [_mActionService] new TestActionServiceFactory;
+			
+			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
+			_mLocationOffice1 = ["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation;
+			_mLocationFactory2 = ["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation;
+			_mLocationOffice2 = ["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation;
+			
+			[_mLocationFactory1] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice1] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationFactory2] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice2] call _mResourceLocationCollection.AddResourceLocation;
+			
+			_mMarkerHandler = new TestMarkerHandler;
+			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY1", [0, 500, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE1", [0, 1000, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY2", [0, 1500, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE2", [0, 2000, 0]] call _mMarkerHandler.AddMarkerPos;
+			
+			_mGroup = createGroup west;
+			_mWorld = [_mResourceLocationCollection] new TestWorld;
+			_mActionPerformer = [_mWorld] new TestActionPerformer;
+			_mRandomGenerator = [0] new TestRandomGenerator;
+			_mKnowledge = [_mGroup, []] new Knowledge;
+			_mTime = [0] new TestMissionTime;
+			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			
+			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
+			
+			_mBrain = [
+				_mGroup, 
+				_mWorld, 
+				_mActionPerformer, 
+				_mRandomGenerator, 
+				_mMarkerHandler, 
+				new TestActionTimeoutConfig, 
+				_mTime, 
+				_mapMarkerInfo, 
+				_mActionServiceFactory,
+				new TestAiWeaponsConfig,
+				_mInventedTechnologiesCollection,
+				_mKnowledge
+			] new AiSquadBrain;
+		};
+		
+		private static method AfterEach()
+		{
+			deleteGroup _mGroup;
+		};
+		
+		private static method StateIdle_SquadVehicleReady_RespawnedAndIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [0, 1000, 0];
+			_mWorld.SquadVehicle = [objNull, [0, 35, 0], 3] new VehicleContainer;
+			_mKnowledge.Members pushBack [[0, 1000, 0]] new TestUnitContainer;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not idle."] call Assert.AreEqual;
+			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
+		};
+		
+		private static method AtBaseAndStateIdle_SquadVehicleReady_NoRespawn
+		{
+			// Arrange
+			_mWorld.LeaderPos = [0, 10, 0];
+			_mWorld.SquadVehicle = [objNull, [0, 35, 0], 3] new VehicleContainer;
+			_mKnowledge.Members pushBack [[0, 1000, 0]] new TestUnitContainer;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[[0, 10, 0], _mWorld.LeaderPos, "AI respawned."] call Assert.AreEqual;
+		};
+	};
+};
