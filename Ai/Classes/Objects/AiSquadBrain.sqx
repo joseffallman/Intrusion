@@ -266,8 +266,28 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			};
-
 			
+/*			
+			// If a squad with a squad vehicle is on foot and their squad vehicle is alive anywhere, move to it.
+			
+			if (!_squadInVehicle && { !isNull _aiVehicle }) then
+			{
+				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
+				private _distanceToTargetPos = _mKnowledge.Order.TargetPosition distance _leaderPos as Scalar;
+				
+	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
+	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
+		        	
+				if (!isNull _aiVehicle && { (_distanceToVehicle / _distanceToTargetPos) < 0.25 }) then {
+					_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _mKnowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _mActionPerformer.DoMove;
+		        	["Move action created #2: " + str _action] call LogHandler.Debug;
+					breakOut "main";
+				};
+			};
+
+*/			
 			// If squad is on foot and an empty vehicle is nearby, move to it.
 			// Nearby means one fourth of the distance to the aimed location
 			

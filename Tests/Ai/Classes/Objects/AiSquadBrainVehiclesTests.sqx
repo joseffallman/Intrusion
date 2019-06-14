@@ -44,8 +44,8 @@ namespace Intrusion.Tests.Ai
 		// Registers all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainVehiclesTests", [
-				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
-				"AtBaseAndStateIdle_SquadVehicleReady_NoRespawn",
+				/*"StateIdle_SquadVehicleReady_RespawnedAndIdle",*/
+				"AtBaseAndStateIdle_SquadVehicleReady_NoRespawnMovingToVehicle",
 			]] call TestEngine.Register;
 		};
 		
@@ -105,7 +105,7 @@ namespace Intrusion.Tests.Ai
 			deleteGroup _mGroup;
 		};
 		
-		private static method StateIdle_SquadVehicleReady_RespawnedAndIdle
+		private static method StateIdle_SquadVehicleReady_RespawnedAndIdle()
 		{
 			// Arrange
 			_mWorld.LeaderPos = [0, 1000, 0];
@@ -121,11 +121,14 @@ namespace Intrusion.Tests.Ai
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
 		};
 		
-		private static method AtBaseAndStateIdle_SquadVehicleReady_NoRespawn
+		private static method AtBaseAndStateIdle_SquadVehicleReady_NoRespawnMovingToVehicle()
 		{
+			private ["_action" as MoveAction];
+			
 			// Arrange
 			_mWorld.LeaderPos = [0, 10, 0];
 			_mWorld.SquadVehicle = [objNull, [0, 35, 0], 3] new VehicleContainer;
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [0, 40, 0], 3] new VehicleContainer;
 			_mKnowledge.Members pushBack [[0, 1000, 0]] new TestUnitContainer;
 			_mKnowledge.State = AiSquadState.Idle;
 			
@@ -134,6 +137,32 @@ namespace Intrusion.Tests.Ai
 			
 			// Assert
 			[[0, 10, 0], _mWorld.LeaderPos, "AI respawned."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving towards their vehicle."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[[0, 35, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
+		};
+		
+		private static method AtBaseAndStateIdle_Act_MovingToVehicle()
+		{
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [0, 1200, 0];
+			_mWorld.SquadVehicle = [objNull, [0, 1600, 0], 3] new VehicleContainer;
+			_mKnowledge.Members pushBack [[0, 1200, 0]] new TestUnitContainer;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving towards their vehicle."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[[0, 1600, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
 		};
 	};
 };
