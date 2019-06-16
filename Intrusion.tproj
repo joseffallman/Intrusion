@@ -116,7 +116,7 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IKnowledge.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Interfaces\IKnowledge.sqx">
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IDecisionMaker.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Interfaces\IDecisionMaker.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -151,6 +151,10 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiWeaponInfo.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\AiWeaponInfo.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InfantryDecisionMaker.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\InfantryDecisionMaker.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

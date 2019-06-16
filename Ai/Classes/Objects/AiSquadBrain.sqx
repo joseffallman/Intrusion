@@ -16,9 +16,10 @@ namespace Intrusion.Ai
 {
 	public class AiSquadBrain
 	{
-		private fields ["_mKnowledge" as IKnowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
+		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
-						"_mActionServiceFactory" as IActionServiceFactory, "_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+						"_mActionServiceFactory" as IActionServiceFactory, "_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+						"_mDecisionMaker" as IDecisionMaker];
 		
 		#region Initialization
 
@@ -36,7 +37,8 @@ namespace Intrusion.Ai
 			"_actionServiceFactory" as IActionServiceFactory,
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			["_knowledge" as IKnowledge, classNull])
+			["_knowledge" as Knowledge, classNull],
+			["_decisionMaker" as IDecisionMaker, classNull])
 		{
 			private ["_members" as Array];
 		
@@ -52,8 +54,7 @@ namespace Intrusion.Ai
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			
 			if (!isNull _knowledge) then {
-				_mKnowledge = _knowledge;
-				
+				_mKnowledge = _knowledge;				
 				_mKnowledge.Group = _group;
 			}
 			else {
@@ -67,6 +68,19 @@ namespace Intrusion.Ai
 			};
 			
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
+			
+			if (!isNull _decisionMaker) then {
+				_mDecisionMaker = _decisionMaker;
+			}
+			else {
+				_mDecisionMaker = [
+					_mTime,
+					_mKnowledge,
+					_mActionServiceFactory,
+					_mWorld,
+					_mActionPerformer
+				] new InfantryDecisionMaker;
+			};
 		};
 		
 		public method Scalar GetMemberCount()
@@ -154,6 +168,7 @@ namespace Intrusion.Ai
 			
 			
 			// If target resource location is already captured, and the order was on own initiative, request a new order!
+			// OnTargetResourceLocationCaptured
 
         	["_mKnowledge.OrderIsGivenByBrigadeLeader: " + str (_mKnowledge.OrderIsGivenByBrigadeLeader)] call LogHandler.Debug;
         	["isNull _mKnowledge.Order.ResourceLocation: " + str (isNull _mKnowledge.Order.ResourceLocation)] call LogHandler.Debug;
@@ -166,14 +181,15 @@ namespace Intrusion.Ai
 	        	
 				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
 				{
+					call _mDecisionMaker.OnTargetResourceLocationCaptured;
 					call _self.CreateOrderOnOwnInitiative;
-					player sideChat ("New order: " + _mKnowledge.Order.ResourceLocation.MarkerName);
 		        	["Order created: " + str _mKnowledge.Order] call LogHandler.Debug;
 					breakOut "main";
 				};
 			};
 			
 			// If squad is not mounted and enemies spotted near, engage
+			// OnNearEnemiesSpottedOnGround
 			
 			_enemyContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
 			
@@ -181,28 +197,24 @@ namespace Intrusion.Ai
 			
 			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
-				_action = [_time + 20, (call _enemyContainer.GetPosition)] new EngageAction;
-				[AiSquadState.Engaging, _action] call _self.SetState;
-	        	["Engage action created: " + str _action] call LogHandler.Debug;
+				_action = [_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
 				breakOut "main";
 			};
 			
 
 			// If squad is mounted and enemies spotted near, disembark
+			// OnNearEnemiesSpottedOnGround
 			
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
-				call _actionService.RunAsync;
-				_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
-				[AiSquadState.Disembarking, _action] call _self.SetState;
-	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+				_action = [_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
 				breakOut "main";
 			};
 			
 
 			// If squad is mounted and near a destination (<150m), set disembark.
+			// OnAlmostAtTargetLocation
 			
 			if (_squadInVehicle) then
 			{
@@ -220,6 +232,7 @@ namespace Intrusion.Ai
 			
 
 			// If inside the perimiters of a resource location that should be captured, capture it!
+			// OnAtEnemyLocation
 
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
 			_locations = call _locationCollection.GetResourceLocations;
@@ -237,7 +250,8 @@ namespace Intrusion.Ai
 			} foreach _locations as ResourceLocation;
 
 			
-			// If distance to ordered position is less than far, move to it (by foot).
+			// If distance to ordered position is less than far, move to it (by foot since not in a vehicle).
+			// OnWithinWalkingDistanceFromTargetLocation
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 150) then
 			{
@@ -250,6 +264,7 @@ namespace Intrusion.Ai
 
 
 			// If squad is on foot and standing right beside an empty vehicle, then mount.
+			// OnNextToEmptyFreeVehicle
 			
 			_aiVehicle = classNull;
 			
@@ -290,6 +305,7 @@ namespace Intrusion.Ai
 */			
 			// If squad is on foot and an empty vehicle is nearby, move to it.
 			// Nearby means one fourth of the distance to the aimed location
+			// OnEmptyFreeVehicleNearby
 			
 			if (!_squadInVehicle && { !isNull _aiVehicle }) then
 			{
@@ -310,6 +326,7 @@ namespace Intrusion.Ai
 			
 			
 			// If not already there, move towards order's target!
+			// OnNotAtTargetPosition
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
 			{
@@ -325,6 +342,8 @@ namespace Intrusion.Ai
 	        	["Move action created #3: " + str _action] call LogHandler.Debug;
 				breakOut "main";
 			};
+			
+			// OnGotAllLocations
 		};
 		
 		private method SetState("_state" as AiSquadState, "_action" as IAction) 

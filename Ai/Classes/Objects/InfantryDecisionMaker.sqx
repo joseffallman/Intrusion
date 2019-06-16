@@ -1,0 +1,71 @@
+/*
+ * Name:	InfantryDecisionMaker
+ * Date:	2019-06-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the frontal lobe of the brain that is the centre for decision making.
+ * This class is inherited by different squad brains with different perspective, like motorized, sharpshooter, air and naval.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class InfantryDecisionMaker : IDecisionMaker
+	{
+		private fields ["_mTime" as IMissionTime, "_mKnowledge" as Knowledge, "_mActionServiceFactory" as IActionServiceFactory, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer];
+	
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer)
+		{
+			_mTime = _time;
+			_mKnowledge = _knowledge;
+			_mActionServiceFactory = _actionServiceFactory;
+			_mWorld = _world;
+			_mActionPerformer = _actionPerformer;
+		};
+	
+		private method SetState("_state" as AiSquadState, "_action" as IAction) 
+		{
+			_mKnowledge.State = _state;
+			
+			if (_state == AiSquadState.Idle) then {
+				_mKnowledge.CurrentAction = classNull;
+			}
+			else {
+				_mKnowledge.CurrentAction = _action;
+			};
+			
+			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+		};
+	
+		public method OnTargetResourceLocationCaptured()
+		{
+		};
+		
+		// Called when enemies on the ground are spotted near.
+		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
+		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
+		public method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		{
+			private ["_action" as IAction, "_actionService" as IActionService, "_time" as Scalar];
+			
+			if (isNull _mountedVehicleContainer) then
+			{
+				_action = [(call _mTime.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
+				[AiSquadState.Engaging, _action] call _self.SetState;
+	        	["Engage action created: " + str _action] call LogHandler.Debug;
+	        }
+	        else {
+	        	_time = call _mTime.GetMissionTime;
+	        	
+				_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _mountedVehicleContainer] call _mActionServiceFactory.CreateDisembarkService;
+				call _actionService.RunAsync;
+				_action = [_time + 20, _mountedVehicleContainer, _actionService as DisembarkActionService] new DisembarkAction;
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+	        };
+		};
+	};
+};

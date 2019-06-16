@@ -12,7 +12,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Ai
 {
-	public class Knowledge : IKnowledge
+	public class Knowledge
 	{
 		// Creates a Knowledge object.
 		public constructor("_group" as Group, "_members" as Array /* of IUnitContainer */)

@@ -26,7 +26,7 @@ namespace Intrusion.Tests.Ai
 			"_mMarkerHandler" as TestMarkerHandler,
 			"_mActionPerformer" as TestActionPerformer,
 			"_mBrain" as AiSquadBrain,
-			"_mKnowledge" as IKnowledge,
+			"_mKnowledge" as Knowledge,
 			"_mRandomGenerator" as TestRandomGenerator,
 			"_mLocationFactory1" as ResourceLocation,
 			"_mLocationOffice1" as ResourceLocation,
@@ -79,7 +79,7 @@ namespace Intrusion.Tests.Ai
 		
 		private static method BeforeEach()
 		{
-			private ["_mapMarkerInfo" as MapMarkerInfo];
+			private ["_mapMarkerInfo" as MapMarkerInfo, "_decisionMaker" as InfantryDecisionMaker];
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_mActionService = new TestActionService;
@@ -111,6 +111,7 @@ namespace Intrusion.Tests.Ai
 			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer] new InfantryDecisionMaker;
 			
 			_mBrain = [
 				_mGroup, 
@@ -124,7 +125,8 @@ namespace Intrusion.Tests.Ai
 				_mActionServiceFactory,
 				new TestAiWeaponsConfig,
 				_mInventedTechnologiesCollection,
-				_mKnowledge
+				_mKnowledge,
+				_decisionMaker,
 			] new AiSquadBrain;
 		};
 		

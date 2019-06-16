@@ -90,7 +90,7 @@ namespace Intrusion.Ai
 					for "_i" from 1 to _unitCount do {
 						[_unitInfo.UnitClassName, getMarkerPos _mapMarkerInfo.BaseMarkerName, _group] call _mUnitSpawner.CreateUnit;
 					};
-				
+					
 					_aiSquad = [
 						_group,
 						[_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World,
