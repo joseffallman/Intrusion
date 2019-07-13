@@ -27,7 +27,7 @@ namespace Intrusion.Ai
 			"_unitBalancer" as IAiUnitBalancer, 
 			"_gameplayConfig" as IGameplayConfig, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
-			"_professinConfig" as IProfessionConfig, 
+			"_professinConfig" as ProfessionConfig, 
 			"_squadHandler" as ISquadHandler, 
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_unitSpawner" as IUnitSpawner,

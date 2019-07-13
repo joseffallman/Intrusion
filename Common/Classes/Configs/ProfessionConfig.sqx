@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionConfig : IProfessionConfig
+	public class ProfessionConfig
 	{
         // Initializes all professions.
         public constructor {

@@ -12,7 +12,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Tests.Helpers
 {
-	public class TestProfessionConfig : IProfessionConfig
+	public class TestProfessionConfig : ProfessionConfig
 	{
         // Initializes all professions.
         public constructor {

@@ -15,10 +15,10 @@ namespace Intrusion.Client
 {
 	public class MapObservationsHandler
 	{
-		private static fields ["_mMapObservationIds" as Array /* as Scalar */, "_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mMapObservationIds" as Array /* as Scalar */, "_mProfessionConfig" as ProfessionConfig];
 
 		// Initializes the MapObservationsHandler.
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init("_professionConfig" as ProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mMapObservationIds = [];

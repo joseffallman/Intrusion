@@ -20,7 +20,7 @@ namespace Intrusion.Server
 			"_mScientist" as Scientist,
 			"_mReservationQueue" as ReservationQueue,
 			"_mSquadHandler" as ISquadHandler,
-			"_mProfessionConfig" as IProfessionConfig,
+			"_mProfessionConfig" as ProfessionConfig,
 			"_mResourceLocationHandler" as IResourceLocationHandler];
 		
         // Creates a SideHandler object.
@@ -35,7 +35,7 @@ namespace Intrusion.Server
 			"_messageHandler" as IMessageHandler, 
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_unitCounter" as IUnitCounter,
-			"_professionConfig" as IProfessionConfig,
+			"_professionConfig" as ProfessionConfig,
 			"_matchLengthMinutes" as Scalar,
 			"_resourceLocationHandler" as IResourceLocationHandler)
 		{

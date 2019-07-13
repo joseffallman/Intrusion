@@ -429,10 +429,6 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IProfessionConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IProfessionConfig.sqx">
-                        <IsSelected>false</IsSelected>
-                        <SubNodes />
-                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IProfessionVehiclesConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IProfessionVehiclesConfig.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />

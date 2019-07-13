@@ -16,10 +16,10 @@ namespace Intrusion.Server
 	public class SquadHandler : ISquadHandler
 	{
 		private fields ["_mSquadCollection" as SquadCollection, "_mVehicleSpawner" as IVehicleSpawner];
-		private static fields ["_mProfessionChangeListeners" as Array /* of Code */, "_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mProfessionChangeListeners" as Array /* of Code */, "_mProfessionConfig" as ProfessionConfig];
 		
 		// Creates a SquadHandler object.
-		public constructor("_vehicleSpawner" as IVehicleSpawner, "_professionConfig" as IProfessionConfig)
+		public constructor("_vehicleSpawner" as IVehicleSpawner, "_professionConfig" as ProfessionConfig)
 		{
 			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadCollection = new SquadCollection;

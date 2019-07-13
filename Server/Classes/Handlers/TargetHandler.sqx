@@ -14,9 +14,9 @@ namespace Intrusion.Server
 {
 	public class TargetHandler
 	{
-		private fields ["_mProfessionConfig" as IProfessionConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private fields ["_mProfessionConfig" as ProfessionConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
 	
-		public constructor("_professionConfig" as IProfessionConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+		public constructor("_professionConfig" as ProfessionConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;

@@ -20,7 +20,7 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as ProfessionConfig];
 		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler, "_mAiWeaponsConfig" as IAiWeaponsConfig];
 		private fields ["_mOrderSetByLeader" as Boolean];
 
@@ -28,7 +28,7 @@ namespace Intrusion.Ai
 		// _noOfUnits (Scalar): Number of units to spawn.
 		public constructor(
 			"_unitsConfig" as IAiUnitsConfig,
-			"_professionConfig" as IProfessionConfig,
+			"_professionConfig" as ProfessionConfig,
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
 			"_vehicleSpawner" as IVehicleSpawner, 

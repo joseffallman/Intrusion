@@ -14,9 +14,9 @@ namespace Intrusion.Client
 {
 	public class ClientSquadHandler
 	{
-		private static fields ["_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mProfessionConfig" as ProfessionConfig];
 	
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init("_professionConfig" as ProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 		};
