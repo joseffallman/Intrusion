@@ -15,7 +15,7 @@ namespace Intrusion.Server
 	public class MoveBaseService : IService
 	{
 		private fields ["_mSide" as Side, "_mBaseLayout" as BaseLayout, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mBaseConfig" as IBaseConfig];
+		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mBaseConfig" as BaseConfig];
 		
 		// Creates a MoveBaseService object.
 		// _leader (Object): The leader unit moving the base.
@@ -25,7 +25,7 @@ namespace Intrusion.Server
 			"_messageHandler" as IMessageHandler, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
 			"_vehicleSpawner" as IVehicleSpawner,
-			"_baseConfig" as IBaseConfig)
+			"_baseConfig" as BaseConfig)
 		{
 			_self.IsRunning = false;
 			

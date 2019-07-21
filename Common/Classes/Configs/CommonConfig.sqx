@@ -19,7 +19,7 @@ namespace Intrusion.Common
 			"_technologyConfig" as ITechnologyConfig, 
 			"_vehiclesClassNamesConfig" as IVehicleClassNamesConfig, 
 			"_professionVehiclesConfig" as IProfessionVehiclesConfig,
-			"_baseConfig" as IBaseConfig)
+			"_baseConfig" as BaseConfig)
 		{
 			_self.MapMarkers = _mapMarkersConfig;
 			_self.Professions = _professionConfig;
@@ -44,6 +44,6 @@ namespace Intrusion.Common
 		public property IProfessionVehiclesConfig ProfessionVehicles { get; private set; };
 		
 		// Gets the base config.
-		public property IBaseConfig BaseConfig { get; private set; };
+		public property BaseConfig BaseConfig { get; private set; };
 	};
 };

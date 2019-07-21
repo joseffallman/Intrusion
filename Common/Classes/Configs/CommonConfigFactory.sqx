@@ -20,11 +20,11 @@ namespace Intrusion.Common
 			if (ReleaseSettings.Mode == ReleaseMode.Production) then {
 				_commonConfig = [
 					new MapMarkersConfig, 
-					new ProfessionProdConfig, 
+					new ProfessionConfig, 
 					new TechnologyProdConfig, 
 					new VehicleClassNamesConfig, 
 					new ProfessionVehiclesProdConfig, 
-					new BaseProdConfig] new CommonConfig;
+					new BaseConfig] new CommonConfig;
 			}
 			else {
 				if (ReleaseSettings.Mode == ReleaseMode.Test) then {

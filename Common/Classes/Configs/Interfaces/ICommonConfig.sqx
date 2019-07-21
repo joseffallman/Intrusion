@@ -27,6 +27,6 @@ namespace Intrusion.Common
 		property IProfessionVehiclesConfig ProfessionVehicles { get; };
 		
 		// Gets the base config.
-		property IBaseConfig BaseConfig { get; private set; };
+		property BaseConfig BaseConfig { get; private set; };
 	};
 };

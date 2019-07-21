@@ -1,5 +1,5 @@
 /*
- * Name:	BaseProdConfig
+ * Name:	BaseConfig
  * Date:	2019-02-01
  * Version: 1.0
  * Author:  Engima
@@ -9,7 +9,7 @@
  */
 namespace Intrusion.Common
 {
-	public class BaseProdConfig : IBaseConfig
+	public class BaseConfig
 	{
 		// Creates a ClassNamesConfig object.
 		public constructor {
@@ -22,19 +22,19 @@ namespace Intrusion.Common
 			_self.TimeRequiredToMoveBase = 60;
 		};
 		
-		public property Scalar BaseRadius { get; private set; };
+		public property Scalar BaseRadius { get; protected set; };
 		
-		public property Scalar BeamToBaseEnemiesMinDistance { get; private set; };
+		public property Scalar BeamToBaseEnemiesMinDistance { get; protected set; };
 		
-		public property Scalar BeamToBaseGroupMembersMaxDistance { get; private set; };
+		public property Scalar BeamToBaseGroupMembersMaxDistance { get; protected set; };
 		
-		public property String MoveBaseRespawnArrowClassName { get; private set; };
+		public property String MoveBaseRespawnArrowClassName { get; protected set; };
 		
-		public property String MoveBaseVehiclesArrowClassName { get; private set; };
+		public property String MoveBaseVehiclesArrowClassName { get; protected set; };
 		
-		public property String MoveBaseWeaponsArrowClassName { get; private set; };
+		public property String MoveBaseWeaponsArrowClassName { get; protected set; };
 		
 		// Gets the time in seconds it takes from when the brigade leader moves the base until it is actually moved.
-		public property Scalar TimeRequiredToMoveBase { get; private set; };
+		public property Scalar TimeRequiredToMoveBase { get; protected set; };
 	};
 };

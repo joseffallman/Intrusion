@@ -417,7 +417,7 @@
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces">
                     <IsSelected>false</IsSelected>
                     <SubNodes>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IBaseConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\IBaseConfig.sqx">
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\Interfaces\BaseConfig.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -451,7 +451,7 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseProdConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\BaseProdConfig.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BaseConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\BaseConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -472,10 +472,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\ProfessionConfig.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionProdConfig.sqx" IsExpanded="false" FileName="Common\Classes\Configs\ProfessionProdConfig.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

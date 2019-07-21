@@ -10,10 +10,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNames
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionTestConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ReleaseSettings.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseTestConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseProdConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\TechnologyTestConfig.sqx";
