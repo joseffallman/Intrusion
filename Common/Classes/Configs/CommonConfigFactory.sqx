@@ -21,9 +21,9 @@ namespace Intrusion.Common
 				_commonConfig = [
 					new MapMarkersConfig, 
 					new ProfessionConfig, 
-					new TechnologyProdConfig, 
+					new TechnologyConfig, 
 					new VehicleClassNamesConfig, 
-					new ProfessionVehiclesProdConfig, 
+					new ProfessionVehiclesConfig, 
 					new BaseConfig] new CommonConfig;
 			}
 			else {
