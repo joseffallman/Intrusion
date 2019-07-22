@@ -12,7 +12,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class MoveBaseService : IService
+	public class MoveBaseService : Service
 	{
 		private fields ["_mSide" as Side, "_mBaseLayout" as BaseLayout, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mBaseConfig" as BaseConfig];
@@ -27,7 +27,7 @@ namespace Intrusion.Server
 			"_vehicleSpawner" as IVehicleSpawner,
 			"_baseConfig" as BaseConfig)
 		{
-			_self.IsRunning = false;
+			call _base.Constructor;
 			
 			_mSide = _side;
 			_mBaseLayout = _baseLayout;
@@ -37,9 +37,7 @@ namespace Intrusion.Server
 			_mBaseConfig = _baseConfig;
 		};
 		
-		public property Boolean IsRunning { get; private set; };
-		
-		private method Run()
+		protected method Run()
 		{
 			private ["_side" as Side, "_newWeaponPos" as Array, "_oldWeaponPos" as Array, "_oldVehicleSpawnPos" as Array, "_offsetX" as Scalar, "_offsetY" as Scalar];
 		    private ["_timeLeft" as Scalar, "_sleepTime" as Scalar, "_allSpawnedVehicles" as Array];
@@ -99,12 +97,8 @@ namespace Intrusion.Server
 			_mMapMarkerInfo.WeaponDepotMarkerName setMarkerPos _newWeaponPos;
 			
 			["Your brigade leader has moved your base to a new location.", _side] call _mMessageHandler.ShowHint;
-		};
-		
-		public method RunAsync()
-		{
-			_self.IsRunning = true;
-			[] spawn _self.Run;
+			
+			call _base.Run;
 		};
 	};
 };

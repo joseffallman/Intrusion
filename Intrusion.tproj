@@ -713,6 +713,10 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Service.sqx" IsExpanded="false" FileName="Common\Classes\Services\Service.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IntrusionCommon.sqx" IsExpanded="false" FileName="Common\Classes\IntrusionCommon.sqx">
