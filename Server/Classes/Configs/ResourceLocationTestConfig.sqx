@@ -1,0 +1,20 @@
+/*
+ * Name:	ResourceLocationTestConfig
+ * Date:	2019-07-23
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles configurations about resource locations.
+ */
+namespace Intrusion.Server
+{
+	public class ResourceLocationTestConfig : ResourceLocationConfig
+	{
+		// Creates a ResourceLocationConfig object.
+		public constructor {
+			call _base.Constructor;
+			_self.DominanceTimeBeforeCaptureSek = 5;
+		};
+	};
+};

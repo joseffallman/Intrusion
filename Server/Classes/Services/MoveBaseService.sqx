@@ -37,7 +37,7 @@ namespace Intrusion.Server
 			_mBaseConfig = _baseConfig;
 		};
 		
-		protected method Run()
+		protected override method Run()
 		{
 			private ["_side" as Side, "_newWeaponPos" as Array, "_oldWeaponPos" as Array, "_oldVehicleSpawnPos" as Array, "_offsetX" as Scalar, "_offsetY" as Scalar];
 		    private ["_timeLeft" as Scalar, "_sleepTime" as Scalar, "_allSpawnedVehicles" as Array];

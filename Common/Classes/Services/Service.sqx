@@ -28,7 +28,7 @@ namespace Intrusion.Common
 		
 		// Performs the service's logic as a separate process.
 		// Call this from the sub class' Run when returning from the method (exiting service script).
-		protected method Run()
+		protected virtual method Run()
 		{
 			_self.IsRunning = false;
 			_self.IsCancelling = false;

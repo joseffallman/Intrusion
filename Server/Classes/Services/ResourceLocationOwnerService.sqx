@@ -16,13 +16,13 @@ namespace Intrusion.Server
 	public class ResourceLocationOwnerService : IService
 	{
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mResourceLocationDomInfos" as Array /* of ResourceLocationDominanceInfo */];
-		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceLocationConfig" as ResourceLocationConfig, "_mMissionTime" as IMissionTime, "_mRatingCalculator" as RatingCalculator];
+		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceLocationConfig" as IResourceLocationConfig, "_mMissionTime" as IMissionTime, "_mRatingCalculator" as RatingCalculator];
 		
 		// Creates a ResourceLocationOwnerService object.
 		public constructor(
 			"_gameplayConfig" as IGameplayConfig,
 			"_resourceLocationHandler" as IResourceLocationHandler,
-			"_resourceLocationConfig" as ResourceLocationConfig,
+			"_resourceLocationConfig" as IResourceLocationConfig,
 			"_missionTime" as IMissionTime,
 			"_ratingCalculator" as RatingCalculator)
 		{

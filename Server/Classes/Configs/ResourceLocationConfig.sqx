@@ -21,6 +21,6 @@ namespace Intrusion.Server
 		public property Scalar AreaRadius { get; private set; };
 		
 		// Gets the time a side must be dominating the resource location area before it is captured.
-		public property Scalar DominanceTimeBeforeCaptureSek { get; private set; };
+		public property Scalar DominanceTimeBeforeCaptureSek { get; protected set; };
 	};
 };
