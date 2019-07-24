@@ -19,6 +19,7 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\CaptureAction
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\MountAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\DisembarkAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\EngageAction.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMaker.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\InfantryDecisionMaker.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\DisembarkActionService.sqx";

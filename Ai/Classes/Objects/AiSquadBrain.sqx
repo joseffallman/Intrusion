@@ -188,6 +188,7 @@ namespace Intrusion.Ai
 				};
 			};
 			
+			
 			// If squad is not mounted and enemies spotted near, engage
 			// OnNearEnemiesSpottedOnGround
 			

@@ -27,7 +27,7 @@ namespace Intrusion.Common
 		protected property Boolean IsCancelling { get; private set; };
 		
 		// Performs the service's logic as a separate process.
-		// Call this from the sub class' Run when returning from the method (exiting service script).
+		// Call this from the sub class'. Run when returning from the method (exiting service script).
 		protected virtual method Run()
 		{
 			_self.IsRunning = false;
@@ -53,4 +53,3 @@ namespace Intrusion.Common
 		};
 	};
 };
-

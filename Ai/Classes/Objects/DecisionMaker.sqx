@@ -1,0 +1,63 @@
+/*
+ * Name:	DecisionMaker
+ * Date:	2019-07-23
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the frontal lobe of the brain that is the centre for decision making.
+ * This class is inherited by different squad brains with different perspective, like motorized, sharpshooter, air and naval.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class DecisionMaker : IDecisionMaker
+	{
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer)
+		{
+			_self.Time = _time;
+			_self.Knowledge = _knowledge;
+			_self.ActionServiceFactory = _actionServiceFactory;
+			_self.World = _world;
+			_self.ActionPerformer = _actionPerformer;
+		};
+		
+		protected property IMissionTime Time { get; private set; };
+		protected property Knowledge Knowledge { get; private set; };
+		protected property IActionServiceFactory ActionServiceFactory { get; private set; };
+		protected property IWorld World { get; private set; };
+		protected property IActionPerformer ActionPerformer { get; private set; };
+	
+		protected method SetState("_state" as AiSquadState, "_action" as IAction) 
+		{
+			_self.Knowledge.State = _state;
+			
+			if (_state == AiSquadState.Idle) then {
+				_self.Knowledge.CurrentAction = classNull;
+			}
+			else {
+				_self.Knowledge.CurrentAction = _action;
+			};
+			
+			player sideChat "Setting status for " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+		};
+	
+		public virtual method OnTargetResourceLocationCaptured()
+		{
+		};
+		
+		// Called when enemies on the ground are spotted near.
+		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
+		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
+		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		{
+			private ["_action" as IAction];
+			
+			_action = [(call _self.Time.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
+			[AiSquadState.Engaging, _action] call _self.SetState;
+        	["Engage action created: " + str _action] call LogHandler.Debug;
+		};
+	};
+};
