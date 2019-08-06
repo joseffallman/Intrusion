@@ -64,13 +64,14 @@ namespace Intrusion.Ai
 		// Creates a new squad if more squads are alive.
 		private method CreateNewSquads()
 		{
-			private ["_group" as Group, "_mapMarkerInfo" as MapMarkerInfo, "_unitInfo" as AiUnitInfo];
-			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquadBrain];
+			private ["_group" as Group, "_mapMarkerInfo" as MapMarkerInfo, "_unitInfo" as AiUnitInfo, "_time" as MissionTime];
+			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquadBrain, "_decisionMaker" as DecisionMaker];
 
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
 				_unitCount = selectRandom [1, 2, 2, 2, 3];
+				_time = new MissionTime;
 				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
 				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
 
@@ -90,19 +91,34 @@ namespace Intrusion.Ai
 					for "_i" from 1 to _unitCount do {
 						[_unitInfo.UnitClassName, getMarkerPos _mapMarkerInfo.BaseMarkerName, _group] call _mUnitSpawner.CreateUnit;
 					};
+
+					private _members = [];
+					
+					{
+						_members pushBack [_x] new UnitContainer;
+					} foreach units _group;
+					
+					private _knowledge = [_group, _members] new Knowledge;
+					private _actionServiceFactory = new ActionServiceFactory;
+					private _world = [_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World;
+					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
+
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer] new InfantryDecisionMaker;
 					
 					_aiSquad = [
 						_group,
-						[_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World,
-						[_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer, 
+						_world,
+						_actionPerformer,
 						new RandomGenerator, 
 						new MarkerHandler, 
 						new ActionTimeoutConfig, 
-						new MissionTime,
+						_time,
 						_mapMarkerInfo,
-						new ActionServiceFactory,
+						_actionServiceFactory,
 						new AiWeaponsConfig,
-						_mInventedTechnologiesCollection
+						_mInventedTechnologiesCollection,
+						_knowledge,
+						_decisionMaker
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;

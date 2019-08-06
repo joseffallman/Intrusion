@@ -37,11 +37,9 @@ namespace Intrusion.Ai
 			"_actionServiceFactory" as IActionServiceFactory,
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			["_knowledge" as Knowledge, classNull],
-			["_decisionMaker" as IDecisionMaker, classNull])
+			"_knowledge" as Knowledge,
+			"_decisionMaker" as IDecisionMaker)
 		{
-			private ["_members" as Array];
-		
 			_self.Group = _group;
 			_mWorld = _world;
 			_mActionPerformer = _actionPerformer;
@@ -52,7 +50,12 @@ namespace Intrusion.Ai
 			_mActionServiceFactory = _actionServiceFactory;
 			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mDecisionMaker = _decisionMaker;
+			_mKnowledge = _knowledge;
 			
+			_mKnowledge.Group = _group;
+
+/*
 			if (!isNull _knowledge) then {
 				_mKnowledge = _knowledge;				
 				_mKnowledge.Group = _group;
@@ -66,21 +69,9 @@ namespace Intrusion.Ai
 				
 				_mKnowledge = [_group, _members] new Knowledge;
 			};
-			
+*/
+
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
-			
-			if (!isNull _decisionMaker) then {
-				_mDecisionMaker = _decisionMaker;
-			}
-			else {
-				_mDecisionMaker = [
-					_mTime,
-					_mKnowledge,
-					_mActionServiceFactory,
-					_mWorld,
-					_mActionPerformer
-				] new InfantryDecisionMaker;
-			};
 		};
 		
 		public method Scalar GetMemberCount()
