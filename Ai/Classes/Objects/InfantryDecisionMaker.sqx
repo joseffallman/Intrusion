@@ -38,10 +38,11 @@ namespace Intrusion.Ai
 	        else {
 	        	_time = call _self.Time.GetMissionTime;
 	        	
-	        	// _self.Knowledge.Group blir fel.
 				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService;
 				call _actionService.RunAsync;
+				
 				_action = [_time + 20, _mountedVehicleContainer, _actionService as DisembarkActionService] new DisembarkAction;
+				
 				[AiSquadState.Disembarking, _action] call _self.SetState;
 	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
 	        };

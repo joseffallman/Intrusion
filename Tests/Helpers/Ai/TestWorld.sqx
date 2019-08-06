@@ -28,6 +28,7 @@ namespace Intrusion.Tests.Helpers
 			_self.ClosestDetectedEnemy = classNull;
 			_self.AllSquadMembersDead = false;
 			_self.SquadVehicle = classNull;
+			_self.MountedVehicle = classNull;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -37,14 +38,14 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Array): The position of the leader.
 		public method Array GetLeaderPos("_group" as Group)
 		{
-			_self.LeaderPos
+			return _self.LeaderPos;
 		};
 		
 		// Gets the resource location collection.
 		// Returns (ResourceLocationCollection): The resource location collection.
 		public method ResourceLocationCollection GetResourceLocationCollection()
 		{
-			_mResourceLocationCollection
+			return _mResourceLocationCollection;
 		};
 		
 		public property Boolean SquadPresenceAtResourceLocation { get; set; };
@@ -55,7 +56,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
 		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
 		{
-			_self.SquadPresenceAtResourceLocation
+			return _self.SquadPresenceAtResourceLocation;
 		};
 		
 		public property VehicleContainer ClosestEmptyFreeVehicle { get; set; };
@@ -67,7 +68,7 @@ namespace Intrusion.Tests.Helpers
 		// _squadSize (Scalar): The number of members in the squad.
 		public method VehicleContainer GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
 		{
-			_self.ClosestEmptyFreeVehicle
+			return _self.ClosestEmptyFreeVehicle;
 		};
 		
 		public property Boolean SquadMounted { get; set; };
@@ -77,7 +78,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Boolean): true if all members are mounted to a vehicle, otherwise false.
 		public method Boolean CheckSquadMounted("_group")
 		{
-			_self.SquadMounted
+			return _self.SquadMounted;
 		};
 		
 		
@@ -85,13 +86,15 @@ namespace Intrusion.Tests.Helpers
 		// _vehicle (Object): The vehicle.
 		public method Scalar GetSpeed("_vehicle" as Object)
 		{
-			0
+			return 0;
 		};
+		
+		public property VehicleContainer MountedVehicle { get; set; };
 		
 		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
 		public method VehicleContainer GetMountedVehicle("_group" as Group)
 		{
-			classNull
+			return _self.MountedVehicle;
 		};
 		
 		public property IUnitContainer ClosestDetectedEnemy { get; set; };
@@ -101,7 +104,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (UnitContainter): The detected unit that is closest to the group. null if no units are detected.
 		public method IUnitContainer GetClosestDetectedEnemy("_group" as Group)
 		{
-			_self.ClosestDetectedEnemy
+			return _self.ClosestDetectedEnemy;
 		};
 		
 		public property Boolean AllSquadMembersDead { get; set; };
@@ -111,7 +114,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Boolean): true if all the group's members are dead, otherwise false.
 		public method Boolean GetAllSquadMembersDead("_group" as Group)
 		{
-			_self.AllSquadMembersDead
+			return _self.AllSquadMembersDead;
 		};
 		
 		public property VehicleContainer SquadVehicle { get; set; };
@@ -121,7 +124,7 @@ namespace Intrusion.Tests.Helpers
 		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
 		public method VehicleContainer GetSquadVehicle("_group" as Group)
 		{
-			_self.SquadVehicle
+			return _self.SquadVehicle;
 		};
 	};
 };
