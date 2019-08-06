@@ -59,5 +59,26 @@ namespace Intrusion.Ai
 			[AiSquadState.Engaging, _action] call _self.SetState;
         	["Engage action created: " + str _action] call LogHandler.Debug;
 		};
+		
+		// Called when the group is closing in on a destination (not necessary a location).
+		public virtual method OnClosingInOnDestination()
+		{
+			private _action = classNull;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+			private _time = call _self.Time.GetMissionTime;
+			
+			if (_squadInVehicle) then
+			{
+				private _aiVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
+				private _actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _aiVehicle] call _self.ActionServiceFactory.CreateDisembarkService as IActionService;
+				call _actionService.RunAsync;
+				
+				_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action created: " + str _action] call LogHandler.Debug;
+			};
+			
+			return _action;
+		};
 	};
 };

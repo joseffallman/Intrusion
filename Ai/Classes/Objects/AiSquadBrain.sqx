@@ -18,8 +18,8 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
-						"_mActionServiceFactory" as IActionServiceFactory, "_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
-						"_mDecisionMaker" as IDecisionMaker];
+						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+						"_mDecisionMaker" as DecisionMaker];
 		
 		#region Initialization
 
@@ -34,11 +34,10 @@ namespace Intrusion.Ai
 			"_actionTimeoutConfig" as IActionTimeoutConfig,
 			"_time" as IMissionTime,
 			"_baseMarkerInfo" as MapMarkerInfo,
-			"_actionServiceFactory" as IActionServiceFactory,
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_knowledge" as Knowledge,
-			"_decisionMaker" as IDecisionMaker)
+			"_decisionMaker" as DecisionMaker)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -47,30 +46,12 @@ namespace Intrusion.Ai
 			_mMarkerHandler = _markerHandler;
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
-			_mActionServiceFactory = _actionServiceFactory;
 			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mDecisionMaker = _decisionMaker;
 			_mKnowledge = _knowledge;
 			
 			_mKnowledge.Group = _group;
-
-/*
-			if (!isNull _knowledge) then {
-				_mKnowledge = _knowledge;				
-				_mKnowledge.Group = _group;
-			}
-			else {
-				_members = [];
-				
-				{
-					_members pushBack [_x] new UnitContainer;
-				} foreach units _group;
-				
-				_mKnowledge = [_group, _members] new Knowledge;
-			};
-*/
-
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
 		};
 		
@@ -142,7 +123,7 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
 			private ["_locationMarkerName" as String, "_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
-			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_actionService" as IActionService, "_enemyContainer" as IUnitContainer];
+			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
@@ -175,7 +156,7 @@ namespace Intrusion.Ai
 					call _mDecisionMaker.OnTargetResourceLocationCaptured;
 					call _self.CreateOrderOnOwnInitiative;
 		        	["Order created: " + str _mKnowledge.Order] call LogHandler.Debug;
-					breakOut "main";
+					return;
 				};
 			};
 			
@@ -190,7 +171,7 @@ namespace Intrusion.Ai
 			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
 				_action = [_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				breakOut "main";
+				return;
 			};
 			
 
@@ -201,13 +182,23 @@ namespace Intrusion.Ai
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				_action = [_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				breakOut "main";
+				return;
 			};
 			
 
 			// If squad is mounted and near a destination (<150m), set disembark.
 			// OnAlmostAtTargetLocation
 			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
+			{
+				_action = call _mDecisionMaker.OnClosingInOnDestination;
+				
+				if (!isNull _action) then {
+					return;
+				};
+			};
+			
+/*			
 			if (_squadInVehicle) then
 			{
 				if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
@@ -221,7 +212,7 @@ namespace Intrusion.Ai
 					breakOut "main";
 				};
 			};
-			
+*/			
 
 			// If inside the perimiters of a resource location that should be captured, capture it!
 			// OnAtEnemyLocation
