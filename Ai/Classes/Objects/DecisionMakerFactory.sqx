@@ -30,10 +30,10 @@ namespace Intrusion.Ai
 			private _time = new MissionTime;
 		
 			switch (_professionType) do {
-				case ProfessionType.Infantry: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer] new InfantryDecisionMaker; };
+				case ProfessionType.Infantry: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new InfantryDecisionMaker; };
 			};
 			
-			return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer] new InfantryDecisionMaker; 
+			return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new InfantryDecisionMaker; 
 		};
 	};
 };

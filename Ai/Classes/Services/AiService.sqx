@@ -102,16 +102,18 @@ namespace Intrusion.Ai
 					private _actionServiceFactory = new ActionServiceFactory;
 					private _world = [_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World;
 					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
+					private _markerHandler = new MarkerHandler;
+					private _actionTimeoutConfig = new ActionTimeoutConfig;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer] new InfantryDecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new InfantryDecisionMaker;
 					
 					_aiSquad = [
 						_group,
 						_world,
 						_actionPerformer,
 						new RandomGenerator, 
-						new MarkerHandler, 
-						new ActionTimeoutConfig,
+						_markerHandler, 
+						_actionTimeoutConfig,
 						_time,
 						_mapMarkerInfo,
 						new AiWeaponsConfig,

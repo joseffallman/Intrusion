@@ -121,7 +121,7 @@ namespace Intrusion.Ai
 		
 		private method MakeDecision()
 		{
-			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */, "_pos" as Array];
+			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
 			private ["_locationMarkerName" as String, "_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
 			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
@@ -171,7 +171,7 @@ namespace Intrusion.Ai
 			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
 				_action = [_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				return;
+				if (!isNull _action) then { return; };
 			};
 			
 
@@ -182,57 +182,35 @@ namespace Intrusion.Ai
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				_action = [_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				return;
+				if (!isNull _action) then { return; };
 			};
 			
 
-			// If squad is mounted and near a destination (<150m), set disembark.
-			// OnAlmostAtTargetLocation
+			// If squad is near a destination (<150m)
+			// OnClosingInOnDestination
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
 			{
 				_action = call _mDecisionMaker.OnClosingInOnDestination;
-				
-				if (!isNull _action) then {
-					return;
-				};
+				if (!isNull _action) then { return; };
 			};
 			
-/*			
-			if (_squadInVehicle) then
-			{
-				if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
-				{
-					_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-					_actionService = [_mTime, _time + 20, _mWorld, _mActionPerformer, _mKnowledge.Group, _aiVehicle] call _mActionServiceFactory.CreateDisembarkService;
-					call _actionService.RunAsync;
-					_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
-					[AiSquadState.Disembarking, _action] call _self.SetState;
-		        	["Disembark action created: " + str _action] call LogHandler.Debug;
-					breakOut "main";
-				};
-			};
-*/			
 
-			// If inside the perimiters of a resource location that should be captured, capture it!
-			// OnAtEnemyLocation
+			// If inside the perimiters of a resource location that should be captured
+			// OnPresentAtLocation
 
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
 			_locations = call _locationCollection.GetResourceLocations;
-			
+
 			{
-				if (_x.Side != _side && { [_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation }) then
+				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then
 				{
-					_pos = [_x.MarkerName] call _mMarkerHandler.GetMarkerPos;
-					_action = [_time + _mActionTimeoutConfig.CaptureActionTimeout, _pos, _x.MarkerName] new CaptureAction;
-					[AiSquadState.Capturing, _action] call _self.SetState;
-					[_mKnowledge.CurrentAction as CaptureAction] call _mActionPerformer.DoCapture;
-		        	["Capture action created: " + str _action] call LogHandler.Debug;
-					breakOut "main";
+					_action = [_x] call _mDecisionMaker.OnPresentAtLocation;
+					if (!isNull _action) then { return; };
 				};
 			} foreach _locations as ResourceLocation;
 
-			
+
 			// If distance to ordered position is less than far, move to it (by foot since not in a vehicle).
 			// OnWithinWalkingDistanceFromTargetLocation
 			
@@ -288,7 +266,7 @@ namespace Intrusion.Ai
 */			
 			// If squad is on foot and an empty vehicle is nearby, move to it.
 			// Nearby means one fourth of the distance to the aimed location
-			// OnEmptyFreeVehicleNearby
+			// OnCheckForVehicle
 			
 			if (!_squadInVehicle && { !isNull _aiVehicle }) then
 			{
@@ -309,7 +287,7 @@ namespace Intrusion.Ai
 			
 			
 			// If not already there, move towards order's target!
-			// OnNotAtTargetPosition
+			// OnNotAtTargetPosition|PerformBasicMove
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
 			{
