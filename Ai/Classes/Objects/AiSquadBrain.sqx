@@ -122,7 +122,7 @@ namespace Intrusion.Ai
 		private method MakeDecision()
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
-			private ["_locationMarkerName" as String, "_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side, "_time" as Scalar];
+			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side];
 			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
@@ -130,7 +130,6 @@ namespace Intrusion.Ai
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_side = side _mKnowledge.Group;
-			_time = call _mTime.GetMissionTime;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			_action = _mKnowledge.CurrentAction;
 			
@@ -253,24 +252,15 @@ namespace Intrusion.Ai
 			
 			
 			// If not already there, move towards order's target!
-			// OnNotAtTargetPosition|PerformBasicMove
+			// OnAwayFromTargetPosition
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
 			{
-				_locationMarkerName = "";
-				
-				if (!isNull _mKnowledge.Order.ResourceLocation) then {
-					_locationMarkerName = _mKnowledge.Order.ResourceLocation.MarkerName;
-				};
-				
-				_action = [_time + _mActionTimeoutConfig.MoveActionTimeout, _mKnowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
-				[AiSquadState.Moving, _action] call _self.SetState;
-				[_mKnowledge.CurrentAction as MoveAction] call _mActionPerformer.DoMove;
-	        	["Move action created #3: " + str _action] call LogHandler.Debug;
-				breakOut "main";
+				_action = [_leaderPos, _mKnowledge.Order] call _mDecisionMaker.OnAwayFromTargetPosition;
+				if (!isNull _action) then { return; };
 			};
 			
-			// OnGotAllLocations
+			// OnIdle
 		};
 		
 		private method SetState("_state" as AiSquadState, "_action" as IAction) 

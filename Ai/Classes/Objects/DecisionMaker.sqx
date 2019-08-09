@@ -167,5 +167,23 @@ namespace Intrusion.Ai
 			
 			return _action;
 		};
+		
+		public virtual method IAction OnAwayFromTargetPosition("_leaderPos" as Array, "_order" as Order)
+		{
+			private _action = classNull as IAction;
+			private _locationMarkerName = "";
+			private _time = call _self.Time.GetMissionTime;
+			
+			if (!isNull _self.Knowledge.Order.ResourceLocation) then {
+				_locationMarkerName = _self.Knowledge.Order.ResourceLocation.MarkerName;
+			};
+			
+			_action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+			[AiSquadState.Moving, _action] call _self.SetState;
+			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
+        	["Move action created #3: " + str _action] call LogHandler.Debug;
+			
+			return _action;
+		};
 	};
 };
