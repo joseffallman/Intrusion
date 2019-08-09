@@ -34,18 +34,7 @@ namespace Intrusion.Common
 		// Gets all professions.
 		public property Array Professions { get; set; };
 		
-		// Gets a profession by profession type.
-		// _professionType (ProfessionType): Profession type.
-		// Returns (Profession): The sought profession. null if the profession type was invalid.
-		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
-			scopeName "main";
-			
-			{
-				if (_x.Type == _professionType) then {
-					_x breakOut "main";
-				};
-			} foreach _self.Professions as Profession;
-			
+		public method Array GetVehicleClassNames() {
 			classNull
 		};
 		
@@ -54,18 +43,16 @@ namespace Intrusion.Common
 		// Returns (Profession): The sought profession. classNull if the profession was not found.
 		public method Profession GetProfession("_professionType" as ProfessionType)
 		{
-			scopeName "main";
-			
 			{
 				private ["_profession" as Profession];
 				_profession = _x;
 				
 				if (_profession.Type == _professionType) then {
-					_profession breakOut "main";
+					return _profession;
 				};
 			} foreach _self.Professions as Profession;
 			
-			classNull
+			return classNull;
 		};
 	};
 };
