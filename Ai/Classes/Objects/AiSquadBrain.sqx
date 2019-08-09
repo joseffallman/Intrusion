@@ -123,7 +123,7 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
 			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side];
-			private ["_action" as IAction, "_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
+			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
@@ -131,10 +131,8 @@ namespace Intrusion.Ai
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_side = side _mKnowledge.Group;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
-			_action = _mKnowledge.CurrentAction;
 			
         	["_squadInVehicle: " + str _squadInVehicle] call LogHandler.Debug;
-        	["_action: " + str _action] call LogHandler.Debug;
         	["_leaderPos: " + str _leaderPos] call LogHandler.Debug;
 			
 			
@@ -169,8 +167,8 @@ namespace Intrusion.Ai
 			
 			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
-				_action = [_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				if (!isNull _action) then { return; };
+				[_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
 
@@ -180,8 +178,8 @@ namespace Intrusion.Ai
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-				_action = [_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
-				if (!isNull _action) then { return; };
+				[_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
 
@@ -190,8 +188,8 @@ namespace Intrusion.Ai
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
 			{
-				_action = call _mDecisionMaker.OnClosingInOnDestination;
-				if (!isNull _action) then { return; };
+				call _mDecisionMaker.OnClosingInOnDestination;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
 
@@ -204,8 +202,8 @@ namespace Intrusion.Ai
 			{
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then
 				{
-					_action = [_x] call _mDecisionMaker.OnPresentAtLocation;
-					if (!isNull _action) then { return; };
+					[_x] call _mDecisionMaker.OnPresentAtLocation;
+					if (!isNull _mKnowledge.CurrentAction) then { return; };
 				};
 			} foreach _locations as ResourceLocation;
 
@@ -215,8 +213,8 @@ namespace Intrusion.Ai
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 150) then
 			{
-				_action = [_mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnWithinWalkingDistanceFromTargetLocation;
-				if (!isNull _action) then { return; };
+				[_mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnWithinWalkingDistanceFromTargetLocation;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 
 
@@ -227,8 +225,8 @@ namespace Intrusion.Ai
 			
 			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 			{
-				_action = [_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
-				if (!isNull _action) then { return; };
+				[_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
 			
@@ -245,8 +243,8 @@ namespace Intrusion.Ai
 	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
 
 				if (!isNull _aiVehicle && { (_distanceToVehicle / _distanceToTargetPos) < 0.25 }) then {
-					_action = [_aiVehicle] call _mDecisionMaker.OnAvailableEmptyFreeVehicleRelativelyNear;
-					if (!isNull _action) then { return; };
+					[_aiVehicle] call _mDecisionMaker.OnAvailableEmptyFreeVehicleRelativelyNear;
+					if (!isNull _mKnowledge.CurrentAction) then { return; };
 				};
 			};
 			
@@ -256,8 +254,8 @@ namespace Intrusion.Ai
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
 			{
-				_action = [_leaderPos, _mKnowledge.Order] call _mDecisionMaker.OnAwayFromTargetPosition;
-				if (!isNull _action) then { return; };
+				[_leaderPos, _mKnowledge.Order] call _mDecisionMaker.OnAwayFromTargetPosition;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
 			// OnIdle

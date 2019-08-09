@@ -23,9 +23,8 @@ namespace Intrusion.Ai
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
 		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
-		public override method IAction OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		public override method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
 		{
-			return classNull;
 		};
 	};
 };
