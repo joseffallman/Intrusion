@@ -170,6 +170,10 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MotorizedDecisionMaker.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\MotorizedDecisionMaker.sqx">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="UnitContainer.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\UnitContainer.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -1263,7 +1267,7 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrainVehiclesTests.sqx" IsExpanded="false" FileName="Tests\Ai\Classes\Objects\AiSquadBrainVehiclesTests.sqx">
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrainMotorizedTests.sqx" IsExpanded="false" FileName="Tests\Ai\Classes\Objects\AiSquadBrainMotorizedTests.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>

@@ -1,0 +1,31 @@
+/*
+ * Name:	MotorizedDecisionMaker
+ * Date:	2019-06-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the frontal lobe of the brain that is the centre for decision making.
+ * This class is inherited by different squad brains with different perspective, like motorized, sharpshooter, air and naval.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class MotorizedDecisionMaker : InfantryDecisionMaker
+	{
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
+		{
+			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] call _base.Constructor;
+		};
+		
+		// Called when enemies on the ground are spotted near.
+		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
+		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
+		public override method IAction OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		{
+			return classNull;
+		};
+	};
+};
