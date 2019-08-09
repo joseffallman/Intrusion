@@ -105,5 +105,17 @@ namespace Intrusion.Ai
 			
 			return _action;
 		};
+		
+		public virtual method IAction OnWithinWalkingDistanceFromTargetLocation("_location" as ResourceLocation)
+		{
+			private _time = call _self.Time.GetMissionTime;
+			
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _location.MarkerName] new MoveAction;
+			[AiSquadState.Moving, _action] call _self.SetState;
+			[_action as MoveAction] call _self.ActionPerformer.DoMove;
+        	["Move action created #1: " + str _action] call LogHandler.Debug;
+        	
+        	return _action;
+		};
 	};
 };
