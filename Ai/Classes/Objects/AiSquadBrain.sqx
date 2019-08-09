@@ -261,6 +261,7 @@ namespace Intrusion.Ai
 			};
 			
 			// OnIdle
+			call _mDecisionMaker.OnNothingToDo;
 		};
 		
 		private method SetState("_state" as AiSquadState, "_action" as IAction) 

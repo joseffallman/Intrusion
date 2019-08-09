@@ -185,5 +185,9 @@ namespace Intrusion.Ai
 			
 			return _action;
 		};
+		
+		public virtual method OnNothingToDo()
+		{
+		};
 	};
 };
