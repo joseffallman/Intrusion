@@ -15,13 +15,15 @@ namespace Intrusion.Ai
 {
 	public class DecisionMaker : IDecisionMaker
 	{
-		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer)
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{
 			_self.Time = _time;
 			_self.Knowledge = _knowledge;
 			_self.ActionServiceFactory = _actionServiceFactory;
 			_self.World = _world;
 			_self.ActionPerformer = _actionPerformer;
+			_self.MarkerHandler = _markerHandler;
+			_self.ActionTimeoutConfig = _actionTimeoutConfig;
 		};
 		
 		protected property IMissionTime Time { get; private set; };
@@ -29,6 +31,8 @@ namespace Intrusion.Ai
 		protected property IActionServiceFactory ActionServiceFactory { get; private set; };
 		protected property IWorld World { get; private set; };
 		protected property IActionPerformer ActionPerformer { get; private set; };
+		protected property IMarkerHandler MarkerHandler { get; private set; };
+		protected property IActionTimeoutConfig ActionTimeoutConfig { get; private set; };
 	
 		protected method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
@@ -51,13 +55,55 @@ namespace Intrusion.Ai
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
 		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
-		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		public virtual method IAction OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
 		{
 			private ["_action" as IAction];
 			
 			_action = [(call _self.Time.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
 			[AiSquadState.Engaging, _action] call _self.SetState;
         	["Engage action created: " + str _action] call LogHandler.Debug;
+        	
+        	return _action;
+		};
+		
+		// Called when the group is closing in on a destination (not necessary a location).
+		public virtual method IAction OnClosingInOnDestination()
+		{
+			private _action = classNull;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+			private _time = call _self.Time.GetMissionTime;
+			
+			if (_squadInVehicle) then
+			{
+				private _aiVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
+				private _actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _aiVehicle] call _self.ActionServiceFactory.CreateDisembarkService as IActionService;
+				call _actionService.RunAsync;
+				
+				_action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action created: " + str _action] call LogHandler.Debug;
+			};
+			
+			return _action;
+		};
+		
+		public virtual method IAction OnPresentAtLocation("_location" as ResourceLocation)
+		{
+			private _side = side _self.Knowledge.Group;
+			private _action = objNull as IAction;
+			
+			if (_location.Side != _side) then
+			{
+				private _time = call _self.Time.GetMissionTime;
+				private _pos = [_location.MarkerName] call _self.MarkerHandler.GetMarkerPos;
+				
+				private _action = [_time + _self.ActionTimeoutConfig.CaptureActionTimeout, _pos, _location.MarkerName] new CaptureAction;
+				[AiSquadState.Capturing, _action] call _self.SetState;
+				[_self.Knowledge.CurrentAction as CaptureAction] call _self.ActionPerformer.DoCapture;
+	        	["Capture action created: " + str _action] call LogHandler.Debug;
+			};
+			
+			return _action;
 		};
 	};
 };

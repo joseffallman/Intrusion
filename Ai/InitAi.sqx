@@ -21,5 +21,6 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\DisembarkActi
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\EngageAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMaker.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\InfantryDecisionMaker.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMakerFactory.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\DisembarkActionService.sqx";

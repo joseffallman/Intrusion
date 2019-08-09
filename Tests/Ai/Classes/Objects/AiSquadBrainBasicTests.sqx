@@ -109,9 +109,10 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
 			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
-			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer] new InfantryDecisionMaker;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig] new InfantryDecisionMaker;
 			
 			_mBrain = [
 				_mGroup, 
@@ -119,10 +120,9 @@ namespace Intrusion.Tests.Ai
 				_mActionPerformer, 
 				_mRandomGenerator, 
 				_mMarkerHandler, 
-				new TestActionTimeoutConfig, 
+				_testActionTimeoutConfig,
 				_mTime, 
-				_mapMarkerInfo, 
-				_mActionServiceFactory,
+				_mapMarkerInfo,
 				new TestAiWeaponsConfig,
 				_mInventedTechnologiesCollection,
 				_mKnowledge,
@@ -606,6 +606,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
 			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [300, 300, 0], 4] new VehicleContainer;
 			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
@@ -615,7 +616,9 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Disembarking, _mKnowledge.State, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
+			private _expectedState = [AiSquadState.Disembarking] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
 			
 			_action = _mKnowledge.CurrentAction as DisembarkAction;
 			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
