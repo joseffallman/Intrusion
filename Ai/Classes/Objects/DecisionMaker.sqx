@@ -120,8 +120,8 @@ namespace Intrusion.Ai
 		
 		public virtual method IAction OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
 		{
-			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 			private _action = classNull as IAction;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 
 			if (!_squadInVehicle) then
 			{
@@ -141,6 +141,30 @@ namespace Intrusion.Ai
 				};
 			};
 
+			return _action;
+		};
+		
+		public virtual method IAction OnAvailableEmptyFreeVehicleRelativelyNear("_aiVehicle" as VehicleContainer)
+		{
+			private _action = classNull as IAction;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+
+			if (!_squadInVehicle) then
+			{
+				private _time = call _self.Time.GetMissionTime;
+				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
+				private _distanceToTargetPos = _self.Knowledge.Order.TargetPosition distance _leaderPos as Scalar;
+				
+	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
+	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
+		        	
+				_action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action as MoveAction] call _self.ActionPerformer.DoMove;
+	        	["Move action created #2: " + str _action] call LogHandler.Debug;
+			};
+			
 			return _action;
 		};
 	};
