@@ -117,5 +117,31 @@ namespace Intrusion.Ai
         	
         	return _action;
 		};
+		
+		public virtual method IAction OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
+		{
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+			private _action = classNull as IAction;
+
+			if (!_squadInVehicle) then
+			{
+				private _side = side _self.Knowledge.Group;
+				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+				private _time = call _self.Time.GetMissionTime;
+			
+				_aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle;
+				
+				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
+				{
+					_action = [_time + 20, _aiVehicle] new MountAction;
+					[AiSquadState.MountingVehicle, _action] call _self.SetState;
+					[_action as MountAction] call _self.ActionPerformer.DoMount;
+		        	["Mount action created: " + str _action] call LogHandler.Debug;
+					breakOut "main";
+				};
+			};
+
+			return _action;
+		};
 	};
 };

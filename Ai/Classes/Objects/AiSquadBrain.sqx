@@ -222,22 +222,14 @@ namespace Intrusion.Ai
 
 
 			// If squad is on foot and standing right beside an empty vehicle, then mount.
-			// OnNextToEmptyFreeVehicle
+			// OnBesideEmptyFreeVehicle
+
+			_aiVehicle = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
 			
-			_aiVehicle = classNull;
-			
-			if (!_squadInVehicle) then
+			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 			{
-				_aiVehicle = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
-				
-				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
-				{
-					_action = [_time + 20, _aiVehicle] new MountAction;
-					[AiSquadState.MountingVehicle, _action] call _self.SetState;
-					[_action as MountAction] call _mActionPerformer.DoMount;
-		        	["Mount action created: " + str _action] call LogHandler.Debug;
-					breakOut "main";
-				};
+				_action = [_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
+				if (!isNull _action) then { return; };
 			};
 			
 			
