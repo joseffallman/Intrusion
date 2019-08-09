@@ -64,6 +64,70 @@ namespace Intrusion.Ai
         	["Engage action created: " + str _action] call LogHandler.Debug;
 		};
 		
+		public virtual method OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
+		{
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+
+			if (!_squadInVehicle) then
+			{
+				private _side = side _self.Knowledge.Group;
+				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+				private _time = call _self.Time.GetMissionTime;
+			
+				_aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle;
+				
+				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
+				{
+					private _action = [_time + 20, _aiVehicle] new MountAction;
+					[AiSquadState.MountingVehicle, _action] call _self.SetState;
+					[_action as MountAction] call _self.ActionPerformer.DoMount;
+		        	["Mount action created: " + str _action] call LogHandler.Debug;
+					breakOut "main";
+				};
+			};
+		};
+		
+		public virtual method OnLookForVehicle()
+		{
+			private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+			
+			// If distance to target position is less than 150 meters, don't do anything.
+			
+			if (_leaderPos distance _self.Knowledge.Order.TargetPosition <= 150) then
+			{
+				return;
+			};
+			
+			// If distance to nearest free vehicle is relatively far, don't do anything.
+			
+			private _side = side _self.Knowledge.Group;
+			private _aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle as VehicleContainer;
+			
+			if (!isNull _aiVehicle) then
+			{
+				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
+				private _distanceToTargetPos = _self.Knowledge.Order.TargetPosition distance _leaderPos as Scalar;
+				
+	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
+	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
+
+				if ((_distanceToVehicle / _distanceToTargetPos) > 0.25) then {
+					return;
+				};
+			};
+			
+			// Otherwise, move to the free vehicle
+			
+			if (!isNull _aiVehicle) then
+			{
+				private _time = call _self.Time.GetMissionTime;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action as MoveAction] call _self.ActionPerformer.DoMove;
+	        	["Move action created #2: " + str _action] call LogHandler.Debug;
+			};
+		};
+		
 		// Called when the group is closing in on a destination (not necessary a location).
 		public virtual method OnClosingInOnDestination()
 		{
@@ -106,50 +170,6 @@ namespace Intrusion.Ai
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_action as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #1: " + str _action] call LogHandler.Debug;
-		};
-		
-		public virtual method OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
-		{
-			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
-
-			if (!_squadInVehicle) then
-			{
-				private _side = side _self.Knowledge.Group;
-				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-				private _time = call _self.Time.GetMissionTime;
-			
-				_aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle;
-				
-				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
-				{
-					private _action = [_time + 20, _aiVehicle] new MountAction;
-					[AiSquadState.MountingVehicle, _action] call _self.SetState;
-					[_action as MountAction] call _self.ActionPerformer.DoMount;
-		        	["Mount action created: " + str _action] call LogHandler.Debug;
-					breakOut "main";
-				};
-			};
-		};
-		
-		public virtual method OnAvailableEmptyFreeVehicleRelativelyNear("_aiVehicle" as VehicleContainer)
-		{
-			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
-
-			if (!_squadInVehicle) then
-			{
-				private _time = call _self.Time.GetMissionTime;
-				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
-				private _distanceToTargetPos = _self.Knowledge.Order.TargetPosition distance _leaderPos as Scalar;
-				
-	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
-	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
-		        	
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
-				[AiSquadState.Moving, _action] call _self.SetState;
-				[_action as MoveAction] call _self.ActionPerformer.DoMove;
-	        	["Move action created #2: " + str _action] call LogHandler.Debug;
-			};
 		};
 		
 		public virtual method IAction OnAwayFromTargetPosition("_leaderPos" as Array, "_order" as Order)

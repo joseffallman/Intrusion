@@ -181,14 +181,24 @@ namespace Intrusion.Ai
 				[_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
-			
 
-			// If squad is near a destination (<150m)
-			// OnClosingInOnDestination
+
+			// If squad is on foot and standing right beside an empty vehicle, then mount.
+			// OnBesideEmptyFreeVehicle
+
+			_aiVehicle = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
 			
-			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
+			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 			{
-				call _mDecisionMaker.OnClosingInOnDestination;
+				[_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+			
+			// Look for a vehicle
+			
+			if (!_squadInVehicle) then {
+				call _mDecisionMaker.OnLookForVehicle;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
@@ -208,6 +218,16 @@ namespace Intrusion.Ai
 			} foreach _locations as ResourceLocation;
 
 
+			// If squad is near a destination (<150m)
+			// OnClosingInOnDestination
+			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
+			{
+				call _mDecisionMaker.OnClosingInOnDestination;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+
 			// If distance to ordered position is less than far, move to it (by foot since not in a vehicle).
 			// OnWithinWalkingDistanceFromTargetLocation
 			
@@ -215,37 +235,6 @@ namespace Intrusion.Ai
 			{
 				[_mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnWithinWalkingDistanceFromTargetLocation;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
-			};
-
-
-			// If squad is on foot and standing right beside an empty vehicle, then mount.
-			// OnBesideEmptyFreeVehicle
-
-			_aiVehicle = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
-			
-			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
-			{
-				[_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
-				if (!isNull _mKnowledge.CurrentAction) then { return; };
-			};
-			
-			
-			// If squad is on foot and an empty vehicle is nearby, move to it.
-			// Nearby means one fourth of the distance to the aimed location
-			// OnAvailableEmptyFreeVehicleRelativelyNear
-			
-			if (!isNull _aiVehicle) then
-			{
-				private _distanceToVehicle = _aiVehicle.Position distance _leaderPos as Scalar;
-				private _distanceToTargetPos = _mKnowledge.Order.TargetPosition distance _leaderPos as Scalar;
-				
-	        	["_distanceToVehicle: " + str _distanceToVehicle] call LogHandler.Debug;
-	        	["_distanceToTargetPos: " + str _distanceToTargetPos] call LogHandler.Debug;
-
-				if (!isNull _aiVehicle && { (_distanceToVehicle / _distanceToTargetPos) < 0.25 }) then {
-					[_aiVehicle] call _mDecisionMaker.OnAvailableEmptyFreeVehicleRelativelyNear;
-					if (!isNull _mKnowledge.CurrentAction) then { return; };
-				};
 			};
 			
 			

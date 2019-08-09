@@ -519,6 +519,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
 			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [550, 550, 0], 4] new VehicleContainer;
 			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;

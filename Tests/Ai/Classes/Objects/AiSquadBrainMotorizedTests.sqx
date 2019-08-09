@@ -84,7 +84,7 @@ namespace Intrusion.Tests.Ai
 			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
-			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig] new InfantryDecisionMaker;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig] new MotorizedDecisionMaker;
 			
 			_mBrain = [
 				_mGroup, 
