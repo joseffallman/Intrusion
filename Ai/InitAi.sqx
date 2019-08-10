@@ -20,6 +20,8 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\MountAction.s
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\DisembarkAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\EngageAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMaker.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\VehicularDecisionMaker.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Objects\MotorizedDecisionMaker.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMakerFactory.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\AiService.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\DisembarkActionService.sqx";
