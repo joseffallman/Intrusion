@@ -127,6 +127,7 @@ namespace Intrusion.Tests.Ai
 				_mInventedTechnologiesCollection,
 				_mKnowledge,
 				_decisionMaker,
+				new BaseConfig
 			] new AiSquadBrain;
 		};
 		

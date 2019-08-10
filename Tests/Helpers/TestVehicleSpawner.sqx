@@ -63,6 +63,11 @@ namespace Intrusion.Tests.Helpers
 			[]
 		};
 		
+		public method IntrusionVehicle GetIntrusionVehicleByGroup("_group" as Group)
+		{
+			return classNull;
+		};
+		
 		// Gets the nearest working empty free vehicle in relation to a position.
 		// _side (Side): The vehicle's side.
 		// _pos (Array): The relative position.

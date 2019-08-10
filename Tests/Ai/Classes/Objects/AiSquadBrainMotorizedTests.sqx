@@ -44,8 +44,9 @@ namespace Intrusion.Tests.Ai
 		// Registers all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainMotorizedTests", [
-				/*"StateIdle_SquadVehicleReady_RespawnedAndIdle",*/
+				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
 				"AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle",
+				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",
 			]] call TestEngine.Register;
 		};
 		
@@ -98,7 +99,8 @@ namespace Intrusion.Tests.Ai
 				new TestAiWeaponsConfig,
 				_mInventedTechnologiesCollection,
 				_mKnowledge,
-				_decisionMaker
+				_decisionMaker,
+				new BaseConfig
 			] new AiSquadBrain;
 		};
 		
@@ -147,6 +149,32 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
 			[[0, 35, 0], _action.Position, "AI not moving to their squad vehicle."] call Assert.AreEqual;
+		};
+		
+		private static method IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle()
+		{
+			private ["_action" as MountAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [0, 25, 0];
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			
+			_mWorld.SquadVehicle = [objNull, [0, 35, 0], 3, _intrusionVehicle] new VehicleContainer;
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [0, 30, 0], 3] new VehicleContainer;
+			_mKnowledge.HasReachedProfession = true;
+			_mKnowledge.Members pushBack [[0, 25, 0]] new TestUnitContainer;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.MountingVehicle, _mKnowledge.State, "AI is not mounting."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MountAction;
+			[_action is MountAction, "Action is not a mount action."] call Assert.IsTrue;
+			[[0, 35, 0], _action.Vehicle.Position, "AI is mounting another vehicle than their squad vehicle."] call Assert.AreEqual;
 		};
 		
 		private static method AtBaseAndStateIdle_Act_MovingToVehicle()

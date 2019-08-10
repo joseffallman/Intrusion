@@ -70,7 +70,7 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
-				_unitCount = selectRandom [1, 2, 2, 2, 3];
+				_unitCount = 2; selectRandom [1, 2, 2, 2, 3];
 				_time = new MissionTime;
 				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
 				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
@@ -105,7 +105,7 @@ namespace Intrusion.Ai
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new DecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new MotorizedDecisionMaker;
 					
 					_aiSquad = [
 						_group,
@@ -119,11 +119,12 @@ namespace Intrusion.Ai
 						new AiWeaponsConfig,
 						_mInventedTechnologiesCollection,
 						_knowledge,
-						_decisionMaker
+						_decisionMaker,
+						new BaseConfig
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
-					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;
+					[_aiSquad.Group, ProfessionType.Motorized] call _mSquadHandler.SetSquadProfession;
 					//[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;

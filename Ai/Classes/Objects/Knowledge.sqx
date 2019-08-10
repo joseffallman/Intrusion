@@ -54,5 +54,8 @@ namespace Intrusion.Ai
 		
 		// Gets the base marker information associated with the brigade.
 		public property MapMarkerInfo BaseMarkerInfo { get; set; };
+		
+		// Gets whether the squad has reached their profession yet or not.
+		public property Boolean HasReachedProfession { get; set; };
 	};
 };

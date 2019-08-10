@@ -453,6 +453,8 @@ namespace Intrusion.Server
 		// Returns (Array of IntrusionVehicle): A list of the squad's intrusion vehicles.
 		public method Array GetIntrusionVehiclesByGroup("_group" as Group)
 		{
+			// Remarks: ***This method is obsolete and should be removed. Use GetIntrusionVehicleByGroup instead.***
+			
 			private ["_squadVehicles" as Array];
 			
 			_squadVehicles = [];
@@ -464,6 +466,20 @@ namespace Intrusion.Server
 			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
 			
 			_squadVehicles
+		};
+		
+		// Gets a squad's intrusion vehicle.
+		// _group (Group): The group that owns the vehicle.
+		// Returns (IntrusionVehicle): The squad's vehicle. classNull if they don't have one.
+		public method IntrusionVehicle GetIntrusionVehicleByGroup("_group" as Group)
+		{
+			{
+				if (_x.OwnerGroup == _group) then {
+					return _x;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			return classNull;
 		};
 		
 		// Gets the nearest working empty free vehicle in relation to a position.

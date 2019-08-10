@@ -84,7 +84,7 @@ namespace Intrusion.Ai
 	        };
 		};
 		
-		public virtual method OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
+		public virtual method OnBoardCloseVehicle()
 		{
 			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 
@@ -94,7 +94,7 @@ namespace Intrusion.Ai
 				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 				private _time = call _self.Time.GetMissionTime;
 			
-				_aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle;
+				private _aiVehicle = [_side, _leaderPos, count _self.Knowledge.Members] call _self.World.GetClosestEmptyFreeVehicle as VehicleContainer;
 				
 				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 				{

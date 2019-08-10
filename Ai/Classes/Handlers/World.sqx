@@ -151,17 +151,42 @@ namespace Intrusion.Ai
 		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
 		public method VehicleContainer GetSquadVehicle("_group" as Group)
 		{
-			private ["_vehicles" as Array /* of Object */, "_vehicleContainer" as VehicleContainer];
+			private ["_vehicleContainer" as VehicleContainer];
 			
 			_vehicleContainer = classNull;
 			
-			_vehicles = [_group] call _mVehicleSpawner.GetIntrusionVehiclesByGroup;
+			private _intrusionVehicle = [_group] call _mVehicleSpawner.GetIntrusionVehicleByGroup as IntrusionVehicle;
 			
-			if (count _vehicles > 0) then {
-				[(_vehicles select 0), getPos (_vehicles select 0), [_vehicles select 0] call _self.CountSeats] new VehicleContainer;
+			if (!isNull _intrusionVehicle) then {
+				_vehicleContainer = [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, [_intrusionVehicle.Vehicle] call _self.CountSeats, _intrusionVehicle] new VehicleContainer;
 			};
 			
 			_vehicleContainer
 		};
+
+/*
+		// Gets the intrusion vehicle that is closest to the group and not destroyed.
+		// _group (Group): The group.
+		// Returns (VehicleContainer): The intrusion vehicle that is closest to the group. classNull if no vehicles has been spawned yet.
+		public method VehicleContainer GetClosestIntrusionVehicle("_group" as Group)
+		{
+			private _shortestDistance = 999999;
+			private _leaderPos = [_group] call _self.GetLeaderPos;
+			private _closestIntrusionVehicle = classNull as IntrusionVehicle;
+		
+			{
+				if (_leaderPos distance _x.Vehicle < _shortestDistance) then {
+					_closestIntrusionVehicle = _x;
+					_shortestDistance = _leaderPos distance _x.Vehicle;
+				};
+			} foreach (call _mVehicleSpawner.GetAllVehicles) as IntrusionVehicle;
+			
+			if (!isNull _closestIntrusionVehicle) then {
+				return [0, 0, 0] new VehicleContainer;
+			};
+			
+			return classNull;
+		};
+*/
 	};
 };

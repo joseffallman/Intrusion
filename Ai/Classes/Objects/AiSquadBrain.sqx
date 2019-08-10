@@ -19,7 +19,7 @@ namespace Intrusion.Ai
 		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
-						"_mDecisionMaker" as DecisionMaker];
+						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig];
 		
 		#region Initialization
 
@@ -37,7 +37,8 @@ namespace Intrusion.Ai
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_knowledge" as Knowledge,
-			"_decisionMaker" as DecisionMaker)
+			"_decisionMaker" as DecisionMaker,
+			"_baseConfig" as BaseConfig)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -50,6 +51,7 @@ namespace Intrusion.Ai
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mDecisionMaker = _decisionMaker;
 			_mKnowledge = _knowledge;
+			_mBaseConfig = _baseConfig;
 			
 			_mKnowledge.Group = _group;
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
@@ -122,14 +124,13 @@ namespace Intrusion.Ai
 		private method MakeDecision()
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
-			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array, "_side" as Side];
+			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array];
 			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
         	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
-			_side = side _mKnowledge.Group;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			
         	["_squadInVehicle: " + str _squadInVehicle] call LogHandler.Debug;
@@ -184,18 +185,15 @@ namespace Intrusion.Ai
 
 
 			// If squad is on foot and standing right beside an empty vehicle, then mount.
-			// OnBesideEmptyFreeVehicle
+			// OnBoardCloseVehicle
 
-			_aiVehicle = [_side, _leaderPos, count _mKnowledge.Members] call _mWorld.GetClosestEmptyFreeVehicle;
-			
-			if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
-			{
-				[_aiVehicle] call _mDecisionMaker.OnBesideEmptyFreeVehicle;
+			if (!_squadInVehicle) then {
+				call _mDecisionMaker.OnBoardCloseVehicle;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
+
 			
-			
-			// Look for a vehicle
+			// Look for a suitable vehicle for the squad
 			
 			if (!_squadInVehicle) then {
 				call _mDecisionMaker.OnLookForVehicle;
@@ -513,10 +511,13 @@ namespace Intrusion.Ai
 			
 			scopeName "main";
 			
-			// If all members are dead, or if group has got their squad vehicle, then respawn.
-			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;			
+			// If all members are dead, or if group has got their squad vehicle, and vehicle is at base, then respawn.
+			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;
 			
-			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200 }) then {
+			private _groupFarAway = ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200;
+			private _vehicleInBase = !isNull _squadVehicle && { _squadVehicle.Position distance (getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName) < _mBaseConfig.BaseRadius };
+			
+			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _self.SetState;
 				breakOut "main";
