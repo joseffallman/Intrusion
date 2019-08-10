@@ -105,7 +105,7 @@ namespace Intrusion.Ai
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new InfantryDecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new DecisionMaker;
 					
 					_aiSquad = [
 						_group,

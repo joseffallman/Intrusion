@@ -13,7 +13,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Ai
 {
-	public class MotorizedDecisionMaker : InfantryDecisionMaker
+	public class MotorizedDecisionMaker : DecisionMaker
 	{
 		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{

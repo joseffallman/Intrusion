@@ -15,6 +15,8 @@ namespace Intrusion.Ai
 {
 	public class DecisionMaker : IDecisionMaker
 	{
+		#region Construction/Properties/Common
+	
 		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{
 			_self.Time = _time;
@@ -48,6 +50,10 @@ namespace Intrusion.Ai
 			player sideChat "Setting status for " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
 		};
 	
+		#endregion
+	
+		#region Brain Events
+	
 		public virtual method OnTargetResourceLocationCaptured()
 		{
 		};
@@ -57,11 +63,25 @@ namespace Intrusion.Ai
 		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
 		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
 		{
-			private ["_action" as IAction];
+			private ["_actionService" as IActionService, "_time" as Scalar];
 			
-			_action = [(call _self.Time.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
-			[AiSquadState.Engaging, _action] call _self.SetState;
-        	["Engage action created: " + str _action] call LogHandler.Debug;
+			if (isNull _mountedVehicleContainer) then
+			{
+				private _action = [(call _self.Time.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
+				[AiSquadState.Engaging, _action] call _self.SetState;
+	        	["Engage action created: " + str _action] call LogHandler.Debug;
+	        }
+	        else {
+	        	_time = call _self.Time.GetMissionTime;
+	        	
+				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService;
+				call _actionService.RunAsync;
+				
+				private _action = [_time + 20, _mountedVehicleContainer, _actionService as DisembarkActionService] new DisembarkAction;
+				
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+	        };
 		};
 		
 		public virtual method OnBesideEmptyFreeVehicle("_aiVehicle" as VehicleContainer)
@@ -172,7 +192,7 @@ namespace Intrusion.Ai
         	["Move action created #1: " + str _action] call LogHandler.Debug;
 		};
 		
-		public virtual method IAction OnAwayFromTargetPosition("_leaderPos" as Array, "_order" as Order)
+		public virtual method OnAwayFromTargetPosition("_leaderPos" as Array, "_order" as Order)
 		{
 			private _locationMarkerName = "";
 			private _time = call _self.Time.GetMissionTime;
@@ -190,5 +210,7 @@ namespace Intrusion.Ai
 		public virtual method OnNothingToDo()
 		{
 		};
+		
+		#endregion
 	};
 };

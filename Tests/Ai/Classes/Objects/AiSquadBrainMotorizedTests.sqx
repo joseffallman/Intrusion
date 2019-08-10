@@ -51,7 +51,7 @@ namespace Intrusion.Tests.Ai
 		
 		private static method BeforeEach()
 		{
-			private ["_mapMarkerInfo" as MapMarkerInfo, "_decisionMaker" as InfantryDecisionMaker];
+			private ["_mapMarkerInfo" as MapMarkerInfo, "_decisionMaker" as MotorizedDecisionMaker];
 			
 			_mResourceLocationCollection = new ResourceLocationCollection;
 			_mActionService = new TestActionService;
