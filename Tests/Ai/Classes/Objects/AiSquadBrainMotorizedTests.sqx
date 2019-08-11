@@ -44,9 +44,10 @@ namespace Intrusion.Tests.Ai
 		// Registers all tests that should be run.
 		public static method Init {
 			["Intrusion.Tests.Ai", "AiSquadBrainMotorizedTests", [
-				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
+				/*"StateIdle_SquadVehicleReady_RespawnedAndIdle",
 				"AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle",
-				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",
+				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",*/
+				"MountedCloseToDestinationIdle_Act_NotStatusDisembarkingStillMoving",
 			]] call TestEngine.Register;
 		};
 		
@@ -196,6 +197,33 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
 			[[0, 1600, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
+		};
+		
+		private static method MountedCloseToDestinationIdle_Act_NotStatusDisembarkingStillMoving
+		{	
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [550, 550, 0], 4, _intrusionVehicle] new VehicleContainer;
+			
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
 		};
 	};
 };
