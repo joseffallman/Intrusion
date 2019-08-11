@@ -267,61 +267,6 @@ namespace Intrusion.Ai
 		
 		#region Completion and Timeout
 		
-		// Gets whether the group has completed a move action.
-		private method Boolean HasCompletedMove()
-		{
-			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean, "_unitContainer" as IUnitContainer];
-			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
-			
-			scopeName "main";
-
-			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
-			_currentAction = _mKnowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
-			
-			if (_currentAction is MoveAction) then
-			{
-				_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
-				_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
-				_moveAction = _currentAction as MoveAction;
-				
-				_unitContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
-			
-				// Move is completed if the squad is mounted and can see nearby enemies
-				if (_squadInVehicle &&  !isNull _unitContainer && { _leaderPos distance (call _unitContainer.GetPosition) < 100 }) then {
-		        	["Completed move #0"] call LogHandler.Debug;
-					player sideChat "Completed #0";
-					true breakOut "main";
-				};
-				
-				// Move is completed if the squad is mounted and near the destination
-				if (_squadInVehicle && _leaderPos distance _moveAction.Position <= 150) then {
-		        	["Completed move #1"] call LogHandler.Debug;
-					player sideChat "Completed #1";
-					true breakOut "main";
-				};
-				
-				// Move is completed if the squad is at the destination position
-				
-				if (_leaderPos distance _moveAction.Position < 20) then {
-					player sideChat "Completed #2";
-		        	["Completed move #2"] call LogHandler.Debug;
-					true breakOut "main";
-				};
-				
-				// Move is completed if the order movement is related to a resource location that is already ours
-				_locationCollection = call _mWorld.GetResourceLocationCollection;
-				_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
-				
-				if (_location.Side == side _mKnowledge.Group) then
-				{
-					player sideChat "Completed #3";
-		        	["Completed move #3"] call LogHandler.Debug;
-					true breakOut "main";
-				};
-			};
-			
-			false
-		};
 		
 		// Gets whether the group has completed a capture action, i.e. it is no longer present at a resource location with enemy side.
 		private method Boolean HasCompletedCapture()
@@ -395,7 +340,7 @@ namespace Intrusion.Ai
 			_currentAction = _mKnowledge.CurrentAction;
 
 			if (_currentAction is MoveAction) then {
-				_hasCompleted = call _self.HasCompletedMove;
+				_hasCompleted = call _mDecisionMaker.HasCompletedMove;
 			};
 			
 			if (_currentAction is CaptureAction) then {

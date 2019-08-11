@@ -26,6 +26,8 @@ namespace Intrusion.Ai
 			_self.ActionPerformer = _actionPerformer;
 			_self.MarkerHandler = _markerHandler;
 			_self.ActionTimeoutConfig = _actionTimeoutConfig;
+			
+			_self.MoveCompletedIfMountedAndMiddleRangeOfTargetPosition = true;
 		};
 		
 		protected property IMissionTime Time { get; private set; };
@@ -220,6 +222,69 @@ namespace Intrusion.Ai
 		
 		public virtual method OnNothingToDo()
 		{
+		};
+		
+		#endregion
+		
+		#region Completion
+		
+		// Gets whether the group completes a move action if it is mounted and encounters nearby enemies.
+		protected property Boolean MoveCompletedIfMountedAndMiddleRangeOfTargetPosition { get; set; };
+		
+		// Gets whether the group has completed a move action.
+		public virtual method Boolean HasCompletedMove()
+		{
+			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean, "_unitContainer" as IUnitContainer];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
+			
+			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
+			_currentAction = _self.Knowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
+			
+			if (_currentAction is MoveAction) then
+			{
+				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+				_squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
+				_moveAction = _currentAction as MoveAction;
+				
+				_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
+			
+				// Move is completed if the squad is mounted and can see nearby enemies
+				if (_squadInVehicle &&  !isNull _unitContainer && { _leaderPos distance (call _unitContainer.GetPosition) < 100 }) then {
+		        	["Completed move #0"] call LogHandler.Debug;
+					player sideChat "Completed #0";
+					return true;
+				};
+				
+				// Move is completed if the squad is mounted and near the destination
+				if (_self.MoveCompletedIfMountedAndMiddleRangeOfTargetPosition) then {
+					if (_squadInVehicle && _leaderPos distance _moveAction.Position <= 150) then {
+			        	["Completed move #1"] call LogHandler.Debug;
+						player sideChat "Completed #1";
+						return true;
+					};
+				};
+				
+				// Move is completed if the squad is at the destination position
+				
+				if (_leaderPos distance _moveAction.Position < 20) then {
+					player sideChat "Completed #2";
+		        	["Completed move #2"] call LogHandler.Debug;
+					return true;
+				};
+				
+				// Move is completed if the order movement is related to a resource location that is already ours
+				_locationCollection = call _self.World.GetResourceLocationCollection;
+				_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_location.Side == side _self.Knowledge.Group) then
+				{
+					player sideChat "Completed #3";
+		        	["Completed move #3"] call LogHandler.Debug;
+					return true;
+				};
+			};
+			
+			return false;
 		};
 		
 		#endregion
