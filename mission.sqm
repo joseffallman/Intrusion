@@ -262,7 +262,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=78;
+		items=76;
 		class Item0
 		{
 			dataType="Marker";
@@ -331,13 +331,13 @@ class Mission
 		class Item6
 		{
 			dataType="Marker";
-			position[]={3056.1489,90.473,6076.229};
+			position[]={3053.3118,106.52899,6193.2964};
 			name="FACTORY2";
 			text="TE Transports Inc (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=78.498077;
+			atlOffset=78.498093;
 		};
 		class Item7
 		{
@@ -2666,28 +2666,6 @@ class Mission
 			{
 			};
 			id=467;
-		};
-		class Item76
-		{
-			dataType="Marker";
-			position[]={2950.8831,106.825,6206.396};
-			name="FACTORY5";
-			text="Church (Factory)";
-			type="mil_objective";
-			colorName="ColorIndependent";
-			id=483;
-			atlOffset=78.497787;
-		};
-		class Item77
-		{
-			dataType="Marker";
-			position[]={3031.6541,105.778,6190.6968};
-			name="FACTORY4";
-			text="The Mast (Factory)";
-			type="mil_objective";
-			colorName="ColorIndependent";
-			id=484;
-			atlOffset=78.498543;
 		};
 	};
 };

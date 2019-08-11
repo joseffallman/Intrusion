@@ -59,6 +59,7 @@ namespace Intrusion.Tests.Ai
 				"MovingMediumNearVehicle_Act_StatusMovingToVehicle",
 				"MovingMediumVehicleHalfNear_Act_StatusMovingToLocation",
 				"MovingFarAtVehicle_Act_StatusMountingVehicle",
+				"MovingRelativelyCloseAtVehicle_Act_StatusMovingVehicle",
 				"MovingFarVehicleNearby_Act_StatusMoving",
 				"MovingToNearbyVehicle_Act_StatusIdle",
 				"MovingFarHasMountedVehicle_Act_StatusMoving",
@@ -429,6 +430,26 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.MountingVehicle, _mKnowledge.State, "AI not mounting nearby vehicle."] call Assert.AreEqual;
 			[1, count _mActionPerformer.MountActions, "AI did not perform a mount action."] call Assert.AreEqual;
+		};
+		
+		private static method MovingRelativelyCloseAtVehicle_Act_StatusMovingVehicle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [600, 500, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [610, 500, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI is not moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToNearbyVehicle_Act_StatusIdle

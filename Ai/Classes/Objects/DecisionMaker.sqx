@@ -86,6 +86,17 @@ namespace Intrusion.Ai
 		
 		public virtual method OnBoardCloseVehicle()
 		{
+			private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+			
+			// If distance to target position is less than 150 meters, don't do anything.
+
+			if (_leaderPos distance _self.Knowledge.Order.TargetPosition <= 150) then
+			{
+				return;
+			};
+			
+			// Mount vehicle if there is one where they stand.
+			
 			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 
 			if (!_squadInVehicle) then
