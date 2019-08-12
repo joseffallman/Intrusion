@@ -37,9 +37,17 @@ namespace Intrusion.Ai
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
 			_waypoint = _mGroup addWaypoint [_moveAction.Position, 10];
-			_waypoint setWaypointSpeed "NORMAL";
-			_waypoint setWaypointType "HOLD";
-			_mGroup setSpeedMode "NORMAL";
+			
+			_waypoint setWaypointSpeed _moveAction.SpeedMode;
+			_waypoint setWaypointType _moveAction.WaypointType;
+			_waypoint setWaypointCombatMode "YELLOW";
+			_waypoint setWaypointBehaviour "SAFE";
+			
+			_mGroup setSpeedMode _moveAction.SpeedMode;
+			_mGroup setCombatMode "YELLOW";
+			_mGroup setBehaviour "SAFE";
+			
+			//player sideChat "expected: " + _moveAction.SpeedMode; // TODO SQX: Semicolon disappears on build.
 		};
 		
 		// Performs a capture action for an AI group.

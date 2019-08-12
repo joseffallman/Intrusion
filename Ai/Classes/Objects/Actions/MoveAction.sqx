@@ -12,12 +12,14 @@ namespace Intrusion.Ai
 	public class MoveAction : Action
 	{
 		// Creates a MoveAction object.
-		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
+		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String, "_speedMode" as String, "_waypointType" as String)
 		{
 			[_timeoutTime] call _base.Constructor;
 			_self.Position = _position;
 			_self.LocationMarkerName = _locationMarkerName;
 			_self.RelatedResourceLocation = (_locationMarkerName != "");
+			_self.SpeedMode = _speedMode;
+			_self.WaypointType = _waypointType;
 		};
 		
 		// Gets the destination position.
@@ -31,5 +33,11 @@ namespace Intrusion.Ai
 		
 		// Gets the squad's vehicle.
 		public property VehicleContainer Vehicle { get; private set; };
+		
+		// Gets the move action's speed mode.
+		public property String SpeedMode { get; set; };
+		
+		// Gets the move action's waypoint type.
+		public property String WaypointType { get; set; };
 	};
 };

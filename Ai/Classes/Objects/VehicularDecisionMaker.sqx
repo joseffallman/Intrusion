@@ -23,6 +23,11 @@ namespace Intrusion.Ai
 		
 		public override method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
 		{
+			if (_self.Knowledge.HasReachedProfession) then {
+				return;
+			};
+			
+			[_enemyContainer, _mountedVehicleContainer] call _base.OnNearEnemiesOnGroundSpotted;
 		};
 
 		public override method OnBoardCloseVehicle()
@@ -61,7 +66,7 @@ namespace Intrusion.Ai
 				_self.Knowledge.HasReachedProfession = true;
 				
 				private _time = call _self.Time.GetMissionTime;
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _vehicleContainer.Position, _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _vehicleContainer.Position, _self.Knowledge.Order.ResourceLocation.MarkerName, "NORMAL", "MOVE"] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created #3: " + str _action] call LogHandler.Debug;

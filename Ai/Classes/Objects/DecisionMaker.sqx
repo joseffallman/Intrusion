@@ -154,7 +154,7 @@ namespace Intrusion.Ai
 			if (!isNull _aiVehicle) then
 			{
 				private _time = call _self.Time.GetMissionTime;
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName, "NORMAL", "MOVE"] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created #2: " + str _action] call LogHandler.Debug;
@@ -198,8 +198,14 @@ namespace Intrusion.Ai
 		public virtual method OnWithinWalkingDistanceFromTargetLocation("_location" as ResourceLocation)
 		{
 			private _time = call _self.Time.GetMissionTime;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _location.MarkerName] new MoveAction;
+			private _speedMode = "NORMAL";
+			if (_squadInVehicle) then {
+				_speedMode = "LIMITED";
+			};
+			
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _location.MarkerName, _speedMode, "MOVE"] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_action as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #1: " + str _action] call LogHandler.Debug;
@@ -209,12 +215,18 @@ namespace Intrusion.Ai
 		{
 			private _locationMarkerName = "";
 			private _time = call _self.Time.GetMissionTime;
+			private _squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 			
 			if (!isNull _self.Knowledge.Order.ResourceLocation) then {
 				_locationMarkerName = _self.Knowledge.Order.ResourceLocation.MarkerName;
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _locationMarkerName] new MoveAction;
+			private _speedMode = "NORMAL";
+			if (_squadInVehicle) then {
+				_speedMode = "LIMITED";
+			};
+			
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _locationMarkerName, _speedMode, "MOVE"] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #3: " + str _action] call LogHandler.Debug;

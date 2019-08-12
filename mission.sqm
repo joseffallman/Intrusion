@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=487;
+		nextID=490;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3086.4775,13.909474,6401.5742};
-		dir[]={0.83493817,-0.22755484,-0.5012216};
-		up[]={0.19513467,0.97374886,-0.11714074};
-		aside[]={-0.51471913,-5.0429662e-008,-0.85742694};
+		pos[]={3080.0889,17.889704,6408.418};
+		dir[]={0.7590915,-0.31836563,-0.56793821};
+		up[]={0.25494158,0.94795078,-0.19074208};
+		aside[]={-0.59910345,-1.8521678e-007,-0.80074936};
 	};
 };
 binarizationWanted=0;
@@ -1490,7 +1490,7 @@ class Mission
 		class Item44
 		{
 			dataType="Marker";
-			position[]={3151.5779,4.0115986,6385.2568};
+			position[]={3200.4163,5.7373147,6358.3442};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";

@@ -23,7 +23,7 @@ namespace Intrusion.Tests.Helpers
 			scopeName "main";
 			
 			if (_side == west) then {
-				2 breakOut "main";
+				10 breakOut "main";
 			};
 			
 			0
