@@ -79,7 +79,7 @@ namespace Intrusion.Ai
 				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService;
 				call _actionService.RunAsync;
 				
-				private _action = [_time + 20, _mountedVehicleContainer, _actionService as DisembarkActionService] new DisembarkAction;
+				private _action = [_time + 20, _actionService as DisembarkActionService, _mountedVehicleContainer] new DisembarkAction;
 				
 				[AiSquadState.Disembarking, _action] call _self.SetState;
 	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
@@ -173,7 +173,7 @@ namespace Intrusion.Ai
 				private _actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _aiVehicle] call _self.ActionServiceFactory.CreateDisembarkService as IActionService;
 				call _actionService.RunAsync;
 				
-				private _action = [_time + 20, _aiVehicle, _actionService as DisembarkActionService] new DisembarkAction;
+				private _action = [_time + 20, _actionService as DisembarkActionService, _aiVehicle] new DisembarkAction;
 				[AiSquadState.Disembarking, _action] call _self.SetState;
 	        	["Disembark action created: " + str _action] call LogHandler.Debug;
 			};

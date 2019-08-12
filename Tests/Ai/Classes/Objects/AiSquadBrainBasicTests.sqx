@@ -572,7 +572,7 @@ namespace Intrusion.Tests.Ai
 			_mActionService.IsRunning = false;
 			_mActionService.Success = true;
 			
-			_mKnowledge.CurrentAction = [300, _vehicleContainer, _mActionService] new DisembarkAction;
+			_mKnowledge.CurrentAction = [300, _mActionService, _vehicleContainer] new DisembarkAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -597,7 +597,7 @@ namespace Intrusion.Tests.Ai
 			_mActionService.IsRunning = false;
 			_mActionService.Success = false;
 			
-			_mKnowledge.CurrentAction = [300, _aiVehicle, _mActionService] new DisembarkAction;
+			_mKnowledge.CurrentAction = [300, _mActionService, _aiVehicle] new DisembarkAction;
 			_mTime.MissionTime = 600;
 			
 			// Act

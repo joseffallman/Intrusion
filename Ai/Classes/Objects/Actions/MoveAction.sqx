@@ -9,23 +9,16 @@
  */
 namespace Intrusion.Ai
 {
-	public class MoveAction : IAction
+	public class MoveAction : Action
 	{
 		// Creates a MoveAction object.
 		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
 		{
-			_self.TimeoutTime = _timeoutTime;
+			[_timeoutTime] call _base.Constructor;
 			_self.Position = _position;
 			_self.LocationMarkerName = _locationMarkerName;
 			_self.RelatedResourceLocation = (_locationMarkerName != "");
-			_self.Service = classNull;
 		};
-		
-		// Gets the time when the action is regarded as timed out.
-		public property Scalar TimeoutTime { get; private set; };
-		
-		// Gets the service associated with the action. classNull if there are no service associated.
-		public property IActionService Service { get; private set; };
 		
 		// Gets the destination position.
 		public property Position { get; private set; };

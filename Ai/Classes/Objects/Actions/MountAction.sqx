@@ -9,21 +9,14 @@
  */
 namespace Intrusion.Ai
 {
-	public class MountAction : IAction
+	public class MountAction : Action
 	{
 		// Creates a MountAction object.
 		public constructor("_timeoutTime" as Scalar, "_vehicle" as VehicleContainer)
 		{
-			_self.TimeoutTime = _timeoutTime;
+			[_timeoutTime] call _base.Constructor;
 			_self.Vehicle = _vehicle;
-			_self.Service = classNull;
 		};
-		
-		// Gets the time when the action is regarded as timed out.
-		public property Scalar TimeoutTime { get; private set; };
-		
-		// Gets the service associated with the action. classNull if there are no service associated.
-		public property IActionService Service { get; private set; };
 		
 		// Gets the AI squad's vehicle. classNull if the AI squad does not have a vehicle.
 		public property VehicleContainer Vehicle { get; private set; };

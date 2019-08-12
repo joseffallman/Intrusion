@@ -9,22 +9,15 @@
  */
 namespace Intrusion.Ai
 {
-	public class CaptureAction : IAction
+	public class CaptureAction : Action
 	{
 		// Creates a CaptureAction object.
 		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
 		{
-			_self.TimeoutTime = _timeoutTime;
+			[_timeoutTime] call _base.Constructor;
 			_self.Position = _position;
 			_self.LocationMarkerName = _locationMarkerName;
-			_self.Service = classNull;
 		};
-		
-		// Gets the time when the action is regarded as timed out.
-		public property Scalar TimeoutTime { get; private set; };
-		
-		// Gets the service associated with the action. classNull if there are no service associated.
-		public property IActionService Service { get; private set; };
 		
 		// Gets the position that are about to be captured.
 		public property Array Position { get; private set; };

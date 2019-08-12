@@ -9,21 +9,14 @@
  */
 namespace Intrusion.Ai
 {
-	public class EngageAction : IAction
+	public class EngageAction : Action
 	{
 		// Creates a EngageAction object.
 		public constructor("_timeoutTime" as Scalar, "_position" as Array)
 		{
-			_self.TimeoutTime = _timeoutTime;
-			_self.Service = classNull;
+			[_timeoutTime] call _base.Constructor;
 			_self.Position = _position;
 		};
-		
-		// Gets the time when the action is regarded as timed out.
-		public property Scalar TimeoutTime { get; private set; };
-		
-		// Gets the service associated with the action. classNull if there are no service associated.
-		public property IActionService Service { get; private set; };
 		
 		// Gets the position that are about to be engaged.
 		public property Array Position { get; private set; };
