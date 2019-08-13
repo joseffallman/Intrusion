@@ -19,6 +19,7 @@ namespace Intrusion.Ai
 	
 		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{
+    		["_actionServiceFactory91: " + str _actionServiceFactory] call LogHandler.Debug;
 			_self.Time = _time;
 			_self.Knowledge = _knowledge;
 			_self.ActionServiceFactory = _actionServiceFactory;

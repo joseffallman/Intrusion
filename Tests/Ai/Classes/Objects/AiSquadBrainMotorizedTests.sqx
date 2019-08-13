@@ -106,8 +106,7 @@ namespace Intrusion.Tests.Ai
 				_decisionMaker,
 				new BaseConfig,
 				_professionConfig,
-				_mSquadHandler,
-				[_mActionServiceFactory, _mWorld, _mActionPerformer] new DecisionMakerFactory
+				_mSquadHandler
 			] new AiSquadBrain;
 		};
 		

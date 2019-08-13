@@ -92,6 +92,7 @@ namespace Intrusion.Common
 		// Checks whether all slots of a profession type is selectable for a squad.
 		// _side (Side): The side to check.
 		// _professionType (ProfessionType): The profession type to check.
+		// _rating (Scalar): The squad's rating.
 		// _professionConfig (ProfessionConfig): The profession config (since this is a distributed class).
 		// Returns (Boolean): true if the profession is available and selectable on the side, otherwise false.
 		public method Boolean ProfessionTypeSelectable("_side" as Side, "_professionType" as ProfessionType, "_rating" as Scalar, "_professionConfig" as ProfessionConfig)

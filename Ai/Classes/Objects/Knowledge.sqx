@@ -27,7 +27,7 @@ namespace Intrusion.Ai
 			_self.LeaderPosTime = 0;
 			_self.BaseMarkerInfo = classNull;
 			_self.WannaBeProfessionType = ProfessionType.Undefined;
-			_self.ProfessionType = ProfessionType.Infantry;
+			_self.ProfessionType = ProfessionType.Undefined;
 		};
 		
 		// gets or sets the group associated with this AI knowledge.

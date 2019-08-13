@@ -52,16 +52,6 @@ namespace Intrusion.Ai
 		
 		public property Boolean IsRunning { get; private set; };
 		
-//		private method SetProfessionTypeDelayed("_side" as Side, "_unitCount" as Scalar, "_aiSquad" as AiSquad)
-//		{
-//			private ["_professionType" as ProfessionType];
-//			
-//			sleep random 120;
-//			
-//			_professionType = [_side, _unitCount] call _self.GetRandomProfessionType;
-//			[_aiSquad.Group, _professionType] call _mSquadHandler.SetSquadProfession;
-//		};
-		
 		// Creates a new squad if more squads are alive.
 		private method CreateNewSquads()
 		{
@@ -106,7 +96,7 @@ namespace Intrusion.Ai
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new MotorizedDecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new DecisionMaker;
 					
 					_aiSquad = [
 						_group,
@@ -123,12 +113,11 @@ namespace Intrusion.Ai
 						_decisionMaker,
 						new BaseConfig,
 						_mProfessionConfig,
-						_mSquadHandler,
-						[_actionServiceFactory, _world, _actionPerformer] new DecisionMakerFactory
+						_mSquadHandler
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
-					[_aiSquad.Group, ProfessionType.Motorized] call _mSquadHandler.SetSquadProfession;
+					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;
 					//[_x, _unitCount, _aiSquad] spawn _self.SetProfessionTypeDelayed;
 				};
 			} foreach _mGameplayConfig.CompetingSides as Side;
@@ -170,8 +159,8 @@ namespace Intrusion.Ai
 			
 			_aiService = [
 				gServer.AiSquadHandler,
-				//_aiUnitBalancer, 
-				new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+				_aiUnitBalancer, 
+				//new Intrusion.Tests.Helpers.TestAiUnitBalancer,
 				gServerConfig.Gameplay,
 				gCommonConfig.MapMarkers,
 				gCommonConfig.Professions,

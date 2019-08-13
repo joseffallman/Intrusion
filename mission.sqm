@@ -1490,7 +1490,7 @@ class Mission
 		class Item44
 		{
 			dataType="Marker";
-			position[]={3200.4163,5.7373147,6358.3442};
+			position[]={3150.8469,2.7165864,6377.1611};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";

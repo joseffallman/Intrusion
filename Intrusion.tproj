@@ -134,10 +134,6 @@
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionPerformer.sqx.sqf" IsExpanded="false" FileName="Ai\Classes\Objects\ActionPerformer.sqx.sqf">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionServiceFactory.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\ActionServiceFactory.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -163,10 +159,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="DecisionMaker.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\DecisionMaker.sqx">
-                    <IsSelected>false</IsSelected>
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="DecisionMakerFactory.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\DecisionMakerFactory.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
                   </ProjectNodeViewModel>

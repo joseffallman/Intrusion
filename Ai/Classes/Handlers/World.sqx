@@ -72,11 +72,16 @@ namespace Intrusion.Ai
 			private ["_intrusionVehicle" as IntrusionVehicle, "_seatsCount" as Scalar, "_vehicle" as Object];
 			
 			_intrusionVehicle = [_side, _pos, _squadSize] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+			
+			if (isNull _intrusionVehicle) then {
+				return classNull;
+			};
+			
 			_vehicle = _intrusionVehicle.Vehicle;
 			
 			_seatsCount = [_vehicle] call _self.CountSeats;
 
-			[_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
+			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
 		};
 		
 		// Checks if all squad members are mounted in a vehicle.

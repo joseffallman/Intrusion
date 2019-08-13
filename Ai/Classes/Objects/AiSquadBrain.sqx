@@ -20,7 +20,7 @@ namespace Intrusion.Ai
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
-						"_mSquadHandler" as ISquadHandler, "_mDecisionMakerFactory" as DecisionMakerFactory];
+						"_mSquadHandler" as ISquadHandler];
 		
 		#region Initialization
 
@@ -41,8 +41,7 @@ namespace Intrusion.Ai
 			"_decisionMaker" as DecisionMaker,
 			"_baseConfig" as BaseConfig,
 			"_professionConfig" as ProfessionConfig,
-			"_squadHandler" as ISquadHandler,
-			"_decisionMakerFactory" as DecisionMakerFactory)
+			"_squadHandler" as ISquadHandler)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -442,6 +441,24 @@ namespace Intrusion.Ai
 			_professionType
 		};
 		
+		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
+		{
+		// TODO SQX JOSEF: Fel här!
+/*		
+			switch (_professionType) do {
+				case ProfessionType.Motorized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
+				case ProfessionType.Mechanized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
+				case ProfessionType.Armored: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
+				case ProfessionType.AttackHelicopter: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
+			};
+*/			
+			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
+				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker;
+			};
+
+			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new DecisionMaker; 
+		};
+		
 		// Tries to set the squad's profession if it is still Infantry.
 		private method SetSquadProfession()
 		{
@@ -465,8 +482,9 @@ namespace Intrusion.Ai
 					if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
 						[_self.Group, _mKnowledge.WannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
 						_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
-						_mDecisionMaker = [_mKnowledge.ProfessionType, _mKnowledge] call _mDecisionMakerFactory.Create;
+						_mDecisionMaker = [_mKnowledge.ProfessionType] call _self.NewDecisionMaker;
 		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
+						["_mDecisionMaker: " + str _mDecisionMaker] call LogHandler.Debug;
 					};
 				}
 				else {
@@ -531,6 +549,10 @@ namespace Intrusion.Ai
 			
 			private _groupFarAway = ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200;
 			private _vehicleInBase = !isNull _squadVehicle && { _squadVehicle.Position distance (getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName) < _mBaseConfig.BaseRadius };
+			
+			["_squadVehicle: " + str _squadVehicle] call LogHandler.Debug;
+			["_groupFarAway: " + str _groupFarAway] call LogHandler.Debug;
+			["_vehicleInBase: " + str _vehicleInBase] call LogHandler.Debug;
 			
 			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;
