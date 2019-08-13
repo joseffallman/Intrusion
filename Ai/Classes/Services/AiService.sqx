@@ -16,7 +16,7 @@ namespace Intrusion.Ai
 	public class AiService : IService
 	{
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */];
-		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadHandler" as ISquadHandler];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
@@ -27,7 +27,7 @@ namespace Intrusion.Ai
 			"_unitBalancer" as IAiUnitBalancer, 
 			"_gameplayConfig" as IGameplayConfig, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
-			"_professinConfig" as ProfessionConfig, 
+			"_professionConfig" as ProfessionConfig, 
 			"_squadHandler" as ISquadHandler, 
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_unitSpawner" as IUnitSpawner,
@@ -40,6 +40,7 @@ namespace Intrusion.Ai
 			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mProfessionConfig = _professionConfig;
 			_mSquadHandler = _squadHandler;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mUnitSpawner = _unitSpawner;
@@ -120,7 +121,10 @@ namespace Intrusion.Ai
 						_mInventedTechnologiesCollection,
 						_knowledge,
 						_decisionMaker,
-						new BaseConfig
+						new BaseConfig,
+						_mProfessionConfig,
+						_mSquadHandler,
+						[_actionServiceFactory, _world, _actionPerformer] new DecisionMakerFactory
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;

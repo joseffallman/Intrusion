@@ -36,7 +36,8 @@ namespace Intrusion.Tests.Ai
 			"_mTime" as TestMissionTime,
 			"_mActionService" as TestActionService,
 			"_mActionServiceFactory" as TestActionServiceFactory,
-			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection;
+			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_mSquadHandler" as ISquadHandler
 		];
 		
 		#endregion
@@ -84,6 +85,8 @@ namespace Intrusion.Tests.Ai
 			_mTime = [0] new TestMissionTime;
 			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
 			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
+			private _professionConfig = new ProfessionConfig;
+			_mSquadHandler = new TestSquadHandler;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
 			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig] new MotorizedDecisionMaker;
@@ -101,7 +104,10 @@ namespace Intrusion.Tests.Ai
 				_mInventedTechnologiesCollection,
 				_mKnowledge,
 				_decisionMaker,
-				new BaseConfig
+				new BaseConfig,
+				_professionConfig,
+				_mSquadHandler,
+				[_mActionServiceFactory, _mWorld, _mActionPerformer] new DecisionMakerFactory
 			] new AiSquadBrain;
 		};
 		

@@ -19,7 +19,8 @@ namespace Intrusion.Ai
 		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
-						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig];
+						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
+						"_mSquadHandler" as ISquadHandler, "_mDecisionMakerFactory" as DecisionMakerFactory];
 		
 		#region Initialization
 
@@ -38,7 +39,10 @@ namespace Intrusion.Ai
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_knowledge" as Knowledge,
 			"_decisionMaker" as DecisionMaker,
-			"_baseConfig" as BaseConfig)
+			"_baseConfig" as BaseConfig,
+			"_professionConfig" as ProfessionConfig,
+			"_squadHandler" as ISquadHandler,
+			"_decisionMakerFactory" as DecisionMakerFactory)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -52,6 +56,8 @@ namespace Intrusion.Ai
 			_mDecisionMaker = _decisionMaker;
 			_mKnowledge = _knowledge;
 			_mBaseConfig = _baseConfig;
+			_mProfessionConfig = _professionConfig;
+			_mSquadHandler = _squadHandler;
 			
 			_mKnowledge.Group = _group;
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
@@ -406,6 +412,70 @@ namespace Intrusion.Ai
 		
 		#endregion
 		
+		// Gets a random an possible to implement profession type for the group.
+		// _side (Side): The side of the group.
+		// _unitCount (Scalar): The number of units in the group.
+		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
+		{
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
+			
+			_ok = false;
+			_tries = 0;
+			
+			while { !_ok && _tries < 25 } do {
+				_professionType = selectRandom AiSquadHandler.AiWarriorTypes;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
+				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
+				
+				if (_ok) then {
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
+				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
+			};
+
+			_professionType
+		};
+		
+		// Tries to set the squad's profession if it is still Infantry.
+		private method SetSquadProfession()
+		{
+			private ["_rating" as Scalar];
+			private ["_squadCollection" as SquadCollection];
+		
+			if (_mKnowledge.ProfessionType == ProfessionType.Undefined) then
+			{
+				// Check that the squad has selected the profession type it wants to be.
+				if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
+					_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+				};
+				
+				// Try to select the wanted profession type
+				_squadCollection = call PublicVariableHandler.GetSquadCollection;
+				
+				if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable) then
+				{
+					_rating = _self.Group getVariable ["Rating", 0];
+					
+					if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
+						[_self.Group, _mKnowledge.WannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
+						_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
+						_mDecisionMaker = [_mKnowledge.ProfessionType, _mKnowledge] call _mDecisionMakerFactory.Create;
+		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
+					};
+				}
+				else {
+					// If profession type is not available, then select another profession type
+					_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+				};
+			};
+		};
+		
 		#region Public Methods
 		
 		public method GiveOrder("_order" as Order)
@@ -454,7 +524,7 @@ namespace Intrusion.Ai
 		{
 			private ["_squadVehicle" as VehicleContainer];
 			
-			scopeName "main";
+			call _self.SetSquadProfession;
 			
 			// If all members are dead, or if group has got their squad vehicle, and vehicle is at base, then respawn.
 			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;
@@ -465,7 +535,7 @@ namespace Intrusion.Ai
 			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _self.SetState;
-				breakOut "main";
+				return;
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.

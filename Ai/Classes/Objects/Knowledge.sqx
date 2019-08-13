@@ -26,6 +26,8 @@ namespace Intrusion.Ai
 			_self.LeaderPos = [0, 0, 0];
 			_self.LeaderPosTime = 0;
 			_self.BaseMarkerInfo = classNull;
+			_self.WannaBeProfessionType = ProfessionType.Undefined;
+			_self.ProfessionType = ProfessionType.Infantry;
 		};
 		
 		// gets or sets the group associated with this AI knowledge.
@@ -57,5 +59,11 @@ namespace Intrusion.Ai
 		
 		// Gets whether the squad has reached their profession yet or not.
 		public property Boolean HasReachedProfession { get; set; };
+		
+		// Gets or sets the squad's wanna be profession type.
+		public property ProfessionType WannaBeProfessionType { get; set; };
+		
+		// Gets or sets the squad's profession type.
+		public property ProfessionType ProfessionType { get; set; };
 	};
 };

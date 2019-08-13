@@ -33,6 +33,7 @@ namespace Intrusion.Ai
 				case ProfessionType.Motorized: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
 				case ProfessionType.Mechanized: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
 				case ProfessionType.Armored: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
+				case ProfessionType.AttackHelicopter: { return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
 			};
 			
 			return [_time, _knowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new DecisionMaker; 
