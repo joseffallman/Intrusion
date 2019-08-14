@@ -20,7 +20,7 @@ namespace Intrusion.Ai
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
-						"_mSquadHandler" as ISquadHandler];
+						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar];
 		
 		#region Initialization
 
@@ -60,6 +60,7 @@ namespace Intrusion.Ai
 			
 			_mKnowledge.Group = _group;
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
+			_mSelectProfessionTime = (call _mTime.GetMissionTime) + ([120] call _mRandomGenerator.GetNumber);
 		};
 		
 		public method Scalar GetMemberCount()
@@ -464,32 +465,35 @@ namespace Intrusion.Ai
 		{
 			private ["_rating" as Scalar];
 			private ["_squadCollection" as SquadCollection];
+			private _time = call _mTime.GetMissionTime;
 		
-			if (_mKnowledge.ProfessionType == ProfessionType.Undefined) then
-			{
-				// Check that the squad has selected the profession type it wants to be.
-				if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
-					_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
-				};
-				
-				// Try to select the wanted profession type
-				_squadCollection = call PublicVariableHandler.GetSquadCollection;
-				
-				if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable) then
+			if (_time > _mSelectProfessionTime) then {
+				if (_mKnowledge.ProfessionType == ProfessionType.Undefined) then
 				{
-					_rating = _self.Group getVariable ["Rating", 0];
-					
-					if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
-						[_self.Group, _mKnowledge.WannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
-						_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
-						_mDecisionMaker = [_mKnowledge.ProfessionType] call _self.NewDecisionMaker;
-		        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
-						["_mDecisionMaker: " + str _mDecisionMaker] call LogHandler.Debug;
+					// Check that the squad has selected the profession type it wants to be.
+					if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
+						_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
 					};
-				}
-				else {
-					// If profession type is not available, then select another profession type
-					_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+					
+					// Try to select the wanted profession type
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					
+					if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable) then
+					{
+						_rating = _self.Group getVariable ["Rating", 0];
+						
+						if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
+							[_self.Group, _mKnowledge.WannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
+							_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
+							_mDecisionMaker = [_mKnowledge.ProfessionType] call _self.NewDecisionMaker;
+			        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
+							["_mDecisionMaker: " + str _mDecisionMaker] call LogHandler.Debug;
+						};
+					}
+					else {
+						// If profession type is not available, then select another profession type
+						_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+					};
 				};
 			};
 		};
