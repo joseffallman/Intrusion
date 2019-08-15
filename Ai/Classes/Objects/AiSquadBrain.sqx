@@ -94,7 +94,7 @@ namespace Intrusion.Ai
 				
 				_location = _mKnowledge.WinnersLocation;
 				
-				if (_mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart > 0.25) then
+				if (_mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart > 0.20 && _mGameLengthMonitor.RemainingMinutes > 15) then
 				{
 					// Value the locations after distance from home base
 					{
