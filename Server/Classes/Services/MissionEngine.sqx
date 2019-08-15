@@ -56,7 +56,7 @@ namespace Intrusion.Server
 			};
 			
         	// Start the mission counter.
-        	[gCommon.MissionParametersHandler.MatchLengthMinutes] call MissionCounterService.RunAsync;
+        	call gServer.MissionCounterService.RunAsync;
         	
         	// Start the weapon service
         	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, gServer.InventedTechnologiesCollection] call WeaponsService.RunAsync;
@@ -78,7 +78,7 @@ namespace Intrusion.Server
         	call gServer.ResourceLocationOwnerService.RunAsync;
         	
 			// Perform the mission digest loop
-			while { MissionCounterService.MissionIsRunning } do
+			while { gServer.MissionCounterService.IsRunning } do
 			{
 				{
 					private ["_sideManager" as SideManager];

@@ -63,10 +63,5 @@ namespace Intrusion.Ai
 		// _group (Group): The group.
 		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
 		method VehicleContainer GetSquadVehicle("_group" as Group);
-		
-		// Gets the intrusion vehicle that is closest to the group and not destroyed.
-		// _group (Group): The group.
-		// Returns (VehicleContainer): The intrusion vehicle that is closest to the group. classNull if no vehicles has been spawned yet.
-		//method VehicleContainer GetClosestIntrusionVehicle("_group" as Group);
 	};
 };

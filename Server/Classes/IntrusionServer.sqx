@@ -28,6 +28,7 @@ namespace Intrusion.Server
 			_self.UnitSpawner = [gCommon.MissionParametersHandler.AiSkillLevel] new UnitSpawner;
 			_self.ResourceLocationHandler = [gCommonConfig.MapMarkers, _self.UnitSpawner, new MarkerHandler] new ResourceLocationHandler;
 			_self.ResourceLocationOwnerService = [gServerConfig.Gameplay, _self.ResourceLocationHandler, gServerConfig.ResourceLocation, new MissionTime, [new RatingConfig] new RatingCalculator] new ResourceLocationOwnerService;
+			_self.MissionCounterService = [gCommon.MissionParametersHandler.MatchLengthMinutes] new MissionCounterService;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -41,5 +42,6 @@ namespace Intrusion.Server
 		public property IAiSquadHandler AiSquadHandler { get; private set; };
 		public property IUnitSpawner UnitSpawner { get; private set; };
 		public property ResourceLocationOwnerService ResourceLocationOwnerService { get; private set; };
+		public property MissionCounterService MissionCounterService { get; private set; };
 	};
 };

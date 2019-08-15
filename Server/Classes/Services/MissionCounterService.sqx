@@ -13,22 +13,24 @@ using Intrusion.Communication;
 
 namespace Intrusion.Server
 {
-	public class MissionCounterService
+	public class MissionCounterService : Service, IGameLengthMonitor
 	{
-		private static fields ["_mMatchLengthMinutes" as Scalar];
-	
-		// Gets whether the mission is running or not.
-		public static property Boolean MissionIsRunning { get; private set; };
+		public constructor("_matchLengthMinutes" as Scalar)
+		{
+			_self.MinutesFromStart = _matchLengthMinutes;
+		};
 		
-		public static property Scalar RemainingMinutes { get; private set; };
+		public property Scalar MinutesFromStart { get; private set; };
+		
+		public property Scalar RemainingMinutes { get; private set; };
 
 		// Performs the mission time count down, and informs all clients about remaining time
 		// and when mission ends.
-        private static method Run {
+        protected override method Run {
 			private ["_endDayTime" as Scalar, "_lastReportMinute" as Scalar];
 			
-			_endDayTime = dayTime + (_mMatchLengthMinutes / 60);
-			_lastReportMinute = _mMatchLengthMinutes;
+			_endDayTime = dayTime + (_self.MinutesFromStart / 60);
+			_lastReportMinute = _self.MinutesFromStart;
 
 			while { daytime < _endDayTime } do {
 				_self.RemainingMinutes = floor ((_endDayTime - daytime) * 60) + 1;
@@ -55,18 +57,8 @@ namespace Intrusion.Server
 				sleep 5;
 			};
 			
-			_self.MissionIsRunning = false;
 			["ClientEventReciever.OnMissionTimeIsUp"] call Remote.Invoke;
 			["ServerEventReciever.OnMissionTimeIsUp"] call Remote.Invoke;
-			//["MissionEndHandler.PlayEndScene", [ResourceLocationHandler.WinnersLocation.Side]] call Remote.Invoke;
         };
-	
-		// Starts the mission
-		public static method RunAsync("_matchLengthMinutes" as Scalar) {
-			_mMatchLengthMinutes = _matchLengthMinutes;
-			_self.MissionIsRunning = true;
-        	
-			[] spawn _self.Run;
-		};
 	};
 };

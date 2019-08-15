@@ -1114,6 +1114,15 @@
               <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" IsExpanded="false" FileName="Server\Classes\Services">
                 <IsSelected>false</IsSelected>
                 <SubNodes>
+                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" IsExpanded="false" FileName="Server\Classes\Services\Interfaces">
+                    <IsSelected>false</IsSelected>
+                    <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IGameLengthMonitor.sqx" IsExpanded="false" FileName="Server\Classes\Services\Interfaces\IGameLengthMonitor.sqx">
+                        <IsSelected>false</IsSelected>
+                        <SubNodes />
+                      </ProjectNodeViewModel>
+                    </SubNodes>
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="FreeVehiclesService.sqx" IsExpanded="false" FileName="Server\Classes\Services\FreeVehiclesService.sqx">
                     <IsSelected>false</IsSelected>
                     <SubNodes />
@@ -1335,6 +1344,10 @@
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestActionServiceFactory.sqx" IsExpanded="false" FileName="Tests\Helpers\TestActionServiceFactory.sqx">
+                <IsSelected>false</IsSelected>
+                <SubNodes />
+              </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestGameLengthMonitor.sqx" IsExpanded="false" FileName="Tests\Helpers\TestGameLengthMonitor.sqx">
                 <IsSelected>false</IsSelected>
                 <SubNodes />
               </ProjectNodeViewModel>

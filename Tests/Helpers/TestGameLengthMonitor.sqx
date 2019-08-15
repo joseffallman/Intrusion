@@ -1,0 +1,28 @@
+/*
+ * Name:	TestGameLengthMonitor
+ * Date:	2019-08-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class that sets game length and remaining time during tests.
+ */
+
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestGameLengthMonitor : IGameLengthMonitor
+	{
+		// Creates a TestGameLengthMonitor object.
+		public constructor {
+			_self.MinutesFromStart = 60;
+			_self.RemainingMinutes = 30;
+		};
+		
+		public property Scalar MinutesFromStart { get; set; };
+		
+		public property Scalar RemainingMinutes { get; set; };
+	};
+};
+
