@@ -446,15 +446,6 @@ namespace Intrusion.Ai
 		
 		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
 		{
-		// TODO SQX JOSEF: Fel här!
-/*		
-			switch (_professionType) do {
-				case ProfessionType.Motorized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.Mechanized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.Armored: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.AttackHelicopter: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-			};
-*/			
 			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
 				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker;
 			};
@@ -555,10 +546,6 @@ namespace Intrusion.Ai
 			
 			private _groupFarAway = ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200;
 			private _vehicleInBase = !isNull _squadVehicle && { _squadVehicle.Position distance (getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName) < _mBaseConfig.BaseRadius };
-			
-			["_squadVehicle: " + str _squadVehicle] call LogHandler.Debug;
-			["_groupFarAway: " + str _groupFarAway] call LogHandler.Debug;
-			["_vehicleInBase: " + str _vehicleInBase] call LogHandler.Debug;
 			
 			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;
