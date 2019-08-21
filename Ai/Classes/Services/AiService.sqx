@@ -19,7 +19,7 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadHandler" as ISquadHandler];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
 		
 		// Creates a AiService object.
 		public constructor(
@@ -34,7 +34,8 @@ namespace Intrusion.Ai
 			"_resourceLocationConfig" as IResourceLocationConfig,
 			"_unitsConfig" as IAiUnitsConfig,
 			"_vehicleSpawner" as IVehicleSpawner,
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_gameLengthMonitor" as IGameLengthMonitor)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -48,6 +49,7 @@ namespace Intrusion.Ai
 			_mUnitsConfig = _unitsConfig;
 			_mVehicleSpawner = _vehicleSpawner;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mGameLengthMonitor = _gameLengthMonitor;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -89,7 +91,7 @@ namespace Intrusion.Ai
 						_members pushBack [_x] new UnitContainer;
 					} foreach units _group;
 					
-					private _knowledge = [_group, _members] new Knowledge;
+					private _knowledge = [_group, _members, _mResourceLocationHandler.WinnersLocation] new Knowledge;
 					private _actionServiceFactory = new ActionServiceFactory;
 					private _world = [_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World;
 					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
@@ -113,7 +115,8 @@ namespace Intrusion.Ai
 						_decisionMaker,
 						new BaseConfig,
 						_mProfessionConfig,
-						_mSquadHandler
+						_mSquadHandler,
+						_mGameLengthMonitor
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
@@ -174,6 +177,7 @@ namespace Intrusion.Ai
 				//new AiWeaponsConfig
 				gServer.VehicleSpawner,
 				gServer.InventedTechnologiesCollection,
+				gServer.MissionCounterService
 			] new AiService;
 			
 			call _aiService.RunAsync;

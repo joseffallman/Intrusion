@@ -1,0 +1,17 @@
+/*
+ * Name:	IGameLengthMonitor
+ * Date:	2019-08-15
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains the information about game length and remaining game time.
+ */
+namespace Intrusion.Server
+{
+	public interface IGameLengthMonitor
+	{
+		property Scalar MinutesFromStart { get; };
+		property Scalar RemainingMinutes { get; };
+	};
+};

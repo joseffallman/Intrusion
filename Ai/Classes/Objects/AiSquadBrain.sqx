@@ -20,7 +20,7 @@ namespace Intrusion.Ai
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
-						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar];
+						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor];
 		
 		#region Initialization
 
@@ -41,7 +41,8 @@ namespace Intrusion.Ai
 			"_decisionMaker" as DecisionMaker,
 			"_baseConfig" as BaseConfig,
 			"_professionConfig" as ProfessionConfig,
-			"_squadHandler" as ISquadHandler)
+			"_squadHandler" as ISquadHandler,
+			"_gameLengthMonitor" as IGameLengthMonitor)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -57,6 +58,7 @@ namespace Intrusion.Ai
 			_mBaseConfig = _baseConfig;
 			_mProfessionConfig = _professionConfig;
 			_mSquadHandler = _squadHandler;
+			_mGameLengthMonitor = _gameLengthMonitor;
 			
 			_mKnowledge.Group = _group;
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
@@ -90,39 +92,39 @@ namespace Intrusion.Ai
 				_count = 0;
 				_valuedLocations = [];
 				
+				_location = _mKnowledge.WinnersLocation;
+				
+				if (_mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart > 0.20 && _mGameLengthMonitor.RemainingMinutes > 15) then
 				{
-					_location = _x;
+					// Value the locations after distance from home base
+					{
+						_location = _x;
+						
+						if (_location.Side != side _mKnowledge.Group) then {
+							_distanceFromBase = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+							_valuedLocations pushBack [_location, _distanceFromBase] new ValuedObject;
+							_count = _count + 1;
+						};
+					} foreach _locations as ResourceLocation;
 					
-					if (_location.Side != side _mKnowledge.Group) then {
-						_distanceFromBase = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
-						_valuedLocations pushBack [_location, _distanceFromBase] new ValuedObject;
-						_count = _count + 1;
+					_valuedLocations = [_valuedLocations] call Sorter.QSort;
+					
+					if (_count > 3) then {
+						_count = 3;
 					};
-				} foreach _locations as ResourceLocation;
-				
-				_valuedLocations = [_valuedLocations] call Sorter.QSort;
-				
-				if (_count > 3) then {
-					_count = 3;
+					
+					if (_count > 0) then {
+						_index = floor ([_count] call _mRandomGenerator.GetNumber);
+						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+						
+						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
+						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+					};
 				};
-				
-				if (_count > 0) then {
-					_index = floor ([_count] call _mRandomGenerator.GetNumber);
-					_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
-					
-					// _location is here a copied object, since it has been sorted. But we want it to be a reference.
-					_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
-					
+
+				if (!isNull _location) then {
 					// Create the order
 					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
-				
-					["AiSquadBrain.CreateOrderOnOwnInitiative"] call LogHandler.Debug;
-					["_this: " + str _this] call LogHandler.Debug;
-					["_locations: " + str _locations] call LogHandler.Debug;
-					["_count: " + str _count] call LogHandler.Debug;
-					["_valuedLocations: " + str _valuedLocations] call LogHandler.Debug;
-					["_index: " + str _index] call LogHandler.Debug;
-					["_mKnowledge.Order: " + str _mKnowledge.Order] call LogHandler.Debug;
 				};
 			};
 		};
@@ -444,15 +446,6 @@ namespace Intrusion.Ai
 		
 		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
 		{
-		// TODO SQX JOSEF: Fel här!
-/*		
-			switch (_professionType) do {
-				case ProfessionType.Motorized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.Mechanized: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.Armored: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-				case ProfessionType.AttackHelicopter: { return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker; };
-			};
-*/			
 			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
 				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker;
 			};
@@ -553,10 +546,6 @@ namespace Intrusion.Ai
 			
 			private _groupFarAway = ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200;
 			private _vehicleInBase = !isNull _squadVehicle && { _squadVehicle.Position distance (getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName) < _mBaseConfig.BaseRadius };
-			
-			["_squadVehicle: " + str _squadVehicle] call LogHandler.Debug;
-			["_groupFarAway: " + str _groupFarAway] call LogHandler.Debug;
-			["_vehicleInBase: " + str _vehicleInBase] call LogHandler.Debug;
 			
 			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;

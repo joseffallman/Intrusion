@@ -127,7 +127,7 @@ namespace Intrusion.Ai
 				
 				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 	
-				if (MissionCounterService.RemainingMinutes <= 12) then {
+				if (12 <= 12) then {
 	//				player sideChat "less than 12!";
 					
 					_location = _mResourceLocationHandler.WinnersLocation;
@@ -606,7 +606,7 @@ namespace Intrusion.Ai
 		
 		private method UpdateOrder()
 		{
-			if (MissionCounterService.RemainingMinutes <= 20) then {
+			if (20 <= 20) then {
 				call _self.CreateOrderOnOwnInitiative;
 			}
 			else {
