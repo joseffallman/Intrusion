@@ -27,6 +27,10 @@ namespace Intrusion.Ai
 		// _disembarkAction (DisembarkAction): Information about the disembarkment.
 		method DoDisembark("_disembarkAction" as DisembarkAction);
 		
+		// Performs a revive action for an AI group.
+		// _reviveAction (ReviveAction): Information about the revive.
+		method DoRevive("_reviveAction" as ReviveAction);
+		
 		// Sets max speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
 		// _speed (Scalar): The speed to set.

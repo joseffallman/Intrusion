@@ -76,6 +76,7 @@ namespace Intrusion.Tests.Ai
 				"SingleSquadMemberIsDead_Act_DoesNotTakeAtLauncherAtRespawn",
 				"SingleSquadMemberIsDead_Act_TakesAaLauncherAtRespawn",
 				"SingleSquadMemberIsDead_Act_DoesNotTakeAaLauncherAtRespawn",
+				"OneOfTwoSquadMembersAreDead_Act_ReviveActionCreated",
 			]] call TestEngine.Register;
 		};
 		
@@ -788,6 +789,26 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
 			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher."] call Assert.IsFalse;
+		};
+		
+		private static method OneOfTwoSquadMembersAreDead_Act_ReviveActionCreated
+		{
+			// Arrange
+			_mWorld.LeaderPos = [500, 500, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[500, 500, 0], true] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[510, 510, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Reviving, _mKnowledge.State, "AI not reviving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.ReviveActions, "No revive action was created."] call Assert.AreEqual;
+			private _action = _mActionPerformer.ReviveActions select 0 as ReviveAction;
+			
 		};
 	};
 };

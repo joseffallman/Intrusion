@@ -19,6 +19,7 @@ namespace Intrusion.Ai
 		Defending = 5,
 		Disembarking = 6,
 		Engaging = 7,
+		Reviving = 8
 	};
 	
 	public class AiSquadStateMeta
@@ -36,6 +37,7 @@ namespace Intrusion.Ai
 				case AiSquadState.Defending: { _s = "Defending"; };
 				case AiSquadState.Disembarking: { _s = "Disembarking"; };
 				case AiSquadState.Engaging: { _s = "Engaging"; };
+				case AiSquadState.Reviving: { _s = "Reviving"; };
 				default { _s = "[AiSquadState has no entry]" };
 			};
 			

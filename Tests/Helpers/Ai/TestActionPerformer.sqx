@@ -29,9 +29,6 @@ namespace Intrusion.Tests.Helpers
 			_self.EquipMemberWithLauncherCalled = false;
 			_self.EquippedLauncherClassName = "";
 			_self.EquippedLauncherMagazineClassName = "";
-			
-	        ["_world: " + str _world] call LogHandler.Debug;
-	        ["_mWorld: " + str _mWorld] call LogHandler.Debug;
 		};
 		
 		public property Array MoveActions { get; private set; };
@@ -72,6 +69,15 @@ namespace Intrusion.Tests.Helpers
 		public method DoDisembark("_action" as DisembarkAction)
 		{
 			_self.DisembarkActions pushBack _action;
+		};
+		
+		public property Array ReviveActions { get; private set; };
+		
+		// Performs a revive action for an AI group.
+		// _action (ReviveAction): Information about the revive.
+		public method DoRevive("_action" as ReviveAction)
+		{
+			_self.ReviveActions pushBack _action;
 		};
 		
 		// Limits the speed of a vehicle.

@@ -105,6 +105,12 @@ namespace Intrusion.Ai
 			call _disembarkAction.Service.RunAsync;
 		};
 		
+		// Performs a revive action for an AI group.
+		// _reviveAction (ReviveAction): Information about the revive.
+		public method DoRevive("_action" as ReviveAction)
+		{
+			
+		};
 		
 		// Limits the speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
