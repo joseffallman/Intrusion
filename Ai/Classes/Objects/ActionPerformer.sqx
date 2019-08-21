@@ -119,9 +119,17 @@ namespace Intrusion.Ai
 		public method MoveOutFromVehicle("_group" as Group)
 		{
 			{
-				unassignVehicle _x;
-				moveOut _x;
+				private _vehicle = vehicle _x;
+				
+				if (_vehicle != _x) then {
+					unassignVehicle _x;
+					moveOut _x;
+					_x action ["GetOut", _vehicle]
+				};
 			} foreach units _group as Object;
+			
+			//units _group allowGetIn false; // Forces the units out of the vehicle
+			//units _group allowGetIn true;  // Allows the units to reenter vehicle later
 		};
 		
 		// Respawns a squad at base. Creates new units and removes the old (if alive).
