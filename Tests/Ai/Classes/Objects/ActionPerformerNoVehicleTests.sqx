@@ -672,8 +672,10 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.Reviving, _mKnowledge.State, "AI not reviving."] call Assert.AreEqual;
 			[1, count _mActionPerformer.ReviveActions, "No revive action was created."] call Assert.AreEqual;
-			private _action = _mActionPerformer.ReviveActions select 0 as ReviveAction;
-			
+			private _currentAction = _mKnowledge.CurrentAction as ReviveAction;
+			[_currentAction is ReviveAction, "Current action is not a revive action."] call Assert.IsTrue;
+			private _isAlive = call _currentAction.UnitToRevive.GetIsAlive;
+			[_isAlive, "The unit to revive is not dead."] call Assert.IsTrue;
 		};
 	};
 };
