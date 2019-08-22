@@ -180,6 +180,17 @@ namespace Intrusion.Ai
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
+			
+			// If at least one member is dead and at least one is alive, revive
+			//private _aliveCount = { _x = _x as UnitContainer; call _x.GetIsAlive } count _mKnowledge.Members as UnitContainer; // SQX FIX: as UnitContainer happens to be on private, and not on count.
+			private _aliveCount = { _x = _x as UnitContainer; call _x.GetIsAlive } count _mKnowledge.Members; // SQX FIX: And also... as on count does not seem to work.
+			private _deadCount = (count _mKnowledge.Members) - _aliveCount;
+			
+			if (_aliveCount >= 1 && _deadCount >= 1) then {
+				call _mDecisionMaker.OnRevive;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
 
 			// If squad is mounted and enemies spotted near, disembark
 			// OnNearEnemiesSpottedOnGround

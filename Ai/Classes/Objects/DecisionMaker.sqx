@@ -87,6 +87,21 @@ namespace Intrusion.Ai
 	        };
 		};
 		
+		// Called when at least one member in the group is dead and at least one member in the group is alive.
+		public virtual method OnRevive()
+		{
+//			private ["_reviveService" as ReviveService];
+//        	private _time = call _self.Time.GetMissionTime;
+        	
+//			_actionService = [_self.Time, _time + 60, _self.World, _self.ActionPerformer] call _self.ActionServiceFactory.CreateReviveService;
+//			call _actionService.RunAsync;
+			
+//			private _action = [_time + 20, _actionService as DisembarkActionService, _mountedVehicleContainer] new DisembarkAction;
+			
+//			[AiSquadState.Disembarking, _action] call _self.SetState;
+//      	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+		};
+		
 		public virtual method OnBoardCloseVehicle()
 		{
 			private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
