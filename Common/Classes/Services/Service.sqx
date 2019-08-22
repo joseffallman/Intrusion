@@ -11,8 +11,6 @@ namespace Intrusion.Common
 {
 	public class Service : IService
 	{
-		private fields ["_mHandle" as Handle];
-		
 		// Creates a Service object.
 		public constructor()
 		{
@@ -26,6 +24,11 @@ namespace Intrusion.Common
 		// Gets whether the service is currently asked to stop running.
 		protected property Boolean IsCancelling { get; private set; };
 		
+		// Called from RunAsync to reset things when starting a new processing.
+		protected virtual method Initialize()
+		{
+		};
+		
 		// Performs the service's logic as a separate process.
 		// Call this from the sub class'. Run when returning from the method (exiting service script).
 		protected virtual method Run()
@@ -38,10 +41,16 @@ namespace Intrusion.Common
 		// Returns (Handle): The script handle.
 		public method Handle RunAsync()
 		{
+			private ["_handle" as Handle];
+		
 			_self.IsRunning = true;
 			_self.IsCancelling = false;
-			_mHandle = spawn _self.Run;
-			_mHandle
+			
+			call _self.Initialize;
+			
+			_handle = spawn _self.Run;
+			
+			return _handle;
 		};
 		
 		// Asks the service to stop processing. If supported, script will close as soon as possible, and its IsRunning will be
