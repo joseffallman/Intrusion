@@ -233,7 +233,7 @@ class Mission
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=6;
-			atlOffset=61.287838;
+			atlOffset=61.28783;
 		};
 		class Item5
 		{
@@ -241,7 +241,7 @@ class Mission
 			position[]={4265.9458,88.046844,4184.8447};
 			name="INT_WeaponDepotMarkerWest";
 			type="Empty";
-			angle=83.777969;
+			angle=83.777939;
 			id=7;
 			atlOffset=56.507137;
 		};
@@ -1314,7 +1314,7 @@ class Mission
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=92.171715;
+			angle=92.171707;
 			drawBorder=1;
 			id=72;
 		};
