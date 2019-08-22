@@ -41,5 +41,11 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.IsAlive
 		};
+		
+		// Changes the unit object to a new unit. Used for AI revive.
+		// _newUnit (Object): The new unit.
+		public method ChangeUnit("_newUnit" as Object)
+		{
+		};
 	};
 };

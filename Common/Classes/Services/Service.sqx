@@ -47,7 +47,6 @@ namespace Intrusion.Common
 			_self.IsCancelling = false;
 			
 			call _self.Initialize;
-			
 			_handle = spawn _self.Run;
 			
 			return _handle;

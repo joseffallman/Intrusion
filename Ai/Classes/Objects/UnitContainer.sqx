@@ -32,5 +32,12 @@ namespace Intrusion.Ai
 		{
 			alive _self.Unit
 		};
+		
+		// Changes the unit object to a new unit. Used for AI revive.
+		// _newUnit (Object): The new unit.
+		public method ChangeUnit("_newUnit" as Object)
+		{
+			_self.Unit = _newUnit;
+		};
 	};
 };

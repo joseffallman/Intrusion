@@ -183,7 +183,7 @@ namespace Intrusion.Ai
 			
 			// If at least one member is dead and at least one is alive, revive
 			//private _aliveCount = { _x = _x as UnitContainer; call _x.GetIsAlive } count _mKnowledge.Members as UnitContainer; // SQX FIX: as UnitContainer happens to be on private, and not on count.
-			private _aliveCount = { _x = _x as UnitContainer; call _x.GetIsAlive } count _mKnowledge.Members; // SQX FIX: And also... as on count does not seem to work.
+			private _aliveCount = { private _xx = _x as IUnitContainer; call _xx.GetIsAlive } count _mKnowledge.Members; // SQX FIX: And also... as on count does not seem to work.
 			private _deadCount = (count _mKnowledge.Members) - _aliveCount;
 			
 			if (_aliveCount >= 1 && _deadCount >= 1) then {
@@ -379,19 +379,20 @@ namespace Intrusion.Ai
 		{
 			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService];
 			
-			scopeName "main";
-			
 			// If the action has a service, check if that service has timed out or not.
 			
 			if (!isNull _mKnowledge.CurrentAction) then {
 				_actionService = _mKnowledge.CurrentAction.Service;
-	        	["_actionService: " + str _actionService] call LogHandler.Debug;
 				
 				if (!isNull _actionService) then {
-					if (!_actionService.IsRunning && !_actionService.Success) then {
-			        	["Timeout occurred #1"] call LogHandler.Debug;
-						true breakOut "main";
+					if (!_actionService.IsRunning) then {
+						if (!_actionService.Success) then {
+				        	["Timeout occurred #1"] call LogHandler.Debug;
+							return true;
+						};
 					};
+					
+					return false;
 				};
 			};
 			
@@ -409,7 +410,7 @@ namespace Intrusion.Ai
 				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
 		        	["Timeout occurred #2"] call LogHandler.Debug;
 					_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
-					true breakOut "main";
+					return true;
 				};
 			};
 			
@@ -417,10 +418,10 @@ namespace Intrusion.Ai
 			_action = _mKnowledge.CurrentAction;
 			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
 	        	["Timeout occurred #3"] call LogHandler.Debug;
-				true breakOut "main";
+				return true;
 			};
 			
-			false
+			return false;
 		};
 		
 		#endregion

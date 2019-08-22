@@ -27,5 +27,10 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.Service
 		};
+		
+		public method IActionService CreateReviveService("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_deadUnit" as UnitContainer, "_revivingUnit" as UnitContainer)
+		{
+			_self.Service
+		};
 	};
 };

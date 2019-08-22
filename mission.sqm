@@ -12,7 +12,7 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={6438.375,78.479637,2656.8091};
+		pos[]={6469.5454,96.518921,2650.4216};
 		dir[]={-0.81251967,-0.3508521,0.46576348};
 		up[]={-0.3044582,0.93639827,0.17452464};
 		aside[]={0.4973706,-5.2169344e-007,0.86765927};
@@ -215,7 +215,7 @@ class Mission
 		class Item3
 		{
 			dataType="Marker";
-			position[]={6440.4365,3.1160707e+015,2663.5186};
+			position[]={6440.4097,3.1160707e+015,2661.6628};
 			name="INT_CarParkEast";
 			type="Empty";
 			fillName="Border";
@@ -241,7 +241,7 @@ class Mission
 			position[]={4265.9458,88.046844,4184.8447};
 			name="INT_WeaponDepotMarkerWest";
 			type="Empty";
-			angle=83.777939;
+			angle=83.777931;
 			id=7;
 			atlOffset=56.507137;
 		};

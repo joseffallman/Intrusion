@@ -36,8 +36,8 @@ call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestUnitContainer.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ResourceCollectorTests.sqx";
 
 call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\ActionPerformerNoVehicleTests.sqx";
-call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\ActionPerformerWithVehicleTests.sqx";
-call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMotorizedTests.sqx";
+//call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\ActionPerformerWithVehicleTests.sqx";
+//call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMotorizedTests.sqx";
 
 /* Initialize test classes */
 //call Tests.Example.ExampleTests.Init;
@@ -46,5 +46,5 @@ call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMot
 //call Intrusion.Tests.Server.ScientistTests.Init;
 //call Intrusion.Tests.Server.ResourceCollectorTests.Init;
 call Intrusion.Tests.Ai.ActionPerformerNoVehicleTests.Init;
-call Intrusion.Tests.Ai.ActionPerformerWithVehicleTests.Init;
-call Intrusion.Tests.Ai.AiSquadBrainMotorizedTests.Init;
+//call Intrusion.Tests.Ai.ActionPerformerWithVehicleTests.Init;
+//call Intrusion.Tests.Ai.AiSquadBrainMotorizedTests.Init;

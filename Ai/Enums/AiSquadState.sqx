@@ -27,6 +27,8 @@ namespace Intrusion.Ai
 		public static method String ToString("_state" as AiSquadState)
 		{
 			private ["_s" as String];
+			
+			_s = "[AiSquadState has no entry]";
 		
 			switch (_state) do {
 				case AiSquadState.Idle: { _s = "Idle"; };
@@ -38,10 +40,9 @@ namespace Intrusion.Ai
 				case AiSquadState.Disembarking: { _s = "Disembarking"; };
 				case AiSquadState.Engaging: { _s = "Engaging"; };
 				case AiSquadState.Reviving: { _s = "Reviving"; };
-				default { _s = "[AiSquadState has no entry]" };
 			};
 			
-			_s
+			return _s;
 		};
 	};
 };

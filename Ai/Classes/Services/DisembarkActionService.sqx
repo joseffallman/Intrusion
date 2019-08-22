@@ -28,15 +28,13 @@ namespace Intrusion.Ai
 		
 		protected override method Run()
 		{
-			scopeName "main";
-			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			[_mAiVehicle.Vehicle, 0] call _self.ActionPerformer.ForceSpeed;
 			
 			while {([_mAiVehicle.Vehicle] call _self.World.GetSpeed) > 1} do
 			{
 				if (call _self.CheckActionTimeout) then {
-					breakOut "main";
+					return;
 				};
 				
 				sleep 0.5;

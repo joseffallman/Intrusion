@@ -25,11 +25,11 @@ namespace Intrusion.Ai
 		
 		// Performs a disembark action for an AI group.
 		// _disembarkAction (DisembarkAction): Information about the disembarkment.
-		method DoDisembark("_disembarkAction" as DisembarkAction);
+		//method DoDisembark("_disembarkAction" as DisembarkAction);
 		
 		// Performs a revive action for an AI group.
 		// _reviveAction (ReviveAction): Information about the revive.
-		method DoRevive("_reviveAction" as ReviveAction);
+		//method DoRevive("_reviveAction" as ReviveAction);
 		
 		// Sets max speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
@@ -52,5 +52,15 @@ namespace Intrusion.Ai
 		// _launcherClassName (String): The class name of the launcher.
 		// _ammoClassName (String): The class name of the launcher's ammo.
 		method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String);
+		
+		// Moves a single unit in a group to a position.
+		// _unitContainer (UnitContainer): The unit to move.
+		// _position (Array): The position to move to.
+		method MoveSingleUnit("_unitContainer" as UnitContainer, "_position" as Array);
+		
+		// Makes a dead AI unit alive again and puts it in a group.
+		// _unitContainer (UnitContainer): The unit to make alive.
+		// _group (Group): The group to insert the unit into after being made alive.
+		method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group);
 	};
 };

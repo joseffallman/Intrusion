@@ -26,6 +26,8 @@ namespace Intrusion.Tests.Helpers
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
 			_self.MountActions = [];
+			//_self.DisembarkActions = [];
+			//_self.ReviveActions = [];
 			_self.EquipMemberWithLauncherCalled = false;
 			_self.EquippedLauncherClassName = "";
 			_self.EquippedLauncherMagazineClassName = "";
@@ -60,7 +62,8 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.MountActions pushBack _mountAction;
 		};
-		
+
+/*
 		public property Array DisembarkActions { get; private set; };
 		
 		// Performs a disembark action for an AI group.
@@ -79,6 +82,7 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.ReviveActions pushBack _action;
 		};
+*/
 		
 		// Limits the speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
@@ -130,6 +134,22 @@ namespace Intrusion.Tests.Helpers
 			_self.EquippedLauncherClassName = _launcherClassName;
 			_self.EquippedLauncherMagazineClassName = _ammoClassName;
 			_self.EquipMemberWithLauncherCalled = true;
+		};
+		
+		// Moves a single unit in a group to a position.
+		// _unitContainer (UnitContainer): The unit to move.
+		// _position (Array): The position to move to.
+		public method MoveSingleUnit("_unitContainer" as UnitContainer, "_position" as Array)
+		{
+			
+		};
+		
+		// Makes a dead AI unit alive again and puts it in a group.
+		// _unitContainer (UnitContainer): The unit to make alive.
+		// _group (Group): The group to insert the unit into after being made alive.
+		public method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group)
+		{
+			
 		};
 	};
 };

@@ -19,7 +19,6 @@ namespace Intrusion.Ai
 	
 		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{
-    		["_actionServiceFactory91: " + str _actionServiceFactory] call LogHandler.Debug;
 			_self.Time = _time;
 			_self.Knowledge = _knowledge;
 			_self.ActionServiceFactory = _actionServiceFactory;
@@ -77,10 +76,10 @@ namespace Intrusion.Ai
 	        else {
 	        	_time = call _self.Time.GetMissionTime;
 	        	
-				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService;
+				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
 				call _actionService.RunAsync;
 				
-				private _action = [_time + 20, _actionService as DisembarkActionService, _mountedVehicleContainer] new DisembarkAction;
+				private _action = [_time + 20, _actionService, _mountedVehicleContainer] new DisembarkAction;
 				
 				[AiSquadState.Disembarking, _action] call _self.SetState;
 	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
@@ -90,16 +89,43 @@ namespace Intrusion.Ai
 		// Called when at least one member in the group is dead and at least one member in the group is alive.
 		public virtual method OnRevive()
 		{
-//			private ["_reviveService" as ReviveService];
-//        	private _time = call _self.Time.GetMissionTime;
+			private ["_actionService" as IActionService];
+			
+			private ["_reviveService" as IActionService];
+        	private _time = call _self.Time.GetMissionTime;
+        	private _deadUnit = classNull;
+        	private _aliveUnit = classNull;
+			private _squadMounted = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
         	
-//			_actionService = [_self.Time, _time + 60, _self.World, _self.ActionPerformer] call _self.ActionServiceFactory.CreateReviveService;
-//			call _actionService.RunAsync;
-			
-//			private _action = [_time + 20, _actionService as DisembarkActionService, _mountedVehicleContainer] new DisembarkAction;
-			
-//			[AiSquadState.Disembarking, _action] call _self.SetState;
-//      	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+        	if (_squadMounted) then {
+        		private _vehicleContainer = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
+        		
+				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _vehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
+				call _actionService.RunAsync;
+				
+				private _action = [_time + 20, _actionService, _vehicleContainer] new DisembarkAction;
+				
+				[AiSquadState.Disembarking, _action] call _self.SetState;
+	        	["Disembark action (revive) created: " + str _action] call LogHandler.Debug;
+        	}
+        	else {
+	        	{
+	        		if (call _x.GetIsAlive) then {
+	        			_aliveUnit = _x;
+	        		}
+	        		else {
+	        			_deadUnit = _x;
+	        		};
+	        	} foreach _self.Knowledge.Members as IUnitContainer;
+	        	
+				_reviveService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _deadUnit, _aliveUnit] call _self.ActionServiceFactory.CreateReviveService as ReviveActionService;
+				call _reviveService.RunAsync;
+				
+				private _action = [_time + 20, _reviveService, _deadUnit] new ReviveAction;
+				
+				[AiSquadState.Reviving, _action] call _self.SetState;
+		      	["Revive action created: " + str _action] call LogHandler.Debug;
+        	};
 		};
 		
 		public virtual method OnBoardCloseVehicle()

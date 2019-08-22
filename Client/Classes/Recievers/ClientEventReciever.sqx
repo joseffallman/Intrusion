@@ -246,5 +246,11 @@ namespace Intrusion.Client
 			};
 		};
 
+		public static method OnPlayUnitAnimation("_unit" as Object, "_animation" as String, "_duration" as Scalar)
+		{
+			[_unit, _animation, "MEDIUM"] call BIS_fnc_ambientAnim;
+			sleep _duration;
+			[_unit] call BIS_fnc_ambientAnim__terminate;
+		};
 	};
 };

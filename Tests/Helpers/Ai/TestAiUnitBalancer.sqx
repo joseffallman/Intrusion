@@ -20,13 +20,11 @@ namespace Intrusion.Tests.Helpers
 		
 		public method Scalar GetAllowedUnitCount("_side" as Side)
 		{
-			scopeName "main";
-			
 			if (_side == west) then {
-				2 breakOut "main";
+				return 2;
 			};
 			
-			0
+			return 0;
 		};
 	};
 };

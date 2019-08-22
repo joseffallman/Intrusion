@@ -26,8 +26,9 @@ namespace Intrusion.Server
 		public method CreateUnit("_className" as String, "_position" as Array, "_group" as Group)
 		{
 			private ["_unit" as Object];
-			
-			_unit = _group createUnit [_className, _position, [], 5, "NONE"];
+
+			_unit = _group createUnit [_className, _position, [], 0, "CAN_COLLIDE"];
+			//_unit = _group createUnit [_className, _position, [], 5, "NONE"];
 			_unit setSkill ([_mSkillLevel] call SkillLevelMeta.SkillToScalar);
 			[_unit] call ServerEventHandlers.AddKilledEventHandler;
 			[_unit] call ServerEventHandlers.AddGetInManEventHandler;
