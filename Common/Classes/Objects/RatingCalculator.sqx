@@ -11,12 +11,13 @@ namespace Intrusion.Common
 {
 	public class RatingCalculator
 	{
-		private fields ["_mRatingConfig" as IRatingConfig];
+		private fields ["_mRatingConfig" as IRatingConfig, "_mGameLengthMinutes" as Scalar];
 		
 		// Creates a RatingCalculator object.
-		public constructor("_ratingConfig" as IRatingConfig)
+		public constructor("_ratingConfig" as IRatingConfig, "_gameLengthMinutes" as Scalar)
 		{
 			_mRatingConfig = _ratingConfig;
+			_mGameLengthMinutes = _gameLengthMinutes;
 		};
 		
 		// Calculates how much rating each member in a group will get for getting a flag.
@@ -24,7 +25,7 @@ namespace Intrusion.Common
 		// Returns (Scalar): The rating to add to each unit in the group.
 		public method Scalar CalculateGroupRatingFlag("_groupMemberCount" as Scalar)
 		{
-			_mRatingConfig.CapturingFlag * (_groupMemberCount + 1) * _mRatingConfig.GroupExtraMemberRatingFactor
+			return floor _mRatingConfig.CapturingFlag * (_groupMemberCount + 1) * _mRatingConfig.GroupExtraMemberRatingFactor * (60 / _mGameLengthMinutes);
 		};
 		
 		// Calculates how much rating each member in a group will get for killing an enemy unit.
@@ -32,7 +33,7 @@ namespace Intrusion.Common
 		// Returns (Scalar): The rating to add to each unit in the group.
 		public method Scalar CalculateGroupRatingEnemyKill("_groupMemberCount" as Scalar)
 		{
-			_mRatingConfig.EnemyUnitKill * (_groupMemberCount + 1) * _mRatingConfig.GroupExtraMemberRatingFactor
+			return floor _mRatingConfig.EnemyUnitKill * (_groupMemberCount + 1) * _mRatingConfig.GroupExtraMemberRatingFactor * (60 / _mGameLengthMinutes);
 		};
 	};
 };
