@@ -76,6 +76,11 @@ namespace Intrusion.Ai
 		
 		#region Decision Making
 		
+		private method Boolean TimeToPushAtEndLocation()
+		{
+			return _mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart < 0.2 || _mGameLengthMonitor.RemainingMinutes <= 15;
+		};
+		
 		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()
 		{
@@ -95,8 +100,11 @@ namespace Intrusion.Ai
 				_location = _mKnowledge.WinnersLocation;
 	        	["_location: '" + _location.MarkerName + "'."] call LogHandler.Debug;
 				
-				if (_mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart > 0.20 && _mGameLengthMonitor.RemainingMinutes > 15) then
+				if (call _self.TimeToPushAtEndLocation) then
 				{
+		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
+				}
+				else {
 					// Value the locations after distance from home base
 					{
 						if (_x.Side != side _mKnowledge.Group) then {
@@ -121,9 +129,6 @@ namespace Intrusion.Ai
 
 			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
 					};
-				}
-				else {
-		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
 				};
 
 				if (!isNull _location) then {
@@ -145,28 +150,25 @@ namespace Intrusion.Ai
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
 			
-        	["_squadInVehicle: " + str _squadInVehicle] call LogHandler.Debug;
-        	["_leaderPos: " + str _leaderPos] call LogHandler.Debug;
-			
 			
 			// If target resource location is already captured, and the order was on own initiative, request a new order!
 			// OnTargetResourceLocationCaptured
 
-        	["_mKnowledge.OrderIsGivenByBrigadeLeader: " + str (_mKnowledge.OrderIsGivenByBrigadeLeader)] call LogHandler.Debug;
-        	["isNull _mKnowledge.Order.ResourceLocation: " + str (isNull _mKnowledge.Order.ResourceLocation)] call LogHandler.Debug;
-
-
 			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
 			{
-	        	["_mKnowledge.Order.ResourceLocation.Side: " + str (_mKnowledge.Order.ResourceLocation.Side)] call LogHandler.Debug;
-	        	["side _mKnowledge.Group: " + str (side _mKnowledge.Group)] call LogHandler.Debug;
-	        	
-				if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
-				{
-					call _mDecisionMaker.OnTargetResourceLocationCaptured;
-					call _self.CreateOrderOnOwnInitiative;
-		        	["Order created: " + str _mKnowledge.Order] call LogHandler.Debug;
-					return;
+				// If it is time for end game, create order for the winner's location
+				if (call _self.TimeToPushAtEndLocation) then {
+					if (_mKnowledge.Order.ResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+						call _self.CreateOrderOnOwnInitiative;
+					};
+				}
+				else {
+					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
+					{
+						call _mDecisionMaker.OnTargetResourceLocationCaptured;
+						call _self.CreateOrderOnOwnInitiative;
+						return;
+					};
 				};
 			};
 			
@@ -576,8 +578,9 @@ namespace Intrusion.Ai
 			};
 			
 			// If the squad is not doing anything, make a new decision.
-		
-			if (_mKnowledge.State == AiSquadState.Idle) then {
+
+			if (_mKnowledge.State == AiSquadState.Idle) then
+			{
 				call _self.MakeDecision;
 			}
 			else
