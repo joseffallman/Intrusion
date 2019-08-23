@@ -93,16 +93,15 @@ namespace Intrusion.Ai
 				_valuedLocations = [];
 				
 				_location = _mKnowledge.WinnersLocation;
+	        	["_location: '" + _location.MarkerName + "'."] call LogHandler.Debug;
 				
 				if (_mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart > 0.20 && _mGameLengthMonitor.RemainingMinutes > 15) then
 				{
 					// Value the locations after distance from home base
 					{
-						_location = _x;
-						
-						if (_location.Side != side _mKnowledge.Group) then {
-							_distanceFromBase = ([_location.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
-							_valuedLocations pushBack [_location, _distanceFromBase] new ValuedObject;
+						if (_x.Side != side _mKnowledge.Group) then {
+							_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+							_valuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
 							_count = _count + 1;
 						};
 					} foreach _locations as ResourceLocation;
@@ -119,12 +118,18 @@ namespace Intrusion.Ai
 						
 						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
 						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+
+			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
 					};
+				}
+				else {
+		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
 				};
 
 				if (!isNull _location) then {
 					// Create the order
 					_mKnowledge.Order = [_mKnowledge.Group, OrderType.Attack, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};
 		};
@@ -135,7 +140,6 @@ namespace Intrusion.Ai
 			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array];
 			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
-        	["MakeDecision()"] call LogHandler.Debug;
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;

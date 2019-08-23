@@ -8,14 +8,14 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=151;
+		nextID=153;
 	};
 	class Camera
 	{
-		pos[]={4198.0874,74.327583,4163.353};
-		dir[]={0.77520293,-0.30717897,0.55220276};
-		up[]={0.25026983,0.95161378,0.17827575};
-		aside[]={0.58025014,-9.3688868e-007,-0.81457728};
+		pos[]={4214.7275,51.281929,4163.4268};
+		dir[]={0.81453109,-0.36876917,0.44785205};
+		up[]={0.32314974,0.92951399,0.17767684};
+		aside[]={0.48180735,6.3890184e-008,-0.87628943};
 	};
 };
 binarizationWanted=0;
@@ -181,7 +181,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=71;
+		items=72;
 		class Item0
 		{
 			dataType="Marker";
@@ -195,12 +195,13 @@ class Mission
 		class Item1
 		{
 			dataType="Marker";
-			position[]={6641.8999,66.094902,3171.375};
+			position[]={6194.0254,67.545593,3165.1523};
 			name="FACTORY1";
 			text="Production Lane (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
+			atlOffset=22.341;
 		};
 		class Item2
 		{
@@ -227,13 +228,13 @@ class Mission
 		class Item4
 		{
 			dataType="Marker";
-			position[]={6532.4033,117.4136,2529.8645};
+			position[]={5753.873,98.404999,2405.938};
 			name="OFFICE1";
-			text="The Mast (Office)";
+			text="Harbour (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=6;
-			atlOffset=61.28783;
+			atlOffset=96.126961;
 		};
 		class Item5
 		{
@@ -259,13 +260,13 @@ class Mission
 		class Item7
 		{
 			dataType="Marker";
-			position[]={4171.6367,110.44711,3851.1345};
+			position[]={4632.6719,124.82501,3965.1804};
 			name="OFFICE2";
 			text="Training Camp (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=83.799461;
+			atlOffset=82.660538;
 		};
 		class Item8
 		{
@@ -2469,17 +2470,25 @@ class Mission
 		};
 		class Item70
 		{
-			dataType="Trigger";
-			position[]={4349.019,31.194221,4157.29};
-			class Attributes
-			{
-				onActivation="{ if (vehicle _x != _x && _x == driver vehicle _x) then { _x setDamage 1; }} foreach allUnits;";
-				sizeA=0;
-				sizeB=0;
-				activationBy="ALPHA";
-			};
-			id=150;
-			type="EmptyDetector";
+			dataType="Marker";
+			position[]={5198.2061,50.402,3146.0549};
+			name="FACTORY3";
+			text="Another Factory (Factory)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=151;
+			atlOffset=-0.0001373291;
+		};
+		class Item71
+		{
+			dataType="Marker";
+			position[]={5380.7749,125.808,3685.967};
+			name="OFFICE3";
+			text="The Farm (Office)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=152;
+			atlOffset=61.287514;
 		};
 	};
 };

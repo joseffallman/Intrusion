@@ -19,7 +19,7 @@ namespace Intrusion.Ai
 		{
 			_self.Group = _group;
 			_self.Members = _members;
-			_self.WinnersLocation = classNull;
+			_self.WinnersLocation = _winnersLocation;
 			_self.State = AiSquadState.Idle;
 			_self.Order = classNull;
 			_self.CurrentAction = classNull;
