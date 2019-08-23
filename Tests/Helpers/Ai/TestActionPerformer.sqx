@@ -151,5 +151,11 @@ namespace Intrusion.Tests.Helpers
 		{
 			
 		};
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		public method MoveOutDeadUnitFromVehicle("_members" as Array)
+		{
+		};
 	};
 };

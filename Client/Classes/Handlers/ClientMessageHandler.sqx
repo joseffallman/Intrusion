@@ -10,7 +10,7 @@ namespace Intrusion.Client
 {
 	public class ClientMessageHandler
 	{
-        // Shows a message as a hint.
+        // Shows a message.
         // _message (String): The message to be shown.
         public static method ShowHint("_message" as String, ["_address" as Any, objNull])
         {

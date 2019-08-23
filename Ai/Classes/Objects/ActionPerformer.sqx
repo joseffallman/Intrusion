@@ -197,7 +197,7 @@ namespace Intrusion.Ai
 		
 		private method CreateAiUnitFromDeadBody("_deadUnit" as UnitContainer, "_group" as Group)
 		{
-			private ["_pos" as Array, "_dir" as Scalar, "_type" as String, "_name" as String, "_nameSound" as String, "_face" as String, "_speaker" as String];
+			private ["_pos" as Array, "_dir" as Scalar, "_type" as String, "_nameSound" as String, "_face" as String, "_speaker" as String];
 			private ["_loadout" as Array, "_wpnCargo" as Array, "_newUnit" as Object];
 		
 			private _oldUnit = _deadUnit.Unit;
@@ -205,7 +205,6 @@ namespace Intrusion.Ai
 			_pos = getPosATL _oldUnit;
 			_dir = getDir _oldUnit;
 			_type = typeOf _oldUnit;
-			_name = name _oldUnit;
 			_nameSound = nameSound _oldUnit;
 			_face = face _oldUnit;
 			_speaker = speaker _oldUnit;
@@ -215,13 +214,11 @@ namespace Intrusion.Ai
 			deleteVehicle _oldUnit;
 			_group = createGroup side _group;
 			_newUnit = [_type, _pos, _group] call _mUnitSpawner.CreateUnit;
-			//_newUnit = _group createUnit [_type, _pos, [], 0, "CAN_COLLIDE"];
 			[_newUnit] call _deadUnit.ChangeUnit;
 			_newUnit setDir _dir;
 			_newUnit switchMove "AmovPpneMstpSnonWnonDnon";
 			_newUnit setUnitLoadout _loadout;
 			_newUnit addWeapon (_wpnCargo select 0 select 0);
-			_newUnit setName _name;
 			_newUnit setNameSound _nameSound;
 			_newUnit setFace _face;
 			_newUnit setSpeaker _speaker;
@@ -234,6 +231,28 @@ namespace Intrusion.Ai
 		{
 			[_unit, _group] call _self.CreateAiUnitFromDeadBody;
 			[_unit.Unit] joinSilent _group;
+		};
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		public method MoveOutDeadUnitFromVehicle("_members" as Array /* of UnitContainer */)
+		{
+			{
+				private _unit = _x.Unit;
+				
+				if (!alive _unit && vehicle _unit != _unit) then {
+					private _vehicle = vehicle _unit;
+					private _firstPos = getPos _vehicle;
+					
+					unassignVehicle _unit;
+					moveOut _unit;
+					
+					private _dir = _firstPos getDir _unit;
+					private _pos = _unit getPos [3, _dir];
+					
+					_unit setPos _pos;
+				};
+			} foreach _members as UnitContainer;
 		};
 	};
 };

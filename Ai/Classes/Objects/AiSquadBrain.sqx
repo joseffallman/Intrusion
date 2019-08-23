@@ -552,6 +552,7 @@ namespace Intrusion.Ai
 			private ["_squadVehicle" as VehicleContainer];
 			
 			call _self.SetSquadProfession;
+			[_mKnowledge.Members] call _mActionPerformer.MoveOutDeadUnitFromVehicle;
 			
 			// If all members are dead, or if group has got their squad vehicle, and vehicle is at base, then respawn.
 			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;

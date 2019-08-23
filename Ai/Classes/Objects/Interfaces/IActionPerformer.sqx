@@ -62,5 +62,9 @@ namespace Intrusion.Ai
 		// _unitContainer (UnitContainer): The unit to make alive.
 		// _group (Group): The group to insert the unit into after being made alive.
 		method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group);
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		method MoveOutDeadUnitFromVehicle("_members" as Array);
 	};
 };

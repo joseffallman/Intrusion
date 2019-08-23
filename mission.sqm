@@ -8,14 +8,14 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=147;
+		nextID=151;
 	};
 	class Camera
 	{
-		pos[]={6469.5454,96.518921,2650.4216};
-		dir[]={-0.81251967,-0.3508521,0.46576348};
-		up[]={-0.3044582,0.93639827,0.17452464};
-		aside[]={0.4973706,-5.2169344e-007,0.86765927};
+		pos[]={4198.0874,74.327583,4163.353};
+		dir[]={0.77520293,-0.30717897,0.55220276};
+		up[]={0.25026983,0.95161378,0.17827575};
+		aside[]={0.58025014,-9.3688868e-007,-0.81457728};
 	};
 };
 binarizationWanted=0;
@@ -181,7 +181,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=70;
+		items=71;
 		class Item0
 		{
 			dataType="Marker";
@@ -1310,13 +1310,14 @@ class Mission
 		class Item39
 		{
 			dataType="Marker";
-			position[]={4289.3062,32.352654,4200.9956};
+			position[]={4296.6177,28.585938,4207.2368};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=92.171707;
+			angle=84.516411;
 			drawBorder=1;
 			id=72;
+			atlOffset=-4.2339935;
 		};
 		class Item40
 		{
@@ -2465,6 +2466,20 @@ class Mission
 			{
 			};
 			id=132;
+		};
+		class Item70
+		{
+			dataType="Trigger";
+			position[]={4349.019,31.194221,4157.29};
+			class Attributes
+			{
+				onActivation="{ if (vehicle _x != _x && _x == driver vehicle _x) then { _x setDamage 1; }} foreach allUnits;";
+				sizeA=0;
+				sizeB=0;
+				activationBy="ALPHA";
+			};
+			id=150;
+			type="EmptyDetector";
 		};
 	};
 };
