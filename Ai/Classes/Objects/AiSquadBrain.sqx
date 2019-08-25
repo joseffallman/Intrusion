@@ -98,7 +98,6 @@ namespace Intrusion.Ai
 				_valuedLocations = [];
 				
 				_location = _mKnowledge.WinnersLocation;
-	        	["_location: '" + _location.MarkerName + "'."] call LogHandler.Debug;
 				
 				if (call _self.TimeToPushAtEndLocation) then
 				{
