@@ -200,7 +200,7 @@ namespace Intrusion.Ai
 			// If squad is mounted and enemies spotted near, disembark
 			// OnNearEnemiesSpottedOnGround
 			
-			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
+			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
 			{
 				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 				[_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
