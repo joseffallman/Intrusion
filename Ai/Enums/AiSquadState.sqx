@@ -18,8 +18,7 @@ namespace Intrusion.Ai
 		ExitingVehicle = 4,
 		Defending = 5,
 		Disembarking = 6,
-		Engaging = 7,
-		Reviving = 8
+		Reviving = 7
 	};
 	
 	public class AiSquadStateMeta
@@ -38,7 +37,6 @@ namespace Intrusion.Ai
 				case AiSquadState.ExitingVehicle: { _s = "ExitingVehicle"; };
 				case AiSquadState.Defending: { _s = "Defending"; };
 				case AiSquadState.Disembarking: { _s = "Disembarking"; };
-				case AiSquadState.Engaging: { _s = "Engaging"; };
 				case AiSquadState.Reviving: { _s = "Reviving"; };
 			};
 			

@@ -523,7 +523,7 @@ namespace Intrusion.Tests.Ai
 		
 		private static method MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging
 		{
-			private ["_action" as EngageAction];
+			private ["_action" as MoveAction];
 		
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
@@ -536,10 +536,10 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Engaging, _mKnowledge.State, "AI did not engage near enemies."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI did not engage near enemies."] call Assert.AreEqual;
 			
-			_action = _mKnowledge.CurrentAction as EngageAction;
-			[_action is EngageAction, "Action is not an engage action."] call Assert.IsNotNull;
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not an engage action."] call Assert.IsNotNull;
 		};
 		
 		private static method AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle

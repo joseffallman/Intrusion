@@ -87,10 +87,6 @@
                         <IsSelected>false</IsSelected>
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="EngageAction.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Actions\EngageAction.sqx">
-                        <IsSelected>false</IsSelected>
-                        <SubNodes />
-                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IAction.sqx" IsExpanded="false" FileName="Ai\Classes\Objects\Actions\IAction.sqx">
                         <IsSelected>false</IsSelected>
                         <SubNodes />

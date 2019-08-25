@@ -19,7 +19,6 @@ call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\MoveAction.sq
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\CaptureAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\MountAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\DisembarkAction.sqx";
-call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\EngageAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\Actions\ReviveAction.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\DecisionMaker.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Objects\VehicularDecisionMaker.sqx";
