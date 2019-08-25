@@ -147,7 +147,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2", "NORMAL", "HOLD"] new MoveAction;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -168,7 +168,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2", "NORMAL", "HOLD"] new MoveAction;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -214,7 +214,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, [600, 600, 0], "FACTORY2", "NORMAL", "HOLD"] new MoveAction;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;

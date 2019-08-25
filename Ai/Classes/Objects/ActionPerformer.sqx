@@ -68,7 +68,7 @@ namespace Intrusion.Ai
 			_mGroup setSpeedMode "LIMITED";
 			_mGroup setCombatMode "YELLOW";
 			_mGroup setBehaviour "AWARE";
-		};		
+		};
 		
 		// Performs a mount action for an AI group.
 		// _group (Group): The group to capture a location.

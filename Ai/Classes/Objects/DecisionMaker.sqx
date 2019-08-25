@@ -63,31 +63,36 @@ namespace Intrusion.Ai
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
 		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
-		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicleContainer" as VehicleContainer)
+		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
 		{
 			private ["_actionService" as IActionService, "_time" as Scalar];
 			
-			if (isNull _mountedVehicleContainer) then
+			if (isNull _mountedVehicle) then
 			{
-				private _action = [(call _self.Time.GetMissionTime) + 20, (call _enemyContainer.GetPosition)] new EngageAction;
+				private _action = [(call _self.Time.GetMissionTime) + 60, (call _enemyContainer.GetPosition)] new EngageAction;
 				[AiSquadState.Engaging, _action] call _self.SetState;
 	        	["Engage action created: " + str _action] call LogHandler.Debug;
 	        }
-	        else {
-	        	_time = call _self.Time.GetMissionTime;
+	        else
+	        {
+	        	// If the group is not in its profession vehicle, disembark and fight on foot
 	        	
-				_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicleContainer] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
-				call _actionService.RunAsync;
-				
-				private _action = [_time + 20, _actionService, _mountedVehicleContainer] new DisembarkAction;
-				
-				[AiSquadState.Disembarking, _action] call _self.SetState;
-	        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+	        	if (isNull _mountedVehicle.IntrusionVehicle) then {
+		        	_time = call _self.Time.GetMissionTime;
+		        	
+					_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
+					call _actionService.RunAsync;
+					
+					private _action = [_time + 20, _actionService, _mountedVehicle] new DisembarkAction;
+					
+					[AiSquadState.Disembarking, _action] call _self.SetState;
+		        	["Disembark action #2 created: " + str _action] call LogHandler.Debug;
+	        	};
 	        };
 		};
 		
 		// Called when at least one member in the group is dead and at least one member in the group is alive.
-		public virtual method OnRevive()
+		public virtual method OnReviveNeeded()
 		{
 			private ["_actionService" as IActionService];
 			
@@ -196,7 +201,7 @@ namespace Intrusion.Ai
 			if (!isNull _aiVehicle) then
 			{
 				private _time = call _self.Time.GetMissionTime;
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, _self.Knowledge.Order.ResourceLocation.MarkerName, "NORMAL", "MOVE"] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created #2: " + str _action] call LogHandler.Debug;
@@ -247,7 +252,7 @@ namespace Intrusion.Ai
 				_speedMode = "LIMITED";
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _location.MarkerName, _speedMode, "MOVE"] new MoveAction;
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "AWARE", "YELLOW", _location.MarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_action as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #1: " + str _action] call LogHandler.Debug;
@@ -268,7 +273,7 @@ namespace Intrusion.Ai
 				_speedMode = "LIMITED";
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, _locationMarkerName, _speedMode, "MOVE"] new MoveAction;
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #3: " + str _action] call LogHandler.Debug;
