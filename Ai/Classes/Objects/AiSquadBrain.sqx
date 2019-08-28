@@ -249,7 +249,7 @@ namespace Intrusion.Ai
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
-
+/*
 			// If distance to ordered position is less than far, move to it (by foot since not in a vehicle).
 			// OnWithinWalkingDistanceFromTargetLocation
 			
@@ -258,7 +258,7 @@ namespace Intrusion.Ai
 				[_mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnWithinWalkingDistanceFromTargetLocation;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
-			
+*/			
 			
 			// If not already there, move towards order's target!
 			// OnAwayFromTargetPosition
