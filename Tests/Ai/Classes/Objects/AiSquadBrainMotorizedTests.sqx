@@ -230,6 +230,7 @@ namespace Intrusion.Tests.Ai
 			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			["AWARE", _action.Behavior, "AI not moving aware."] call Assert.AreEqual;
 		};
 	};
 };
