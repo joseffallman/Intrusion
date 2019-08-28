@@ -69,7 +69,7 @@ namespace Intrusion.Ai
 			
 			if (isNull _mountedVehicle) then
 			{
-				private _action = [(call _self.Time.GetMissionTime) + 60, (call _enemyContainer.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, "_locationMarkerName"] new MoveAction;
+				private _action = [(call _self.Time.GetMissionTime) + 60, (call _enemyContainer.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action] call _self.ActionPerformer.DoMove;
 	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
@@ -333,14 +333,16 @@ namespace Intrusion.Ai
 				};
 				
 				// Move is completed if the order movement is related to a resource location that is already ours
-				_locationCollection = call _self.World.GetResourceLocationCollection;
-				_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
-				
-				if (_location.Side == side _self.Knowledge.Group) then
-				{
-					player sideChat "Completed #3";
-		        	["Completed move #3"] call LogHandler.Debug;
-					return true;
+				if (_moveAction.LocationMarkerName != "") then {
+					_locationCollection = call _self.World.GetResourceLocationCollection;
+					_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+					
+					if (_location.Side == side _self.Knowledge.Group) then
+					{
+						player sideChat "Completed #3";
+			        	["Completed move #3"] call LogHandler.Debug;
+						return true;
+					};
 				};
 			};
 			
