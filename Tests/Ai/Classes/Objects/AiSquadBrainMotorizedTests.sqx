@@ -48,7 +48,9 @@ namespace Intrusion.Tests.Ai
 				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
 				"AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle",
 				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",
-				"MountedCloseToDestinationIdle_Act_NotStatusDisembarkingStillMoving",
+				"MountedCloseToDestinationIdle_Act_MovingCombat",
+				"MountedCloseToDestinationMovingSafe_Act_CompletedAndNotSetIdle",
+				"MountedCloseToDestinationMovingAware_Act_NotCompletedAndNotSetIdle",
 			]] call TestEngine.Register;
 		};
 		
@@ -205,21 +207,72 @@ namespace Intrusion.Tests.Ai
 			[[0, 1600, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
 		};
 		
-		private static method MountedCloseToDestinationIdle_Act_NotStatusDisembarkingStillMoving
+		private static method MountedCloseToDestinationIdle_Act_MovingCombat
 		{	
 			private ["_action" as MoveAction];
 			
 			// Arrange
-			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.LeaderPos = [600, 500, 0];
 			_mWorld.SquadMounted = true;
 			
 			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
-			_mWorld.MountedVehicle = [objNull, [550, 550, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
-			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = classNull;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			["AWARE", _action.Behavior, "AI not moving aware."] call Assert.AreEqual;
+		};
+		
+		private static method MountedCloseToDestinationMovingSafe_Act_CompletedAndNotSetIdle
+		{	
+			// Arrange
+			_mWorld.LeaderPos = [600, 500, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
+			
+			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Idle] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+		};
+		
+		private static method MountedCloseToDestinationMovingAware_Act_NotCompletedAndNotSetIdle
+		{	
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 500, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
+			
+			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, [600, 600, 0], "MOVE", "NORMAL", "AWARE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;

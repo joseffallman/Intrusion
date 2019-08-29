@@ -18,7 +18,6 @@ namespace Intrusion.Ai
 		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
 		{
 			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] call _base.Constructor;
-			_self.MoveCompletedIfMountedAndMiddleRangeOfTargetPosition = false;
 		};
 		
 		public override method OnBoardCloseVehicle()
@@ -66,20 +65,17 @@ namespace Intrusion.Ai
 			
 			call _base.OnLookForVehicle;
 		};
-		
-		public override method OnClosingInOnDestination()
+/*
+		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
 		{
-			private ["_aiVehicle" as VehicleContainer];
-			
 			// If squad is in its intrusion vehicle, don't do anything
-			
-			_aiVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
 
-			if (!isNull _aiVehicle.IntrusionVehicle) then {
+			if (!isNull _mountedVehicle.IntrusionVehicle) then {
 				return;
 			};
 			
-			call _base.OnClosingInOnDestination;
+			[_mountedVehicle] call _base.OnClosingInOnDestination;
 		};
+*/
 	};
 };

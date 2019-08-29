@@ -141,13 +141,14 @@ namespace Intrusion.Ai
 		private method MakeDecision()
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
-			private ["_aiVehicle" as VehicleContainer, "_leaderPos" as Array];
+			private ["_mountedVehicle" as VehicleContainer, "_leaderPos" as Array];
 			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
 			
 			scopeName "main";
 			
 			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
 			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
+			_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 			
 			
 			// If target resource location is already captured, and the order was on own initiative, request a new order!
@@ -179,7 +180,7 @@ namespace Intrusion.Ai
 			
         	["_unitContainer: " + str _enemyContainer] call LogHandler.Debug;
 			
-			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 100 }) then
+			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
 			{
 				[_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
@@ -202,8 +203,7 @@ namespace Intrusion.Ai
 			
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
 			{
-				_aiVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
-				[_enemyContainer, _aiVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
+				[_enemyContainer, _mountedVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 
@@ -245,7 +245,7 @@ namespace Intrusion.Ai
 			
 			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
 			{
-				call _mDecisionMaker.OnClosingInOnDestination;
+				[_mountedVehicle] call _mDecisionMaker.OnClosingInOnDestination;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
 			
@@ -508,14 +508,6 @@ namespace Intrusion.Ai
 			};
 		};
 		
-		#region Public Methods
-		
-		public method GiveOrder("_order" as Order)
-		{
-			_mKnowledge.Order = _order;
-			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
-		};
-		
 		private method Boolean GetAllMembersAreDead()
 		{
 			scopeName "main";
@@ -549,6 +541,14 @@ namespace Intrusion.Ai
 					};
 				};
 			} foreach _newMembers as IUnitContainer;
+		};
+		
+		#region Public Methods
+		
+		public method GiveOrder("_order" as Order)
+		{
+			_mKnowledge.Order = _order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.
