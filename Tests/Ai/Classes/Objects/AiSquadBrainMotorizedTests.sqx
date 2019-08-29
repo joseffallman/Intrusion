@@ -48,6 +48,7 @@ namespace Intrusion.Tests.Ai
 				"StateIdle_SquadVehicleReady_RespawnedAndIdle",
 				"AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle",
 				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",
+				"AtBaseAndStateIdle_Act_MovingToVehicle",
 				"MountedCloseToDestinationIdle_Act_MovingCombat",
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationMovingAware_Act_NotCompletedAndNotSetIdle",
@@ -235,7 +236,8 @@ namespace Intrusion.Tests.Ai
 			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
-			["AWARE", _action.Behavior, "AI not moving aware."] call Assert.AreEqual;
+			["COMBAT", _action.Behavior, "AI not moving AWARE."] call Assert.AreEqual;
+			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
 		};
 		
 		private static method MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle

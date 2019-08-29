@@ -284,17 +284,26 @@ namespace Intrusion.Ai
 			
 			_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 				
-			if (!isNull _mountedVehicle && { _leaderPos distance (call _closestEnemy.GetPosition) < 250 }) then {
-				return true;
+			if (!isNull _mountedVehicle && { _leaderPos distance (call _closestEnemy.GetPosition) < 250 }) then
+			{				
+				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
+				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.Engage }) then {
+					return true;
+				};
 			};
 		};
 		
 		protected virtual method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
 		{
-			if (!isNull _mountedVehicle && _distanceToTargetPos <= 150) then {
-	        	["Completed move #1"] call LogHandler.Debug;
-				player sideChat "Completed #1";
-				return true;
+			if (!isNull _mountedVehicle && _distanceToTargetPos <= 150) then
+			{
+				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
+				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn }) then
+				{
+		        	["Completed move #1"] call LogHandler.Debug;
+					player sideChat "Completed #1";
+					return true;
+				};
 			};
 			
 			return false;
