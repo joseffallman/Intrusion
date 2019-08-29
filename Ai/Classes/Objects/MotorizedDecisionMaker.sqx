@@ -20,6 +20,51 @@ namespace Intrusion.Ai
 			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] call _base.Constructor;
 		};
 		
+		public override method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
+		{
+			private ["_action" as MoveAction];
+			
+			// If acting as a profession squad
+			
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			{
+				_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action] call _self.ActionPerformer.DoMove;
+	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
+			};
+			
+			[_enemy, _mountedVehicle] call _base.OnNearEnemiesOnGroundSpotted;
+		};
+		
+		protected override method Boolean CompleteMoveWhenEnemiesNearby("_mountedVehicle" as VehicleContainer, "_closestEnemy" as IUnitContainer)
+		{
+			private ["_moveAction" as MoveAction];
+			private ["_leaderPos" as Array];
+			
+			// If acting as a profession squad
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			{
+				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+					
+				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction) then {
+						if (_moveAction.Type != MoveActionType.Engage) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
+						};
+					};
+				};
+				
+				return false;
+			};
+			
+			return [_mountedVehicle, _closestEnemy] call _base.CompleteMoveWhenEnemiesNearby;
+		};
+		
 		protected override method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
 		{
 			private ["_moveAction" as MoveAction];
@@ -32,7 +77,7 @@ namespace Intrusion.Ai
 					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
 					
 					if (_moveAction is MoveAction) then {
-						if (_moveAction.Behavior != "AWARE") then {
+						if (_moveAction.Type != MoveActionType.ClosingIn) then {
 				        	["Completed move #1"] call LogHandler.Debug;
 							player sideChat "Completed #1";
 							return true;

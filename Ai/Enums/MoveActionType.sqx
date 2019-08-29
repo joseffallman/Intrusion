@@ -1,0 +1,36 @@
+/*
+ * Name:	AiSquadState
+ * Date:	2019-02-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Enumeration of all states that an AI squad can take.
+ */
+namespace Intrusion.Ai
+{
+	public enum MoveActionType
+	{
+		Move,
+		ClosingIn,
+		Engage,
+	};
+	
+	public class MoveActionTypeMeta
+	{
+		public static method String ToString("_type" as MoveActionType)
+		{
+			private ["_s" as String];
+			
+			_s = "[MoveActionType has no entry]";
+		
+			switch (_type) do {
+				case MoveActionType.Move: { _s = "Move"; };
+				case MoveActionType.ClosingIn: { _s = "Closing In"; };
+				case MoveActionType.Engage: { _s = "Engage"; };
+			};
+			
+			return _s;
+		};
+	};
+};

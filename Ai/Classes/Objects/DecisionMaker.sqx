@@ -61,13 +61,13 @@ namespace Intrusion.Ai
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
 		// _mountedVehicleContainer (VehicleContainer): The vehicle that the (subject) AI squad is mounted to. classNull if not mounted.
-		public virtual method OnNearEnemiesOnGroundSpotted("_enemyContainer" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
+		public virtual method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
 		{
 			private ["_actionService" as IActionService, "_time" as Scalar];
 			
 			if (isNull _mountedVehicle) then
 			{
-				private _action = [(call _self.Time.GetMissionTime) + 60, (call _enemyContainer.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
+				private _action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action] call _self.ActionPerformer.DoMove;
 	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
@@ -200,7 +200,7 @@ namespace Intrusion.Ai
 			if (!isNull _aiVehicle) then
 			{
 				private _time = call _self.Time.GetMissionTime;
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created #2: " + str _action] call LogHandler.Debug;
@@ -242,7 +242,7 @@ namespace Intrusion.Ai
 			}
 			else
 			{
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, "MOVE", "NORMAL", "AWARE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "NORMAL", "AWARE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
@@ -264,7 +264,7 @@ namespace Intrusion.Ai
 				_speedMode = "LIMITED";
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created #3: " + str _action] call LogHandler.Debug;
@@ -278,13 +278,13 @@ namespace Intrusion.Ai
 		
 		#region Completion
 		
-		protected virtual method Boolean CompleteMoveWhenEnemiesNearby("_squadMounted" as Boolean, "_closestEnemy" as IUnitContainer)
+		protected virtual method Boolean CompleteMoveWhenEnemiesNearby("_mountedVehicle" as VehicleContainer, "_closestEnemy" as IUnitContainer)
 		{
 			private ["_leaderPos" as Array];
 			
 			_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 				
-			if (_squadMounted && { _leaderPos distance (call _closestEnemy.GetPosition) < 250 }) then {
+			if (!isNull _mountedVehicle && { _leaderPos distance (call _closestEnemy.GetPosition) < 250 }) then {
 				return true;
 			};
 		};
@@ -303,7 +303,7 @@ namespace Intrusion.Ai
 		// Gets whether the group has completed a move action.
 		public virtual method Boolean HasCompletedMove()
 		{
-			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_squadInVehicle" as Boolean, "_unitContainer" as IUnitContainer];
+			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_unitContainer" as IUnitContainer];
 			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
 			
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
@@ -312,47 +312,49 @@ namespace Intrusion.Ai
 			if (_currentAction is MoveAction) then
 			{
 				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-				_squadInVehicle = [_self.Knowledge.Group] call _self.World.CheckSquadMounted;
 				_moveAction = _currentAction as MoveAction;
 				
-				_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
-			
-				// Move is completed if the squad is mounted and has detected nearby enemies
-				if (!isNull _unitContainer) then {
-					if ([_squadInVehicle, _unitContainer] call _self.CompleteMoveWhenEnemiesNearby) then {
-			        	["Completed move (enemies nearby)"] call LogHandler.Debug;
-						player sideChat "Completed (enemies nearby)";
+				// If Engaging nearby enemies, never complete the move for some other reason.
+				if (_moveAction.Type != MoveActionType.Engage) then
+				{
+					_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
+	        		private _mountedVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
+				
+					// Move is completed if the squad is mounted and has detected nearby enemies
+					if (!isNull _unitContainer) then {
+						if ([_mountedVehicle, _unitContainer] call _self.CompleteMoveWhenEnemiesNearby) then {
+				        	["Completed move (enemies nearby)"] call LogHandler.Debug;
+							player sideChat "Completed (enemies nearby)";
+							return true;
+						};
+					};
+	        		
+					// Move is completed if the squad is mounted and near the destination
+					if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
+			        	["Completed move (closing in)"] call LogHandler.Debug;
+						player sideChat "Completed (closing in)";
 						return true;
 					};
-				};
-				
-        		private _mountedVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
-        		
-				// Move is completed if the squad is mounted and near the destination
-				if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
-		        	["Completed move (closing in)"] call LogHandler.Debug;
-					player sideChat "Completed (closing in)";
-					return true;
-				};
-				
-				// Move is completed if the squad is at the destination position
-				
-				if (_leaderPos distance _moveAction.Position < 20) then {
-					player sideChat "Completed #2";
-		        	["Completed move #2"] call LogHandler.Debug;
-					return true;
-				};
-				
-				// Move is completed if the order movement is related to a resource location that is already ours
-				if (_moveAction.LocationMarkerName != "") then {
-					_locationCollection = call _self.World.GetResourceLocationCollection;
-					_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
 					
-					if (_location.Side == side _self.Knowledge.Group) then
-					{
-						player sideChat "Completed #3";
-			        	["Completed move #3"] call LogHandler.Debug;
+					// Move is completed if the squad is at the destination position
+					
+					if (_leaderPos distance _moveAction.Position < 20) then {
+						player sideChat "Completed #2";
+			        	["Completed move #2"] call LogHandler.Debug;
 						return true;
+					};
+					
+					// Move is completed if the order movement is related to a resource location that is already ours
+					if (_moveAction.LocationMarkerName != "") then {
+						_locationCollection = call _self.World.GetResourceLocationCollection;
+						_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+						
+						if (_location.Side == side _self.Knowledge.Group) then
+						{
+							player sideChat "Completed #3";
+				        	["Completed move #3"] call LogHandler.Debug;
+							return true;
+						};
 					};
 				};
 			};

@@ -12,10 +12,11 @@ namespace Intrusion.Ai
 	public class MoveAction : Action
 	{
 		// Creates a MoveAction object.
-		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_waypointType" as String, "_speedMode" as String, "_behavior" as String, "_combatMode" as String, "_locationMarkerName" as String)
+		public constructor("_timeoutTime" as Scalar, "_type" as MoveActiontype, "_position" as Array, "_waypointType" as String, "_speedMode" as String, "_behavior" as String, "_combatMode" as String, "_locationMarkerName" as String)
 		{
 			[_timeoutTime] call _base.Constructor;
 			
+			_self.Type = _type;
 			_self.Position = _position;
 			_self.LocationMarkerName = _locationMarkerName;
 			_self.RelatedResourceLocation = (_locationMarkerName != "");
@@ -24,6 +25,8 @@ namespace Intrusion.Ai
 			_self.Behavior = _behavior;
 			_self.CombatMode = _combatMode;
 		};
+		
+		public property Type { get; private set; };
 		
 		// Gets the destination position.
 		public property Position { get; private set; };
