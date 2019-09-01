@@ -45,7 +45,7 @@ namespace Intrusion.Ai
 			// If mounted on a squad vehicle.
 			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
 			{
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName, 75] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;

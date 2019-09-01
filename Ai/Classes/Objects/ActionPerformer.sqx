@@ -36,7 +36,7 @@ namespace Intrusion.Ai
 			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
-			_waypoint = _mGroup addWaypoint [_moveAction.Position, 10];
+			_waypoint = _mGroup addWaypoint [_moveAction.Position, _moveAction.Radius];
 			
 			_waypoint setWaypointSpeed _moveAction.SpeedMode;
 			_waypoint setWaypointType _moveAction.WaypointType;

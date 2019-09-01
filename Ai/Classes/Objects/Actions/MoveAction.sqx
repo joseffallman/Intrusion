@@ -12,7 +12,7 @@ namespace Intrusion.Ai
 	public class MoveAction : Action
 	{
 		// Creates a MoveAction object.
-		public constructor("_timeoutTime" as Scalar, "_type" as MoveActiontype, "_position" as Array, "_waypointType" as String, "_speedMode" as String, "_behavior" as String, "_combatMode" as String, "_locationMarkerName" as String)
+		public constructor("_timeoutTime" as Scalar, "_type" as MoveActiontype, "_position" as Array, "_waypointType" as String, "_speedMode" as String, "_behavior" as String, "_combatMode" as String, "_locationMarkerName" as String, ["_radius" as Scalar, 10])
 		{
 			[_timeoutTime] call _base.Constructor;
 			
@@ -24,6 +24,7 @@ namespace Intrusion.Ai
 			_self.WaypointType = _waypointType;
 			_self.Behavior = _behavior;
 			_self.CombatMode = _combatMode;
+			_self.Radius = _radius;
 		};
 		
 		public property Type { get; private set; };
@@ -51,5 +52,8 @@ namespace Intrusion.Ai
 		
 		// Gets the move action's combat mode.
 		public property String CombatMode { get; private set; };
+		
+		// Gets the waypoint radius.
+		public property Scalar Radius { get; private set; };
 	};
 };

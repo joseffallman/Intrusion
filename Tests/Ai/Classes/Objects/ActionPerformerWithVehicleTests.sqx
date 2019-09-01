@@ -46,7 +46,7 @@ namespace Intrusion.Tests.Ai
 		public static method Init {
 			["Intrusion.Tests.Ai", "ActionPerformerWithVehicleTests", [
 				"MovingFarHasMountedVehicle_Act_StatusMoving",
-				"MountedArrivingFarMoving_Act_StatusIdle",
+				"MountedArrivingFarMoving_EnteringClose_StatusIdle",
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 				"CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle",
 				"MountedMovingDetectedEnemies_Act_StatusIdle",
@@ -139,7 +139,7 @@ namespace Intrusion.Tests.Ai
 			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 		};
 		
-		private static method MountedArrivingFarMoving_Act_StatusIdle
+		private static method MountedArrivingFarMoving_EnteringClose_StatusIdle
 		{
 			// Arrange
 			_mWorld.LeaderPos = [550, 550, 0];
@@ -148,14 +148,13 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop moving."] call Assert.AreEqual;
-			//[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
 		};
 		
 		private static method MountedCloseToDestinationIdle_Act_StatusDisembarking

@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=154;
+		nextID=156;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={4190.7251,69.624886,4146.4644};
-		dir[]={0.88795054,-0.34540206,0.30374587};
-		up[]={0.32687634,0.93842673,0.1118171};
-		aside[]={0.32366511,-3.1150557e-007,-0.94618011};
+		pos[]={4258.0723,46.440891,4244.1333};
+		dir[]={-0.20703238,-0.42679352,-0.88040084};
+		up[]={-0.097703278,0.90433449,-0.4154819};
+		aside[]={-0.97350454,4.1443855e-008,0.2289238};
 	};
 };
 binarizationWanted=0;
@@ -232,13 +232,13 @@ class Mission
 		class Item4
 		{
 			dataType="Marker";
-			position[]={5753.873,98.404999,2405.938};
+			position[]={5586.7559,162.59375,4255.4429};
 			name="OFFICE1";
 			text="Harbour (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=6;
-			atlOffset=96.126961;
+			atlOffset=59.109978;
 		};
 		class Item5
 		{
@@ -253,13 +253,13 @@ class Mission
 		class Item6
 		{
 			dataType="Marker";
-			position[]={4484.3135,118.23971,4272.9272};
+			position[]={4342.7236,95.501038,3572.5349};
 			name="FACTORY2";
 			text="Engineering Room (Factory)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=8;
-			atlOffset=62.477852;
+			atlOffset=48.182972;
 		};
 		class Item7
 		{
@@ -2477,7 +2477,7 @@ class Mission
 			dataType="Marker";
 			position[]={5198.2061,50.402,3146.0549};
 			name="FACTORY3";
-			text="Another Factory (Factory)";
+			text="Forrest Factory (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=151;

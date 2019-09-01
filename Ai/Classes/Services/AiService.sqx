@@ -63,7 +63,7 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
-				_unitCount = 2; //selectRandom [1, 2, 2, 2, 3];
+				_unitCount = selectRandom [1, 1, 2, 2, 2, 2, 2, 3, 3, 4];
 				_time = new MissionTime;
 				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
 				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
@@ -162,8 +162,8 @@ namespace Intrusion.Ai
 			
 			_aiService = [
 				gServer.AiSquadHandler,
-				//_aiUnitBalancer, 
-				new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+				_aiUnitBalancer, 
+				//new Intrusion.Tests.Helpers.TestAiUnitBalancer,
 				gServerConfig.Gameplay,
 				gCommonConfig.MapMarkers,
 				gCommonConfig.Professions,
