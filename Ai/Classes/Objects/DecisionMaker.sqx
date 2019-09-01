@@ -10,6 +10,7 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
@@ -17,7 +18,7 @@ namespace Intrusion.Ai
 	{
 		#region Construction/Properties/Common
 	
-		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig)
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
 		{
 			_self.Time = _time;
 			_self.Knowledge = _knowledge;
@@ -26,6 +27,7 @@ namespace Intrusion.Ai
 			_self.ActionPerformer = _actionPerformer;
 			_self.MarkerHandler = _markerHandler;
 			_self.ActionTimeoutConfig = _actionTimeoutConfig;
+			_Self.ResourceLocationConfig = _resourceLocationConfig;
 		};
 		
 		protected property IMissionTime Time { get; private set; };
@@ -35,6 +37,7 @@ namespace Intrusion.Ai
 		protected property IActionPerformer ActionPerformer { get; private set; };
 		protected property IMarkerHandler MarkerHandler { get; private set; };
 		protected property IActionTimeoutConfig ActionTimeoutConfig { get; private set; };
+		protected property IResourceLocationConfig ResourceLocationConfig { get; private set; };
 	
 		protected method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
@@ -347,7 +350,7 @@ namespace Intrusion.Ai
 					
 					// Move is completed if the squad is at the destination position
 					
-					if (_leaderPos distance _moveAction.Position < 20) then {
+					if (_leaderPos distance _moveAction.Position < _self.ResourceLocationConfig.AreaRadius) then {
 						player sideChat "Completed #2";
 			        	["Completed move #2"] call LogHandler.Debug;
 						return true;

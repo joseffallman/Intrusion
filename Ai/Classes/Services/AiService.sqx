@@ -98,7 +98,7 @@ namespace Intrusion.Ai
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig] new DecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker;
 					
 					_aiSquad = [
 						_group,
@@ -116,7 +116,8 @@ namespace Intrusion.Ai
 						new BaseConfig,
 						_mProfessionConfig,
 						_mSquadHandler,
-						_mGameLengthMonitor
+						_mGameLengthMonitor,
+						_mResourceLocationConfig
 					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;

@@ -20,7 +20,8 @@ namespace Intrusion.Ai
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
 						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
-						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor];
+						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor,
+						"_mResourceLocationConfig" as IResourceLocationConfig];
 		
 		#region Initialization
 
@@ -42,7 +43,8 @@ namespace Intrusion.Ai
 			"_baseConfig" as BaseConfig,
 			"_professionConfig" as ProfessionConfig,
 			"_squadHandler" as ISquadHandler,
-			"_gameLengthMonitor" as IGameLengthMonitor)
+			"_gameLengthMonitor" as IGameLengthMonitor,
+			"_resourceLocationConfig" as IResourceLocationConfig)
 		{
 			_self.Group = _group;
 			_mWorld = _world;
@@ -59,6 +61,7 @@ namespace Intrusion.Ai
 			_mProfessionConfig = _professionConfig;
 			_mSquadHandler = _squadHandler;
 			_mGameLengthMonitor = _gameLengthMonitor;
+			_mResourceLocationConfig = _resourceLocationConfig;
 			
 			_mKnowledge.Group = _group;
 			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
@@ -464,10 +467,10 @@ namespace Intrusion.Ai
 		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
 		{
 			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
-				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new MotorizedDecisionMaker;
+				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new MotorizedDecisionMaker;
 			};
 
-			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig] new DecisionMaker; 
+			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker; 
 		};
 		
 		// Tries to set the squad's profession if it is still Infantry.

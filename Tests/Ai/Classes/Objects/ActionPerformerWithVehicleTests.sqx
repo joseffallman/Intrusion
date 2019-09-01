@@ -89,9 +89,10 @@ namespace Intrusion.Tests.Ai
 			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
 			private _professionConfig = new ProfessionConfig;
 			_mSquadHandler = new TestSquadHandler;
+			private _resourceLocationConfig = new TestResourceLocationConfig;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
-			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig] new DecisionMaker;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig, _resourceLocationConfig] new DecisionMaker;
 			
 			_mBrain = [
 				_mGroup, 
@@ -109,7 +110,8 @@ namespace Intrusion.Tests.Ai
 				new BaseConfig,
 				_professionConfig,
 				_mSquadHandler,
-				new TestGameLengthMonitor
+				new TestGameLengthMonitor,
+				_resourceLocationConfig
 			] new AiSquadBrain;
 		};
 		
