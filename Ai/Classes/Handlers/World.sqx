@@ -168,5 +168,27 @@ namespace Intrusion.Ai
 			
 			_vehicleContainer
 		};
+		
+		// Gets the allied group that are closest to a specified destination.
+		// _locationMarkerName (String): The location marker to test.
+		// _side (Side): Side to check.
+		// Returns (Group): The allied group closest to the location. grpNull if no group exists.
+		public method Group GetAlliedGroupClosestToLocation("_locationMarkerName" as String, "_side" as Side)
+		{
+			private ["_closestGroup" as Group, "_closestDistance" as Scalar, "_locationPosition" as Array];
+			
+			_closestGroup = grpNull;
+			_closestDistance = 9999999;
+			_locationPosition = getMarkerPos _locationMarkerName;
+			
+			{
+				if (side group _x == _side && vehicle _x distance _locationPosition < _closestDistance) then {
+					_closestGroup = group _x;
+					_closestDistance = vehicle _x distance _locationPosition;
+				};
+			} foreach allUnits as Object;
+			
+			return _closestGroup;
+		};
 	};
 };

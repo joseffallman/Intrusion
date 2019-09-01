@@ -540,6 +540,7 @@ namespace Intrusion.Tests.Ai
 			
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not an engage action."] call Assert.IsNotNull;
+			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
 		};
 		
 		private static method AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle

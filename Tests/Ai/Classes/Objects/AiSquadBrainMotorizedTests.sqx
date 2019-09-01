@@ -55,6 +55,7 @@ namespace Intrusion.Tests.Ai
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
 				"MountedDetectedEnemiesSafe_Act_CompletedAndIdle",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
+				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
 			]] call TestEngine.Register;
 		};
 		
@@ -323,6 +324,7 @@ namespace Intrusion.Tests.Ai
 			[[300, 300, 0], _action.Position, "AI engaging in the wrong direction."] call Assert.AreEqual;
 			["COMBAT", _action.Behavior, "AI not moving combat."] call Assert.AreEqual;
 			[10, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
+			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
 		};
 		
 		private static method MountedDetectedEnemiesSafe_Act_CompletedAndIdle
@@ -364,7 +366,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, MoveActionType.Engage, [300, 300, 0], "MOVE", "NORMAL", "COMBAT", "RED", ""] new MoveAction;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Engage, [300, 300, 0], "SAD", "NORMAL", "COMBAT", "RED", ""] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -378,6 +380,42 @@ namespace Intrusion.Tests.Ai
 			[[300, 300, 0], _action.Position, "AI engaging in the wrong direction."] call Assert.AreEqual;
 			[[MoveActionType.Engage] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "AI stopped engaging."] call Assert.AreEqual;
 			[10, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
+		};
+		
+		private static method MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle
+		{	
+			private ["_action" as MoveAction, "_alliedGroup" as Group];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 580, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [600, 580, 0], 4, _intrusionVehicle] new VehicleContainer;
+			
+			_alliedGroup = createGroup west;
+			_mWorld.AlliedGroupClosestToLocation = _alliedGroup;
+			
+			_mKnowledge.Members pushBack [[600, 580, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "COMBAT", "YELLOW", "FACTORY2", 75] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI stopped moving."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			[[600, 600, 0], _action.Position, "AI moving in the wrong direction."] call Assert.AreEqual;
+			[[MoveActionType.ClosingIn] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "AI stopped closing in."] call Assert.AreEqual;
+			[75, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
+
+			// Cleanup
+			deleteGroup _alliedGroup;
 		};
 	};
 };

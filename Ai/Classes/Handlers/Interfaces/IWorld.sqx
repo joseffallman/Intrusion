@@ -63,5 +63,11 @@ namespace Intrusion.Ai
 		// _group (Group): The group.
 		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
 		method VehicleContainer GetSquadVehicle("_group" as Group);
+		
+		// Gets the allied group that are closest to a specified destination.
+		// _locationMarkerName (String): The location marker to test.
+		// _side (Side): Side to check.
+		// Returns (Group): The allied group closest to the location. grpNull if no group exists.
+		method Group GetAlliedGroupClosestToLocation("_locationMarkerName" as String, "_side" as Side);
 	};
 };

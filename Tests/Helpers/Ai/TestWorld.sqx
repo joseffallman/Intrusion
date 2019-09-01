@@ -29,6 +29,7 @@ namespace Intrusion.Tests.Helpers
 			_self.AllSquadMembersDead = false;
 			_self.SquadVehicle = classNull;
 			_self.MountedVehicle = classNull;
+			_self.AlliedGroupClosestToLocation = grpNull;
 		};
 		
 		public property Array LeaderPos { get; set; };
@@ -125,6 +126,17 @@ namespace Intrusion.Tests.Helpers
 		public method VehicleContainer GetSquadVehicle("_group" as Group)
 		{
 			return _self.SquadVehicle;
+		};
+		
+		public property Group AlliedGroupClosestToLocation { get; set; };
+		
+		// Gets the allied group that are closest to a specified destination.
+		// _locationMarkerName (String): The location marker to test.
+		// _side (Side): Side to check.
+		// Returns (Group): The allied group closest to the location. grpNull if no group exists.
+		public method Group GetAlliedGroupClosestToLocation("_locationMarkerName" as String, "_side" as Side)
+		{
+			return _self.AlliedGroupClosestToLocation;
 		};
 	};
 };

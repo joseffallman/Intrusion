@@ -67,7 +67,7 @@ namespace Intrusion.Ai
 			
 			if (isNull _mountedVehicle) then
 			{
-				private _action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "MOVE", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
+				private _action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action] call _self.ActionPerformer.DoMove;
 	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
