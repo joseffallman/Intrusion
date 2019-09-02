@@ -312,6 +312,15 @@ namespace Intrusion.Ai
 			return false;
 		};
 		
+		// Called when the squad is at a resource location and is performing a move action.
+		// _mountedVehicle (VehicleContainer): The squad's mounted vehicle. classNull if no vehicle is mounted.
+		// _locationMarkerName (String): The current location's marker name.
+		// Returns (Boolean): true if the move action should be completed/interrupted. Otherwise false.
+		protected virtual method Boolean CompleteMoveWhenAtResourceLocation("_mountedVehicle" as VehicleContainer, "_locationMarkerName" as String)
+		{
+			return true;
+		};
+		
 		// Gets whether the group has completed a move action.
 		public virtual method Boolean HasCompletedMove()
 		{
@@ -326,7 +335,7 @@ namespace Intrusion.Ai
 				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 				_moveAction = _currentAction as MoveAction;
 				
-				// If Engaging nearby enemies, never complete the move for some other reason.
+				// If Engaging nearby enemies, never complete the move for any other reason.
 				if (_moveAction.Type != MoveActionType.Engage) then
 				{
 					_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
@@ -341,19 +350,30 @@ namespace Intrusion.Ai
 						};
 					};
 	        		
-					// Move is completed if the squad is mounted and near the destination
+					// Move is completed if the squad is mounted and close to the destination
 					if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
 			        	["Completed move (closing in)"] call LogHandler.Debug;
 						player sideChat "Completed (closing in)";
 						return true;
 					};
 					
-					// Move is completed if the squad is at the destination position
-					
-					if (_leaderPos distance _moveAction.Position < _self.ResourceLocationConfig.AreaRadius) then {
-						player sideChat "Completed #2";
-			        	["Completed move #2"] call LogHandler.Debug;
-						return true;
+					// Move is completed if the squad is at the destination location
+					if (_moveAction.LocationMarkerName != "") then {
+						if (_leaderPos distance getMarkerPos _moveAction.LocationMarkerName < _self.ResourceLocationConfig.AreaRadius) then {
+							if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
+								player sideChat "Completed (at location)";
+					        	["Completed move (at location)"] call LogHandler.Debug;
+								return true;
+							};
+						};
+					}
+					else // If the move position is not related to a resource location
+					{
+						if (_leaderPos distance _moveAction.Position < 25) then {
+							player sideChat "Completed (at position)";
+				        	["Completed move (at position)"] call LogHandler.Debug;
+							return true;
+						};
 					};
 					
 					// Move is completed if the order movement is related to a resource location that is already ours
@@ -363,8 +383,8 @@ namespace Intrusion.Ai
 						
 						if (_location.Side == side _self.Knowledge.Group) then
 						{
-							player sideChat "Completed #3";
-				        	["Completed move #3"] call LogHandler.Debug;
+							player sideChat "Completed (location captured)";
+				        	["Completed move (location captured)"] call LogHandler.Debug;
 							return true;
 						};
 					};

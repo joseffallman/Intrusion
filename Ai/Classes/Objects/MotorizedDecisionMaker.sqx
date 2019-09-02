@@ -109,5 +109,24 @@ namespace Intrusion.Ai
 			
 			return [_mountedVehicle, _distanceToTargetPos] call _base.CompleteMoveWhenCloseToDestination;
 		};
+		
+		// Called when the squad is at a resource location and is performing a move action.
+		// _mountedVehicle (VehicleContainer): The squad's mounted vehicle. classNull if no vehicle is mounted.
+		// _locationMarkerName (String): The current location's marker name.
+		// Returns (Boolean): true if the move action should be completed/interrupted. Otherwise false.
+		protected override method Boolean CompleteMoveWhenAtResourceLocation("_mountedVehicle" as VehicleContainer, "_locationMarkerName" as String)
+		{
+			private ["_closestGroup" as Group];
+		
+			// If acting as a profession squad
+			
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			{
+				_closestGroup = [_locationMarkerName, side _self.Knowledge.Group] call _self.World.GetAlliedGroupClosestToLocation;
+				return _closestGroup == _self.Knowledge.Group;
+			};
+			
+			return [_mountedVehicle, _locationMarkerName] call _base.CompleteMoveWhenAtResourceLocation;
+		};
 	};
 };

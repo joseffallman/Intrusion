@@ -294,7 +294,6 @@ namespace Intrusion.Ai
 		
 		#region Completion and Timeout
 		
-		
 		// Gets whether the group has completed a capture action, i.e. it is no longer present at a resource location with enemy side.
 		private method Boolean HasCompletedCapture()
 		{
