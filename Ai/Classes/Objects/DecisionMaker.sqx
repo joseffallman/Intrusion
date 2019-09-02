@@ -359,7 +359,7 @@ namespace Intrusion.Ai
 					
 					// Move is completed if the squad is at the destination location
 					if (_moveAction.LocationMarkerName != "") then {
-						if (_leaderPos distance getMarkerPos _moveAction.LocationMarkerName < _self.ResourceLocationConfig.AreaRadius) then {
+						if (_leaderPos distance _moveAction.Position < _self.ResourceLocationConfig.AreaRadius) then {
 							if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
 								player sideChat "Completed (at location)";
 					        	["Completed move (at location)"] call LogHandler.Debug;
