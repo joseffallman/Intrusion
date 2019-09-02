@@ -54,6 +54,7 @@ namespace Intrusion.Tests.Ai
 				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
 				"OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
+				"OwnOrderToDefendOwnLocationAlreadyPresentAndIdle_Act_PatrolTheArea",
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
@@ -310,6 +311,36 @@ namespace Intrusion.Tests.Ai
 			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
 			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			["FACTORY1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+		
+		private static method OwnOrderToDefendOwnLocationAlreadyPresentAndIdle_Act_PatrolTheArea
+		{
+			private ["_action" as MoveAction];
+		
+			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = [410, 410, 0];
+			_mKnowledge.Members pushBack [[410, 410, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, [400, 400, 0], _mLocationOffice1] new Order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[MoveActionType.Move, _action.Type, "Wrong move action type."] call Assert.AreEqual;
+			[30, _action.Radius, "Wrong move radius."] call Assert.AreEqual;
+			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
+			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
+			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order has wrong type."] call Assert.AreEqual;
+			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
 		
 		private static method SquadStationary_Act_TimeoutStatusIdle

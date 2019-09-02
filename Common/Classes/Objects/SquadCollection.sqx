@@ -85,8 +85,12 @@ namespace Intrusion.Common
 			
 			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
 			_profession = [_professionType] call _professionConfig.GetProfession;
+
+			if (!isNull _profession) then {
+				return _assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0;
+			};
 			
-			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
+			return false;
 		};
 		
 		// Checks whether all slots of a profession type is selectable for a squad.

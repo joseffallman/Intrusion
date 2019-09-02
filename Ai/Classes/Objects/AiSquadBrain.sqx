@@ -504,7 +504,6 @@ namespace Intrusion.Ai
 							_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
 							_mDecisionMaker = [_mKnowledge.ProfessionType] call _self.NewDecisionMaker;
 			        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
-							["_mDecisionMaker: " + str _mDecisionMaker] call LogHandler.Debug;
 						};
 					}
 					else {

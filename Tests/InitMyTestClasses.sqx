@@ -46,6 +46,7 @@ call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMot
 //call Intrusion.Tests.Server.ProductionManagerTests.Init;
 //call Intrusion.Tests.Server.ScientistTests.Init;
 //call Intrusion.Tests.Server.ResourceCollectorTests.Init;
+
 call Intrusion.Tests.Ai.ActionPerformerNoVehicleTests.Init;
 call Intrusion.Tests.Ai.ActionPerformerWithVehicleTests.Init;
 call Intrusion.Tests.Ai.AiSquadBrainMotorizedTests.Init;
