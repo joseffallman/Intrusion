@@ -237,7 +237,7 @@ namespace Intrusion.Ai
 			{
 				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then
 				{
-					[_x] call _mDecisionMaker.OnPresentAtLocation;
+					[_mountedVehicle, _x] call _mDecisionMaker.OnPresentAtLocation;
 					if (!isNull _mKnowledge.CurrentAction) then { return; };
 				};
 			} foreach _locations as ResourceLocation;

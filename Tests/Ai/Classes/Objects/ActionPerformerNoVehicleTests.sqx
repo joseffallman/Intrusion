@@ -330,7 +330,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
 			
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			
