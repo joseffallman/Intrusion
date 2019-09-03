@@ -68,11 +68,6 @@ namespace Intrusion.Ai
 				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
 				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
 
-        		["Create new squads variables:"] call LogHandler.Debug;
-        		["_existingUnitsCount: " + str _existingUnitsCount] call LogHandler.Debug;
-        		["_maxUnitsCount: " + str _maxUnitsCount] call LogHandler.Debug;
-        		["_unitCount: " + str _unitCount] call LogHandler.Debug;
-        	
 				if (_existingUnitsCount < _maxUnitsCount) then
 				{
 					_group = createGroup _x;
@@ -137,7 +132,11 @@ namespace Intrusion.Ai
 				call _self.CreateNewSquads;
 				
 				{
-					call _x.Act;
+					private _squad = _x as AiSquadBrain;
+					
+					{ (call _squad.GetGroup) reveal _x; } foreach allUnits;
+					
+					call _squad.Act;
 					sleep 0.1;
 				} foreach _allSquads as AiSquadBrain;
 				

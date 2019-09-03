@@ -25,8 +25,8 @@ namespace Intrusion.Server
 		// Gets a unit's all enemy targets
 		// _unit (Object): The unit for which to check enemy targets.
 		// _maxRange (Scalar): Optional. The maximun range from the unit to check.
-		public method Array GetEnemyTargets {
-			params ["_unit" as Object, ["_maxRange" as Scalar, 1000]];
+		public method Array GetEnemyTargets("_unit" as Object, ["_maxRange" as Scalar, 1000])
+		{
 			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
 			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_professionType" as ProfessionType, "_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			private ["_targetUnitNearItsIntrusionVehicle" as Boolean, "_targetUnitHasIntrusionVehicle" as Boolean];

@@ -557,6 +557,11 @@ namespace Intrusion.Ai
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
 		};
 		
+		public method Group GetGroup()
+		{
+			return _mKnowledge.Group;
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{

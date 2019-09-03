@@ -67,7 +67,7 @@ using Intrusion.Common;
 /****** Mission Release Settings ***********/
 
 ReleaseSettings.Mode = ReleaseMode.Production;
-ReleaseSettings.ShowTutorials = false;
+ReleaseSettings.ShowTutorials = true;
 ReleaseSettings.LogLevelFile = LogLevel.Debug;
 ReleaseSettings.LogLevelScreen = LogLevel.Warning;
 
