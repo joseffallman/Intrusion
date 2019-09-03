@@ -166,7 +166,7 @@ namespace Intrusion.Ai
 					};
 				}
 				else {
-					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group) then
+					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
 					{
 						call _mDecisionMaker.OnTargetResourceLocationCaptured;
 						call _self.CreateOrderOnOwnInitiative;

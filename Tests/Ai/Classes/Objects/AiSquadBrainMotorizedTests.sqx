@@ -85,7 +85,7 @@ namespace Intrusion.Tests.Ai
 			["OFFICE2", [0, 2000, 0]] call _mMarkerHandler.AddMarkerPos;
 			
 			_mGroup = createGroup west;
-			_mWorld = [_mResourceLocationCollection] new TestWorld;
+			_mWorld = [_mResourceLocationCollection, new ResourceLocationConfig, _mMarkerHandler] new TestWorld;
 			_mActionPerformer = [_mWorld] new TestActionPerformer;
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup, []] new Knowledge;

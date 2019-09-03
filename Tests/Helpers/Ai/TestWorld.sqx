@@ -16,12 +16,14 @@ namespace Intrusion.Tests.Helpers
 {
 	public class TestWorld : IWorld
 	{
-		private fields ["_mResourceLocationCollection" as ResourceLocationCollection];
+		private fields ["_mResourceLocationCollection" as ResourceLocationCollection, "_mResourceLocationConfig" as IResourceLocationConfig, "_mMarkerHandler" as IMarkerHandler];
 
 		// Creates a TestWorld object.
-		public constructor("_resourceLocationCollection" as ResourceLocationCollection)
+		public constructor("_resourceLocationCollection" as ResourceLocationCollection, "_resourceLocationConfig" as IResourceLocationConfig, "_markerHandler" as IMarkerHandler)
 		{
 			_mResourceLocationCollection = _resourceLocationCollection;
+			_mResourceLocationConfig = _resourceLocationConfig;
+			_mMarkerHandler = _markerHandler;
 			_self.LeaderPos = [];
 			_self.ClosestEmptyFreeVehicle = classNull;
 			_self.SquadMounted = false;
@@ -49,7 +51,7 @@ namespace Intrusion.Tests.Helpers
 			return _mResourceLocationCollection;
 		};
 		
-		public property Boolean SquadPresenceAtResourceLocation { get; set; };
+		//public property Boolean SquadPresenceAtResourceLocation { get; set; };
 		
 		// Checks if a group is inside the perimiters of one or more resource locations.
 		// _group (Group): The group to check.
@@ -57,7 +59,11 @@ namespace Intrusion.Tests.Helpers
 		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
 		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
 		{
-			return _self.SquadPresenceAtResourceLocation;
+			private _leaderPos = [_group] call _self.GetLeaderPos;
+			private _locationPos = [_location.MarkerName] call _mMarkerHandler.GetMarkerPos;
+			private _areaRadius = _mResourceLocationConfig.AreaRadius;
+
+			_leaderPos distance _locationPos <= _areaRadius;
 		};
 		
 		public property VehicleContainer ClosestEmptyFreeVehicle { get; set; };
