@@ -27,7 +27,7 @@ namespace Intrusion.Ai
 			
 			// If acting as a profession squad
 			
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
 				_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
@@ -44,7 +44,7 @@ namespace Intrusion.Ai
 			private _time = call _self.Time.GetMissionTime;
 			
 			// If mounted on a squad vehicle.
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
 				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName, 75] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
@@ -62,7 +62,7 @@ namespace Intrusion.Ai
 			private ["_leaderPos" as Array];
 			
 			// If acting as a profession squad
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
 				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 					
@@ -90,7 +90,7 @@ namespace Intrusion.Ai
 			
 			// If acting as a profession squad
 			
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then {
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then {
 				if (_distanceToTargetPos <= 150) then
 				{
 					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
@@ -120,7 +120,7 @@ namespace Intrusion.Ai
 		
 			// If acting as a profession squad
 			
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.IntrusionVehicle }) then
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
 				_closestGroup = [_locationMarkerName, side _self.Knowledge.Group] call _self.World.GetAlliedGroupClosestToLocation;
 				return _closestGroup == _self.Knowledge.Group;

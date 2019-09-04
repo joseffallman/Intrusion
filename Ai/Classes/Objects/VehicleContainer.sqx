@@ -20,12 +20,17 @@ namespace Intrusion.Ai
 			_self.Vehicle = _vehicle;
 			_self.Position = _position;
 			_self.SeatsCount = _seatsCount;
+			_self.OwnerGroup = grpNull;
 			
 			if (isNull _vehicle) then {
 				_self.IntrusionVehicle = _intrusionVehicle;
 			}
 			else {
 				_self.IntrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+			};
+			
+			if (!isNull _intrusionVehicle) then {
+				_self.OwnerGroup = _intrusionVehicle.OwnerGroup;
 			};
 		};
 		
@@ -40,5 +45,8 @@ namespace Intrusion.Ai
 		
 		// Gets the intrusion vehicle object for the vehicle.
 		public property IntrusionVehicle IntrusionVehicle { get; private set; };
+		
+		// Gets the owner group for the vehicle. grpNull if it is a free vehicle.
+		public property Group OwnerGroup { get; private set; };
 	};
 };

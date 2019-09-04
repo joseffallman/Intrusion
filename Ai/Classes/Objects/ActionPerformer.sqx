@@ -42,6 +42,7 @@ namespace Intrusion.Ai
 			_waypoint setWaypointType _moveAction.WaypointType;
 			_waypoint setWaypointCombatMode "YELLOW";
 			_waypoint setWaypointBehaviour "SAFE";
+			_waypoint setWaypointFormation "WEDGE";
 			
 			_mGroup setSpeedMode _moveAction.SpeedMode;
 			_mGroup setCombatMode "YELLOW";

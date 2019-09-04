@@ -260,16 +260,14 @@ namespace Intrusion.Ai
 			private _time = call _self.Time.GetMissionTime;
 			
 			// If mounted on a free vehicle, disembark.
-			
-			if (!isNull _mountedVehicle && { isNull _mountedVehicle.IntrusionVehicle }) then
+			if (!isNull _mountedVehicle && { isNull _mountedVehicle.OwnerGroup }) then
 			{
-				private _aiVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
-				private _actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _aiVehicle] call _self.ActionServiceFactory.CreateDisembarkService as IActionService;
+				private _actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as IActionService;
 				call _actionService.RunAsync;
 				
-				private _action = [_time + 20, _actionService as DisembarkActionService, _aiVehicle] new DisembarkAction;
+				private _action = [_time + 20, _actionService as DisembarkActionService, _mountedVehicle] new DisembarkAction;
 				[AiSquadState.Disembarking, _action] call _self.SetState;
-	        	["Disembark action created: " + str _action] call LogHandler.Debug;
+	        	["Disembark action created (closing in): " + str _action] call LogHandler.Debug;
 			}
 			else
 			{
