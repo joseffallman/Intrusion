@@ -39,8 +39,10 @@ namespace Intrusion.Ai
 		protected property IActionTimeoutConfig ActionTimeoutConfig { get; private set; };
 		protected property IResourceLocationConfig ResourceLocationConfig { get; private set; };
 	
-		protected method SetState("_state" as AiSquadState, "_action" as IAction) 
+		public method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
+			private ["_moveAction" as MoveAction, "_moveActionText" as String];
+		
 			_self.Knowledge.State = _state;
 			
 			if (_state == AiSquadState.Idle) then {
@@ -50,7 +52,13 @@ namespace Intrusion.Ai
 				_self.Knowledge.CurrentAction = _action;
 			};
 			
-			player sideChat "Setting status for " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+			_moveActionText = "";
+			_moveAction = _action as MoveAction;
+			if (_moveAction is MoveAction) then {
+				_moveActionText = " " + ([_moveAction.Type] call MoveActionTypeMeta.ToString) + ", " + _moveAction.WaypointType + ", " + _moveAction.Behavior + ", " + _moveAction.SpeedMode;
+			};
+			
+			player sideChat "New status " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString) + _moveActionText;
 		};
 	
 		#endregion
@@ -388,18 +396,16 @@ namespace Intrusion.Ai
 					};
 					
 					// Move is completed if the squad is at the destination location
-					if (_moveAction.LocationMarkerName != "") then {
-						if (_leaderPos distance _moveAction.Position < _self.ResourceLocationConfig.AreaRadius) then {
-							if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
-								player sideChat "Completed (at location)";
-					        	["Completed move (at location)"] call LogHandler.Debug;
-								return true;
-							};
+					if (_moveAction.LocationMarkerName != "" && { _leaderPos distance ([_moveAction.LocationMarkerName] call _self.MarkerHandler.GetMarkerPos) < _self.ResourceLocationConfig.AreaRadius }) then {
+						if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
+							player sideChat "Completed (at location)";
+				        	["Completed move (at location)"] call LogHandler.Debug;
+							return true;
 						};
 					}
 					else // If the move position is not related to a resource location
 					{
-						if (_leaderPos distance _moveAction.Position < 25) then {
+						if (_leaderPos distance _moveAction.Position < 20) then {
 							player sideChat "Completed (at position)";
 				        	["Completed move (at position)"] call LogHandler.Debug;
 							return true;

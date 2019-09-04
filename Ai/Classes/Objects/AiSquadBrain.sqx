@@ -279,6 +279,7 @@ namespace Intrusion.Ai
 			call _mDecisionMaker.OnNothingToDo;
 		};
 		
+/*
 		private method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
 			_mKnowledge.State = _state;
@@ -292,7 +293,7 @@ namespace Intrusion.Ai
 			
 			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
 		};
-		
+*/
 		#endregion
 		
 		#region Completion and Timeout
@@ -581,7 +582,7 @@ namespace Intrusion.Ai
 			
 			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
 				call _self.RespawnToBase;
-				[AiSquadState.Idle, classNull] call _self.SetState;
+				[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
 				return;
 			};
 			
@@ -601,7 +602,7 @@ namespace Intrusion.Ai
 				// If there has been a timeout or if the squad is complete doing something, set to idle.
 				
 				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
-					[AiSquadState.Idle, classNull] call _self.SetState;
+					[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
 				};
 			};
 		};

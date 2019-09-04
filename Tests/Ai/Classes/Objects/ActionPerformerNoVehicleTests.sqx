@@ -534,7 +534,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI dit not stop at vehicle."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not stop at vehicle."] call Assert.AreEqual;
 		};
 		
 		private static method MovingFarVehicleNearby_Act_StatusMoving
