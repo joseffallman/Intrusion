@@ -67,6 +67,7 @@ namespace Intrusion.Tests.Ai
 				"MovingToNearbyVehicle_Act_StatusIdle",
 				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
 				"MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging",
+				"MovingToDestinationFarOffDetectingNearEnemiesMoving_Act_StatusIdle",
 				"AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle",
 				"SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn",
 				"SingleSquadMemberIsDead_Act_DoesNotTakeAtLauncherAtRespawn",
@@ -607,6 +608,23 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not an engage action."] call Assert.IsNotNull;
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
+		};
+		
+		private static method MovingToDestinationFarOffDetectingNearEnemiesMoving_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [150, 150, 0];
+			_mWorld.ClosestDetectedEnemy = [[210, 210, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[150, 150, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [200, 200, 0], "MOVE", "NORMAL", "AWARE", "YELLOW", "FACTORY1"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not complete its move."] call Assert.AreEqual;
 		};
 		
 		private static method AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle

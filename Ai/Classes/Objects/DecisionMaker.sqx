@@ -312,10 +312,11 @@ namespace Intrusion.Ai
 			private ["_leaderPos" as Array];
 			
 			_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-				
-			if (!isNull _mountedVehicle && { _leaderPos distance (call _closestEnemy.GetPosition) < 250 }) then
+			
+			if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then
 			{				
 				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
+				
 				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.Engage }) then {
 					return true;
 				};
