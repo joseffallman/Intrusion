@@ -131,9 +131,9 @@ namespace Intrusion.Ai
 				private _vehicle = vehicle _x;
 				
 				if (_vehicle != _x) then {
-					unassignVehicle _x;
 					moveOut _x;
-					_x action ["GetOut", _vehicle]
+					_x action ["GetOut", _vehicle];
+					unassignVehicle _x;
 				};
 			} foreach units _group as Object;
 			

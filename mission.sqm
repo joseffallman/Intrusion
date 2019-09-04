@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=156;
+		nextID=161;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={4263.1245,37.900116,4237.1719};
-		dir[]={-0.12687822,-0.028839469,-0.99150681};
-		up[]={-0.0036582144,0.99958456,-0.028595066};
-		aside[]={-0.99192339,7.5039134e-007,0.12693304};
+		pos[]={4263.1245,43.345432,4237.1719};
+		dir[]={-0.16856052,-0.29227492,-0.9413718};
+		up[]={-0.051511806,0.9563368,-0.28768674};
+		aside[]={-0.9843573,1.1618249e-006,0.1762587};
 	};
 };
 binarizationWanted=0;
@@ -185,7 +185,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=72;
+		items=75;
 		class Item0
 		{
 			dataType="Marker";
@@ -2493,6 +2493,75 @@ class Mission
 			colorName="ColorIndependent";
 			id=152;
 			atlOffset=61.287514;
+		};
+		class Item72
+		{
+			dataType="Marker";
+			position[]={4496.9268,121.92734,4265.0645};
+			name="OFFICE4";
+			text="Training Camp (Office)";
+			type="mil_objective";
+			colorName="ColorIndependent";
+			id=156;
+			atlOffset=66.000969;
+		};
+		class Item73
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4385.2412,32.4543,3855.3694};
+						angles[]={0,3.2757566,0};
+					};
+					side="East";
+					flags=7;
+					class Attributes
+					{
+					};
+					id=158;
+					type="O_Soldier_AAR_F";
+				};
+			};
+			class Attributes
+			{
+			};
+			id=157;
+		};
+		class Item74
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4493.6582,35.924057,4099.6846};
+						angles[]={0,1.7932764,0};
+					};
+					side="East";
+					flags=7;
+					class Attributes
+					{
+					};
+					id=160;
+					type="O_Soldier_AAR_F";
+				};
+			};
+			class Attributes
+			{
+			};
+			id=159;
 		};
 	};
 };

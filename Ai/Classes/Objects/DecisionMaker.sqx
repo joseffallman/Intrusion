@@ -87,7 +87,7 @@ namespace Intrusion.Ai
 	        {
 	        	// If the group is not in its profession vehicle, disembark and fight on foot
 	        	
-	        	if (isNull _mountedVehicle.IntrusionVehicle) then {
+	        	if (isNull _mountedVehicle.OwnerGroup) then {
 		        	_time = call _self.Time.GetMissionTime;
 		        	
 					_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
