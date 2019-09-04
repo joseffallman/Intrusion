@@ -356,8 +356,8 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.Members pushBack [[410, 410, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Defend, [400, 400, 0], _mLocationOffice1] new Order;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
-			_mKnowledge.State = AiSquadState.Idle;
-			_mKnowledge.CurrentAction = [350, MoveActionType.Patrol, [400, 400, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "OFFICE1"] new MoveAction;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [350, MoveActionType.Patrol, [400, 400, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "OFFICE1", 30] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;

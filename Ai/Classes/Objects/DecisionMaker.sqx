@@ -236,7 +236,7 @@ namespace Intrusion.Ai
 						// If order is a defend order for the current location
 						if (!isNull _orderLocation && { _orderLocation.MarkerName == _location.MarkerName}) then
 						{
-							private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "SAFE", "YELLOW", _orderLocation.MarkerName, _self.ResourceLocationConfig.AreaRadius] new MoveAction;
+							private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "SAFE", "YELLOW", _orderLocation.MarkerName, _self.ResourceLocationConfig.AreaRadius] new MoveAction;
 							[AiSquadState.Moving, _action] call _self.SetState;
 							[_action as MoveAction] call _self.ActionPerformer.DoMove;
 				        	["Move action created (defencd patrol): " + str _action] call LogHandler.Debug;
@@ -338,6 +338,16 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if the move action should be completed/interrupted. Otherwise false.
 		protected virtual method Boolean CompleteMoveWhenAtResourceLocation("_mountedVehicle" as VehicleContainer, "_locationMarkerName" as String)
 		{
+			private ["_moveAction" as MoveAction];
+			
+			// The the squad is patrolling/defending, do not complete move.
+			
+			_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+		
+			if (!isNull _moveAction && { _moveAction.Type == MoveActionType.Patrol }) then {
+				return false;
+			};
+		
 			return true;
 		};
 		
@@ -397,7 +407,7 @@ namespace Intrusion.Ai
 					};
 					
 					// Move is completed if the order movement is related to a resource location that is already ours
-					if (_moveAction.LocationMarkerName != "") then {
+					if (_moveAction.LocationMarkerName != "" && !_self.Knowledge.OrderIsGivenByBrigadeLeader && _self.Knowledge.Order.Type != OrderType.Defend) then {
 						_locationCollection = call _self.World.GetResourceLocationCollection;
 						_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
 						
