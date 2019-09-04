@@ -133,9 +133,14 @@ namespace Intrusion.Ai
 				
 				{
 					private _squad = _x as AiSquadBrain;
+					private _group = call _squad.GetGroup;
 					
-					{ (call _squad.GetGroup) reveal _x; } foreach allUnits;
-					
+					{
+						if (leader _group distance _x <= 200) then {
+							_group reveal _x;
+						};
+					} foreach allUnits;
+
 					call _squad.Act;
 					sleep 0.1;
 				} foreach _allSquads as AiSquadBrain;
