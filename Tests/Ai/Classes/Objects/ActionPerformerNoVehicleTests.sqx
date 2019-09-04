@@ -49,12 +49,13 @@ namespace Intrusion.Tests.Ai
 				"AtBaseAttackOrder_Act_StatusMove",
 				"MovingToDestinationFarOff_Act_StatusMoving",
 				"ArrivingAtDestination_Act_StatusIdle",
-				"AtEnemyLocation_Act_StatusCapturing",
+				"AtEnemyLocationIdle_Act_StatusCapturing",
 				"AfterCapturingLocation_Act_StatusIdle",
 				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
 				"OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToDefendOwnLocationAlreadyPresentAndIdle_Act_PatrolTheArea",
+				"OwnOrderToDefendOwnLocationPatrolling_Act_ContinuePatrolTheArea",
 				"SquadStationary_Act_TimeoutStatusIdle",
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
@@ -214,7 +215,7 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI does not halt at flag."] call Assert.AreEqual;
 		};
 		
-		private static method AtEnemyLocation_Act_StatusCapturing
+		private static method AtEnemyLocationIdle_Act_StatusCapturing
 		{
 			// Arrange
 			_mLocationFactory1.Side = east;
@@ -336,7 +337,38 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
-			[MoveActionType.Move, _action.Type, "Wrong move action type."] call Assert.AreEqual;
+			[MoveActionType.Patrol, _action.Type, "Wrong move action type."] call Assert.AreEqual;
+			[30, _action.Radius, "Wrong move radius."] call Assert.AreEqual;
+			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
+			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
+			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order has wrong type."] call Assert.AreEqual;
+			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+		
+		private static method OwnOrderToDefendOwnLocationPatrolling_Act_ContinuePatrolTheArea
+		{
+			private ["_action" as MoveAction];
+		
+			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = [410, 410, 0];
+			_mKnowledge.Members pushBack [[410, 410, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, [400, 400, 0], _mLocationOffice1] new Order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [350, MoveActionType.Patrol, [400, 400, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "OFFICE1"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[MoveActionType.Patrol, _action.Type, "Wrong move action type."] call Assert.AreEqual;
 			[30, _action.Radius, "Wrong move radius."] call Assert.AreEqual;
 			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
 			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
