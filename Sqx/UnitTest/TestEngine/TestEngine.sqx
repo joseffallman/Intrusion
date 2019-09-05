@@ -28,6 +28,16 @@ namespace Sqx.UnitTest
 			_mTestUnits pushBack [_namespaceName, _className, _methodNames] new TestUnit;
 		};
 		
+		public static method OnlyThisOne("_methodName" as String)
+		{
+			private ["_lastTestUnit" as TestUnit];
+			
+			if (count _mTestUnits > 0) then {
+				_lastTestUnit = _mTestUnits select count _mTestUnits;
+				_lastTestUnit.SingleMethodName = _methodName;
+			};
+		};
+		
 		// Outputs a text to the screen and the Arma 3 RPT file.
 		// _text (String): The text to be written.
 		private static method Output("_text" as String, ["_onlyToRpt" as Boolean, false])
@@ -117,52 +127,56 @@ namespace Sqx.UnitTest
 				if (isNil compile _sConstructorFunction) then {
 					[("MISSING: " + _mCurrentNamespaceName + "." + _mCurrentClassName + " - Test class was not found.")] call _self.Output;
 				}
-				else {
+				else
+				{
 					{
 						_mCurrentMethodName = _x;
-						_mMethodSucceeded = true;
-						_mAssertDone = false;
-						_mFoundTestMethod = true;
 						
-						_sqfBeforeEach = _sqfClassName + "_BeforeEach";
-						if (!isNil _sqfBeforeEach) then {
-							call compile ("call " + _sqfBeforeEach);
-						};
-						
-						_sqfTestMethod = _sqfClassName + "_" + _mCurrentMethodName + ";";
-						
-						if (isNil compile _sqfTestMethod) then {
-							_mMethodSucceeded = false;
-							_mFoundTestMethod = false;
-							[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
-						}
-						else {
-							_processId = _sqfTestMethod spawn {
-								try {
-									call compile ("call " + _this);
-								}
-								catch {
+						if (_testUnit.SingleMethodName == "" || _testUnit.SingleMethodName == _mCurrentMethodName) then {
+							_mMethodSucceeded = true;
+							_mAssertDone = false;
+							_mFoundTestMethod = true;
+							
+							_sqfBeforeEach = _sqfClassName + "_BeforeEach";
+							if (!isNil _sqfBeforeEach) then {
+								call compile ("call " + _sqfBeforeEach);
+							};
+							
+							_sqfTestMethod = _sqfClassName + "_" + _mCurrentMethodName + ";";
+							
+							if (isNil compile _sqfTestMethod) then {
+								_mMethodSucceeded = false;
+								_mFoundTestMethod = false;
+								[("MISSING: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Test method was not found.")] call _self.Output;
+							}
+							else {
+								_processId = _sqfTestMethod spawn {
+									try {
+										call compile ("call " + _this);
+									}
+									catch {
+									};
+								};
+								
+								waitUntil { scriptDone _processId; };
+							};
+							
+							if (_mMethodSucceeded && _mAssertDone) then {
+								_successCount = _successCount + 1;
+								[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
+							}
+							else {
+								_failedCount = _failedCount + 1;
+								
+								if (!_mAssertDone && _mFoundTestMethod) then {
+									[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Assert never reached. (Forgot Assert?)"), false] call _self.Output;
 								};
 							};
 							
-							waitUntil { scriptDone _processId; };
-						};
-						
-						if (_mMethodSucceeded && _mAssertDone) then {
-							_successCount = _successCount + 1;
-							[("PASSED: " + _mCurrentClassName + "." + _mCurrentMethodName), true] call _self.Output;
-						}
-						else {
-							_failedCount = _failedCount + 1;
-							
-							if (!_mAssertDone && _mFoundTestMethod) then {
-								[("FAILED: " + _mCurrentClassName + "." + _mCurrentMethodName + " - Assert never reached. (Forgot Assert?)"), false] call _self.Output;
+							_sqfAfterEach = _sqfClassName + "_AfterEach";
+							if (!(isNil compile _sqfAfterEach)) then {
+								call compile ("call " + _sqfAfterEach);
 							};
-						};
-						
-						_sqfAfterEach = _sqfClassName + "_AfterEach";
-						if (!(isNil compile _sqfAfterEach)) then {
-							call compile ("call " + _sqfAfterEach);
 						};
 					} foreach _testUnit.MethodNames as String;
 				};

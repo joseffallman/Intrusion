@@ -67,7 +67,11 @@ namespace Intrusion.Tests.Ai
 				"SingleSquadMemberIsDead_Act_TakesAaLauncherAtRespawn",
 				"SingleSquadMemberIsDead_Act_DoesNotTakeAaLauncherAtRespawn",
 				"OneOfTwoSquadMembersAreDead_Act_ReviveActionCreated",
+				"OneOfTwoSquadMembersAreDeadMoving_Act_StatusIdle",
+				"OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving",
 			]] call TestEngine.Register;
+			
+			["SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -597,6 +601,49 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Reviving, _mKnowledge.State, "AI not reviving."] call Assert.AreEqual;
 			private _currentAction = _mKnowledge.CurrentAction as ReviveAction;
 			[_currentAction is ReviveAction, "Current action is not a revive action."] call Assert.IsTrue;
+		};
+		
+		private static method OneOfTwoSquadMembersAreDeadMoving_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [100, 100, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[100, 100, 0], true] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[110, 110, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI not completing move."] call Assert.AreEqual;
+		};
+		
+		private static method OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving
+		{
+			private ["_moveAction" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [100, 100, 0];
+			_mWorld.SquadMounted = false;
+			_mWorld.ClosestDetectedEnemy = [[200, 200, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[100, 100, 0], true] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[110, 110, 0], false] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Engage, [200, 200, 0], "SAD", "NORMAL", "COMBAT", "RED", ""] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not completing move."] call Assert.AreEqual;
+			_moveAction = _mKnowledge.CurrentAction as MoveAction;
+			[_moveAction is MoveAction, "Current action is not a move action."] call Assert.IsTrue;
+			[MoveActionType.Engage, _moveAction.Type, "AI not engaging."] call Assert.AreEqual;
+			[[200, 200, 0], _moveAction.Position, "AI engaging in wrong direction."] call Assert.AreEqual;
 		};
 	};
 };

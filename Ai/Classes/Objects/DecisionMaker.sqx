@@ -386,7 +386,7 @@ namespace Intrusion.Ai
 							return true;
 						};
 					};
-	        		
+					
 					// Move is completed if the squad is mounted and close to the destination
 					if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
 			        	["Completed move (closing in)"] call LogHandler.Debug;

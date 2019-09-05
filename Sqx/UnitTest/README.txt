@@ -49,6 +49,7 @@ SQF>call Sqx_UnitTest_TestEngine_RunAsync;
     README changed location from Tests to Sqx\UnitTest.
 X.X Fixed: Change == to "isEqualTo" in Assert.AreEqual.
     The test report is now copied to clipboard.
+    Added method TestEngine.OnlyThisOne to run only one of the test class' registered tests more easily.
     Added error message for when the test class does not exist.
     Test framework now warns if a test method does not reach Assert.
     Fixed: The Assert did not really assert, i.e. now when a test fails, execution of the current test is ended.
