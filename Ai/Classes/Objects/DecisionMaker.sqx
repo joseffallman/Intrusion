@@ -387,6 +387,16 @@ namespace Intrusion.Ai
 						};
 					};
 					
+					// Move is completed if a unit is dead and need revive.
+					private _aliveCount = { private _xx = _x as IUnitContainer; call _xx.GetIsAlive } count _self.Knowledge.Members; // SQX FIX: And also... as on count does not seem to work.
+					private _deadCount = (count _self.Knowledge.Members) - _aliveCount;
+					
+					if (_aliveCount >= 1 && _deadCount >= 1) then {
+			        	["Completed move (man down)"] call LogHandler.Debug;
+						player sideChat "Completed (man down)";
+						return true;
+					};
+					
 					// Move is completed if the squad is mounted and close to the destination
 					if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
 			        	["Completed move (closing in)"] call LogHandler.Debug;
