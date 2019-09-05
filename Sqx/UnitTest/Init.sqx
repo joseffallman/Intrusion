@@ -7,3 +7,6 @@ call Sqx.UnitTest.TestEngine.Init;
 
 /* Register the user's test classes */
 call compile preprocessFileLineNumbers "Tests\InitMyTestClasses.sqx";
+
+/* Start the tests */
+//call Sqx.UnitTest.TestEngine.RunDelayedAsync;

@@ -27,6 +27,9 @@ namespace Tests.Example
 				"Given10_WhenMultipliedBy2_Then20",
 				"GivenEmptyGroup_WhenAiUnitAdded_ThenOneAiInGroup"
 			]] call TestEngine.Register;
+			
+			// Uncomment the line below, and provide just one of the methods above, when you need to focus on a single test.
+			// ["Given10_WhenMultipliedBy2_Then20"] call TestEngine.OnlyThisOne;
 		};
 		
 		// If this method exists, then it will be called once for every test method, before the test method is executed.

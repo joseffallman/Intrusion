@@ -33,7 +33,7 @@ namespace Sqx.UnitTest
 			private ["_lastTestUnit" as TestUnit];
 			
 			if (count _mTestUnits > 0) then {
-				_lastTestUnit = _mTestUnits select count _mTestUnits;
+				_lastTestUnit = _mTestUnits select (count _mTestUnits) - 1;
 				_lastTestUnit.SingleMethodName = _methodName;
 			};
 		};
