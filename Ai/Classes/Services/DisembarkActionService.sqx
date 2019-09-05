@@ -1,0 +1,51 @@
+/*
+ * Name:	DisembarkActionService
+ * Date:	2019-05-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service that disembarks units from a vehicle.
+ */
+
+using Intrusion.Common;
+using Sqx.Waypoints;
+
+namespace Intrusion.Ai
+{
+	public class DisembarkActionService : ActionService
+	{
+		private fields ["_mGroup" as Group, "_mAiVehicle" as VehicleContainer];
+	
+		// Creates a DisembarkActionService object.
+		public constructor("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_aiVehicle" as VehicleContainer)
+		{
+			[_time, _timeoutTime, _world, _actionPerformer] call _base.Constructor;
+		
+			_mGroup = _group;
+			_mAiVehicle = _aiVehicle;
+		};
+		
+		protected override method Run()
+		{
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			[_mAiVehicle.Vehicle, 0] call _self.ActionPerformer.ForceSpeed;
+			
+			while {([_mAiVehicle.Vehicle] call _self.World.GetSpeed) > 1} do
+			{
+				if (call _self.CheckActionTimeout) then {
+					return;
+				};
+				
+				sleep 0.5;
+			};
+			
+			[_mAiVehicle.Vehicle, -1] call _self.ActionPerformer.ForceSpeed;
+			[_mGroup] call _self.ActionPerformer.MoveOutFromVehicle;
+			
+			_self.Success = true;
+			
+			call _base.Run;
+		};
+	};
+};

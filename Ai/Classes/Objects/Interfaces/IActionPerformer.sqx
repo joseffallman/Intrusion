@@ -1,0 +1,70 @@
+/*
+ * Name:	IActionPerformer
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Makes actions happen in the world.
+ */
+namespace Intrusion.Ai
+{
+	public interface IActionPerformer
+	{
+		// Performs a move action for an AI group.
+		// _moveAction (MoveAction): Information about the movement.
+		method DoMove("_moveAction" as MoveAction);
+		
+		// Performs a move action for an AI group.
+		// _captureAction (CaptureAction): Information about the capturing.
+		method DoCapture("_captureAction" as CaptureAction);
+		
+		// Performs a mount action for an AI group.
+		// _mountAction (MountAction): Information about the mounting.
+		method DoMount("_mountAction" as MountAction);
+		
+		// Performs a disembark action for an AI group.
+		// _disembarkAction (DisembarkAction): Information about the disembarkment.
+		//method DoDisembark("_disembarkAction" as DisembarkAction);
+		
+		// Performs a revive action for an AI group.
+		// _reviveAction (ReviveAction): Information about the revive.
+		//method DoRevive("_reviveAction" as ReviveAction);
+		
+		// Sets max speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		method ForceSpeed("_vehicle" as Object, "_speed" as Scalar);
+		
+		// Moves the members of a group out of its vehicles immediately.
+		// _group (Group): The group to move out.
+		method MoveOutFromVehicle("_group" as Group);
+		
+		// Kills the AI units and creates new units at base.
+		// _group (Group): The group to respawn.
+		// _members (Array of IUnitContainer): The squad's members.
+		// _baseMarkerName (String): The marker name of the group's base.
+		// Returns (Array of IUnitContainer): All new units.
+		method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String);
+		
+		// Equips an AI squad member with a backpack and a launcher.
+		// _member (IUnitContainer): The member to equip.
+		// _launcherClassName (String): The class name of the launcher.
+		// _ammoClassName (String): The class name of the launcher's ammo.
+		method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String);
+		
+		// Moves a single unit in a group to a position.
+		// _unitContainer (UnitContainer): The unit to move.
+		// _position (Array): The position to move to.
+		method MoveSingleUnit("_unitContainer" as UnitContainer, "_position" as Array);
+		
+		// Makes a dead AI unit alive again and puts it in a group.
+		// _unitContainer (UnitContainer): The unit to make alive.
+		// _group (Group): The group to insert the unit into after being made alive.
+		method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group);
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		method MoveOutDeadUnitFromVehicle("_members" as Array);
+	};
+};

@@ -1,0 +1,421 @@
+/*
+ * Name:	ActionPerformerWithVehicleTests
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Test class for AiBrain, that tests basic squad behaviour for infantry squads.
+ */
+
+using Sqx.UnitTest;
+using Intrusion.Tests.Helpers;
+using Intrusion.Ai;
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Tests.Ai
+{
+	public class ActionPerformerWithVehicleTests
+	{
+		#region Fields
+		
+		private static fields [
+			"_mGroup" as Group,
+			"_mWorld" as TestWorld,
+			"_mMarkerHandler" as TestMarkerHandler,
+			"_mActionPerformer" as TestActionPerformer,
+			"_mBrain" as AiSquadBrain,
+			"_mKnowledge" as Knowledge,
+			"_mRandomGenerator" as TestRandomGenerator,
+			"_mLocationFactory1" as ResourceLocation,
+			"_mLocationOffice1" as ResourceLocation,
+			"_mLocationFactory2" as ResourceLocation,
+			"_mLocationOffice2" as ResourceLocation,
+			"_mResourceLocationCollection" as ResourceLocationCollection,
+			"_mTime" as TestMissionTime,
+			"_mActionService" as TestActionService,
+			"_mActionServiceFactory" as TestActionServiceFactory,
+			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_mSquadHandler" as TestSquadHandler
+		];
+		
+		#endregion
+
+		// Registers all tests that should be run.
+		public static method Init {
+			["Intrusion.Tests.Ai", "ActionPerformerWithVehicleTests", [
+				"MovingFarHasMountedVehicle_Act_StatusMoving",
+				"MountedArrivingFarMoving_EnteringClose_StatusIdle",
+				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
+				"CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle",
+				"MountedMovingDetectedEnemies_Act_StatusIdle",
+				"MountedIdleDetectedEnemies_Act_StatusDisembarking",
+				"MovingMediumNearVehicle_Act_StatusMovingToVehicle",
+				"MovingMediumVehicleHalfNear_Act_StatusMovingToLocation",
+				"MovingFarAtVehicle_Act_StatusMountingVehicle",
+				"MovingRelativelyFarVehicleRelativelyClose_Act_StatusMovingToVehicle",
+				"MovingFarVehicleNearby_Act_StatusMoving",
+				"MovingToNearbyVehicle_Act_StatusIdle",
+				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
+			]] call TestEngine.Register;
+		};
+		
+		private static method BeforeEach()
+		{
+			private ["_mapMarkerInfo" as MapMarkerInfo, "_decisionMaker" as DecisionMaker];
+
+			_mResourceLocationCollection = new ResourceLocationCollection;
+			_mActionService = new TestActionService;
+			_mActionServiceFactory = [_mActionService] new TestActionServiceFactory;
+			
+			_mLocationFactory1 = ["FACTORY1", ResourceFacility.Factory, objNull] new ResourceLocation;
+			_mLocationOffice1 = ["OFFICE1", ResourceFacility.TechLab, objNull] new ResourceLocation;
+			_mLocationFactory2 = ["FACTORY2", ResourceFacility.Factory, objNull] new ResourceLocation;
+			_mLocationOffice2 = ["OFFICE2", ResourceFacility.TechLab, objNull] new ResourceLocation;
+			
+			[_mLocationFactory1] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice1] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationFactory2] call _mResourceLocationCollection.AddResourceLocation;
+			[_mLocationOffice2] call _mResourceLocationCollection.AddResourceLocation;
+			
+			_mMarkerHandler = new TestMarkerHandler;
+			["respawn_marker", [0, 0, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY1", [200, 200, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE1", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
+			["FACTORY2", [600, 600, 0]] call _mMarkerHandler.AddMarkerPos;
+			["OFFICE2", [800, 800, 0]] call _mMarkerHandler.AddMarkerPos;
+			
+			_mGroup = createGroup west;
+			_mWorld = [_mResourceLocationCollection, new ResourceLocationConfig, _mMarkerHandler] new TestWorld;
+			_mActionPerformer = [_mWorld] new TestActionPerformer;
+			_mRandomGenerator = [0] new TestRandomGenerator;
+			_mKnowledge = [_mGroup, []] new Knowledge;
+			_mTime = [0] new TestMissionTime;
+			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
+			private _professionConfig = new ProfessionConfig;
+			_mSquadHandler = new TestSquadHandler;
+			private _resourceLocationConfig = new TestResourceLocationConfig;
+			
+			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig, _resourceLocationConfig] new DecisionMaker;
+			
+			_mBrain = [
+				_mGroup, 
+				_mWorld, 
+				_mActionPerformer, 
+				_mRandomGenerator, 
+				_mMarkerHandler, 
+				_testActionTimeoutConfig,
+				_mTime, 
+				_mapMarkerInfo,
+				new TestAiWeaponsConfig,
+				_mInventedTechnologiesCollection,
+				_mKnowledge,
+				_decisionMaker,
+				new BaseConfig,
+				_professionConfig,
+				_mSquadHandler,
+				new TestGameLengthMonitor,
+				_resourceLocationConfig
+			] new AiSquadBrain;
+		};
+		
+		private static method AfterEach()
+		{
+			deleteGroup _mGroup;
+		};
+		
+		private static method MovingFarHasMountedVehicle_Act_StatusMoving
+		{
+			// Arrange
+			_mWorld.LeaderPos = [10, 10, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [15, 15, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [10, 10, 10], 4] new VehicleContainer;
+			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving with vehicle."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+		};
+		
+		private static method MountedArrivingFarMoving_EnteringClose_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [550, 550, 0], 4] new VehicleContainer;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop moving."] call Assert.AreEqual;
+		};
+		
+		private static method MountedCloseToDestinationIdle_Act_StatusDisembarking
+		{	
+			private ["_action" as DisembarkAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [550, 550, 0], 4] new VehicleContainer;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Disembarking, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as DisembarkAction;
+			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
+		};
+		
+		private static method CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle
+		{	
+			private ["_aiVehicle" as VehicleContainer];
+			
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = true;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Disembarking;
+			
+			_aiVehicle = [objNull, [550, 550, 0], 2] new VehicleContainer;
+			
+			_mActionService.IsRunning = false;
+			_mActionService.Success = false;
+			
+			_mKnowledge.CurrentAction = [300, _mActionService, _aiVehicle] new DisembarkAction;
+			_mTime.MissionTime = 600;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
+		};
+		
+		private static method MountedMovingDetectedEnemies_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [300, 300, 0], 4] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop when detecting enemies."] call Assert.AreEqual;
+		};
+		
+		private static method MountedIdleDetectedEnemies_Act_StatusDisembarking
+		{
+			private ["_action" as DisembarkAction];
+		
+			// Arrange
+			_mWorld.LeaderPos = [300, 300, 0];
+			_mWorld.SquadMounted = true;
+			_mWorld.MountedVehicle = [objNull, [300, 300, 0], 4] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[250, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[300, 300, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Disembarking] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI does not disembark when detecting enemies."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as DisembarkAction;
+			[_action is DisembarkAction, "Action is not a disembark action."] call Assert.IsNotNull;
+		};
+		
+		private static method MovingMediumNearVehicle_Act_StatusMovingToVehicle
+		{
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 500, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 530, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[[600, 600, 0], _action.Position, "AI moved to the wrong position."] call Assert.AreEqual;
+		};
+		
+		private static method MovingMediumVehicleHalfNear_Act_StatusMovingToLocation
+		{
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 400, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [601, 500, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[600, 400, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not leaving vehicle and moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
+			[_action.Position, [600, 600, 0], "AI moved to the wrong position."] call Assert.AreEqual;
+		};
+		
+		private static method MovingFarAtVehicle_Act_StatusMountingVehicle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [10, 10, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.MountingVehicle, _mKnowledge.State, "AI not mounting nearby vehicle."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MountActions, "AI did not perform a mount action."] call Assert.AreEqual;
+		};
+		
+		private static method MovingRelativelyFarVehicleRelativelyClose_Act_StatusMovingToVehicle
+		{
+			private ["_moveAction" as MoveAction];
+
+			// Arrange
+			_mWorld.LeaderPos = [600, 0, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [600, 100, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[600, 0, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI is not moving."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			_moveAction = _mKnowledge.CurrentAction as MoveAction;
+			[_moveAction is MoveAction, "Current action is not a move action."] call Assert.IsTrue;
+			[_moveAction.Position, [600, 100, 0], "Squad not moving to vehicle."] call Assert.AreEqual;
+		};
+		
+		private static method MovingToNearbyVehicle_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [25, 25, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[25, 25, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.CurrentAction = [30, MoveActionType.Move, [30, 30, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			_mKnowledge.State = AiSquadState.Moving;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not stop at vehicle."] call Assert.AreEqual;
+		};
+		
+		private static method MovingFarVehicleNearby_Act_StatusMoving
+		{
+			private ["_moveAction" as MoveAction];
+		
+			// Arrange
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mWorld.ClosestEmptyFreeVehicle = [objNull, [30, 30, 0], 2] new VehicleContainer;
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI not moving towards nearby vehicle."] call Assert.AreEqual;
+			[_mKnowledge.CurrentAction, "Current action not set."] call Assert.IsNotNull;
+			[1, count _mActionPerformer.MoveActions, "AI did not perform a move action."] call Assert.AreEqual;
+			
+			_moveAction = _mActionPerformer.MoveActions select 0;
+			
+			[[30, 30, 0], _moveAction.Position, "Squad moving to wrong position."] call Assert.AreEqual;
+		};
+		
+		private static method CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle
+		{	
+			private ["_vehicleContainer" as VehicleContainer];
+			
+			// Arrange
+			_mWorld.LeaderPos = [550, 550, 0];
+			_mWorld.SquadMounted = false;
+			_mKnowledge.Members pushBack [[550, 550, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.State = AiSquadState.Disembarking;
+			
+			_vehicleContainer = [objNull, [550, 550, 0], 2] new VehicleContainer;
+			
+			_mActionService.IsRunning = false;
+			_mActionService.Success = true;
+			
+			_mKnowledge.CurrentAction = [300, _mActionService, _vehicleContainer] new DisembarkAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI did not disembark."] call Assert.AreEqual;
+		};
+		
+	};
+};

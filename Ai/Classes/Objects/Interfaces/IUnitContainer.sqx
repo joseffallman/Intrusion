@@ -1,0 +1,28 @@
+/*
+ * Name:	IUnitContainer
+ * Date:	2019-06-04
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * An object containing a unit abstracted from reality.
+ */
+namespace Intrusion.Ai
+{
+	public interface IUnitContainer
+	{
+		// Gets the unit object.
+		property Object Unit { get; private set; };
+		
+		// Gets the unit's position.
+		method Array GetPosition();
+		
+		// Get whether the unit is alive or not.
+		// Returns (Boolean): true if the unit is alive, otherwise false.
+		method Boolean GetIsAlive();
+		
+		// Changes the unit object to a new unit. Used for AI revive.
+		// _newUnit (Object): The new unit.
+		method ChangeUnit("_newUnit" as Object);
+	};
+};

@@ -9,16 +9,11 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionTestConfig : IProfessionConfig /* Pseudo inherits ProfessionConfig */
+	public class ProfessionTestConfig : ProfessionConfig
 	{
-		private fields ["_base" as ProfessionConfig];
-		
         // Initializes all professions.
         public constructor {
-        	// In a pseudo inheritment we first need to create and initialize the base class.
-        	_base = new ProfessionConfig;
-        	
-        	_base.Professions = [
+        	_self.Professions = [
         		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, "b_inf", "o_inf", false] new Profession,
 			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, true, "b_service", "o_service", true] new Profession,
 			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 2, 2, true, "b_service", "o_service", false] new Profession,
@@ -34,27 +29,6 @@ namespace Intrusion.Common
 			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Private, 1, 2, 9, 3, true, "b_armor", "o_armor", false] new Profession,
 			    [ProfessionType.AttackHelicopter, "Attack Helicopters", Technology.AirArmed, Rank.Private, 1, 1, 2, 2, true, "b_air", "o_air", false] new Profession
         	];
-        	
-        	// In a pseudo interitment all 'inherited' properties must be set to the same as the base class.
-        	_self.Professions = _base.Professions;
-		};
-		
-		// Gets all professions.
-		public property Array Professions { get; set; };
-		
-		// Gets a profession by profession type.
-		// _professionType (ProfessionType): Profession type.
-		// Returns (Profession): The sought profession. null if the profession type was invalid.
-		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
-			[_professionType] call _base.GetVehicleClassNames
-		};
-		
-		// Gets a profession.
-		// _professionType (ProfessionType): The profession type.
-		// Returns (Profession): The sought profession. classNull if the profession was not found.
-		public method Profession GetProfession("_professionType" as ProfessionType)
-		{
-			[_professionType] call _base.GetProfession
 		};
 	};
 };

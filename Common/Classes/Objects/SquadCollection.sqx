@@ -76,25 +76,30 @@ namespace Intrusion.Common
 		// Checks whether all slots of a profession type is occupied for a side or not.
 		// _side (Side): The side to check.
 		// _professionType (ProfessionType): The profession type to check.
-		// _professionConfig (IProfessionConfig): The profession config (since this is a distributed class).
+		// _professionConfig (ProfessionConfig): The profession config (since this is a distributed class).
 		// Returns (Boolean): true if the profession is still available on the side, false if all slots of the 
 		// current profession is occupied.
-		public method Boolean ProfessionTypeAvailable("_side" as Side, "_professionType" as ProfessionType, "_professionConfig" as IProfessionConfig)
+		public method Boolean ProfessionTypeAvailable("_side" as Side, "_professionType" as ProfessionType, "_professionConfig" as ProfessionConfig)
 		{
 			private ["_assignedSquadsCount" as Scalar, "_profession" as Profession];
 			
 			_assignedSquadsCount = [_side, _professionType] call _self.CountByProfessionType;
 			_profession = [_professionType] call _professionConfig.GetProfession;
+
+			if (!isNull _profession) then {
+				return _assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0;
+			};
 			
-			_assignedSquadsCount < _profession.MaxGroupsCount || _profession.MaxGroupsCount < 0
+			return false;
 		};
 		
 		// Checks whether all slots of a profession type is selectable for a squad.
 		// _side (Side): The side to check.
 		// _professionType (ProfessionType): The profession type to check.
-		// _professionConfig (IProfessionConfig): The profession config (since this is a distributed class).
+		// _rating (Scalar): The squad's rating.
+		// _professionConfig (ProfessionConfig): The profession config (since this is a distributed class).
 		// Returns (Boolean): true if the profession is available and selectable on the side, otherwise false.
-		public method Boolean ProfessionTypeSelectable("_side" as Side, "_professionType" as ProfessionType, "_rating" as Scalar, "_professionConfig" as IProfessionConfig)
+		public method Boolean ProfessionTypeSelectable("_side" as Side, "_professionType" as ProfessionType, "_rating" as Scalar, "_professionConfig" as ProfessionConfig)
 		{
 			private ["_profession" as Profession, "_available" as Boolean, "_selectable" as Boolean];
 			

@@ -1,0 +1,30 @@
+/*
+ * Name:	TestRandomGenerator
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Class used to make random number static during tests.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestRandomGenerator : IRandomGenerator
+	{
+		// Creates a TestRandomGenerator object.
+		public constructor("_returnValue" as Scalar)
+		{
+			_self.Number = _returnValue;
+		};
+		
+		public property Scalar Number { get; set; };
+		
+		public method Scalar GetNumber("_maxValue" as Scalar)
+		{
+			_self.Number
+		};
+	};
+};

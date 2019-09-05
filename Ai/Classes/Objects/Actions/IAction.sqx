@@ -1,0 +1,20 @@
+/*
+ * Name:	IAction
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Interface for the action classes.
+ */
+namespace Intrusion.Ai
+{
+	public interface IAction
+	{
+		// Gets the time when the action is regarded as timed out.
+		property Scalar TimeoutTime { get; };
+		
+		// Gets the service associated with the action. classNull if there are no service associated.
+		property IActionService Service { get; };
+	};
+};

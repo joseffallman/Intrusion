@@ -1,0 +1,54 @@
+/*
+ * Name:	TestMarkerHandler
+ * Date:	2019-05-20
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Low level class that handles markers on the map.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	public class TestMarkerHandler : IMarkerHandler
+	{
+		private fields ["_mMarkerPositions" as Array /* of DictionaryItem */];
+		
+		// Creates a MarkerHandler object.
+		public constructor()
+		{
+			_mMarkerPositions = [];
+		};
+		
+		public method AddMarkerPos("_markerName" as String, "_pos" as Array)
+		{
+			_mMarkerPositions pushBack [_markerName, _pos] new DictionaryItem;
+		};
+		
+		// Gets the position of a marker.
+		// _markerName (String): The name of the marker.
+		// Returns (Array): The position of the marker.
+		public method Array GetMarkerPos("_markerName" as String)
+		{
+			scopeName "main";
+			
+			{
+				if (_x.Key == _markerName) then {
+					_x.Value breakOut "main";
+				};
+			} foreach _mMarkerPositions as DictionaryItem;
+			
+			[]
+		};
+		
+		// Gets a marker's text.
+		// _markerName (String): Name of the marker.
+		// Returns (String): The marker's text.
+		public method String GetMarkerText("_markerName" as String)
+		{
+			"[General Marker Name]"
+		};
+	};
+};

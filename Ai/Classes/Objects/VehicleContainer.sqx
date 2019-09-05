@@ -1,0 +1,52 @@
+/*
+ * Name:	VehicleContainer
+ * Date:	2019-05-26
+ * Version: 1.0
+ * Author:  Engime
+ *
+ * Description:
+ * Models a vehicle that can be used by an AI squad.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class VehicleContainer
+	{
+		// Creates a VehicleContainer object.
+		public constructor("_vehicle" as Object, "_position" as Array, "_seatsCount" as Scalar, ["_intrusionVehicle" as IntrusionVehicle, classNull])
+		{
+			_self.Vehicle = _vehicle;
+			_self.Position = _position;
+			_self.SeatsCount = _seatsCount;
+			_self.OwnerGroup = grpNull;
+			
+			if (isNull _vehicle) then {
+				_self.IntrusionVehicle = _intrusionVehicle;
+			}
+			else {
+				_self.IntrusionVehicle = _vehicle getVariable ["IntrusionVehicle", classNull];
+			};
+			
+			if (!isNull _intrusionVehicle) then {
+				_self.OwnerGroup = _intrusionVehicle.OwnerGroup;
+			};
+		};
+		
+		// Gets the vehicle's position.
+		public property Array Position { get; private set; };
+		
+		// Gets the vehicle's number of seats.
+		public property Scalar SeatsCount { get; private set; };
+		
+		// Gets the actual vehicle.
+		public property Object Vehicle { get; private set; };
+		
+		// Gets the intrusion vehicle object for the vehicle.
+		public property IntrusionVehicle IntrusionVehicle { get; private set; };
+		
+		// Gets the owner group for the vehicle. grpNull if it is a free vehicle.
+		public property Group OwnerGroup { get; private set; };
+	};
+};

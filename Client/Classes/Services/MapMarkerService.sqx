@@ -15,11 +15,11 @@ namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
-		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as IProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
 		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarkers" as Array /* of Marker */, "_mSquadMemberMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as IProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as ProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mProfessionConfig = _professionConfig;
 			_mSquadMarkersConfig = _squadMarkersConfig;
@@ -112,14 +112,14 @@ namespace Intrusion.Client
 					_profession = [_professionType] call _mProfessionConfig.GetProfession;
         			
         			if (isNull _marker) then {
-						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", name leader _group + " (" + str count units _group + ")"] call Marker.CreateIconMarkerLocal;
+						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", (_group getVariable ["MapName", ""]) + " (" + str count units _group + ")"] call Marker.CreateIconMarkerLocal;
 						_marker.Tag = _group;
 						_mMapMarkers pushBack _marker;
         			}
         			else {
         				[getPos _leader] call _marker.SetPosition;
         				[_profession.MarkerTypeFriendly] call _marker.SetType;
-        				[name leader _group + " (" + str count units _group + ")"] call _marker.SetText;
+        				[(_group getVariable ["MapName", ""]) + " (" + str count units _group + ")"] call _marker.SetText;
         			};
 				};
     		} foreach allGroups as Group;

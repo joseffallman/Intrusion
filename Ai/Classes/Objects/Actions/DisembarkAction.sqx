@@ -1,0 +1,25 @@
+/*
+ * Name:	DisembarkAction
+ * Date:	2019-05-27
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contans all necessary information about Ai disembark actions.
+ */
+namespace Intrusion.Ai
+{
+	public class DisembarkAction : Action
+	{
+		// Creates a MountAction object.
+		public constructor("_timeoutTime" as Scalar, "_service" as IActionService, "_vehicle" as VehicleContainer)
+		{
+			[_timeoutTime] call _base.Constructor;
+			_self.Service = _service;
+			_self.Vehicle = _vehicle;
+		};
+		
+		// Gets the AI squad's vehicle.
+		public property VehicleContainer Vehicle { get; private set; };
+	};
+};

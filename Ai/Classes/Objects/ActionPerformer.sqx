@@ -1,0 +1,269 @@
+/*
+ * Name:	ActionPerformer
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Makes actions happen in the world.
+ */
+
+using Sqx.Waypoints;
+using Intrusion.Server;
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class ActionPerformer : IActionPerformer
+	{
+		private fields ["_mGroup" as Group, "_mUnitSpawner" as IUnitSpawner, "_mUnitInfo" as AiUnitInfo];
+		
+		// Creates a ActionManager object.
+		public constructor("_group" as Group, "_resourceLocationHandler" as IResourceLocationHandler, "_unitSpawner" as IUnitSpawner, "_unitsConfig" as IAiUnitsConfig)
+		{
+			_mGroup = _group;
+			_mUnitSpawner = _unitSpawner;
+			
+			_mUnitInfo = [side _group] call _unitsConfig.GetUnitInfo;
+		};
+		
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoMove("_moveAction" as MoveAction)
+		{
+			private ["_waypoint" as Array];
+			
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			_waypoint = _mGroup addWaypoint [_moveAction.Position, _moveAction.Radius];
+			
+			_waypoint setWaypointSpeed _moveAction.SpeedMode;
+			_waypoint setWaypointType _moveAction.WaypointType;
+			_waypoint setWaypointCombatMode "YELLOW";
+			_waypoint setWaypointBehaviour "SAFE";
+			_waypoint setWaypointFormation "WEDGE";
+			
+			_mGroup setSpeedMode _moveAction.SpeedMode;
+			_mGroup setCombatMode "YELLOW";
+			_mGroup setBehaviour "SAFE";
+			
+			//player sideChat "expected: " + _moveAction.SpeedMode; // TODO SQX: Semicolon disappears on build.
+		};
+		
+		// Performs a capture action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoCapture("_captureAction" as CaptureAction)
+		{
+			private ["_waypoint" as Array];
+			
+			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			_waypoint = _mGroup addWaypoint [_captureAction.Position, 10];
+			_waypoint setWaypointSpeed "LIMITED";
+			_waypoint setWaypointCombatMode "YELLOW";
+			_waypoint setWaypointBehaviour "AWARE";
+			_waypoint setWaypointType "SAD";
+			
+			_mGroup setSpeedMode "LIMITED";
+			_mGroup setCombatMode "YELLOW";
+			_mGroup setBehaviour "AWARE";
+		};
+		
+		// Performs a mount action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _mountAction (MountAction): Information about the mounting.
+		public method DoMount("_mountAction" as MountAction)
+		{
+			private _driverOccupied = false;;
+			private _commanderOccupied = false;;
+			private _gunnerOccupied = false;;
+			
+			{
+				private _driver = assignedDriver _mountAction.Vehicle.Vehicle;
+				if (!_driverOccupied && isNull (assignedVehicle _x) && (isNull _driver || { vehicle _driver == _driver })) then {
+					_x assignAsDriver _mountAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+					_driverOccupied = true;
+				};
+				
+				private _commander = assignedCommander _mountAction.Vehicle.Vehicle;
+				if (!_commanderOccupied && isNull (assignedVehicle _x) && (isNull _commander || { vehicle _commander == _commander })) then {
+					_x assignAsCommander _mountAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+					_commanderOccupied = true;
+				};
+				
+				private _gunner = assignedGunner _mountAction.Vehicle.Vehicle;
+				if (!_gunnerOccupied && isNull (assignedVehicle _x) && (isNull _gunner || { vehicle _gunner == _gunner })) then {
+					_x assignAsGunner _mountAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+					_gunnerOccupied = true;
+				};
+				
+				if (isNull (assignedVehicle _x)) then {
+					_x assignAsCargo _mountAction.Vehicle.Vehicle;
+					[_x] orderGetIn true;
+				};
+			} foreach units _mGroup;
+		};
+	
+/*
+		// Performs a disembark action for an AI group.
+		// _disembarkAction (DisembarkAction): Information about the disembarkment.
+		public method DoDisembark("_disembarkAction" as DisembarkAction)
+		{
+			call _disembarkAction.Service.RunAsync;
+		};
+		
+		// Performs a revive action for an AI group.
+		// _reviveAction (ReviveAction): Information about the revive.
+		public method DoRevive("_action" as ReviveAction)
+		{
+			call _action.Service.RunAsync;
+		};
+*/
+
+		// Limits the speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		public method ForceSpeed("_vehicle" as Object, "_speed" as Scalar)
+		{
+			_vehicle forceSpeed _speed;
+		};
+		
+		// Moves the members of a group out of its vehicles and unassigns them immediately.
+		// _group (Group): The group to move out.
+		public method MoveOutFromVehicle("_group" as Group)
+		{
+			{
+				private _vehicle = vehicle _x;
+				
+				if (_vehicle != _x) then {
+					moveOut _x;
+					_x action ["GetOut", _vehicle];
+					unassignVehicle _x;
+				};
+			} foreach units _group as Object;
+			
+			//units _group allowGetIn false; // Forces the units out of the vehicle
+			//units _group allowGetIn true;  // Allows the units to reenter vehicle later
+		};
+		
+		// Respawns a squad at base. Creates new units and removes the old (if alive).
+		// _group (Group): The group to respawn.
+		// _members (Array of IUnitContainer): The squad's members.
+		// _baseMarkerName (String): The marker name of the group's base.
+		// Returns (Array of IUnitContainer): All new units.
+		public method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
+		{
+			private ["_oldUnits" as Array, "_newUnits" as Array, "_unit" as Object];
+			
+			_oldUnits = [];
+			_newUnits = [];
+			
+			// Remove any current waypoint
+			[_group] call WaypointHelper.DeleteAllWaypointsFromGroup;
+			
+			// Create new units at base
+			{
+				_oldUnits pushBack _x.Unit;
+				
+				_unit = [_mUnitInfo.UnitClassName, getMarkerPos _baseMarkerName, _group] call _mUnitSpawner.CreateUnit;
+				_newUnits pushBack [_unit] new UnitContainer;
+			} foreach _members as IUnitContainer;
+			
+			// Make sure none of the old units belong to the group
+			(_oldUnits) joinSilent grpNull;
+			
+			// Make sure the old units are dead or removed.
+			{
+				if (alive _x) then {
+					deleteVehicle _x;
+				};
+			} foreach _oldUnits as Object;
+			
+			_newUnits
+		};
+		
+		// Equips an AI squad member with a backpack and a launcher.
+		// _member (IUnitContainer): The member to equip.
+		// _launcherClassName (String): The class name of the launcher.
+		// _ammoClassName (String): The class name of the launcher's ammo.
+		public method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String)
+		{
+			_member.Unit addBackpack "B_Kitbag_cbr";
+			(unitBackpack _member.Unit) addMagazineCargo [_ammoClassName, 1];
+			_member.Unit addWeapon _launcherClassName;
+		};
+		
+		// Moves a single unit in a group to a position.
+		// _unitContainer (UnitContainer): The unit to move.
+		// _position (Array): The position to move to.
+		public method MoveSingleUnit("_unitContainer" as UnitContainer, "_position" as Array)
+		{
+			_unitContainer.Unit commandMove _position;
+		};
+		
+		private method CreateAiUnitFromDeadBody("_deadUnit" as UnitContainer, "_group" as Group)
+		{
+			private ["_pos" as Array, "_dir" as Scalar, "_type" as String, "_nameSound" as String, "_face" as String, "_speaker" as String];
+			private ["_loadout" as Array, "_wpnCargo" as Array, "_newUnit" as Object];
+		
+			private _oldUnit = _deadUnit.Unit;
+		
+			_pos = getPosATL _oldUnit;
+			_dir = getDir _oldUnit;
+			_type = typeOf _oldUnit;
+			_nameSound = nameSound _oldUnit;
+			_face = face _oldUnit;
+			_speaker = speaker _oldUnit;
+			_loadout = getUnitLoadout _oldUnit;
+			_wpnCargo = getWeaponCargo (_pos nearestObject "weaponHolderSimulated");
+			
+			deleteVehicle _oldUnit;
+			_group = createGroup side _group;
+			_newUnit = [_type, _pos, _group] call _mUnitSpawner.CreateUnit;
+			[_newUnit] call _deadUnit.ChangeUnit;
+			_newUnit setDir _dir;
+			_newUnit switchMove "AmovPpneMstpSnonWnonDnon";
+			_newUnit setUnitLoadout _loadout;
+			_newUnit addWeapon (_wpnCargo select 0 select 0);
+			_newUnit setNameSound _nameSound;
+			_newUnit setFace _face;
+			_newUnit setSpeaker _speaker;
+		};
+
+		// Makes a dead AI unit alive again and puts it in a group.
+		// _unitContainer (UnitContainer): The unit to make alive.
+		// _group (Group): The group to insert the unit into after being made alive.
+		public method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group)
+		{
+			[_unit, _group] call _self.CreateAiUnitFromDeadBody;
+			[_unit.Unit] joinSilent _group;
+		};
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		public method MoveOutDeadUnitFromVehicle("_members" as Array /* of UnitContainer */)
+		{
+			{
+				private _unit = _x.Unit;
+				
+				if (!alive _unit && vehicle _unit != _unit) then {
+					private _vehicle = vehicle _unit;
+					private _firstPos = getPos _vehicle;
+					
+					unassignVehicle _unit;
+					moveOut _unit;
+					
+					private _dir = _firstPos getDir _unit;
+					private _pos = _unit getPos [3, _dir];
+					
+					_unit setPos _pos;
+				};
+			} foreach _members as UnitContainer;
+		};
+	};
+};

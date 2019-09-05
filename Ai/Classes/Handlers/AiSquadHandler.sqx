@@ -14,7 +14,7 @@ namespace Intrusion.Ai
 {
 	public class AiSquadHandler : IAiSquadHandler
 	{
-		private fields ["_mSquads" as Array /* of AiSquad */];
+		private fields ["_mSquads" as Array /* of AiSquadBrain */];
 		
 		// Creates a AiSquadHandler object.
 		public constructor {
@@ -31,8 +31,8 @@ namespace Intrusion.Ai
 		public static property Array AiWarriorTypes { get; private set; };
 		
 		// Adds an AI squad to the AI squad handler.
-		// _aiSquad (AiSquad): The AI squad to add.
-		public method AddSquad("_aiSquad" as AiSquad)
+		// _aiSquad (AiSquadBrain): The AI squad to add.
+		public method AddSquad("_aiSquad" as AiSquadBrain)
 		{
 			_mSquads pushBack _aiSquad;
 		};
@@ -46,8 +46,8 @@ namespace Intrusion.Ai
 			_count = 0;
 			
 			{
-				_count = _count + count _x.Members;
-			} foreach _mSquads as AiSquad;
+				_count = _count + (call _x.GetMemberCount);
+			} foreach _mSquads as AiSquadBrain;
 			
 			_count
 		};
@@ -63,15 +63,15 @@ namespace Intrusion.Ai
 			
 			{
 				if (side _x.Group == _side) then {
-					_count = _count + count _x.Members;
+					_count = _count + (call _x.GetMemberCount);
 				};
-			} foreach _mSquads as AiSquad;
+			} foreach _mSquads as AiSquadBrain;
 			
 			_count
 		};
 		
 		// Gets all AI squads.
-		// Returns (Array): All AI squads as an array of AiSquad.
+		// Returns (Array): All AI squads as an array of AiSquadBrain.
 		public method Array GetAllSquads()
 		{
 			_mSquads
@@ -89,7 +89,7 @@ namespace Intrusion.Ai
 					[_order] call _x.GiveOrder;
 					breakOut "main";
 				};
-			} foreach _mSquads as AiSquad;
+			} foreach _mSquads as AiSquadBrain;
 		};
 	};
 };

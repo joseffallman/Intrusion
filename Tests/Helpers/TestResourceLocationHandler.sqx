@@ -107,5 +107,11 @@ namespace Intrusion.Tests.Helpers
 		public method CreateGuerillaUnits()
 		{
 		};
+		
+		// Get the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		public method ResourceLocationCollection GetResourceLocationCollection()
+		{
+		};
 	};
 };

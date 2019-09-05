@@ -1,0 +1,59 @@
+/*
+ * Name:	MoveAction
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains all necessary information for a gorup to perform a move action.
+ */
+namespace Intrusion.Ai
+{
+	public class MoveAction : Action
+	{
+		// Creates a MoveAction object.
+		public constructor("_timeoutTime" as Scalar, "_type" as MoveActiontype, "_position" as Array, "_waypointType" as String, "_speedMode" as String, "_behavior" as String, "_combatMode" as String, "_locationMarkerName" as String, ["_radius" as Scalar, 10])
+		{
+			[_timeoutTime] call _base.Constructor;
+			
+			_self.Type = _type;
+			_self.Position = _position;
+			_self.LocationMarkerName = _locationMarkerName;
+			_self.RelatedResourceLocation = (_locationMarkerName != "");
+			_self.SpeedMode = _speedMode;
+			_self.WaypointType = _waypointType;
+			_self.Behavior = _behavior;
+			_self.CombatMode = _combatMode;
+			_self.Radius = _radius;
+		};
+		
+		public property Type { get; private set; };
+		
+		// Gets the destination position.
+		public property Position { get; private set; };
+		
+		// Gets the marker name of the resource location to be captured.
+		public property String LocationMarkerName { get; private set; };
+		
+		// Gets wether this move action is related to a resource location or not.
+		public property Boolean RelatedResourceLocation { get; private set; };
+		
+		// Gets the squad's vehicle.
+		public property VehicleContainer Vehicle { get; private set; };
+		
+		// Gets the move action's speed mode.
+		public property String SpeedMode { get; private set; };
+		
+		// Gets the move action's waypoint type.
+		public property String WaypointType { get; private set; };
+		
+		// Gets the move action's behavior.
+		public property String Behavior { get; private set; };
+		
+		// Gets the move action's combat mode.
+		public property String CombatMode { get; private set; };
+		
+		// Gets the waypoint radius.
+		public property Scalar Radius { get; private set; };
+	};
+};

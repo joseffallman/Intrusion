@@ -1,0 +1,69 @@
+/*
+ * Name:	ReviveActionService
+ * Date:	2019-08-22
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles a revive action.
+ */
+
+using Intrusion.Common;
+using Intrusion.Communication;
+
+namespace Intrusion.Ai
+{
+	public class ReviveActionService : ActionService
+	{
+		private fields ["_mGroup" as Group, "_mDeadUnit" as UnitContainer, "_mRevivingUnit" as UnitContainer];
+		
+		// Creates a ReviveActionService object.
+		public constructor("_time" as IMissionTime, "_timeoutTime" as Scalar, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_group" as Group, "_deadUnit" as UnitContainer, "_revivingUnit" as UnitContainer) {
+			[_time, _timeoutTime, _world, _actionPerformer] call _base.Constructor;
+			
+			_mGroup = _group;
+			_mDeadUnit = _deadUnit;
+			_mRevivingUnit = _revivingUnit;
+		};
+		
+		protected override method Run()
+		{
+			private _deadPos = call _mDeadUnit.GetPosition;
+			private _timedOut = false;
+
+			[_mRevivingUnit, call _mDeadUnit.GetPosition] call _self.ActionPerformer.MoveSingleUnit;
+			
+			while { (call _mRevivingUnit.GetPosition) distance _deadPos > 2 && !_timedOut } do
+			{
+				if (call _self.CheckActionTimeout) then {
+					_timedOut = true;
+				};
+				
+				sleep 0.5;
+			};
+			
+			if (!_timedOut) then {
+				_mRevivingUnit.Unit disableAI "MOVE";
+				private _loadout = getUnitLoadout _mRevivingUnit.Unit;
+
+				["ClientEventReciever.OnPlayUnitAnimation", [_mRevivingUnit.Unit, "KNEEL_TREAT", 10]] call Remote.Invoke;
+				
+				sleep 10;
+				
+				if (alive _mRevivingUnit.Unit) then {
+					[_mDeadUnit, _mGroup] call _self.ActionPerformer.MakeAliveAiUnit;
+					
+					_mRevivingUnit.Unit enableAI "MOVE";
+					_mRevivingUnit.Unit setUnitLoadout _loadout;
+				
+					if (call _mDeadUnit.GetIsAlive) then {
+						_self.Success = true;
+			        	["Unit " + str _mRevivingUnit.Unit + " (in group " + str group _mRevivingUnit.Unit + ") revived unit " + str _mDeadUnit.Unit + " successfully." + str _mDeadUnit.Unit] call LogHandler.Debug;
+					};
+				};
+			};
+			
+			call _base.Run;
+		};
+	};
+};

@@ -21,14 +21,14 @@ namespace Intrusion.Server
 			private ["_serverConfig" as IServerConfig]; // SQX TODO: Complains at return line if _commonConfig is declared as a CommonConfig, but it shouldn't.
 			
 			if (_releaseMode == ReleaseMode.Production) then {
-				_serverConfig = [new GameplayProdConfig] new ServerConfig;
+				_serverConfig = [new GameplayConfig, new ResourceLocationConfig] new ServerConfig;
 			}
 			else {
 				if (_releaseMode == ReleaseMode.Test) then {
-					_serverConfig = [new GameplayTestConfig] new ServerConfig;
+					_serverConfig = [new GameplayTestConfig, new ResourceLocationTestConfig] new ServerConfig;
 				}
 				else { // Dev
-					_serverConfig = [new GameplayTestConfig] new ServerConfig;
+					_serverConfig = [new GameplayTestConfig, new ResourceLocationTestConfig] new ServerConfig;
 				};
 			};
 			

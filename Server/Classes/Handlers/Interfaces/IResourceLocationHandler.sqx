@@ -49,5 +49,9 @@ namespace Intrusion.Server
 		
 		// Creates guarding guerilla units on all resource locations.
 		method CreateGuerillaUnits();
+		
+		// Get the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		method ResourceLocationCollection GetResourceLocationCollection();
 	};
 };

@@ -12,48 +12,12 @@ using Intrusion.Common;
 
 namespace Intrusion.Tests.Helpers
 {
-	public class TestProfessionConfig : IProfessionConfig
+	public class TestProfessionConfig : ProfessionConfig
 	{
         // Initializes all professions.
         public constructor {
         	_self.Professions = [];
 		};
-		
-		// Gets a profession by profession type.
-		// _professionType (ProfessionType): Profession type.
-		public method Array GetVehicleClassNames("_professionType" as ProfessionType) {
-			scopeName "main";
-			
-			{
-				if (_x.Type == _professionType) then {
-					_x breakOut "main";
-				};
-			} foreach _self.Professions as Profession;
-			
-			classNull
-		};
-		
-		// Gets a profession.
-		// _professionType (ProfessionType): The profession type.
-		// Returns (Profession): The sought profession. classNull if the profession was not found.
-		public method Profession GetProfession("_professionType" as ProfessionType)
-		{
-			scopeName "main";
-			
-			{
-				private ["_profession" as Profession];
-				_profession = _x;
-				
-				if (_profession.Type == _professionType) then {
-					_profession breakOut "main";
-				};
-			} foreach _self.Professions as Profession;
-			
-			classNull
-		};
-		
-		// Gets all professions.
-		public property Array Professions { get; set; };
 		
 		public method AddProfession(
     		"_type" as ProfessionType,

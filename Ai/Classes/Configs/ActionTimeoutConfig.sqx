@@ -1,0 +1,30 @@
+/*
+ * Name:	ActionTimeoutConfig
+ * Date:	2019-05-23
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Describes the timeouts for the different actions an AI squad can perform.
+ */
+namespace Intrusion.Ai
+{
+	public class ActionTimeoutConfig : IActionTimeoutConfig
+	{
+		// Creates an ActionTimeoutConfig object.
+		public constructor {
+			_self.LeaderStationaryTimeout = 10;
+			_self.MoveActionTimeout = 120;
+			_self.CaptureActionTimeout = 30;
+		};
+		
+		// Gets the time in seconds for how long a leader can be stationary before the squad status becomes idle.
+		public property Scalar LeaderStationaryTimeout { get; private set; };
+		
+		// Gets the time in seconds for how long a move action can be carried out before the squad status becomes idle.
+		public property Scalar MoveActionTimeout { get; private set; };
+		
+		// Gets the time in seconds for how long a capture action can be carried out before the squad status becomes idle.
+		public property Scalar CaptureActionTimeout { get; private set; };
+	};
+};

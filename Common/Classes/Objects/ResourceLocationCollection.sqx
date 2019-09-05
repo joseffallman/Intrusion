@@ -85,7 +85,7 @@ namespace Intrusion.Common
 				};
 			} foreach _mResourceLocations as ResourceLocation;
 			
-			_closestLocation;
+			_closestLocation
 		};
 		
 		public method ResourceLocation GetResourceLocationByMarkerName("_markerName" as String)

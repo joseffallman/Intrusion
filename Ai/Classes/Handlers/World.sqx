@@ -1,0 +1,194 @@
+/*
+ * Name:	World
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class for the brain to have its decitions manifested in physical actions outside itself.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class World : IWorld
+	{
+		private fields ["_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceLocationHandler" as IResourceLocationHandler];
+		
+		// Creates a World object.
+		public constructor("_resourceLocationConfig" as IResourceLocationConfig, "_vehicleSpawner" as IVehicleSpawner, "_resourceLocationHandler" as IResourceLocationHandler)
+		{
+			_mResourceLocationConfig = _resourceLocationConfig;
+			_mVehicleSpawner = _vehicleSpawner;
+			_mResourceLocationHandler = _resourceLocationHandler;
+		};
+		
+		// Gets a group's leader's position.
+		// _group (Group): The group to get the leader's position from.
+		// Returns (Array): The position of the leader.
+		public method Array GetLeaderPos("_group" as Group)
+		{
+			getPos leader _group
+		};
+		
+		// Gets the resource location collection.
+		// Returns (ResourceLocationCollection): The resource location collection.
+		public method ResourceLocationCollection GetResourceLocationCollection()
+		{
+			call _mResourceLocationHandler.GetResourceLocationCollection
+		};
+		
+		// Checks if a group is inside the perimiters of one or more resource locations.
+		// _group (Group): The group to check.
+		// _location (ResourceLocation): The resource location to check.
+		// Returns (Boolean): true if any squad member is inside the perimiter of the resource location, otherwise false.
+		public method Boolean CheckSquadPresenceAtResourceLocation("_group" as Group, "_location" as ResourceLocation)
+		{
+			scopeName "main";
+
+			{
+				if (_x distance (getMarkerPos _location.MarkerName) < _mResourceLocationConfig.AreaRadius) then {
+					true breakOut "main";
+				};
+			} foreach units _group;
+			
+			false
+		};
+		
+		private method Scalar CountSeats("_vehicle" as Object)
+		{
+			(count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]))
+		};
+
+		// Gets the closest empty, unassigned, usable and free vehicle that fits the group.
+		// _side (Side): Side of the vehicle.
+		// _pos (Array): The relative position.
+		// _squadSize (Scalar): The number of members in the squad.
+		// Returns (VehicleContainer): The closest empty and free vehicle.
+		public method VehicleContainer GetClosestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_squadSize" as Scalar)
+		{
+			private ["_intrusionVehicle" as IntrusionVehicle, "_seatsCount" as Scalar, "_vehicle" as Object];
+			
+			_intrusionVehicle = [_side, _pos, _squadSize] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+			
+			if (isNull _intrusionVehicle) then {
+				return classNull;
+			};
+			
+			_vehicle = _intrusionVehicle.Vehicle;
+			
+			_seatsCount = [_vehicle] call _self.CountSeats;
+
+			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
+		};
+		
+		// Checks if all squad members are mounted in a vehicle.
+		// _group (Group): The group to check.
+		// Returns (Boolean): true if all members are mounted, otherwise false.
+		public method Boolean CheckSquadMounted("_group")
+		{
+			scopeName "main";
+			
+			{
+				if (vehicle _x == _x) then {
+					false breakOut "main";
+				};
+			} foreach units _group as Object;
+			
+			true
+		};
+		
+		// Gets the speed of a vehicle.
+		// _vehicle (Object): The vehicle.
+		public method Scalar GetSpeed("_vehicle" as Object)
+		{
+			speed _vehicle
+		};
+		
+		// Gets a squad's current vehicle. objNull if no one of the members are not in a vehicle.
+		// Returns (VehicleContainer): The vehicle the the group is currently mounted on.
+		public method VehicleContainer GetMountedVehicle("_group" as Group)
+		{
+			private ["_vehicle" as Object, "_seatsCount" as Scalar];
+		
+			scopeName "main";
+			
+			{
+				if (vehicle _x != _x) then {
+					_vehicle = vehicle _x;
+					_seatsCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
+					([vehicle _x, getPos vehicle _x, _seatsCount] new VehicleContainer) breakOut "main";
+				};
+			} foreach units _group as Object;
+			
+			classNull
+		};
+		
+		// Gets the closest detected enemy unit.
+		// _group (Group): The group to test.
+		// Returns (UnitContainter): The detected unit that is closest to the group. null if no units are detected.
+		public method IUnitContainer GetClosestDetectedEnemy("_group" as Group)
+		{
+			private ["_closestUnit" as Object, "_unitContainer" as IUnitContainer];
+			
+			_unitContainer = classNull;
+			_closestUnit = (leader _group) findNearestEnemy getPos leader _group;
+
+			if (!isNull _closestUnit) then {
+				_unitContainer = [_closestUnit] new UnitContainer;
+			};
+
+			_unitContainer
+		};
+		
+		// Gets whether all squad members are dead or not.
+		// _group (Group): The group to test.
+		// Returns (Boolean): true if all the group's members are dead, otherwise false.
+		public method Boolean GetAllSquadMembersDead("_group" as Group)
+		{
+			count units _group == 0
+		};
+		
+		// Gets the squad's squad vehicle.
+		// _group (Group): The group.
+		// Returns (VehicleContainer): The squad's squad vehicle. classNull if the squad has no squad vehicle.
+		public method VehicleContainer GetSquadVehicle("_group" as Group)
+		{
+			private ["_vehicleContainer" as VehicleContainer];
+			
+			_vehicleContainer = classNull;
+			
+			private _intrusionVehicle = [_group] call _mVehicleSpawner.GetIntrusionVehicleByGroup as IntrusionVehicle;
+			
+			if (!isNull _intrusionVehicle) then {
+				_vehicleContainer = [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, [_intrusionVehicle.Vehicle] call _self.CountSeats, _intrusionVehicle] new VehicleContainer;
+			};
+			
+			_vehicleContainer
+		};
+		
+		// Gets the allied group that are closest to a specified destination.
+		// _locationMarkerName (String): The location marker to test.
+		// _side (Side): Side to check.
+		// Returns (Group): The allied group closest to the location. grpNull if no group exists.
+		public method Group GetAlliedGroupClosestToLocation("_locationMarkerName" as String, "_side" as Side)
+		{
+			private ["_closestGroup" as Group, "_closestDistance" as Scalar, "_locationPosition" as Array];
+			
+			_closestGroup = grpNull;
+			_closestDistance = 9999999;
+			_locationPosition = getMarkerPos _locationMarkerName;
+			
+			{
+				if (side group _x == _side && vehicle _x distance _locationPosition < _closestDistance) then {
+					_closestGroup = group _x;
+					_closestDistance = vehicle _x distance _locationPosition;
+				};
+			} foreach allUnits as Object;
+			
+			return _closestGroup;
+		};
+	};
+};

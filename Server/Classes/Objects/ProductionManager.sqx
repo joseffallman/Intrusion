@@ -16,10 +16,10 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as IProfessionConfig];
+		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as ProfessionConfig];
 
 		// Creates a ProductionManager object.
-		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as IProfessionConfig, "_reservationQueue" as ReservationQueue)
+		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as ProfessionConfig, "_reservationQueue" as ReservationQueue)
 		{
 			_mProfessionVehiclesConfig = _professionVehiclesConfig;
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;

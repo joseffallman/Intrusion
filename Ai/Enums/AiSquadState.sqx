@@ -11,10 +11,36 @@ namespace Intrusion.Ai
 {
 	public enum AiSquadState
 	{
-		Idle,
-		Moving,
-		BoardingVehicle,
-		ExitingVehicle,
-		SingleUnitGettingFlag,
+		Idle = 0,
+		Moving = 1,
+		Capturing = 2,
+		MountingVehicle = 3,
+		ExitingVehicle = 4,
+		Defending = 5,
+		Disembarking = 6,
+		Reviving = 7
+	};
+	
+	public class AiSquadStateMeta
+	{
+		public static method String ToString("_state" as AiSquadState)
+		{
+			private ["_s" as String];
+			
+			_s = "[AiSquadState has no entry]";
+		
+			switch (_state) do {
+				case AiSquadState.Idle: { _s = "Idle"; };
+				case AiSquadState.Moving: { _s = "Moving"; };
+				case AiSquadState.Capturing: { _s = "Capturing"; };
+				case AiSquadState.MountingVehicle: { _s = "MountingVehicle"; };
+				case AiSquadState.ExitingVehicle: { _s = "ExitingVehicle"; };
+				case AiSquadState.Defending: { _s = "Defending"; };
+				case AiSquadState.Disembarking: { _s = "Disembarking"; };
+				case AiSquadState.Reviving: { _s = "Reviving"; };
+			};
+			
+			return _s;
+		};
 	};
 };

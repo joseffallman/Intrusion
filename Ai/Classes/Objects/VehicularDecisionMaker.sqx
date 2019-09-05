@@ -1,0 +1,82 @@
+/*
+ * Name:	VehicularDecisionMaker
+ * Date:	2019-06-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the frontal lobe of the brain that is the centre for decision making.
+ * This class is inherited by different squad brains with different perspective, like motorized, sharpshooter, air and naval.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class VehicularDecisionMaker : DecisionMaker
+	{
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
+		{
+			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig] call _base.Constructor;
+		};
+		
+		public override method OnBoardCloseVehicle()
+		{
+			private ["_vehicleContainer" as VehicleContainer];
+		
+			if (_self.Knowledge.HasReachedProfession) then {
+				private _leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+				private _time = call _self.Time.GetMissionTime;
+			
+				_vehicleContainer = [_self.Knowledge.Group] call _self.World.GetSquadVehicle;
+				
+				if (!isNull _vehicleContainer && { _vehicleContainer.Position distance _leaderPos <= 20 }) then
+				{
+					private _action = [_time + 20, _vehicleContainer] new MountAction;
+					[AiSquadState.MountingVehicle, _action] call _self.SetState;
+					[_action as MountAction] call _self.ActionPerformer.DoMount;
+		        	["Mount action created: " + str _action] call LogHandler.Debug;
+				};
+			
+				return;
+			};
+			
+			call _base.OnBoardCloseVehicle;
+		};
+
+		public override method OnLookForVehicle()
+		{
+			private ["_vehicleContainer" as VehicleContainer];
+			
+			// Look for a profession vehicle
+			
+			_vehicleContainer = [_self.Knowledge.Group] call _self.World.GetSquadVehicle;
+			
+			if (!isNull _vehicleContainer) then {
+				_self.Knowledge.HasReachedProfession = true;
+				
+				private _time = call _self.Time.GetMissionTime;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _vehicleContainer.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action as MoveAction] call _self.ActionPerformer.DoMove;
+	        	["Move action created #3: " + str _action] call LogHandler.Debug;
+	        	return;
+			};
+			
+			call _base.OnLookForVehicle;
+		};
+/*
+		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
+		{
+			// If squad is in its intrusion vehicle, don't do anything
+
+			if (!isNull _mountedVehicle.IntrusionVehicle) then {
+				return;
+			};
+			
+			[_mountedVehicle] call _base.OnClosingInOnDestination;
+		};
+*/
+	};
+};

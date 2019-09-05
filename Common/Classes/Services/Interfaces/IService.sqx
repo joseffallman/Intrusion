@@ -16,4 +16,3 @@ namespace Intrusion.Common
 		method RunAsync();
 	};
 };
-

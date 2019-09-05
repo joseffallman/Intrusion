@@ -453,6 +453,8 @@ namespace Intrusion.Server
 		// Returns (Array of IntrusionVehicle): A list of the squad's intrusion vehicles.
 		public method Array GetIntrusionVehiclesByGroup("_group" as Group)
 		{
+			// Remarks: ***This method is obsolete and should be removed. Use GetIntrusionVehicleByGroup instead.***
+			
 			private ["_squadVehicles" as Array];
 			
 			_squadVehicles = [];
@@ -466,13 +468,28 @@ namespace Intrusion.Server
 			_squadVehicles
 		};
 		
+		// Gets a squad's intrusion vehicle.
+		// _group (Group): The group that owns the vehicle.
+		// Returns (IntrusionVehicle): The squad's vehicle. classNull if they don't have one.
+		public method IntrusionVehicle GetIntrusionVehicleByGroup("_group" as Group)
+		{
+			{
+				if (_x.OwnerGroup == _group) then {
+					return _x;
+				};
+			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			
+			return classNull;
+		};
+		
 		// Gets the nearest working empty free vehicle in relation to a position.
 		// _side (Side): The vehicle's side.
 		// _pos (Array): The relative position.
+		// _requiredCrewPlacesCount (Scalar): Required number of crew places.
 		// Returns (IntrusionVehicle): The intrusion vehicle closest to the group. classNull if no vehicle was found.
-		public method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array)
+		public method IntrusionVehicle GetNearestEmptyFreeVehicle("_side" as Side, "_pos" as Array, "_requiredCrewPlacesCount" as Scalar)
 		{
-			private ["_nearestVehicle" as IntrusionVehicle, "_nearestDistance" as Scalar];
+			private ["_nearestVehicle" as IntrusionVehicle, "_nearestDistance" as Scalar, "_crewPlacesCount" as Scalar];
 			
 			_nearestVehicle = classNull;
 			_nearestDistance = 9999999;
@@ -482,10 +499,18 @@ namespace Intrusion.Server
 				_intrusionVehicle = _x;
 				
 				if (_intrusionVehicle.Side == _side && canMove _intrusionVehicle.Vehicle && isNull _intrusionVehicle.OwnerGroup) then {
-					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then {
-						if (isNull assignedDriver _intrusionVehicle.Vehicle && count assignedCargo _intrusionVehicle.Vehicle == 0) then {
-							_nearestVehicle = _intrusionVehicle;
-							_nearestDistance = _intrusionVehicle.Vehicle distance _pos;
+					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then
+					{
+						private _crewInVehicle = { vehicle _x == _x } count crew _intrusionVehicle.Vehicle > 0;
+						
+						if (!_crewInVehicle) then
+						{
+							_crewPlacesCount = (count fullCrew [_intrusionVehicle.Vehicle, "driver", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "commander", true] + (count fullCrew [_intrusionVehicle.Vehicle, "gunner", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "turret", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "cargo", true]));
+						
+							if (_crewPlacesCount >= _requiredCrewPlacesCount) then {
+								_nearestVehicle = _intrusionVehicle;
+								_nearestDistance = _intrusionVehicle.Vehicle distance _pos;
+							};
 						};
 					};
 				};

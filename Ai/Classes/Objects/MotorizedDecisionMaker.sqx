@@ -1,0 +1,132 @@
+/*
+ * Name:	MotorizedDecisionMaker
+ * Date:	2019-06-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the frontal lobe of the brain that is the centre for decision making.
+ * This class is inherited by different squad brains with different perspective, like motorized, sharpshooter, air and naval.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class MotorizedDecisionMaker : VehicularDecisionMaker
+	{
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
+		{
+			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig] call _base.Constructor;
+		};
+		
+		public override method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
+		{
+			private ["_action" as MoveAction];
+			
+			// If acting as a profession squad
+			
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			{
+				_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action] call _self.ActionPerformer.DoMove;
+	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
+			};
+			
+			[_enemy, _mountedVehicle] call _base.OnNearEnemiesOnGroundSpotted;
+		};
+		
+		// Called when the group is closing in on a destination (not necessary a location).
+		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
+		{
+			private _time = call _self.Time.GetMissionTime;
+			
+			// If mounted on a squad vehicle.
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			{
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName, 75] new MoveAction;
+				[AiSquadState.Moving, _action] call _self.SetState;
+				[_action as MoveAction] call _self.ActionPerformer.DoMove;
+	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
+	        	return;
+			};
+			
+			[_mountedVehicle] call _base.OnClosingInOnDestination;
+		};
+		
+		protected override method Boolean CompleteMoveWhenEnemiesNearby("_mountedVehicle" as VehicleContainer, "_closestEnemy" as IUnitContainer)
+		{
+			private ["_moveAction" as MoveAction];
+			private ["_leaderPos" as Array];
+			
+			// If acting as a profession squad
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			{
+				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+					
+				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction) then {
+						if (_moveAction.Type != MoveActionType.Engage) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
+						};
+					};
+				};
+				
+				return false;
+			};
+			
+			return [_mountedVehicle, _closestEnemy] call _base.CompleteMoveWhenEnemiesNearby;
+		};
+		
+		protected override method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
+		{
+			private ["_moveAction" as MoveAction];
+			
+			// If acting as a profession squad
+			
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then {
+				if (_distanceToTargetPos <= 150) then
+				{
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction) then {
+						if (_moveAction.Type != MoveActionType.ClosingIn) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
+						};
+					};
+				};
+				
+				return false;
+			};
+			
+			return [_mountedVehicle, _distanceToTargetPos] call _base.CompleteMoveWhenCloseToDestination;
+		};
+		
+		// Called when the squad is at a resource location and is performing a move action.
+		// _mountedVehicle (VehicleContainer): The squad's mounted vehicle. classNull if no vehicle is mounted.
+		// _locationMarkerName (String): The current location's marker name.
+		// Returns (Boolean): true if the move action should be completed/interrupted. Otherwise false.
+		protected override method Boolean CompleteMoveWhenAtResourceLocation("_mountedVehicle" as VehicleContainer, "_locationMarkerName" as String)
+		{
+			private ["_closestGroup" as Group];
+		
+			// If acting as a profession squad
+			
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			{
+				_closestGroup = [_locationMarkerName, side _self.Knowledge.Group] call _self.World.GetAlliedGroupClosestToLocation;
+				return _closestGroup == _self.Knowledge.Group;
+			};
+			
+			return [_mountedVehicle, _locationMarkerName] call _base.CompleteMoveWhenAtResourceLocation;
+		};
+	};
+};

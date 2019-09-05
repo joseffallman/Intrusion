@@ -1,0 +1,28 @@
+/*
+ * Name:	CaptureAction
+ * Date:	2019-05-21
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains information about capture actions.
+ */
+namespace Intrusion.Ai
+{
+	public class CaptureAction : Action
+	{
+		// Creates a CaptureAction object.
+		public constructor("_timeoutTime" as Scalar, "_position" as Array, "_locationMarkerName" as String)
+		{
+			[_timeoutTime] call _base.Constructor;
+			_self.Position = _position;
+			_self.LocationMarkerName = _locationMarkerName;
+		};
+		
+		// Gets the position that are about to be captured.
+		public property Array Position { get; private set; };
+		
+		// Gets the marker name of the resource location to be captured.
+		public property String LocationMarkerName { get; private set; };
+	};
+};

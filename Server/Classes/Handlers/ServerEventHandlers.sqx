@@ -83,6 +83,18 @@ namespace Intrusion.Server
 			}];
 		};
 		
+		// This is called when a new Ai unit is spawned.
+		// Adds a unit exiting vehicle event handler.
+		// _unit (Object): The unit to add eventhandler to.
+		public static method AddGetOutManEventHandler("_unit" as Object)
+		{
+			_unit addEventHandler ["GetOutMan", {
+				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
+				hint "unassigning " + name _unit;
+				unassignVehicle _unit;
+			}];
+		};
+			
 		// Adds a rating event handler to a player.
 		// _player (Object): The player to add the rating event handler to.
 		public static method AddRatingEventHandlerToPlayer("_player" as Object)

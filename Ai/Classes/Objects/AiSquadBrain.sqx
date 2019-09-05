@@ -1,0 +1,612 @@
+/*
+ * Name:	AiSquadBrain
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models the brain of the squad leader that takes all decisions of the team.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+using Sqx.Collections;
+
+namespace Intrusion.Ai
+{
+	public class AiSquadBrain
+	{
+		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
+						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
+						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
+						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor,
+						"_mResourceLocationConfig" as IResourceLocationConfig];
+		
+		#region Initialization
+
+		// Creates a AiSquadBrain object.
+		public constructor
+		(
+			"_group" as Group,
+			"_world" as IWorld, 
+			"_actionPerformer" as IActionPerformer, 
+			"_randomGenerator" as IRandomGenerator,
+			"_markerHandler" as IMarkerHandler,
+			"_actionTimeoutConfig" as IActionTimeoutConfig,
+			"_time" as IMissionTime,
+			"_baseMarkerInfo" as MapMarkerInfo,
+			"_aiWeaponsConfig" as IAiWeaponsConfig,
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_knowledge" as Knowledge,
+			"_decisionMaker" as DecisionMaker,
+			"_baseConfig" as BaseConfig,
+			"_professionConfig" as ProfessionConfig,
+			"_squadHandler" as ISquadHandler,
+			"_gameLengthMonitor" as IGameLengthMonitor,
+			"_resourceLocationConfig" as IResourceLocationConfig)
+		{
+			_self.Group = _group;
+			_mWorld = _world;
+			_mActionPerformer = _actionPerformer;
+			_mRandomGenerator = _randomGenerator;
+			_mMarkerHandler = _markerHandler;
+			_mActionTimeoutConfig = _actionTimeoutConfig;
+			_mTime = _time;
+			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mDecisionMaker = _decisionMaker;
+			_mKnowledge = _knowledge;
+			_mBaseConfig = _baseConfig;
+			_mProfessionConfig = _professionConfig;
+			_mSquadHandler = _squadHandler;
+			_mGameLengthMonitor = _gameLengthMonitor;
+			_mResourceLocationConfig = _resourceLocationConfig;
+			
+			_mKnowledge.Group = _group;
+			_mKnowledge.BaseMarkerInfo = _baseMarkerInfo;
+			_mSelectProfessionTime = (call _mTime.GetMissionTime) + ([120] call _mRandomGenerator.GetNumber);
+		};
+		
+		public method Scalar GetMemberCount()
+		{
+			count _mKnowledge.Members
+		};
+		
+		public property Group Group { get; private set; };
+		
+		#endregion
+		
+		#region Decision Making
+		
+		private method Boolean TimeToPushAtEndLocation()
+		{
+			return _mGameLengthMonitor.RemainingMinutes / _mGameLengthMonitor.MinutesFromStart < 0.2 || _mGameLengthMonitor.RemainingMinutes <= 15;
+		};
+		
+		// Creates a new order on own initiative.
+		private method CreateOrderOnOwnInitiative()
+		{
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
+			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType];
+			
+			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
+
+			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
+			_orderType = OrderType.Defend;
+			
+			if (!isNull _resourceLocationCollection) then
+			{
+				_locations = call _resourceLocationCollection.GetResourceLocations;
+				_count = 0;
+				_valuedLocations = [];
+				
+				_location = _mKnowledge.WinnersLocation;
+				
+				// If it's not yet time to push at end location
+				if (!(call _self.TimeToPushAtEndLocation)) then
+				{
+					// Value the locations after distance from home base
+					{
+						if (_x.Side != side _mKnowledge.Group) then {
+							_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+							_valuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
+							_count = _count + 1;
+						};
+					} foreach _locations as ResourceLocation;
+					
+					_valuedLocations = [_valuedLocations] call Sorter.QSort;
+					
+					if (_count > 3) then {
+						_count = 3;
+					};
+					
+					if (_count > 0) then {
+						_index = floor ([_count] call _mRandomGenerator.GetNumber);
+						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+						
+						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
+						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+						_orderType = OrderType.Attack;
+						
+			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
+					};
+				}
+				else {
+		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
+				};
+
+				if (!isNull _location) then {
+					// Create the order
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
+				};
+			};
+		};
+		
+		private method MakeDecision()
+		{
+			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
+			private ["_mountedVehicle" as VehicleContainer, "_leaderPos" as Array];
+			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
+			
+			scopeName "main";
+			
+			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
+			_squadInVehicle = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
+			_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
+			
+			
+			// If target resource location is already captured, and the order was on own initiative, request a new order!
+			// OnTargetResourceLocationCaptured
+
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
+			{
+				// If it is time for end game, create order for the winner's location
+				if (call _self.TimeToPushAtEndLocation) then {
+					if (_mKnowledge.Order.ResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+						call _self.CreateOrderOnOwnInitiative;
+					};
+				}
+				else {
+					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
+					{
+						call _mDecisionMaker.OnTargetResourceLocationCaptured;
+						call _self.CreateOrderOnOwnInitiative;
+						return;
+					};
+				};
+			};
+			
+			
+			// If squad is not mounted and enemies spotted near, engage
+			// OnNearEnemiesSpottedOnGround
+			
+			_enemyContainer = [_mKnowledge.Group] call _mWorld.GetClosestDetectedEnemy;
+			
+        	["_unitContainer: " + str _enemyContainer] call LogHandler.Debug;
+			
+			if (!_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
+			{
+				[_enemyContainer, classNull] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+			
+			// If at least one member is dead and at least one is alive, revive
+			//private _aliveCount = { _x = _x as UnitContainer; call _x.GetIsAlive } count _mKnowledge.Members as UnitContainer; // SQX FIX: as UnitContainer happens to be on private, and not on count.
+			private _aliveCount = { private _xx = _x as IUnitContainer; call _xx.GetIsAlive } count _mKnowledge.Members; // SQX FIX: And also... as on count does not seem to work.
+			private _deadCount = (count _mKnowledge.Members) - _aliveCount;
+			
+			if (_aliveCount >= 1 && _deadCount >= 1) then {
+				call _mDecisionMaker.OnReviveNeeded;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+
+			// If squad is mounted and enemies spotted near, disembark
+			// OnNearEnemiesSpottedOnGround
+			
+			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
+			{
+				[_enemyContainer, _mountedVehicle] call _mDecisionMaker.OnNearEnemiesOnGroundSpotted;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+
+
+			// If squad is on foot and standing right beside an empty vehicle, then mount.
+			// OnBoardCloseVehicle
+
+			if (!_squadInVehicle) then {
+				call _mDecisionMaker.OnBoardCloseVehicle;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+
+			
+			// Look for a suitable vehicle for the squad
+			
+			if (!_squadInVehicle) then {
+				call _mDecisionMaker.OnLookForVehicle;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+
+			// If inside the perimiters of a resource location that should be captured
+			// OnPresentAtLocation
+
+			_locationCollection = call _mWorld.GetResourceLocationCollection;
+			_locations = call _locationCollection.GetResourceLocations;
+
+			{
+				if ([_mKnowledge.Group, _x] call _mWorld.CheckSquadPresenceAtResourceLocation) then
+				{
+					[_mountedVehicle, _x] call _mDecisionMaker.OnPresentAtLocation;
+					if (!isNull _mKnowledge.CurrentAction) then { return; };
+				};
+			} foreach _locations as ResourceLocation;
+
+
+			// If squad is near a destination (<150m)
+			// OnClosingInOnDestination
+			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= 150) then
+			{
+				[_mountedVehicle] call _mDecisionMaker.OnClosingInOnDestination;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+/*
+			// If distance to ordered position is less than far, move to it (by foot since not in a vehicle).
+			// OnWithinWalkingDistanceFromTargetLocation
+			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition < 150) then
+			{
+				[_mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnWithinWalkingDistanceFromTargetLocation;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+*/			
+			
+			// If not already there, move towards order's target!
+			// OnAwayFromTargetPosition
+			
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition > 25) then
+			{
+				[_leaderPos, _mKnowledge.Order] call _mDecisionMaker.OnAwayFromTargetPosition;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+			
+			// OnIdle
+			call _mDecisionMaker.OnNothingToDo;
+		};
+		
+/*
+		private method SetState("_state" as AiSquadState, "_action" as IAction) 
+		{
+			_mKnowledge.State = _state;
+			
+			if (_state == AiSquadState.Idle) then {
+				_mKnowledge.CurrentAction = classNull;
+			}
+			else {
+				_mKnowledge.CurrentAction = _action;
+			};
+			
+			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
+		};
+*/
+		#endregion
+		
+		#region Completion and Timeout
+		
+		// Gets whether the group has completed a capture action, i.e. it is no longer present at a resource location with enemy side.
+		private method Boolean HasCompletedCapture()
+		{
+			private ["_captureAction" as CaptureAction, "_hasCompleted" as Boolean];
+			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
+			
+			_hasCompleted = false;
+			_currentAction = _mKnowledge.CurrentAction;
+			
+			if (_currentAction is CaptureAction) then
+			{
+				_captureAction = _currentAction as CaptureAction;
+				
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_location = [_captureAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_location.Side == side _mKnowledge.Group) then {
+					_hasCompleted = true;
+				};
+				
+				
+				if (!_hasCompleted) then {
+					if (!([_mKnowledge.Group, _location] call _mWorld.CheckSquadPresenceAtResourceLocation)) then {
+						_hasCompleted = true;
+					};
+				};
+			};
+			
+			_hasCompleted
+		};
+		
+		// Gets whether the group has completed a mount vehicle action, i.e. all members are in the same vehicle.
+		private method Boolean HasCompletedMount()
+		{
+			private ["_currentAction" as IAction];
+		
+			private _hasCompleted = false;
+			_currentAction = _mKnowledge.CurrentAction;
+		
+			if (_currentAction is MountAction) then
+			{
+				_hasCompleted = [_mKnowledge.Group] call _mWorld.CheckSquadMounted;
+			};
+			
+			_hasCompleted
+		};
+		
+		// Gets whether the last action has completed or not.
+		// Returns (Boolean): true if the last action has completed, otherwise false.
+		public method Boolean GetHasCompleted()
+		{
+			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
+
+			scopeName "main";
+			
+			_hasCompleted = false;
+			
+			// If the action has a service, check if that service has completed or not.
+			
+			if (!isNull _mKnowledge.CurrentAction) then {
+				_actionService = _mKnowledge.CurrentAction.Service;
+				
+				if (!isNull _actionService) then {
+					if (!_actionService.IsRunning && _actionService.Success) then {
+						true breakOut "main";
+					};
+				};
+			};
+			
+			_currentAction = _mKnowledge.CurrentAction;
+
+			if (_currentAction is MoveAction) then {
+				_hasCompleted = call _mDecisionMaker.HasCompletedMove;
+			};
+			
+			if (_currentAction is CaptureAction) then {
+				_hasCompleted = call _self.HasCompletedCapture;
+			};
+			
+			if (_currentAction is MountAction) then {
+				_hasCompleted = call _self.HasCompletedMount;
+			};
+			
+			_hasCompleted
+		};
+		
+		// Tracks the leader's movement, and stationary for so long time that squad status should be set to idle.
+		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
+		private method Boolean CheckActionTimeout()
+		{
+			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService];
+			
+			// If the action has a service, check if that service has timed out or not.
+			
+			if (!isNull _mKnowledge.CurrentAction) then {
+				_actionService = _mKnowledge.CurrentAction.Service;
+				
+				if (!isNull _actionService) then {
+					if (!_actionService.IsRunning) then {
+						if (!_actionService.Success) then {
+				        	["Timeout occurred #1"] call LogHandler.Debug;
+							return true;
+						};
+					};
+					
+					return false;
+				};
+			};
+			
+			// If leader has moved since last time, update position and time
+			
+			_leaderPos = [_mKnowledge.Group] call _mWorld.GetLeaderPos;
+			
+			if (!(_leaderPos isEqualTo _mKnowledge.LeaderPos)) then {
+				_mKnowledge.LeaderPos = _leaderPos;
+				_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
+			}
+			else
+			{
+				// If leader has not moved since last time, check if current action should time out
+				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
+		        	["Timeout occurred #2"] call LogHandler.Debug;
+					_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
+					return true;
+				};
+			};
+			
+			// Check if the current action has timed out
+			_action = _mKnowledge.CurrentAction;
+			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
+	        	["Timeout occurred #3"] call LogHandler.Debug;
+				return true;
+			};
+			
+			return false;
+		};
+		
+		#endregion
+		
+		// Gets a random an possible to implement profession type for the group.
+		// _side (Side): The side of the group.
+		// _unitCount (Scalar): The number of units in the group.
+		private method ProfessionType GetRandomProfessionType("_side" as Side, "_unitCount" as Scalar)
+		{
+			private ["_ok" as Boolean, "_professionType" as ProfessionType, "_profession" as Profession, "_squadCollection" as SquadCollection, "_tries" as Scalar];
+			
+			_ok = false;
+			_tries = 0;
+			
+			while { !_ok && _tries < 25 } do {
+				_professionType = selectRandom AiSquadHandler.AiWarriorTypes;
+				_profession = [_professionType] call _mProfessionConfig.GetProfession;
+				_ok = _unitCount >= _profession.MinGroupSize && (_unitCount <= _profession.MaxGroupSize || _profession.MaxGroupSize == 0);
+				
+				if (_ok) then {
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
+				};
+				
+				_tries = _tries + 1;
+			};
+			
+			if (_tries == 25) then {
+				_professionType == ProfessionType.Infantry;
+			};
+
+			_professionType
+		};
+		
+		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
+		{
+			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
+				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new MotorizedDecisionMaker;
+			};
+
+			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker; 
+		};
+		
+		// Tries to set the squad's profession if it is still Infantry.
+		private method SetSquadProfession()
+		{
+			private ["_rating" as Scalar, "_wannaBeType" as ProfessionType];
+			private ["_squadCollection" as SquadCollection];
+			private _time = call _mTime.GetMissionTime;
+		
+			if (_time > _mSelectProfessionTime) then {
+				if (_mKnowledge.ProfessionType == ProfessionType.Undefined) then
+				{
+					// Check that the squad has selected the profession type it wants to be.
+					if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
+						_wannaBeType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+						
+						// Make sure an attach chopper crew is always at least two members.
+						if (_wannaBeType != ProfessionType.AttackHelicopter || { count _mKnowledge.Members >= 2 }) then {
+							_mKnowledge.WannaBeProfessionType = _wannaBeType;
+						};
+					};
+					
+					// Try to select the wanted profession type
+					_squadCollection = call PublicVariableHandler.GetSquadCollection;
+					
+					if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable) then
+					{
+						_rating = _self.Group getVariable ["Rating", 0];
+						
+						if ([side _self.Group, _mKnowledge.WannaBeProfessionType, _rating, _mProfessionConfig] call _squadCollection.ProfessionTypeSelectable) then {
+							[_self.Group, _mKnowledge.WannaBeProfessionType] call _mSquadHandler.SetSquadProfession;
+							_mKnowledge.ProfessionType = _mKnowledge.WannaBeProfessionType;
+							_mDecisionMaker = [_mKnowledge.ProfessionType] call _self.NewDecisionMaker;
+			        		["AI Squad '" + str _self.Group + "' selected profession type '" + str _mKnowledge.ProfessionType + "'."] call LogHandler.Debug;
+						};
+					}
+					else {
+						// If profession type is not available, then select another profession type
+						_mKnowledge.WannaBeProfessionType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+					};
+				};
+			};
+		};
+		
+		private method Boolean GetAllMembersAreDead()
+		{
+			scopeName "main";
+			
+			{
+				if (call _x.GetIsAlive) then {
+					false breakOut "main";
+				};
+			} foreach _mKnowledge.Members as IUnitContainer;
+			
+			true
+		};
+		
+		private method RespawnToBase()
+		{
+			private ["_newMembers" as Array /* of IUnitContainer */, "_atLaunchersInvented" as Boolean, "_aaLaunchersInvented" as Boolean];
+			
+			_newMembers = [_mKnowledge.Group, _mKnowledge.Members, _mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mActionPerformer.RespawnAiSquad;
+			_mKnowledge.Members = _newMembers;
+			
+			_atLaunchersInvented = [side _mKnowledge.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+			_aaLaunchersInvented = [side _mKnowledge.Group, Technology.AntiAir] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+
+			{
+				if (_atLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
+					[_x, _mAiWeaponInfo.AtLauncherClassName, _mAiWeaponInfo.AtLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
+				}
+				else {
+					if (_aaLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
+						[_x, _mAiWeaponInfo.AaLauncherClassName, _mAiWeaponInfo.AaLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
+					};
+				};
+			} foreach _newMembers as IUnitContainer;
+		};
+		
+		#region Public Methods
+		
+		public method GiveOrder("_order" as Order)
+		{
+			_mKnowledge.Order = _order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+		};
+		
+		public method Group GetGroup()
+		{
+			return _mKnowledge.Group;
+		};
+		
+		// Gives the AI brain an opportunity to make a new decision.
+		public method Act()
+		{
+			private ["_squadVehicle" as VehicleContainer];
+			
+			call _self.SetSquadProfession;
+			[_mKnowledge.Members] call _mActionPerformer.MoveOutDeadUnitFromVehicle;
+			
+			// If all members are dead, or if group has got their squad vehicle, and vehicle is at base, then respawn.
+			_squadVehicle = [_mKnowledge.Group] call _mWorld.GetSquadVehicle;
+			
+			private _groupFarAway = ([_mKnowledge.Group] call _mWorld.GetLeaderPos) distance getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName > 200;
+			private _vehicleInBase = !isNull _squadVehicle && { _squadVehicle.Position distance (getMarkerPos _mKnowledge.BaseMarkerInfo.BaseMarkerName) < _mBaseConfig.BaseRadius };
+			
+			if (call _self.GetAllMembersAreDead || { !isNull _squadVehicle && _groupFarAway && _vehicleInBase }) then {
+				call _self.RespawnToBase;
+				[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
+				return;
+			};
+			
+			// If there is no order, create one on own initiative so the squad always has an order.
+			if (isNull _mKnowledge.Order) then {
+				call _self.CreateOrderOnOwnInitiative;
+			};
+			
+			// If the squad is not doing anything, make a new decision.
+
+			if (_mKnowledge.State == AiSquadState.Idle) then
+			{
+				call _self.MakeDecision;
+			}
+			else
+			{
+				// If there has been a timeout or if the squad is complete doing something, set to idle.
+				
+				if (call _self.CheckActionTimeout || { call _self.GetHasCompleted }) then {
+					[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
+				};
+			};
+		};
+		
+		#endregion
+	};
+};

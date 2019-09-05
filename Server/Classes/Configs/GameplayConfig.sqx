@@ -12,7 +12,7 @@ using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public class GameplayProdConfig : IGameplayConfig
+	public class GameplayConfig : IGameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
 		public constructor()
@@ -24,15 +24,15 @@ namespace Intrusion.Server
 		};
 		
 		// Gets the competing sides in the mission.
-		public property Array CompetingSides { get; private set; };
+		public property Array CompetingSides { get; protected set; };
 		
 		// Gets the total production that will be shared by both sides during a game (if there are 60 players and the game is one hour long).
-		public property Scalar TotalProduction { get; private set; };
+		public property Scalar TotalProduction { get; protected set; };
 		
 		// Gets the total technology that will be shared by both sides during a game.
-		public property Scalar TotalResearch { get; private set; };
+		public property Scalar TotalResearch { get; protected set; };
 		
 		// Get the maximun number of free vehicles at base.
-		public property Scalar MaxFreeVehiclesAtBase { get; private set; };
+		public property Scalar MaxFreeVehiclesAtBase { get; protected set; };
 	};
 };

@@ -9,14 +9,12 @@
  */
 namespace Intrusion.Common
 {
-	public class TechnologyDevConfig : ITechnologyConfig
+	public class TechnologyDevConfig : TechnologyConfig
 	{
-		private fields ["_mTechnologies" as Array /* of TechnologyInfo */];
-		
 		// Creates a TechnologyConfig object.
 		public constructor {
 			// Must match the order in TechnologyEnum.
-			_mTechnologies = [
+			_self.Technologies = [
 				[Technology.Transport, "Transport", 2] new TechnologyInfo,
 				[Technology.Services, "Services", 4] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 6] new TechnologyInfo,
@@ -29,41 +27,6 @@ namespace Intrusion.Common
 				[Technology.HeavyArmor, "Heavy Armor", 20] new TechnologyInfo,
 				[Technology.AirArmed, "Armed Air Units", 22] new TechnologyInfo,
 			];
-			
-			_self.Technologies = +_mTechnologies;
-		};
-		
-		// Gets a copy of all technologies.
-		public property Array Technologies { get; private set; };
-		
-		// Gets a profession vehicle from the list.
-		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
-		public method TechnologyInfo GetTechnology("_technology" as Technology) {
-			scopeName "main";
-			
-			{
-				if (_technology == _x.Technology) then {
-					_x breakOut "main";
-				};
-			} foreach _mTechnologies as TechnologyInfo;
-			
-			classNull
-		};
-		
-		// Gets the next technology to investigate.
-		// _research (Scalar): The current research points.
-		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been invented.
-		public method TechnologyInfo GetNextTechnology("_research" as Scalar)
-		{
-			scopeName "main";
-			
-			{
-				if (_x.RequiredResearch > _research) then {
-					_x breakOut "main";
-				};
-			} foreach _mTechnologies as TechnologyInfo;
-			
-			classNull
 		};
 	};
 };

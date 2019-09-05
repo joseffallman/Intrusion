@@ -1,0 +1,72 @@
+/*
+ * Name:	Knowledge
+ * Date:	2019-05-17
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Models an AI:s knowledge/memory.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class Knowledge
+	{
+		// Creates a Knowledge object.
+		public constructor("_group" as Group, "_members" as Array /* of IUnitContainer */, ["_winnersLocation" as ResourceLocation, classNull])
+		{
+			_self.Group = _group;
+			_self.Members = _members;
+			_self.WinnersLocation = _winnersLocation;
+			_self.State = AiSquadState.Idle;
+			_self.Order = classNull;
+			_self.CurrentAction = classNull;
+			_self.OrderIsGivenByBrigadeLeader = false;
+			_self.LeaderPos = [0, 0, 0];
+			_self.LeaderPosTime = 0;
+			_self.BaseMarkerInfo = classNull;
+			_self.WannaBeProfessionType = ProfessionType.Undefined;
+			_self.ProfessionType = ProfessionType.Undefined;
+		};
+		
+		// gets or sets the group associated with this AI knowledge.
+		public property Group Group { get; set; };
+		
+		// Gets how the original members of the group (might be excluded from the group because they are dead).
+		public property Array Members { get; set; };
+		
+		// Gets or sets the state of the AI team.
+		public property AiSquadState State { get; set; };
+		
+		// Gets or sets an order.
+		public property Order Order { get; set; };
+		
+		// Gets or sets the squad's current action
+		public property IAction CurrentAction { get; set; };
+		
+		// Gets whether the order is given by the brigade leader or if it is on own initiative.
+		public property Boolean OrderIsGivenByBrigadeLeader { get; set; };
+		
+		// Gets or sets the leader's position.
+		public property Array LeaderPos { get; set; };
+		
+		// Gets the time when the leader got its new pos.
+		public property Scalar LeaderPosTime { get; set; };
+		
+		// Gets the base marker information associated with the brigade.
+		public property MapMarkerInfo BaseMarkerInfo { get; set; };
+		
+		// Gets whether the squad has reached their profession yet or not.
+		public property Boolean HasReachedProfession { get; set; };
+		
+		// Gets or sets the squad's wanna be profession type.
+		public property ProfessionType WannaBeProfessionType { get; set; };
+		
+		// Gets or sets the squad's profession type.
+		public property ProfessionType ProfessionType { get; set; };
+		
+		public property ResourceLocation WinnersLocation { get; set; };
+	};
+};

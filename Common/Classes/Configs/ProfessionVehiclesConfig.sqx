@@ -1,5 +1,5 @@
 /*
- * Name:	ProVehiclesConfig
+ * Name:	ProfessionVehiclesConfig
  * Date:	2017-11-24
  * Version: 1.0
  * Author:  Engima
@@ -9,13 +9,11 @@
  */
 namespace Intrusion.Common
 {
-	public class ProfessionVehiclesProdConfig : IProfessionVehiclesConfig
+	public class ProfessionVehiclesConfig : IProfessionVehiclesConfig
 	{
-		private fields ["_mProVehicles"];
-	
-		// Creates a ProVehiclesConfig object.
+		// Creates a ProfessionVehiclesConfig object.
 		public constructor {
-			_mProVehicles = [
+			_self.Vehicles = [
 				[ProfessionType.Transport, 150] new ProfessionVehicleInfo,
 				[ProfessionType.Fuel, 150] new ProfessionVehicleInfo,
 				[ProfessionType.Ammo, 150] new ProfessionVehicleInfo,
@@ -32,9 +30,10 @@ namespace Intrusion.Common
 			];
 		};
 		
+		protected property Vehicles { get; protected set; };
+		
 		// Gets a profession vehicle from the list.
 		// Returns (ProfessionVehicle): A profession vehicle. classNull if the vehicle type does not exist.
-		//public static method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType) // TODO SQX (TEST ADDED): If method is static it should not count as interface implemented
 		public method ProfessionVehicleInfo GetVehicle("_professionType" as ProfessionType)
 		{
 			scopeName "main";
@@ -43,7 +42,7 @@ namespace Intrusion.Common
 				if (_professionType == _x.ProfessionType) then {
 					_x breakOut "main";
 				};
-			} foreach _mProVehicles as ProfessionVehicleInfo;
+			} foreach _self.Vehicles as ProfessionVehicleInfo;
 			
 			classNull
 		};

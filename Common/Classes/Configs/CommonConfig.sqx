@@ -15,11 +15,11 @@ namespace Intrusion.Common
 		// Creates a CommonConfig object.
 		public constructor(
 			"_mapMarkersConfig" as IMapMarkersConfig, 
-			"_professionConfig" as IProfessionConfig, 
+			"_professionConfig" as ProfessionConfig, 
 			"_technologyConfig" as ITechnologyConfig, 
 			"_vehiclesClassNamesConfig" as IVehicleClassNamesConfig, 
 			"_professionVehiclesConfig" as IProfessionVehiclesConfig,
-			"_baseConfig" as IBaseConfig)
+			"_baseConfig" as BaseConfig)
 		{
 			_self.MapMarkers = _mapMarkersConfig;
 			_self.Professions = _professionConfig;
@@ -32,7 +32,7 @@ namespace Intrusion.Common
 		public property IMapMarkersConfig MapMarkers { get; private set; };
 		
 		// Gets the profession configs.
-		public property IProfessionConfig Professions { get; private set; };
+		public property ProfessionConfig Professions { get; private set; };
 		
 		// Gets the technology configs.
 		public property ITechnologyConfig Technology { get; private set; };
@@ -44,6 +44,6 @@ namespace Intrusion.Common
 		public property IProfessionVehiclesConfig ProfessionVehicles { get; private set; };
 		
 		// Gets the base config.
-		public property IBaseConfig BaseConfig { get; private set; };
+		public property BaseConfig BaseConfig { get; private set; };
 	};
 };

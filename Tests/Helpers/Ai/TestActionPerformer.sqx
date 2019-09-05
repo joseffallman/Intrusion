@@ -1,0 +1,161 @@
+/*
+ * Name:	TestActionPerformer
+ * Date:	2019-05-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Used to fake an action performer in testing.
+ */
+
+using Intrusion.Ai;
+using Intrusion.Common;
+
+namespace Intrusion.Tests.Helpers
+{
+	//private fields ["_mWorld" as TestWorld]; // TODO SQX: Declaring variables outside class MUST generate an error!
+
+	public class TestActionPerformer : IActionPerformer
+	{
+		private fields ["_mWorld" as TestWorld];
+
+		// Creates a TestActionPerformer object.
+		public constructor("_world" as TestWorld)
+		{
+			_mWorld = _world;
+			_self.MoveActions = [];
+			_self.CaptureActions = [];
+			_self.MountActions = [];
+			//_self.DisembarkActions = [];
+			//_self.ReviveActions = [];
+			_self.EquipMemberWithLauncherCalled = false;
+			_self.EquippedLauncherClassName = "";
+			_self.EquippedLauncherMagazineClassName = "";
+		};
+		
+		public property Array MoveActions { get; private set; };
+		
+		// Performs a move action for an AI group.
+		// _group (Group): The group to move.
+		// _moveAction (MoveAction): Information about the movement.
+		public method DoMove("_moveAction" as MoveAction)
+		{
+			_self.MoveActions pushBack _moveAction;
+		};
+		
+		public property Array CaptureActions { get; private set; };
+		
+		// Performs a capture action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _moveAction (MoveAction): Information about the capture.
+		public method DoCapture("_captureAction" as CaptureAction)
+		{
+			_self.CaptureActions pushBack _captureAction;
+		};
+		
+		public property Array MountActions { get; private set; };
+		
+		// Performs a mount action for an AI group.
+		// _group (Group): The group to capture a location.
+		// _mountAction (MountAction): Information about the mounting.
+		public method DoMount("_mountAction" as MountAction)
+		{
+			_self.MountActions pushBack _mountAction;
+		};
+
+/*
+		public property Array DisembarkActions { get; private set; };
+		
+		// Performs a disembark action for an AI group.
+		// _group (Group): The group to disembark from its vehicle.
+		// _action (DisembarkAction): Information about the disembarkment.
+		public method DoDisembark("_action" as DisembarkAction)
+		{
+			_self.DisembarkActions pushBack _action;
+		};
+		
+		public property Array ReviveActions { get; private set; };
+		
+		// Performs a revive action for an AI group.
+		// _action (ReviveAction): Information about the revive.
+		public method DoRevive("_action" as ReviveAction)
+		{
+			_self.ReviveActions pushBack _action;
+		};
+*/
+		
+		// Limits the speed of a vehicle.
+		// _vehicle (Vehicle): The vehicle to have a limited speed.
+		// _speed (Scalar): The speed to set.
+		public method ForceSpeed("_vehicle" as Object, "_speed" as Scalar)
+		{
+		};
+		
+		// Moves the members of a group out of its vehicles immediately.
+		// _group (Group): The group to move out.
+		public method MoveOutFromVehicle("_group" as Group)
+		{
+		};
+		
+		// Kills the AI units and creates new units at base.
+		// _group (Group): The group to respawn.
+		// _members (Array of IUnitContainer): The squad's members.
+		// _baseMarkerName (String): The marker name of the group's base.
+		// Returns (Array of IUnitContainer): All new units.
+		public method Array RespawnAiSquad("_group" as Group, "_members" as Array, "_baseMarkerName" as String)
+		{
+			private ["_newMembers" as Array];
+			
+	        ["_mWorld: " + str _mWorld] call LogHandler.Debug;
+	        
+			_mWorld.LeaderPos = [0, 0, 0];
+			
+			_newMembers = [];
+			
+			{
+				_newMembers pushBack [[0, 0, 0], true] new TestUnitContainer;
+			} foreach _members as IUnitContainer;
+			
+			_newMembers
+		};
+		
+		public property Boolean EquipMemberWithLauncherCalled { get; private set; };
+		
+		public property String EquippedLauncherClassName { get; private set; };
+		
+		public property String EquippedLauncherMagazineClassName { get; private set; };
+		
+		// Equips an AI squad member with a backpack and a launcher.
+		// _member (IUnitContainer): The member to equip.
+		// _launcherClassName (String): The class name of the launcher.
+		// _ammoClassName (String): The class name of the launcher's ammo.
+		public method EquipMemberWithLauncher("_member" as IUnitContainer, "_launcherClassName" as String, "_ammoClassName" as String)
+		{
+			_self.EquippedLauncherClassName = _launcherClassName;
+			_self.EquippedLauncherMagazineClassName = _ammoClassName;
+			_self.EquipMemberWithLauncherCalled = true;
+		};
+		
+		// Moves a single unit in a group to a position.
+		// _unitContainer (UnitContainer): The unit to move.
+		// _position (Array): The position to move to.
+		public method MoveSingleUnit("_unitContainer" as UnitContainer, "_position" as Array)
+		{
+			
+		};
+		
+		// Makes a dead AI unit alive again and puts it in a group.
+		// _unitContainer (UnitContainer): The unit to make alive.
+		// _group (Group): The group to insert the unit into after being made alive.
+		public method MakeAliveAiUnit("_unit" as UnitContainer, "_group" as Group)
+		{
+			
+		};
+		
+		// Moves out a dead unit from a vehicle.
+		// _members (Array of UnitContainer): The members to check.
+		public method MoveOutDeadUnitFromVehicle("_members" as Array)
+		{
+		};
+	};
+};

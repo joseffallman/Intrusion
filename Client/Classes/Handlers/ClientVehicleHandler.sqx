@@ -15,7 +15,7 @@ namespace Intrusion.Client
 	{
 		private fields ["_mGroupMarkers" as Array /* of Object */];
 		
-		public constructor("_professionConfig" as IProfessionConfig)
+		public constructor("_professionConfig" as ProfessionConfig)
 		{
 			_mGroupMarkers = [];
 		};

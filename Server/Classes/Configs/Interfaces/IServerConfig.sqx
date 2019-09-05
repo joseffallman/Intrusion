@@ -15,5 +15,6 @@ namespace Intrusion.Server
 	{
 		// Gets the gameplay configs.
 		property IGameplayConfig Gameplay { get; };
+		property IResourceLocationConfig ResourceLocation { get; };
 	};
 };

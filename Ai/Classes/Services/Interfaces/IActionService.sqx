@@ -1,0 +1,23 @@
+/*
+ * Name:	IActionService
+ * Date:	2019-02-01
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Interface for AI's action services, used when their actions is of a more scripted format.
+ */
+namespace Intrusion.Ai
+{
+	public interface IActionService
+	{
+		// Gets whether the service reached its goals or not (if it timed out).
+		property Boolean Success { get; };
+		
+		// Gets whether the service is still running nor not.
+		property Boolean IsRunning { get; };
+		
+		// Starts the service asynchronously.
+		method RunAsync();
+	};
+};

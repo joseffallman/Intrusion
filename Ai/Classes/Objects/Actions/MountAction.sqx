@@ -1,0 +1,24 @@
+/*
+ * Name:	MountAction
+ * Date:	2019-05-26
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contans all necessary information about Ai mount actions.
+ */
+namespace Intrusion.Ai
+{
+	public class MountAction : Action
+	{
+		// Creates a MountAction object.
+		public constructor("_timeoutTime" as Scalar, "_vehicle" as VehicleContainer)
+		{
+			[_timeoutTime] call _base.Constructor;
+			_self.Vehicle = _vehicle;
+		};
+		
+		// Gets the AI squad's vehicle. classNull if the AI squad does not have a vehicle.
+		public property VehicleContainer Vehicle { get; private set; };
+	};
+};

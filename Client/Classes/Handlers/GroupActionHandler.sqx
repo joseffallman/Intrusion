@@ -14,9 +14,9 @@ namespace Intrusion.Client
 {
 	public class GroupActionHandler
 	{
-		private static fields ["_mProfessionConfig" as IProfessionConfig];
+		private static fields ["_mProfessionConfig" as ProfessionConfig];
 		
-		public static method Init("_professionConfig" as IProfessionConfig)
+		public static method Init("_professionConfig" as ProfessionConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 		};
@@ -33,19 +33,6 @@ namespace Intrusion.Client
 			};
 		};
 
-/*
-		public static method AddActionEject()
-		{
-			_mEjectId = player addAction ["Eject", { call _self.EjectFromVehicle; }];
-		};
-		
-		private static method EjectFromVehicle()
-		{
-			moveOut player;
-			player removeAction _mEjectId;
-			_mEjectId = -1;
-		};
-*/	
         // Adds 'Invite player to group' actions to every single member group leader.
         public static method UpdateAllInvitePlayerActions()
         {

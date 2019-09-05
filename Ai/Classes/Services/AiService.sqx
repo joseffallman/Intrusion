@@ -15,85 +15,105 @@ namespace Intrusion.Ai
 {
 	public class AiService : IService
 	{
-		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mUnitsConfig" as IAiUnitsConfig, "_mMapMarkersConfig" as IMapMarkersConfig, "_mSquadHandler" as ISquadHandler, "_mSkillLevel" as SkillLevel];
-		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mProfessionConfig" as IProfessionConfig, "_mAiWeaponsConfig" as IAiWeaponsConfig];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mUnitSpawner" as IUnitSpawner];
+		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */];
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadHandler" as ISquadHandler];
+		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
+		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
 		
 		// Creates a AiService object.
 		public constructor(
 			"_aiSquadHandler" as IAiSquadHandler, 
 			"_unitBalancer" as IAiUnitBalancer, 
 			"_gameplayConfig" as IGameplayConfig, 
-			"_unitsConfig" as IAiUnitsConfig, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
-			"_vehicleSpawner" as IVehicleSpawner, 
-			"_professinConfig" as IProfessionConfig, 
+			"_professionConfig" as ProfessionConfig, 
 			"_squadHandler" as ISquadHandler, 
-			"_skillLevel" as SkillLevel, 
 			"_resourceLocationHandler" as IResourceLocationHandler, 
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
 			"_unitSpawner" as IUnitSpawner,
-			"_professionConfig" as IProfessionConfig,
-			"_aiWeaponsConfig" as IAiWeaponsConfig)
+			"_resourceLocationConfig" as IResourceLocationConfig,
+			"_unitsConfig" as IAiUnitsConfig,
+			"_vehicleSpawner" as IVehicleSpawner,
+			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_gameLengthMonitor" as IGameLengthMonitor)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
-			_mUnitsConfig = _unitsConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
-			_mVehicleSpawner = _vehicleSpawner;
+			_mProfessionConfig = _professionConfig;
 			_mSquadHandler = _squadHandler;
-			_mSkillLevel = _skillLevel;
 			_mResourceLocationHandler = _resourceLocationHandler;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mUnitSpawner = _unitSpawner;
-			_mProfessionConfig = _professinConfig;
-			_mAiWeaponsConfig = _aiWeaponsConfig;
+			_mResourceLocationConfig = _resourceLocationConfig;
+			_mUnitsConfig = _unitsConfig;
+			_mVehicleSpawner = _vehicleSpawner;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mGameLengthMonitor = _gameLengthMonitor;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
 		
-//		private method SetProfessionTypeDelayed("_side" as Side, "_unitCount" as Scalar, "_aiSquad" as AiSquad)
-//		{
-//			private ["_professionType" as ProfessionType];
-//			
-//			sleep random 120;
-//			
-//			_professionType = [_side, _unitCount] call _self.GetRandomProfessionType;
-//			[_aiSquad.Group, _professionType] call _mSquadHandler.SetSquadProfession;
-//		};
-		
 		// Creates a new squad if more squads are alive.
 		private method CreateNewSquads()
 		{
-			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquad];
+			private ["_group" as Group, "_mapMarkerInfo" as MapMarkerInfo, "_unitInfo" as AiUnitInfo, "_time" as MissionTime];
+			private ["_existingUnitsCount" as Scalar, "_maxUnitsCount" as Scalar, "_unitCount" as Scalar, "_aiSquad" as AiSquadBrain, "_decisionMaker" as DecisionMaker];
 
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
-				_unitCount = selectRandom [1, 2, 2, 2, 3];
+				_unitCount = selectRandom [1, 1, 2, 2, 2, 2, 2, 3, 3, 4];
+				_time = new MissionTime;
+				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
+				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
 
-        		["Create new squads variables:"] call LogHandler.Debug;
-        		["_existingUnitsCount: " + str _existingUnitsCount] call LogHandler.Debug;
-        		["_maxUnitsCount: " + str _maxUnitsCount] call LogHandler.Debug;
-        		["_unitCount: " + str _unitCount] call LogHandler.Debug;
-        	
-				if (_existingUnitsCount < _maxUnitsCount) then {
-				
+				if (_existingUnitsCount < _maxUnitsCount) then
+				{
+					_group = createGroup _x;
+					
+					if (_existingUnitsCount + _unitCount > _maxUnitsCount) then {
+						_unitCount = _maxUnitsCount - _existingUnitsCount;
+					};
+					
+					for "_i" from 1 to _unitCount do {
+						[_unitInfo.UnitClassName, getMarkerPos _mapMarkerInfo.BaseMarkerName, _group] call _mUnitSpawner.CreateUnit;
+					};
+
+					private _members = [];
+					
+					{
+						_members pushBack [_x] new UnitContainer;
+					} foreach units _group;
+					
+					private _knowledge = [_group, _members, _mResourceLocationHandler.WinnersLocation] new Knowledge;
+					private _actionServiceFactory = new ActionServiceFactory;
+					private _world = [_mResourceLocationConfig, _mVehicleSpawner, _mResourceLocationHandler] new World;
+					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
+					private _markerHandler = new MarkerHandler;
+					private _actionTimeoutConfig = new ActionTimeoutConfig;
+
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker;
+					
 					_aiSquad = [
-						_mUnitsConfig,
+						_group,
+						_world,
+						_actionPerformer,
+						new RandomGenerator, 
+						_markerHandler, 
+						_actionTimeoutConfig,
+						_time,
+						_mapMarkerInfo,
+						new AiWeaponsConfig,
+						_mInventedTechnologiesCollection,
+						_knowledge,
+						_decisionMaker,
+						new BaseConfig,
 						_mProfessionConfig,
-						_mResourceLocationHandler, 
-						_mMapMarkersConfig, 
-						_mVehicleSpawner, 
-						_x, 
-						_unitCount, 
-						_mSkillLevel, 
-						_mInventedTechnologiesCollection, 
 						_mSquadHandler,
-						_mUnitSpawner,
-						_mAiWeaponsConfig] new AiSquad;
+						_mGameLengthMonitor,
+						_mResourceLocationConfig
+					] new AiSquadBrain;
 					
 					[_aiSquad] call _mAiSquadHandler.AddSquad;
 					[_aiSquad.Group, ProfessionType.Infantry] call _mSquadHandler.SetSquadProfession;
@@ -112,9 +132,21 @@ namespace Intrusion.Ai
 				call _self.CreateNewSquads;
 				
 				{
-					call _x.Act;
+					private _squad = _x as AiSquadBrain;
+					
+					/* // Seems to mess up AI unit's behaviour.
+					private _group = call _squad.GetGroup;
+					
+					{
+						if (leader _group distance _x <= 100) then {
+							_group reveal _x;
+						};
+					} foreach allUnits;
+					*/
+					
+					call _squad.Act;
 					sleep 0.1;
-				} foreach _allSquads as AiSquad;
+				} foreach _allSquads as AiSquadBrain;
 				
 				sleep 1;
 			};
@@ -126,6 +158,42 @@ namespace Intrusion.Ai
 		{
 			_self.IsRunning = true;
 			[] spawn _self.Run;
+		};
+		
+		private static method Start()
+		{
+			private ["_aiService" as IService, "_aiUnitBalancer" as IAiUnitBalancer];
+			
+			sleep 5;
+		
+			_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+			
+			_aiService = [
+				gServer.AiSquadHandler,
+				_aiUnitBalancer, 
+				//new Intrusion.Tests.Helpers.TestAiUnitBalancer,
+				gServerConfig.Gameplay,
+				gCommonConfig.MapMarkers,
+				gCommonConfig.Professions,
+				gServer.SquadHandler, 
+				//gCommon.MissionParametersHandler.AiSkillLevel, 
+				gServer.ResourceLocationHandler,
+				gServer.UnitSpawner,
+				gServerConfig.ResourceLocation,
+				//gCommonConfig.Professions,
+				new AiUnitsConfig, 
+				//new AiWeaponsConfig
+				gServer.VehicleSpawner,
+				gServer.InventedTechnologiesCollection,
+				gServer.MissionCounterService
+			] new AiService;
+			
+			call _aiService.RunAsync;
+		};
+		
+		public static method StartAsync()
+		{
+			[] spawn _self.Start;
 		};
 	};
 };

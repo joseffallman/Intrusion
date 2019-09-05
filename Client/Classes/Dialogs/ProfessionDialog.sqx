@@ -17,7 +17,7 @@ namespace Intrusion.Client
 	{
 		private static fields [
 			"_mOptions" as Array /* of ProfessionType */,
-			"_mProfessionConfig" as IProfessionConfig,
+			"_mProfessionConfig" as ProfessionConfig,
 			"_mVehiclesConfig" as IProfessionVehiclesConfig,
 			"_mTechnologyConfig" as ITechnologyConfig,
 			"_mVehicleClassNamesConfig" as IVehicleClassNamesConfig,
@@ -29,11 +29,10 @@ namespace Intrusion.Client
 	
 		// Initializes the profession dialog.
 		public static method Init(
-			"_professionConfig" as IProfessionConfig,
+			"_professionConfig" as ProfessionConfig,
 			"_technologyConfig" as ITechnologyConfig,
 			"_vehicleClassNamesConfig" as IVehicleClassNamesConfig,
-			"_vehiclesConfig" as IProfessionVehiclesConfig
-		)
+			"_vehiclesConfig" as IProfessionVehiclesConfig)
 		{
 			_mProfessionConfig = _professionConfig;
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
@@ -104,7 +103,7 @@ namespace Intrusion.Client
 					_profession = [_x] call _mProfessionConfig.GetProfession;
 					// If profession is available, and if the group has a good size
 					if (
-						[playerSide, _profession.Type] call _squadCollection.ProfessionTypeAvailable &&
+						[playerSide, _profession.Type, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable &&
 						_unitsInPlayerGroup >= _profession.MinGroupSize &&
 						_unitsInPlayerGroup <= _profession.MaxGroupSize &&
 						rating leader group player >= (_profession.RequiredRank as Scalar)

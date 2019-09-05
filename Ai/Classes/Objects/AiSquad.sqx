@@ -13,21 +13,22 @@ using Intrusion.Server;
 using Sqx.Collections;
 using Sqx.Waypoints;
 
-namespace Intrusion.Ai {
-	public class AiSquad
+namespace Intrusion.Ai
+{
+	public class AiSquadOld
 	{
 		private fields ["_mMapMarkerInfo" as MapMarkerInfo, "_mVehicle" as Object, "_mCurrentOrder" as Order, "_mVehicleSpawner" as IVehicleSpawner, "_mUnitSpawner" as IUnitSpawner];
 		private fields ["_mState" as AiSquadState, "_mCurrentActionTimeoutTime" as Scalar, "_mUnit" as Object, "_mResourceLocation" as ResourceLocation, "_mUnitInfo" as AiUnitInfo];
 		private fields ["_mVehicleIsSquadVehicle" as Boolean, "_mMovingToPos" as Array, "_mLastPos" as Array, "_mLastPosTime" as Scalar, "_mResourceLocationHandler" as IResourceLocationHandler];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as IProfessionConfig];
+		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mProfessionConfig" as ProfessionConfig];
 		private fields ["_mWannaBeProfessionType" as ProfessionType, "_mProfessionType" as ProfessionType, "_mSquadHandler" as ISquadHandler, "_mAiWeaponsConfig" as IAiWeaponsConfig];
 		private fields ["_mOrderSetByLeader" as Boolean];
-		
+
 		// Creates an AiSquad object.
 		// _noOfUnits (Scalar): Number of units to spawn.
 		public constructor(
 			"_unitsConfig" as IAiUnitsConfig,
-			"_professionConfig" as IProfessionConfig,			
+			"_professionConfig" as ProfessionConfig,
 			"_resourceLocationHandler" as IResourceLocationHandler, 
 			"_mapMarkersConfig" as IMapMarkersConfig, 
 			"_vehicleSpawner" as IVehicleSpawner, 
@@ -126,21 +127,21 @@ namespace Intrusion.Ai {
 				
 				_resourceLocationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 	
-				if (MissionCounterService.RemainingMinutes <= 12) then {
+				if (12 <= 12) then {
 	//				player sideChat "less than 12!";
 					
 					_location = _mResourceLocationHandler.WinnersLocation;
 					
 					if (isNull _mResourceLocation || {_location.MarkerName != _mResourceLocation.MarkerName}) then {
 						_mResourceLocation = _location;
-						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName, _location] new Order;
 						//_mOrderTime = time;
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 	//					player sideChat "End location order!";
 					};
 				}
 				else {
-					// Find the three enemny (or neutral) resource locations closest to the base and select a random one of them.
+					// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 					
 					_locations = call _resourceLocationCollection.GetResourceLocations;
 					_count = 0;
@@ -166,7 +167,7 @@ namespace Intrusion.Ai {
 						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
 						
 						_mResourceLocation = _location;
-						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName] new Order;
+						_mCurrentOrder = [_self.Group, OrderType.Attack, getMarkerPos _location.MarkerName, _location] new Order;
 						//_mOrderTime = time;
 						[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
 					};
@@ -268,7 +269,7 @@ namespace Intrusion.Ai {
 				private ["_targets" as Array, "_seeEnemies" as Boolean, "_targetSide" as Side];
 				_seeEnemies = false;
 				
-				// If infantry have see enemy targets, get out of vehicle
+				// If infantry have seen enemy targets, get out of vehicle
 				
 				if (call _self.WholeGroupInVehicle && !_mVehicleIsSquadVehicle) then {
 					_targets = (leader _self.Group) nearTargets 250;
@@ -308,7 +309,7 @@ namespace Intrusion.Ai {
 					
 					_mUnit doMove getPos _mResourceLocation.Flag;
 					_mUnit setBehaviour "AWARE";
-					[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
+					//[AiSquadState.SingleUnitGettingFlag, 30] call _self.SetState;
 //					player sideChat "SingleUnitGettingFlag";
 					
 					[_mUnit, getMarkerPos _mResourceLocation.MarkerName] spawn {
@@ -326,12 +327,12 @@ namespace Intrusion.Ai {
 					breakOut "main";
 				};
 				
-				// If squad is unmounted and have their intrusion vehicle, board it
+				// If squad is unmounted and have their intrusion vehicle, then mount
 				
 				if (!(call _self.WholeGroupInVehicle) && _mVehicleIsSquadVehicle && alive _mVehicle) then {
 					if ([_mVehicle] call _self.GroupFitInVehicle) then {
 						[_mVehicle] call _self.EnterVehicle;
-						[AiSquadState.BoardingVehicle, 30] call _self.SetState;
+						[AiSquadState.MountingVehicle, 30] call _self.SetState;
 //						player sideChat "Entering vehicle";
 						breakOut "main";
 					};
@@ -363,16 +364,15 @@ namespace Intrusion.Ai {
 					breakOut "main";
 				};
 				
-				// If there is a vehicle nearby and no enemies, and group fit, then board it.
+				// If there is a vehicle nearby and no enemies, and group fit, then mount.
 				
 				if (!_seeEnemies) then {
-					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
+					_nearestIntrusionVehicle = [side _self.Group, getPos vehicle leader _self.Group, count _self.Members] call _mVehicleSpawner.GetNearestEmptyFreeVehicle;
 					
 					if (!isNull _nearestIntrusionVehicle && { (leader _self.Group) distance _nearestIntrusionVehicle.Vehicle < 500 }) then {
 						if ([_nearestIntrusionVehicle.Vehicle] call _self.GroupFitInVehicle) then {
 							[_nearestIntrusionVehicle.Vehicle] call _self.EnterVehicle;
-							[AiSquadState.BoardingVehicle, 60] call _self.SetState;
-//							player sideChat "BoardingVehicle";
+							[AiSquadState.MountingVehicle, 60] call _self.SetState;
 							breakOut "main";
 						};
 					};
@@ -452,7 +452,7 @@ namespace Intrusion.Ai {
 			};
 		};
 		
-		private method CheckIfFinishedBoardingVehicle()
+		private method CheckIfFinishedMountingVehicle()
 		{
 			if ({ vehicle _x == _mVehicle } count units _self.Group == count units _self.Group) then {
 				[AiSquadState.Idle, 0] call _self.SetState;
@@ -597,7 +597,7 @@ namespace Intrusion.Ai {
 					_mVehicle = _vehicle.Vehicle;
 					_mVehicleIsSquadVehicle = true;
 					[_self.Group] call WaypointHelper.DeleteAllWaypointsFromGroup;
-					[AiSquadState.BoardingVehicle, 90] call _self.SetState;
+					[AiSquadState.MountingVehicle, 90] call _self.SetState;
 					call _self.CreateOrderOnOwnInitiative;
 //					player sideChat "Beaming. Idle...";
 				};
@@ -606,7 +606,7 @@ namespace Intrusion.Ai {
 		
 		private method UpdateOrder()
 		{
-			if (MissionCounterService.RemainingMinutes <= 20) then {
+			if (20 <= 20) then {
 				call _self.CreateOrderOnOwnInitiative;
 			}
 			else {
@@ -651,7 +651,7 @@ namespace Intrusion.Ai {
 				
 				if (_ok) then {
 					_squadCollection = call PublicVariableHandler.GetSquadCollection;
-					_ok = [_side, _professionType] call _squadCollection.ProfessionTypeAvailable;
+					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
 				};
 				
 				_tries = _tries + 1;
@@ -680,7 +680,7 @@ namespace Intrusion.Ai {
 				// Try to select the wanted profession type
 				_squadCollection = call PublicVariableHandler.GetSquadCollection;
 				
-				if ([side _self.Group, _mWannaBeProfessionType] call _squadCollection.ProfessionTypeAvailable) then
+				if ([side _self.Group, _mWannaBeProfessionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable) then
 				{
 					_rating = _self.Group getVariable ["Rating", 0];
 					
@@ -733,9 +733,9 @@ namespace Intrusion.Ai {
 			
 			switch (_mState) do {
 				case AiSquadState.Idle: { call _self.MakeNewDecision; };
-				case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
+				//case AiSquadState.SingleUnitGettingFlag: { call _self.CheckIfFinishedSingleUnitGettingFlag; };
 				case AiSquadState.Moving: { call _self.CheckIfFinishedMoving; };
-				case AiSquadState.BoardingVehicle: { call _self.CheckIfFinishedBoardingVehicle; };
+				case AiSquadState.MountingVehicle: { call _self.CheckIfFinishedMountingVehicle; };
 				case AiSquadState.ExitingVehicle: { call _self.CheckIfFinishedExitingVehicle; };
 			};
 		};
