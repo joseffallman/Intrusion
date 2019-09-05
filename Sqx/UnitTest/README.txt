@@ -62,6 +62,8 @@ SQF: >call Sqx_UnitTest_TestEngine_RunAsync;
     Fixed: The Assert did not really assert (i.e. break execution). Now when a test fails, execution of the current test ends.
     Fixed: nil values were not handled.
 
+1.4 Made the method TestEngine.OnlyThisOne suppress tests not only from current test class but from all other test classes.
+
 
 Good luck unit testing!
 Engima

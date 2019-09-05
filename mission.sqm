@@ -185,7 +185,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=73;
+		items=72;
 		class Item0
 		{
 			dataType="Marker";
@@ -2493,17 +2493,6 @@ class Mission
 			colorName="ColorIndependent";
 			id=152;
 			atlOffset=61.287514;
-		};
-		class Item72
-		{
-			dataType="Marker";
-			position[]={4496.9268,121.92734,4265.0645};
-			name="OFFICE4";
-			text="Training Camp (Office)";
-			type="mil_objective";
-			colorName="ColorIndependent";
-			id=156;
-			atlOffset=66.000969;
 		};
 	};
 };

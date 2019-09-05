@@ -13,10 +13,12 @@ namespace Sqx.UnitTest
 	{
 		private static fields ["_mTestUnits" as Array /* of TestUnit */, "_mMethodSucceeded" as Boolean, "_mAssertDone" as Boolean, "_mAllOutput" as String];
 		private static fields ["_mCurrentNamespaceName" as String, "_mCurrentClassName" as String, "_mCurrentMethodName" as String, "_mFoundTestMethod" as Boolean];
+		private static fields ["_mOnlyOneMethod" as Boolean];
 		
 		// Initializes the test engine.
 		public static method Init {
 			_mTestUnits = [];
+			_mOnlyOneMethod = false;
 		};
 		
 		// Registeres a test unit (a custom testclass with its test methods) so the testclass' tests can be executed.
@@ -35,6 +37,7 @@ namespace Sqx.UnitTest
 			if (count _mTestUnits > 0) then {
 				_lastTestUnit = _mTestUnits select (count _mTestUnits) - 1;
 				_lastTestUnit.SingleMethodName = _methodName;
+				_mOnlyOneMethod = true;
 			};
 		};
 		
@@ -132,7 +135,8 @@ namespace Sqx.UnitTest
 					{
 						_mCurrentMethodName = _x;
 						
-						if (_testUnit.SingleMethodName == "" || _testUnit.SingleMethodName == _mCurrentMethodName) then {
+						if ((_mOnlyOneMethod && _testUnit.SingleMethodName == _mCurrentMethodName) || !_mOnlyOneMethod) then
+						{
 							_mMethodSucceeded = true;
 							_mAssertDone = false;
 							_mFoundTestMethod = true;
