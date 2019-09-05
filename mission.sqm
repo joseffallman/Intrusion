@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=161;
+		nextID=162;
 	};
 	class MarkerIDProvider
 	{
@@ -185,7 +185,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=75;
+		items=73;
 		class Item0
 		{
 			dataType="Marker";
@@ -2504,64 +2504,6 @@ class Mission
 			colorName="ColorIndependent";
 			id=156;
 			atlOffset=66.000969;
-		};
-		class Item73
-		{
-			dataType="Group";
-			side="East";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={4385.2412,32.4543,3855.3694};
-						angles[]={0,3.2757566,0};
-					};
-					side="East";
-					flags=7;
-					class Attributes
-					{
-					};
-					id=158;
-					type="O_Soldier_AAR_F";
-				};
-			};
-			class Attributes
-			{
-			};
-			id=157;
-		};
-		class Item74
-		{
-			dataType="Group";
-			side="East";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={4493.6582,35.924057,4099.6846};
-						angles[]={0,1.7932764,0};
-					};
-					side="East";
-					flags=7;
-					class Attributes
-					{
-					};
-					id=160;
-					type="O_Soldier_AAR_F";
-				};
-			};
-			class Attributes
-			{
-			};
-			id=159;
 		};
 	};
 };

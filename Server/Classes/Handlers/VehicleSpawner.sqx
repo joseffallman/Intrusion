@@ -499,8 +499,11 @@ namespace Intrusion.Server
 				_intrusionVehicle = _x;
 				
 				if (_intrusionVehicle.Side == _side && canMove _intrusionVehicle.Vehicle && isNull _intrusionVehicle.OwnerGroup) then {
-					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then {
-						if (isNull assignedDriver _intrusionVehicle.Vehicle && count assignedCargo _intrusionVehicle.Vehicle == 0) then
+					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then
+					{
+						private _crewInVehicle = { vehicle _x == _x } count crew _intrusionVehicle.Vehicle > 0;
+						
+						if (!_crewInVehicle) then
 						{
 							_crewPlacesCount = (count fullCrew [_intrusionVehicle.Vehicle, "driver", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "commander", true] + (count fullCrew [_intrusionVehicle.Vehicle, "gunner", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "turret", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "cargo", true]));
 						

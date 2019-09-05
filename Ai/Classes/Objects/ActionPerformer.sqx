@@ -76,20 +76,30 @@ namespace Intrusion.Ai
 		// _mountAction (MountAction): Information about the mounting.
 		public method DoMount("_mountAction" as MountAction)
 		{
+			private _driverOccupied = false;;
+			private _commanderOccupied = false;;
+			private _gunnerOccupied = false;;
+			
 			{
-				if (isNull (assignedVehicle _x) && isNull (assignedDriver _mountAction.Vehicle.Vehicle)) then {
+				private _driver = assignedDriver _mountAction.Vehicle.Vehicle;
+				if (!_driverOccupied && isNull (assignedVehicle _x) && (isNull _driver || { vehicle _driver == _driver })) then {
 					_x assignAsDriver _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
+					_driverOccupied = true;
 				};
 				
-				if (isNull (assignedVehicle _x) && isNull (assignedCommander _mountAction.Vehicle.Vehicle)) then {
+				private _commander = assignedCommander _mountAction.Vehicle.Vehicle;
+				if (!_commanderOccupied && isNull (assignedVehicle _x) && (isNull _commander || { vehicle _commander == _commander })) then {
 					_x assignAsCommander _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
+					_commanderOccupied = true;
 				};
 				
-				if (isNull (assignedVehicle _x) && isNull (assignedGunner _mountAction.Vehicle.Vehicle)) then {
+				private _gunner = assignedGunner _mountAction.Vehicle.Vehicle;
+				if (!_gunnerOccupied && isNull (assignedVehicle _x) && (isNull _gunner || { vehicle _gunner == _gunner })) then {
 					_x assignAsGunner _mountAction.Vehicle.Vehicle;
 					[_x] orderGetIn true;
+					_gunnerOccupied = true;
 				};
 				
 				if (isNull (assignedVehicle _x)) then {

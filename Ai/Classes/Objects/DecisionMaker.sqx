@@ -214,7 +214,7 @@ namespace Intrusion.Ai
 				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
-	        	["Move action created #2: " + str _action] call LogHandler.Debug;
+	        	["Move action created (to vehicle): " + str _action] call LogHandler.Debug;
 			};
 		};
 		
