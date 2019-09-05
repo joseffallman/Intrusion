@@ -71,7 +71,7 @@ namespace Intrusion.Tests.Ai
 				"OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving",
 			]] call TestEngine.Register;
 			
-			["SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn"] call TestEngine.OnlyThisOne;
+			//["SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
