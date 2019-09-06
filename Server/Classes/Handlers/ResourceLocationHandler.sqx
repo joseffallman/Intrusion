@@ -200,7 +200,13 @@ namespace Intrusion.Server
 				};
 				
 				for "_i" from 1 to _noOfUnits do {
-					["I_soldier_F", _pos, _group] call _mUnitSpawner.CreateUnit;
+					private _unit = ["I_soldier_F", _pos, _group] call _mUnitSpawner.CreateUnit;
+					
+					if (random 100 < 50) then {
+						_unit addBackpack "B_Kitbag_cbr";
+						(unitBackpack _unit) addMagazineCargo ["RPG32_F", 1];
+						_unit addWeapon "launch_RPG32_F";
+					};
 				};
 				
 			} foreach _resourceLocations as ResourceLocation;
