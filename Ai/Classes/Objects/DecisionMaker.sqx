@@ -168,6 +168,7 @@ namespace Intrusion.Ai
 				
 				if (!isNull _aiVehicle && { _aiVehicle.Position distance _leaderPos <= 20 }) then
 				{
+					[_time] call _aiVehicle.SetAssignedTime;
 					private _action = [_time + 20, _aiVehicle] new MountAction;
 					[AiSquadState.MountingVehicle, _action] call _self.SetState;
 					[_action as MountAction] call _self.ActionPerformer.DoMount;
