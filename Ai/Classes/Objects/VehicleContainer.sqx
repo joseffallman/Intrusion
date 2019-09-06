@@ -14,6 +14,8 @@ namespace Intrusion.Ai
 {
 	public class VehicleContainer
 	{
+		private fields ["_mAssignedTime" as Scalar];
+	
 		// Creates a VehicleContainer object.
 		public constructor("_vehicle" as Object, "_position" as Array, "_seatsCount" as Scalar, ["_intrusionVehicle" as IntrusionVehicle, classNull])
 		{
@@ -48,5 +50,23 @@ namespace Intrusion.Ai
 		
 		// Gets the owner group for the vehicle. grpNull if it is a free vehicle.
 		public property Group OwnerGroup { get; private set; };
+		
+		public method SetAssignedtime("_time" as Scalar)
+		{
+			_mAssignedTime = _time;
+			
+			if (!isNull _self.Vehicle) then {
+				_self.Vehicle setVariable ["IntrusionAssignedTime", _time];
+			};
+		};
+		
+		public method Scalar GetAssignedTime()
+		{
+			if (!isNull _self.Vehicle) then {
+				return _self.Vehicle getVariable ["IntrusionAssignedTime", -1000];
+			};
+			
+			return _mAssignedTime;
+		};
 	};
 };

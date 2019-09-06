@@ -17,12 +17,14 @@ namespace Intrusion.Server
 			"_mVehicleClassNamesConfig" as IVehicleClassNamesConfig,
 			"_mAllIntrusionVehicles" as Array /* of IntrusionVehicle */,
 			"_mMapMarkersConfig" as IMapMarkersConfig,
-			"_mAllHelipads" as Array /* of SideObject */];
+			"_mAllHelipads" as Array /* of SideObject */,
+			"_mMissionTime" as IMissionTime];
 	
 		// Creates a VehicleHandler object.
-		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig) {
+		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_missionTime" as IMissionTime) {
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
+			_mMissionTime = _missionTime;
 			
 			_mAllIntrusionVehicles = [];
 			_mAllHelipads = [];
@@ -502,8 +504,10 @@ namespace Intrusion.Server
 					if (_intrusionVehicle.Vehicle distance _pos < _nearestDistance) then
 					{
 						private _crewInVehicle = { vehicle _x == _x } count crew _intrusionVehicle.Vehicle > 0;
+						private _assignedTime = _intrusionVehicle.Vehicle getVariable ["IntrusionAssignedTime", -1000];
+						private _time = call _mMissionTime.GetMissionTime;
 						
-						if (!_crewInVehicle) then
+						if (!_crewInVehicle && _time > _assignedTime + 20) then
 						{
 							_crewPlacesCount = (count fullCrew [_intrusionVehicle.Vehicle, "driver", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "commander", true] + (count fullCrew [_intrusionVehicle.Vehicle, "gunner", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "turret", true]) + (count fullCrew [_intrusionVehicle.Vehicle, "cargo", true]));
 						

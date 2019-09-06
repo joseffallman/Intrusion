@@ -17,8 +17,12 @@ namespace Intrusion.Server
 	{
 		// Creates a IntrusionServer object.
 		public constructor() {
+			private ["_missionTime" as MissionTime];
+			
+			_missionTime = new MissionTime;
+		
 			_self.MessageHandler = new MessageHandler;
-			_self.VehicleSpawner = [gCommonConfig.VehicleClassNames, gCommonConfig.MapMarkers] new VehicleSpawner;
+			_self.VehicleSpawner = [gCommonConfig.VehicleClassNames, gCommonConfig.MapMarkers, _missionTime] new VehicleSpawner;
 			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
 			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
 			_self.AiSquadHandler = new AiSquadHandler;
@@ -27,7 +31,7 @@ namespace Intrusion.Server
 			_self.BrigadeLeadershipHandler = [_self.MessageHandler] new BrigadeLeadershipHandler;
 			_self.UnitSpawner = [gCommon.MissionParametersHandler.AiSkillLevel] new UnitSpawner;
 			_self.ResourceLocationHandler = [gCommonConfig.MapMarkers, _self.UnitSpawner, new MarkerHandler] new ResourceLocationHandler;
-			_self.ResourceLocationOwnerService = [gServerConfig.Gameplay, _self.ResourceLocationHandler, gServerConfig.ResourceLocation, new MissionTime, gCommon.RatingCalculator] new ResourceLocationOwnerService;
+			_self.ResourceLocationOwnerService = [gServerConfig.Gameplay, _self.ResourceLocationHandler, gServerConfig.ResourceLocation, _missionTime, gCommon.RatingCalculator] new ResourceLocationOwnerService;
 			_self.MissionCounterService = [gCommon.MissionParametersHandler.MatchLengthMinutes] new MissionCounterService;
 		};
 	
