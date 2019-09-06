@@ -38,7 +38,7 @@ namespace Intrusion.Ai
 			
 			_waypoint = _mGroup addWaypoint [_moveAction.Position, _moveAction.Radius];
 			
-			[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarkerLocal;
+			//[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarkerLocal;
 			
 			_waypoint setWaypointSpeed _moveAction.SpeedMode;
 			_waypoint setWaypointType _moveAction.WaypointType;
