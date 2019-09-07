@@ -16,4 +16,23 @@ namespace Intrusion.Common
 		Attack,
 		Defend
 	};
+	
+	public class OrderTypeMeta
+	{
+		public static method String ToString("_type" as OrderType)
+		{
+			private ["_s" as String];
+			
+			_s = "[OrderType has no entry]";
+		
+			switch (_type) do {
+				case OrderType.None: { _s = "None"; };
+				case OrderType.Recon: { _s = "Recon"; };
+				case OrderType.Attack: { _s = "Attack"; };
+				case OrderType.Defend: { _s = "Defend"; };
+			};
+			
+			return _s;
+		};
+	};
 };

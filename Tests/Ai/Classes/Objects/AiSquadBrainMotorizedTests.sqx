@@ -226,7 +226,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = classNull;
 			
@@ -255,7 +255,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
@@ -280,7 +280,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2", 75] new MoveAction;
 			
@@ -310,7 +310,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = classNull;
 			
@@ -340,7 +340,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
@@ -366,7 +366,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Engage, [300, 300, 0], "SAD", "NORMAL", "COMBAT", "RED", ""] new MoveAction;
 			
@@ -399,7 +399,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.AlliedGroupClosestToLocation = _alliedGroup;
 			
 			_mKnowledge.Members pushBack [[600, 580, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "COMBAT", "YELLOW", "FACTORY2", 75] new MoveAction;
 			

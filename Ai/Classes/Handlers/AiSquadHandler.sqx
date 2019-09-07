@@ -82,12 +82,10 @@ namespace Intrusion.Ai
 		// _order (Order): The order.
 		public method GiveOrderToGroup("_group" as Group, "_order" as Order)
 		{
-			scopeName "main";
-			
 			{
 				if (_x.Group == _group) then {
 					[_order] call _x.GiveOrder;
-					breakOut "main";
+					return;
 				};
 			} foreach _mSquads as AiSquadBrain;
 		};

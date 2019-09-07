@@ -88,12 +88,13 @@ namespace Intrusion.Ai
 		private method CreateOrderOnOwnInitiative()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType];
+			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
 			
 			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 
 			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
 			_orderType = OrderType.Defend;
+			_orderTimeoutTime = (call _mTime.GetMissionTime) + 10000; // Never time out if its the last order given
 			
 			if (!isNull _resourceLocationCollection) then
 			{
@@ -138,7 +139,7 @@ namespace Intrusion.Ai
 
 				if (!isNull _location) then {
 					// Create the order
-					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};

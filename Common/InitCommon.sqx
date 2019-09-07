@@ -3,6 +3,7 @@ call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\SkillLevel.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Rank.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\VehicleRole.sqx";
+call compile preprocessFileLineNumbers "Common\Enums\OrderType.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesDevConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionVehiclesTestConfig.sqx";

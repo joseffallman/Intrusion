@@ -109,15 +109,20 @@ namespace Intrusion.Client
         			_marker = [_group] call _self.GetMarkerByGroup;
 					_profession = [_professionType] call _mProfessionConfig.GetProfession;
         			
+        			private _orderInfo = _group getVariable ["IntrusionOrderInfo", ""];
+        			if (_orderInfo != "") then {
+        				_orderInfo = "[" + _orderInfo + "]";
+        			};
+        			
         			if (isNull _marker) then {
-						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", (_group getVariable ["MapName", ""]) + " (" + str count units _group + ")"] call Marker.CreateIconMarkerLocal;
+						_marker = [getPos _leader, _profession.MarkerTypeFriendly, "ColorBlufor", (_group getVariable ["MapName", ""]) + " (" + str count units _group + ")" + _orderInfo] call Marker.CreateIconMarkerLocal;
 						_marker.Tag = _group;
 						_mMapMarkers pushBack _marker;
         			}
         			else {
         				[getPos _leader] call _marker.SetPosition;
         				[_profession.MarkerTypeFriendly] call _marker.SetType;
-        				[(_group getVariable ["MapName", ""]) + " (" + str count units _group + ")"] call _marker.SetText;
+        				[(_group getVariable ["MapName", ""]) + " (" + str count units _group + ")" + _orderInfo] call _marker.SetText;
         			};
 				};
     		} foreach allGroups as Group;
