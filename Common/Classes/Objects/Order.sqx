@@ -19,9 +19,6 @@ namespace Intrusion.Common
 			_self.TargetPosition = _targetPosition;
 			_self.ResourceLocation = _resourceLocation;
 			_self.TimeoutTime = _timeoutTime;
-			
-			private _orderInfo = ([_type] call OrderTypeMeta.ToString) + " " + _resourceLocation.MarkerName;
-			_group setVariable ["IntrusionOrderInfo", _orderInfo, true];
 		};
 		
 		public property Group Group { get; private set; };

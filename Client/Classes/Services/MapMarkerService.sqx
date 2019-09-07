@@ -109,9 +109,15 @@ namespace Intrusion.Client
         			_marker = [_group] call _self.GetMarkerByGroup;
 					_profession = [_professionType] call _mProfessionConfig.GetProfession;
         			
-        			private _orderInfo = _group getVariable ["IntrusionOrderInfo", ""];
-        			if (_orderInfo != "") then {
-        				_orderInfo = "[" + _orderInfo + "]";
+        			private _orderInfo = "";
+        			
+        			if (ClientState.IsBrigadeLeader) then
+        			{
+        				_orderInfo = _group getVariable ["IntrusionOrderInfo", ""];
+        				
+	        			if (_orderInfo != "") then {
+	        				_orderInfo = " [" + _orderInfo + "]";
+	        			};
         			};
         			
         			if (isNull _marker) then {

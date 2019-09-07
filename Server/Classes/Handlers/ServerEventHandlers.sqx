@@ -90,7 +90,6 @@ namespace Intrusion.Server
 		{
 			_unit addEventHandler ["GetOutMan", {
 				params ["_unit" as Object, "_role" as String, "_vehicle" as Object, "_turret" as Array];
-				hint "unassigning " + name _unit;
 				unassignVehicle _unit;
 			}];
 		};

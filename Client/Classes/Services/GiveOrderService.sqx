@@ -114,10 +114,21 @@ namespace Intrusion.Client
 						// Is the target area a resource location?
 						_location = [_mMapPos] call _self.FindClosestResourceLocation;
 						
-						if (player distance getMarkerPos _location.MarkerName > 100) then {
+						if (_mMapPos distance getMarkerPos _location.MarkerName > 150) then {
 							_location = classNull;
 						};
 					
+						// Update order info
+						private _orderInfo = ([_mOrderType] call OrderTypeMeta.ToString);
+						
+						if (!isNull _location) then {
+							_orderInfo = _orderInfo + " " + markerText _location.MarkerName;
+						};
+						
+						_orderInfo = _orderInfo + "*";
+						
+						_mSelectedGroup setVariable ["IntrusionOrderInfo", _orderInfo, true];
+						
 						if (!(isPlayer leader _mSelectedGroup)) then {
 							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
 							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' have a new order.");

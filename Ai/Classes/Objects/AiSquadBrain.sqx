@@ -137,7 +137,17 @@ namespace Intrusion.Ai
 		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
 				};
 
-				if (!isNull _location) then {
+				if (!isNull _location) then
+				{
+					// Update order info
+					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString);
+					
+					if (!isNull _location) then {
+						_orderInfo = _orderInfo + " " + ([_location.MarkerName] call _mMarkerHandler.GetMarkerText);
+					};
+					
+					_mKnowledge.Group setVariable ["IntrusionOrderInfo", _orderInfo, true];
+					
 					// Create the order
 					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
@@ -560,6 +570,10 @@ namespace Intrusion.Ai
 		{
 			_mKnowledge.Order = _order;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+			
+			if (_mKnowledge.State != AiSquadState.Idle) then {
+				_mKnowledge.JustGotNewOrder = true;
+			};
 		};
 		
 		public method Group GetGroup()
