@@ -35,18 +35,16 @@ namespace Intrusion.Client
 		// Returns (Marker): The marker associated with the group. classNull if such a marker was not found.
 		private static method Marker GetMarkerByGroup("_group" as Group)
 		{
-			scopeName "main";
-			
 			{
 				private ["_marker" as Marker];
 				_marker = _x as Marker;
 
 				if (_marker.Tag == _group) then {
-					_marker breakOut "main";
+					return _marker;
 				};
 			} foreach _mMapMarkers as Marker;
 			
-			classNull
+			return classNull;
 		};
 		
 		// Updates all allied forces' markers.

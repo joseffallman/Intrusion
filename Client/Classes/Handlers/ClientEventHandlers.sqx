@@ -27,7 +27,10 @@ namespace Intrusion.Client
 			
 			// Fires when preload finishes.
 			["ClientEventHandlerId_01", "onPreloadFinished",
-			{ 
+			{
+				// Set the name of the group for the map
+				(group player) setVariable ["MapName", name player, true];
+				
 				if (didJIP) then {
 					// Perform JIP stuff
 					[gCommonConfig.MapMarkers] call JipService.StartAsync;
