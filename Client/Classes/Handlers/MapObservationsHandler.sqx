@@ -28,11 +28,12 @@ namespace Intrusion.Client
 		// _mapObservation (MapObservation): The map observation to draw a marker for.
 		private static method AddMarker("_mapObservation" as MapObservation)
 		{
-			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
+			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession, "_percievedPos" as Array];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			createMarkerLocal [_name, _mapObservation.PercievedPos];
+			_percievedPos = _mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDir, _mapObservation.PercievedOffsetDistance];
+			createMarkerLocal [_name, _percievedPos];
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
@@ -61,7 +62,7 @@ namespace Intrusion.Client
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			_name setMarkerPosLocal _mapObservation.PercievedPos;
+			_name setMarkerPosLocal (_mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDir, _mapObservation.PercievedOffsetDistance]);
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
