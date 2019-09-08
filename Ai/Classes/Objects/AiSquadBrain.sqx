@@ -584,7 +584,7 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
-			private ["_squadVehicle" as VehicleContainer];
+			private ["_squadVehicle" as VehicleContainer, "_time" as Scalar];
 			
 			call _self.SetSquadProfession;
 			[_mKnowledge.Members] call _mActionPerformer.MoveOutDeadUnitFromVehicle;
@@ -599,6 +599,13 @@ namespace Intrusion.Ai
 				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
 				return;
+			};
+			
+			_time = call _mTime.GetMissionTime;
+			
+			// Check if order's timeout time is exceedeed
+			if (!isNull _mKnowledge.Order && { _mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime }) then {
+				_mKnowledge.Order = classNull;
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.
