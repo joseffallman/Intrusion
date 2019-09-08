@@ -103,7 +103,8 @@ namespace Intrusion.Server
 							};
 						};
 					
-						_resultingTargets pushBack [side group _unit, _percievedPos, _percievedSide, _professionType, _targetUnit, _accuracy] new Target;
+						private _observedDistance = (vehicle _unit) distance (vehicle _targetUnit);
+						_resultingTargets pushBack [side group _unit, _percievedPos, _percievedSide, _professionType, _targetUnit, _accuracy, _observedDistance] new Target;
 					};
 				};
 			} foreach _targets as Array;
@@ -153,7 +154,8 @@ namespace Intrusion.Server
 							
 							};
 
-							_resultingTargets pushBack [side group _unit, getPos vehicle _targetUnit, _percievedSide, _professionType, _targetUnit, 0] new Target;
+							private _observedDistance = (vehicle _unit) distance (vehicle _targetUnit);
+							_resultingTargets pushBack [side group _unit, getPos vehicle _targetUnit, _percievedSide, _professionType, _targetUnit, 0, _observedDistance] new Target;
 						};
 					};
 				};

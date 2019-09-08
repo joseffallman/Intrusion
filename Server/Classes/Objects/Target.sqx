@@ -15,7 +15,14 @@ namespace Intrusion.Server
 	public class Target
 	{
 		// Creates a Target object.
-		public constructor("_observingSide" as Side,"_percievedPos" as Array, "_percievedSide" as Side, "_percievedProfessionType" as ProfessionType, "_unit" as Object, "_accuracy" as Scalar)
+		public constructor(
+			"_observingSide" as Side,
+			"_percievedPos" as Array, 
+			"_percievedSide" as Side, 
+			"_percievedProfessionType" as ProfessionType, 
+			"_unit" as Object, 
+			"_accuracy" as Scalar,
+			"_observedDistance" as Scalar)
 		{
 			_self.ObservingSide = _observingSide;
 			_self.PercievedPos = _percievedPos;
@@ -23,6 +30,7 @@ namespace Intrusion.Server
 			_self.PercievedProfessionType = _percievedProfessionType;
 			_self.Unit = _unit;
 			_self.Accuracy = _accuracy;
+			_self.ObservedDistance = _observedDistance;
 		};
 		
 		// Gets the side of the observing unit.
@@ -42,5 +50,8 @@ namespace Intrusion.Server
 		
 		// Gets the target's accuracy.
 		public property Scalar Accuracy { get; private set; };
+		
+		// Gets the distance from the observer to the target.
+		public property Scalar ObservedDistance { get; private set; };
 	};
 };

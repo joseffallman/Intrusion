@@ -34,7 +34,8 @@ namespace Intrusion.Server
 			"_accuracy" as Scalar, 
 			"_time" as Scalar,
 			"_percievedOffsetDistance" as Scalar,
-			"_percievedOffsetDir" as Scalar)
+			"_percievedOffsetDir" as Scalar,
+			"_observedDistance" as Scalar)
 		{
 			_mMissionTime = new MissionTime;
 			
@@ -50,6 +51,7 @@ namespace Intrusion.Server
 			_self.Time = _time;
 			_self.PercievedOffsetDistance = _percievedOffsetDistance;
 			_self.PercievedOffsetDir = _percievedOffsetDir;
+			_self.ObservedDistance = _observedDistance;
 		};
 		
 		// Gets the unique and persistent Name of the observation.
@@ -87,6 +89,9 @@ namespace Intrusion.Server
 		
 		// Gets the direction of th offset of the percieved position in degrees.
 		public property Scalar PercievedOffsetDir { get; set; };
+		
+		// Gets the distance from the observer to the target.
+		public property Scalar ObservedDistance { get; set; };
 		
 		// Converts this observation into a map observation that is optimized for broadcasting and client use.
 		public method MapObservation ToMapObservation {
