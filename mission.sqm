@@ -8,18 +8,18 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=162;
+		nextID=165;
 	};
 	class MarkerIDProvider
 	{
-		nextID=1;
+		nextID=3;
 	};
 	class Camera
 	{
-		pos[]={4263.1245,43.345432,4237.1719};
-		dir[]={-0.14863755,-0.16798812,-0.97453278};
-		up[]={-0.025358863,0.98575485,-0.16626279};
-		aside[]={-0.98857975,4.4672925e-007,0.15077956};
+		pos[]={4292.7583,47.249306,4211.4536};
+		dir[]={-0.80536616,-0.3705397,-0.4627797};
+		up[]={-0.3212809,0.92879754,-0.18461472};
+		aside[]={-0.49823812,-4.3513137e-007,0.86707872};
 	};
 };
 binarizationWanted=0;
@@ -2272,8 +2272,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4254.3472,32.137733,4193.4058};
-						angles[]={6.2033563,2.9836268,0.006394445};
+						position[]={4255.1694,32.19561,4194.0635};
+						angles[]={6.2033563,2.0488539,0.006394445};
 					};
 					side="West";
 					flags=6;
@@ -2475,13 +2475,12 @@ class Mission
 		class Item70
 		{
 			dataType="Marker";
-			position[]={5198.2061,50.402,3146.0549};
+			position[]={5197.79,50.586521,3149.7993};
 			name="FACTORY3";
 			text="Forrest Factory (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=151;
-			atlOffset=-0.0001373291;
 		};
 		class Item71
 		{

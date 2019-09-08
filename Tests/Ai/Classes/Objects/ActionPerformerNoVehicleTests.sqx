@@ -69,9 +69,10 @@ namespace Intrusion.Tests.Ai
 				"OneOfTwoSquadMembersAreDead_Act_ReviveActionCreated",
 				"OneOfTwoSquadMembersAreDeadMoving_Act_StatusIdle",
 				"OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving",
+				"BrigadeLeaderOrderToDefendOwnLocationIdleAtLocation_EncounterEnemies_StatusMovingPatrolStealth",
 			]] call TestEngine.Register;
 			
-			//["OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving"] call TestEngine.OnlyThisOne;
+			//[""] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -112,7 +113,7 @@ namespace Intrusion.Tests.Ai
 			private _resourceLocationConfig = new TestResourceLocationConfig;
 			
 			_mapMarkerInfo = [west, "respawn_marker", "carpark_marker", "weapondepot_marker", "flag_texture", "marker_icon_type"] new MapMarkerInfo;
-			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig, _resourceLocationConfig] new DecisionMaker;
+			_decisionMaker = [_mTime, _mKnowledge, _mActionServiceFactory, _mWorld, _mActionPerformer, _mMarkerHandler, _testActionTimeoutConfig, _resourceLocationConfig, _mRandomGenerator] new DecisionMaker;
 			
 			_mBrain = [
 				_mGroup, 
@@ -646,8 +647,7 @@ namespace Intrusion.Tests.Ai
 			[[200, 200, 0], _moveAction.Position, "AI engaging in wrong direction."] call Assert.AreEqual;
 		};
 
-/*
-		private static method BrigadeLeaderOrderToDefendOwnLocationPatrolling_EncounterEnemies_StatusIdle
+		private static method BrigadeLeaderOrderToDefendOwnLocationIdleAtLocation_EncounterEnemies_StatusMovingPatrolStealth
 		{
 			private ["_action" as MoveAction];
 		
@@ -655,11 +655,10 @@ namespace Intrusion.Tests.Ai
 			_mRandomGenerator.Number = 0;
 			_mLocationOffice1.Side = west;
 			_mWorld.LeaderPos = [410, 410, 0];
+			_mWorld.ClosestDetectedEnemy = [[410, 510, 0]] new TestUnitContainer;
 			_mKnowledge.Members pushBack [[410, 410, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Defend, [400, 400, 0], _mLocationOffice1, 20 * 60] new Order;
-			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
-			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [350, MoveActionType.Patrol, [400, 400, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "OFFICE1", 30] new MoveAction;
+			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
 			call _mBrain.Act;
@@ -670,13 +669,14 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
-			[MoveActionType.Patrol, _action.Type, "Wrong move action type."] call Assert.AreEqual;
-			[30, _action.Radius, "Wrong move radius."] call Assert.AreEqual;
-			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
+			[MoveActionType.Engage, _action.Type, "Wrong move action type."] call Assert.AreEqual;
+			[10, _action.Radius, "Wrong move radius."] call Assert.AreEqual;
+			["MOVE", _action.WaypointType, "Not wypoint type MOVE."] call Assert.AreEqual;
+			["STEALTH", _action.Behavior, "Not moving STEALTH."] call Assert.AreEqual;
+			["YELLOW", _action.CombatMode, "Not in combat mode YELLOW."] call Assert.AreEqual;
 			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
-			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order has wrong type."] call Assert.AreEqual;
+			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not DEFEND."] call Assert.AreEqual;
 			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
-*/
 	};
 };

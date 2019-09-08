@@ -129,6 +129,7 @@ namespace Intrusion.Ai
 						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
 						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
 						_orderType = OrderType.Attack;
+						_orderTimeoutTime = 0;
 						
 			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
 					};
@@ -481,10 +482,10 @@ namespace Intrusion.Ai
 		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
 		{
 			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
-				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new MotorizedDecisionMaker;
+				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig, _mRandomGenerator] new MotorizedDecisionMaker;
 			};
 
-			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker; 
+			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig, _mRandomGenerator] new DecisionMaker; 
 		};
 		
 		// Tries to set the squad's profession if it is still Infantry.

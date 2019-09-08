@@ -92,8 +92,9 @@ namespace Intrusion.Ai
 					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
+					private _randomGenerator = new RandomGenerator;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig, _randomGenerator] new DecisionMaker;
 					
 					_aiSquad = [
 						_group,
