@@ -173,27 +173,40 @@ namespace Intrusion.Server
 		// Creates guarding guerilla units on all resource locations.
 		public method CreateGuerillaUnits()
 		{
-			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_waypoint" as Array, "_i" as Scalar, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
+			private ["_resourceLocations" as Array, "_location" as ResourceLocation, "_pos" as Array, "_waypoint" as Array, "_group" as Group, "_noOfUnits" as Scalar, "_roadSegments" as Array];
 			
 			_resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
-			_i = 0;
 			
 			{
 				_location = _x;
-				_i = _i + 1;
 				
 				// Create a marker
 				
-				_pos = getMarkerPos _location.MarkerName;
+				private _locationPos = getMarkerPos _location.MarkerName;
 				
 				// Create a group
 				
 				_group = createGroup [independent, true];
 				_noOfUnits = (floor random 3) + 1;
-				_roadSegments = _pos nearRoads 50;
+				_roadSegments = _locationPos nearRoads 50;
 				
-				_waypoint = _group addWaypoint [_pos, 25];
-				_waypoint setWaypointType "HOLD";
+				private _createRandomPos = {
+					[(_this select 0) - 25 + random 50, (_this select 1) - 25 + random 50, 0]
+				};
+				
+				_pos = if (count _roadSegments >= 3) then { getPos selectRandom _roadSegments } else { _locationPos call _createRandomPos };
+				_waypoint = _group addWaypoint [_pos, 20];
+				_waypoint setWaypointType "MOVE";
+				_waypoint setWaypointBehaviour "SAFE";
+				_waypoint setWaypointSpeed "LIMITED";
+				_waypoint setWaypointCombatMode "YELLOW";
+				
+				_pos = if (count _roadSegments >= 3) then { getPos selectRandom _roadSegments } else { _locationPos call _createRandomPos };
+				_waypoint = _group addWaypoint [_pos, 20];
+				
+				_pos = if (count _roadSegments >= 3) then { getPos selectRandom _roadSegments } else { _locationPos call _createRandomPos };
+				_waypoint = _group addWaypoint [_pos, 20];
+				_waypoint setWaypointType "CYCLE";
 				
 				if (count _roadSegments > 0) then {
 					_pos = getPos (selectRandom _roadSegments);
@@ -204,9 +217,10 @@ namespace Intrusion.Server
 
 					if (random 100 < 50) then
 					{
-						_unit addBackpack "B_Kitbag_cbr";
-						(unitBackpack _unit) addMagazineCargo ["RPG32_F", 1];
-						_unit addWeapon "launch_RPG32_F";
+						_unit addBackpackGlobal "B_Kitbag_cbr";
+						(unitBackpack _unit) addMagazineCargoGlobal ["RPG32_F", 1];
+						_unit addWeaponGlobal "launch_RPG32_F";
+						removeBackpackGlobal _unit;
 					};
 				};
 				
