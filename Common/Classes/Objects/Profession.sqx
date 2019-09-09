@@ -20,6 +20,7 @@ namespace Intrusion.Common
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
     		"_maxUnitsPerVehicle" as Scalar,
+    		"_manRevealsProfessionType" as Boolean,
     		"_vehicleRevealsProfessionType" as Boolean,
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String,
@@ -33,6 +34,7 @@ namespace Intrusion.Common
         	_self.MinGroupSize = _minGroupSize;
         	_self.MaxGroupSize = _maxGroupSize;
         	_self.MaxUnitsPerVehicle = _maxUnitsPerVehicle;
+        	_self.ManRevealsProfessionType = _manRevealsProfessionType;
         	_self.VehicleRevealsProfessionType = _vehicleRevealsProfessionType;
         	_self.MarkerTypeFriendly = _markerTypeFriendly;
         	_self.MarkerTypeEnemy = _markerTypeEnemy;
@@ -63,7 +65,10 @@ namespace Intrusion.Common
 		// Gets the maximum units that fits into one vehicle. Then one more will be spawned. 0 = infinite.
 		public property Scalar MaxUnitsPerVehicle { get; private set; };
 		
-		// Gets wether the vehicle reveals the profession type on sight.
+		// Gets whether the man itself, without his vehicle, reveals the profession type on sight.
+		public property Boolean ManRevealsProfessionType { get; private set; };
+		
+		// Gets whether the vehicle reveals the profession type on sight.
 		public property Boolean VehicleRevealsProfessionType { get; private set; };
 		
 		// Gets the friendly marker type associated with the profession.

@@ -29,7 +29,7 @@ namespace Intrusion.Server
 		{
 			private ["_targets" as Array, "_resultingTargets" as Array, "_visibility" as Scalar];
 			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_professionType" as ProfessionType, "_intrusionVehicles" as Array /* of IntrusionVehicle */];
-			private ["_targetUnitNearItsIntrusionVehicle" as Boolean, "_targetUnitHasIntrusionVehicle" as Boolean];
+			private ["_targetUnitNearItsIntrusionVehicle" as Boolean];
 			_resultingTargets = [];
 			
 			// Reveal all units to the unit
@@ -69,29 +69,36 @@ namespace Intrusion.Server
 							{
 								_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 								
-								_technologyInvented = true;								
+								_technologyInvented = true;
 								if (!isNull _profession) then {
 									_technologyInvented = [side group _unit, _profession.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
 								};
 								
 								if (_technologyInvented) then
 								{
-									// Check if the unit is near its profession vehicle
-									_targetUnitNearItsIntrusionVehicle = false;
-									_targetUnitHasIntrusionVehicle = false;
-									
-									{
-										if (_x.OwnerGroup == _squad.Group) then {
-											_targetUnitHasIntrusionVehicle = true;
-											
-											if (vehicle _targetUnit distance _x.Vehicle < 30 && alive _x.Vehicle) then {
-												_targetUnitNearItsIntrusionVehicle = true;
-											};
-										};
-									} foreach _intrusionVehicles as IntrusionVehicle;
-								
-									if (!_targetUnitHasIntrusionVehicle || _targetUnitNearItsIntrusionVehicle) then {
+									if (_profession.ManRevealsProfessionType) then {
 										_professionType = _squad.ProfessionType;
+									}
+									else
+									{
+										// Check if the unit is *near* its profession vehicle
+										_targetUnitNearItsIntrusionVehicle = false;
+										
+										{
+											if (_x.OwnerGroup == _squad.Group) then
+											{
+												if (vehicle _targetUnit distance _x.Vehicle < 30 && alive _x.Vehicle) then {
+													_targetUnitNearItsIntrusionVehicle = true;
+												};
+											};
+										} foreach _intrusionVehicles as IntrusionVehicle;
+	
+										if (_targetUnitNearItsIntrusionVehicle) then {
+											_professionType = _squad.ProfessionType;
+										}
+										else {
+											_professionType = ProfessionType.Infantry;
+										};
 									};
 								}
 								else {
@@ -130,13 +137,14 @@ namespace Intrusion.Server
 							{
 								_percievedSide = side _targetUnit;
 								_squad = [group _targetUnit] call _squadCollection.GetSquadByGroup;
+								
 								if (!isNull _squad) then
 								{
 									_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 									
 									if (_profession.VehicleRevealsProfessionType) then
 									{
-										// Check if the unit is in its profession vehicle
+										// Check if the unit is *in* its profession vehicle
 										_targetUnitInItsIntrusionVehicle = false;
 										{
 											if (_x.OwnerGroup == _squad.Group) then {

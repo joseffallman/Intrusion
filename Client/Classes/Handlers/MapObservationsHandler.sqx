@@ -37,6 +37,7 @@ namespace Intrusion.Client
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
+			
 			if (_mapObservation.IsIdentifiedAsEnemy) then {
 				_profession = [_mapObservation.PercievedProfessionType] call _mProfessionConfig.GetProfession;
 				

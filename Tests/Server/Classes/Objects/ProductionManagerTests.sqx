@@ -67,7 +67,7 @@ namespace Intrusion.Tests.Server
 			_mScientist = new TestScientist;
 			_mMessageHandler = new TestMessageHandler;
 			_mProfessionConfig = new TestProfessionConfig;
-			[Professiontype.Armored, "Armored Forces", Technology.HeavyArmor, Rank.Lieutenant, 1, 1, 9, 3, true, "", ""] call _mProfessionConfig.AddProfession;
+			[Professiontype.Armored, "Armored Forces", Technology.HeavyArmor, Rank.Lieutenant, 1, 1, 9, 3, false, true, "", ""] call _mProfessionConfig.AddProfession;
 			
 			_mGroup = [1] call TestActions.CreatePopulatedGroup;
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
