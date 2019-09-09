@@ -5,10 +5,10 @@ class EditorData
 	angleGridStep=0.2617994;
 	scaleGridStep=1;
 	autoGroupingDist=10;
-	toggles=1;
+	toggles=129;
 	class ItemIDProvider
 	{
-		nextID=165;
+		nextID=167;
 	};
 	class MarkerIDProvider
 	{
@@ -1410,8 +1410,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4264.7646,32.056206,4193.6855};
-						angles[]={6.2248516,0.87830627,6.2727814};
+						position[]={4264.7651,32.056244,4193.686};
+						angles[]={6.2248564,0.87830204,6.2727828};
 					};
 					side="West";
 					flags=6;
