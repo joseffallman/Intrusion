@@ -32,7 +32,7 @@ namespace Intrusion.Client
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			_percievedPos = _mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDir, _mapObservation.PercievedOffsetDistance];
+			_percievedPos = _mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDistance, _mapObservation.PercievedOffsetDir];
 			createMarkerLocal [_name, _percievedPos];
 			
 			_color = "ColorGrey";
@@ -62,7 +62,7 @@ namespace Intrusion.Client
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			_name setMarkerPosLocal (_mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDir, _mapObservation.PercievedOffsetDistance]);
+			_name setMarkerPosLocal (_mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDistance, _mapObservation.PercievedOffsetDir]);
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
