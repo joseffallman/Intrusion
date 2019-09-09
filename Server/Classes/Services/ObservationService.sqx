@@ -117,7 +117,7 @@ namespace Intrusion.Server
 		private static method Scalar CalculateRandomOffsetDistance("_observedDistance" as Scalar)
 		{
 			private _maxOffsetDistance = 50;
-			private _offsetDistance = _observedDistance / 5;
+			private _offsetDistance = _observedDistance / 7;
 			
 			if (_offsetDistance > _maxOffsetDistance) then {
 				_offsetDistance = _maxOffsetDistance;
@@ -181,7 +181,7 @@ namespace Intrusion.Server
 	        	_mapObservations = call _self.ConvertToMapObservations;
 				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 1;
+        		sleep 10;
 			};
 		};
 		
