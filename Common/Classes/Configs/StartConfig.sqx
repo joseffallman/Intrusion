@@ -20,6 +20,7 @@ namespace Intrusion.Common
 			_self.LogLevelScreen = LogLevel.Off;
 			
 			_self.OnlyOneGroupWithTwoWestlyAiUnits = true;
+			_self.OnlyLetAiBeMotorized = true;
 			
 			if (_self.Mode == ReleaseMode.Live) then
 			{
@@ -29,6 +30,7 @@ namespace Intrusion.Common
 				_self.LogLevelFile = LogLevel.Debug;
 				_self.LogLevelScreen = LogLevel.Off;
 				_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
+				_self.OnlyLetAiBeMotorized = false;
 			};
 		};
 	
@@ -46,5 +48,7 @@ namespace Intrusion.Common
 		
 		// Gets whether the mission will start with special setting about AI groups count or not.
 		public static property Boolean OnlyOneGroupWithTwoWestlyAiUnits { get; private set; };
+		
+		public static property Boolean OnlyLetAiBeMotorized { get; private set; };
 	};
 };
