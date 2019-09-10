@@ -17,7 +17,7 @@ namespace Intrusion.Common
 		{
 			private ["_commonConfig" as ICommonConfig]; // SQX TODO: Complains at return line if _commonConfig is declared as a CommonConfig, but it shouldn't.
 			
-			if (ReleaseSettings.Mode == ReleaseMode.Production) then {
+			if (StartConfig.Mode == ReleaseMode.Production) then {
 				_commonConfig = [
 					new MapMarkersConfig, 
 					new ProfessionConfig, 
@@ -27,7 +27,7 @@ namespace Intrusion.Common
 					new BaseConfig] new CommonConfig;
 			}
 			else {
-				if (ReleaseSettings.Mode == ReleaseMode.Test) then {
+				if (StartConfig.Mode == ReleaseMode.Test) then {
 					_commonConfig = [
 						new MapMarkersConfig, 
 						new ProfessionTestConfig, 

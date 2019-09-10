@@ -67,7 +67,7 @@ call WeaponBoxesConfig.Init;
 call ServerEventHandlers.Init;
 [gCommon.UniformHandler] call ServerEventReciever.Init;
 
-gServerConfig = [ReleaseSettings.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
+gServerConfig = [StartConfig.Mode] call ServerConfigFactory.CreateServerConfig as IServerConfig;
 gServer = [] new IntrusionServer;
 
 /* Handlers */

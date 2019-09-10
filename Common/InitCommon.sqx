@@ -11,7 +11,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\VehicleClassNames
 call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ProfessionTestConfig.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Configs\ReleaseSettings.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\StartConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\BaseTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\MapMarkersConfig.sqx";
@@ -65,25 +65,17 @@ using Intrusion.Common;
 
 #region Common Objects
 
-/****** Mission Release Settings ***********/
-
-ReleaseSettings.Mode = ReleaseMode.Production;
-ReleaseSettings.ShowTutorials = false;
-ReleaseSettings.LogLevelFile = LogLevel.Debug;
-ReleaseSettings.LogLevelScreen = LogLevel.Warning;
-
-/*******************************************/
-
 // Enum Metas
 call TechnologyMeta.Init;
 
 // Configs
+call StartConfig.Init;
 call ProfessionTypeMeta.Init;
 
-gCommonConfig = [ReleaseSettings.Mode] call CommonConfigFactory.CreateCommonConfig as ICommonConfig;
+gCommonConfig = [StartConfig.Mode] call CommonConfigFactory.CreateCommonConfig as ICommonConfig;
 gCommon = new IntrusionCommon;
 
 // Handlers
-[ReleaseSettings.LogLevelFile, ReleaseSettings.LogLevelScreen] call LogHandler.Init;
+[StartConfig.LogLevelFile, StartConfig.LogLevelScreen] call LogHandler.Init;
 
 #endregion

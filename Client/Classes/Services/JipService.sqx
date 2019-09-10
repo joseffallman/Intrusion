@@ -65,7 +65,7 @@ namespace Intrusion.Client
 				[] spawn {
 				    sleep 1;
 				    
-					if (ReleaseSettings.ShowTutorials) then {
+					if (StartConfig.ShowTutorials) then {
 					    [TutorialType.Welcome] call TutorialHandler.ShowTutorial;
 					};
 					
