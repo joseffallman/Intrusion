@@ -286,8 +286,6 @@ namespace Intrusion.Ai
 		{
 			private _time = call _self.Time.GetMissionTime;
 			
-	        ["_mountedVehicle.OwnerGroup: " + str _mountedVehicle.OwnerGroup] call LogHandler.Debug;
-	        	
 			// If mounted on a free vehicle, disembark.
 			if (!isNull _mountedVehicle && { isNull _mountedVehicle.OwnerGroup }) then
 			{
@@ -325,7 +323,7 @@ namespace Intrusion.Ai
 			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
-        	["Move action created #3: " + str _action] call LogHandler.Debug;
+        	["Move action created (Away): " + str _action] call LogHandler.Debug;
 		};
 		
 		public virtual method OnNothingToDo()

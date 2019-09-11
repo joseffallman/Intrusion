@@ -56,7 +56,10 @@ namespace Intrusion.Tests.Ai
 				"MountedDetectedEnemiesSafe_Act_CompletedAndIdle",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
 				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
+				"AtLocationDefendOrderIdle_Act_StartPatrolling",
 			]] call TestEngine.Register;
+			
+			//["AtLocationDefendOrderIdle_Act_StartPatrolling"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -418,6 +421,34 @@ namespace Intrusion.Tests.Ai
 
 			// Cleanup
 			deleteGroup _alliedGroup;
+		};
+		
+		private static method AtLocationDefendOrderIdle_Act_StartPatrolling
+		{	
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [600, 580, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [600, 580, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.AlliedGroupClosestToLocation = _mKnowledge.Group;
+			
+			_mKnowledge.Members pushBack [[600, 580, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI group does not move."] call Assert.AreEqual;
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			[[MoveActionType.Patrol] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "AI not patrolling."] call Assert.AreEqual;
 		};
 	};
 };
