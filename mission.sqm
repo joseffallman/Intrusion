@@ -1978,7 +1978,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4264.5923,31.945782,4191.7642};
+						position[]={4264.9946,31.966684,4192.1934};
 						angles[]={6.2248516,1.4753672,6.2727814};
 					};
 					side="West";
@@ -1991,14 +1991,12 @@ class Mission
 					};
 					id=109;
 					type="B_Soldier_F";
-					atlOffset=1.9073486e-006;
 				};
 			};
 			class Attributes
 			{
 			};
 			id=108;
-			atlOffset=1.9073486e-006;
 		};
 		class Item58
 		{

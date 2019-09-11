@@ -286,6 +286,8 @@ namespace Intrusion.Ai
 		{
 			private _time = call _self.Time.GetMissionTime;
 			
+	        ["_mountedVehicle.OwnerGroup: " + str _mountedVehicle.OwnerGroup] call LogHandler.Debug;
+	        	
 			// If mounted on a free vehicle, disembark.
 			if (!isNull _mountedVehicle && { isNull _mountedVehicle.OwnerGroup }) then
 			{

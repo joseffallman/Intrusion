@@ -500,11 +500,16 @@ namespace Intrusion.Ai
 				{
 					// Check that the squad has selected the profession type it wants to be.
 					if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
-						_wannaBeType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
-						
-						// Make sure an attach chopper crew is always at least two members.
-						if (_wannaBeType != ProfessionType.AttackHelicopter || { count _mKnowledge.Members >= 2 }) then {
-							_mKnowledge.WannaBeProfessionType = _wannaBeType;
+						if (StartConfig.OnlyAllowAiBeMotorized) then {
+							_mKnowledge.WannaBeProfessionType = ProfessionType.Motorized;
+						}
+						else {
+							_wannaBeType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+							
+							// Make sure an attack chopper crew is always at least two members.
+							if (_wannaBeType != ProfessionType.AttackHelicopter || { count _mKnowledge.Members >= 2 }) then {
+								_mKnowledge.WannaBeProfessionType = _wannaBeType;
+							};
 						};
 					};
 					
