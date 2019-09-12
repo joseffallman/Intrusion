@@ -89,7 +89,9 @@ namespace Intrusion.Ai
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
 			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
-			
+
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+
 			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 
 			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
@@ -160,7 +162,7 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
 			private ["_mountedVehicle" as VehicleContainer, "_leaderPos" as Array];
-			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
+			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer, "_orderResourceLocation" as ResourceLocation];
 			
 			scopeName "main";
 			
@@ -169,20 +171,50 @@ namespace Intrusion.Ai
 			_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 			
 			
-			// If target resource location is already captured, and the order was on own initiative, request a new order!
-			// OnTargetResourceLocationCaptured
+			// Check if a new order is needed
 
-			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
+			_orderResourceLocation = _mKnowledge.Order.ResourceLocation;
+
+			if (!isNull _orderResourceLocation) then
 			{
 				// If it is time for end game, create order for the winner's location
 				if (call _self.TimeToPushAtEndLocation) then {
-					if (_mKnowledge.Order.ResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+					if (_orderResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+						if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+					};
+				};
+				
+				// If squad is present at order location
+				if (_orderResourceLocation.Side == side _mKnowledge.Group) then
+				{
+					if (_mKnowledge.Order.Type == OrderType.Attack) then {
+						if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+						
+						if ([_mKnowledge.Group, _orderResourceLocation] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+					};
+				};
+			};
+			
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _orderResourceLocation)) then
+			{
+				// If it is time for end game, create order for the winner's location
+				if (call _self.TimeToPushAtEndLocation) then {
+					if (_orderResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
 				}
 				else {
-					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
+					if (_orderResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
 					{
 						call _self.CreateOrderOnOwnInitiative;
 						return;
