@@ -41,15 +41,26 @@ namespace Intrusion.Ai
 		// Called when the group is closing in on a destination (not necessary a location).
 		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
 		{
+			private ["_order" as Order];
 			private _time = call _self.Time.GetMissionTime;
 			
 			// If mounted on a squad vehicle.
 			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName, 75] new MoveAction;
-				[AiSquadState.Moving, _action] call _self.SetState;
-				[_action as MoveAction] call _self.ActionPerformer.DoMove;
-	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
+				_order = _self.Knowledge.Order;
+				if (_order.Type == OrderType.Defend) then {
+					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 70] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (patrol in): " + str _action] call LogHandler.Debug;
+				}
+				else {
+					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 30] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
+				};
+				
 	        	return;
 			};
 			

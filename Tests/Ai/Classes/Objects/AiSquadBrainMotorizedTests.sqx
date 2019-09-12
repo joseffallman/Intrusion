@@ -49,7 +49,7 @@ namespace Intrusion.Tests.Ai
 				"AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle",
 				"IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle",
 				"AtBaseAndStateIdle_Act_MovingToVehicle",
-				"MountedCloseToDestinationIdle_Act_ClosingInCorrectly",
+				"MountedCloseToDestinationAttackIdle_Act_ClosingInCorrectly",
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationClosingIn_Act_NotCompletedAndNotSetIdle",
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
@@ -217,7 +217,7 @@ namespace Intrusion.Tests.Ai
 			[[0, 1600, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
 		};
 		
-		private static method MountedCloseToDestinationIdle_Act_ClosingInCorrectly
+		private static method MountedCloseToDestinationAttackIdle_Act_ClosingInCorrectly
 		{	
 			private ["_action" as MoveAction];
 			
@@ -245,7 +245,7 @@ namespace Intrusion.Tests.Ai
 			[[MoveActionType.ClosingIn] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "Wrong movement type."] call Assert.AreEqual;
 			["COMBAT", _action.Behavior, "AI not moving AWARE."] call Assert.AreEqual;
 			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
-			[75, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
+			[30, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
 		};
 		
 		private static method MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle
@@ -428,6 +428,7 @@ namespace Intrusion.Tests.Ai
 			private ["_action" as MoveAction];
 			
 			// Arrange
+			_mLocationFactory2.Side = west;
 			_mWorld.LeaderPos = [600, 580, 0];
 			_mWorld.SquadMounted = true;
 			
