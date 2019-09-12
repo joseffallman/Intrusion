@@ -178,12 +178,12 @@ namespace Intrusion.Ai
 				if (call _self.TimeToPushAtEndLocation) then {
 					if (_mKnowledge.Order.ResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
 						call _self.CreateOrderOnOwnInitiative;
+						return;
 					};
 				}
 				else {
 					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
 					{
-						call _mDecisionMaker.OnTargetResourceLocationCaptured;
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};

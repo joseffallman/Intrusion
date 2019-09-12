@@ -14,7 +14,7 @@ using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
-	public class DecisionMaker : IDecisionMaker
+	public class DecisionMaker
 	{
 		#region Construction/Properties/Common
 	
@@ -66,10 +66,6 @@ namespace Intrusion.Ai
 		#endregion
 	
 		#region Brain Events
-	
-		public virtual method OnTargetResourceLocationCaptured()
-		{
-		};
 		
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
