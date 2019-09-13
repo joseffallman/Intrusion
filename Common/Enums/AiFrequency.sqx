@@ -12,11 +12,16 @@ namespace Intrusion.Common
 	public enum AiFrequency
 	{
 		None = 0, // Must be the same values that are in the parameters.
+		Five = 5,
 		Ten = 10,
+		Fifteen = 15,
 		Twenty = 20,
+		TwentyFive = 25,
 		Thirty = 30,
 		Same = 1001, // Important that all absolute options have a value below 1000, and that all relative options have a value above 1000.
-		More50Percent = 1002,
-		More100Percent = 1003,
+		More25Percent = 1002,
+		More50Percent = 1003,
+		More75Percent = 1004,
+		More100Percent = 1005,
 	};
 };
