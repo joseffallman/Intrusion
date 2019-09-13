@@ -11,8 +11,10 @@ namespace Intrusion.Common
 {
 	public enum ReleaseMode
 	{
-		Develop,
-		Test,
-		Production
+		UnitTest,	// Only run unit tests.
+		Develop,	// Development settings - Excecuted with dev configs.
+		Test,		// Test settings - Excecuted with test configs.
+		Production,	// Production settings - Excecuted with prod configs.
+		Live		// Live settings - Excecuted with prod configs and all extra test settings off.
 	};
 };

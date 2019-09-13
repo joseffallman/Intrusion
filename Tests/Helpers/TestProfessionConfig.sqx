@@ -28,11 +28,12 @@ namespace Intrusion.Tests.Helpers
     		"_minGroupSize" as Scalar,
     		"_maxGroupSize" as Scalar,
     		"_maxUnitsPerVehicle" as Scalar,
+    		"_manRevealsProfessionType" as Boolean,
     		"_vehicleRevealsProfessionType" as Boolean,
     		"_markerTypeFriendly" as String,
     		"_markerTypeEnemy" as String)
     	{
-    		_self.Professions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy, false] new Profession;
+    		_self.Professions pushBack [_type, _name, _requiredTechnology, _requiredRank, _maxGroupsCount, _minGroupSize, _maxGroupSize, _maxUnitsPerVehicle, _manRevealsProfessionType, _vehicleRevealsProfessionType, _markerTypeFriendly, _markerTypeEnemy, false] new Profession;
     	};
 	};
 };

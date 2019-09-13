@@ -91,7 +91,7 @@ namespace Intrusion.Server
 		// Prioritizes the properties of an observation. All "better" properties of the target will be 
 		// set on the observation.
 		// _observation (Observation): The observation that will be updated.
-		// _target (Target): The target with values
+		// _target (Target): The target with values.
 		private static method PrioritizeObservation("_observation" as Observation, "_target" as Target)
 		{
 			_observation.MarkedAsDeleted = false;
@@ -101,19 +101,47 @@ namespace Intrusion.Server
 			_observation.PercievedPos = _target.PercievedPos;
 			_observation.PercievedSide = if (_observation.PercievedSide != sideUnknown) then { _observation.PercievedSide } else { _target.PercievedSide };
 			_observation.PercievedProfessionType = if ((_observation.PercievedProfessionType as Scalar) > (_target.PercievedProfessionType as Scalar)) then { _observation.PercievedProfessionType } else { _target.PercievedProfessionType };
+			
+			if (_target.ObservedDistance < _observation.ObservedDistance) then
+			{
+				// Set a random offset for the observation.
+				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
+				private _offsetDir = floor random 360;
+				
+				_observation.PercievedOffsetDir = _offsetDir;
+				_observation.ObservedDistance = _target.ObservedDistance;
+				_observation.PercievedOffsetDistance = _offsetDistance;
+			};
+		};
+		
+		private static method Scalar CalculateRandomOffsetDistance("_observedDistance" as Scalar)
+		{
+			private _maxOffsetDistance = 50;
+			private _offsetDistance = _observedDistance / 7;
+			
+			if (_offsetDistance > _maxOffsetDistance) then {
+				_offsetDistance = _maxOffsetDistance;
+			};
+			
+			return floor random _offsetDistance;
 		};
 		
 		// Adds a target to the list of current observations.
 		// _target (Target): The target to add as an observation.
 		private static method AddTargetToObservations("_target" as Target)
 		{
-			private ["_existingObservation" as Observation, "_newObservation" as Observation];
+			private ["_existingObservation" as Observation, "_newObservation" as Observation, "_offsetDistance" as Scalar, "_offsetDir" as Scalar];
 			
 			_existingObservation = [_target] call _self.GetExistingObservation;
 			
 			if (isNull _existingObservation) then {
 				_mCurrentId = _mCurrentId + 1;
-				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime] new Observation;
+				
+				// Set a random offset for the observation.
+				_offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
+				_offsetDir = floor random 360;
+				
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime, _offsetDistance, _offsetDir, _target.ObservedDistance] new Observation;
 			
 				_mObservations pushBack _newObservation;
 			} else {
@@ -153,7 +181,7 @@ namespace Intrusion.Server
 	        	_mapObservations = call _self.ConvertToMapObservations;
 				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 1;
+        		sleep 10;
 			};
 		};
 		

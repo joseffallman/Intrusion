@@ -1,3 +1,4 @@
+using Intrusion.Common;
 using Intrusion.Server;
 using Intrusion.Ai;
 
@@ -22,7 +23,11 @@ call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {
-	[gServer, gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
-	call AiService.StartAsync;
-	//call Sqx.UnitTest.TestEngine.RunDelayedAsync;
+	if (StartConfig.Mode == ReleaseMode.UnitTest) then {
+		call Sqx.UnitTest.TestEngine.RunDelayedAsync;
+	}
+	else {
+		[gServer, gServerConfig, gCommonConfig] call MissionEngine.RunAsync;
+		call AiService.StartAsync;
+	};
 };

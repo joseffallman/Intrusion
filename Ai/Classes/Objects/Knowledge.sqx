@@ -29,6 +29,7 @@ namespace Intrusion.Ai
 			_self.BaseMarkerInfo = classNull;
 			_self.WannaBeProfessionType = ProfessionType.Undefined;
 			_self.ProfessionType = ProfessionType.Undefined;
+			_self.JustGotNewOrder = false;
 		};
 		
 		// gets or sets the group associated with this AI knowledge.
@@ -68,5 +69,7 @@ namespace Intrusion.Ai
 		public property ProfessionType ProfessionType { get; set; };
 		
 		public property ResourceLocation WinnersLocation { get; set; };
+		
+		public property Boolean JustGotNewOrder { get; set; };
 	};
 };

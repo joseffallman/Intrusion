@@ -31,8 +31,8 @@ class Params
 	{
 		// paramsArray[3]
 		title="AI Units West Frequency";
-		values[]={0, 10, 20, 30, 1001, 1002, 1003};
-		texts[]={"None", 10, 20, 30, "Same as eastly units (humans and ai)", "50% more than eastly units (humans and ai)", "100% more than eastly units (humans and ai)"};
+		values[]={0, 5, 10, 15, 20, 25, 30, 1001, 1002, 1003, 1004, 1005};
+		texts[]={"None", 5, 10, 15, 20, 25, 30, "Same as eastly units (humans and ai)", "25% more than eastly units (humans and ai)", "50% more than eastly units (humans and ai)", "75% more than eastly units (humans and ai)", "100% more than eastly units (humans and ai)"};
 		default = 0;
 	};
 	
@@ -40,8 +40,8 @@ class Params
 	{
 		// paramsArray[4]
 		title="AI Units East Frequency";
-		values[]={0, 10, 20, 30, 1001, 1002, 1003};
-		texts[]={"None", 10, 20, 30, "Same as westly units (humans and ai)", "50% more than westly units (humans and ai)", "100% more than westly units (humans and ai)"};
+		values[]={0, 5, 10, 15, 20, 25, 30, 1001, 1002, 1003, 1004, 1005};
+		texts[]={"None", 5, 10, 15, 20, 25, 30, "Same as westly units (humans and ai)", "25% more than westly units (humans and ai)", "50% more than westly units (humans and ai)", "75% more than westly units (humans and ai)", "100% more than westly units (humans and ai)"};
 		default = 0;
 	};
 	

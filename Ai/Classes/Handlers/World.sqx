@@ -81,7 +81,7 @@ namespace Intrusion.Ai
 			
 			_seatsCount = [_vehicle] call _self.CountSeats;
 
-			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
+			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount, _intrusionVehicle] new VehicleContainer;
 		};
 		
 		// Checks if all squad members are mounted in a vehicle.
@@ -112,18 +112,19 @@ namespace Intrusion.Ai
 		public method VehicleContainer GetMountedVehicle("_group" as Group)
 		{
 			private ["_vehicle" as Object, "_seatsCount" as Scalar];
-		
-			scopeName "main";
 			
 			{
 				if (vehicle _x != _x) then {
 					_vehicle = vehicle _x;
 					_seatsCount = (count fullCrew [_vehicle, "driver", true]) + (count fullCrew [_vehicle, "commander", true] + (count fullCrew [_vehicle, "gunner", true]) + (count fullCrew [_vehicle, "turret", true]) + (count fullCrew [_vehicle, "cargo", true]));
-					([vehicle _x, getPos vehicle _x, _seatsCount] new VehicleContainer) breakOut "main";
+
+		        	private _intrusionVehicle = (_vehicle getVariable ["IntrusionVehicle", classNull]) as IntrusionVehicle;
+		        	
+					return ([vehicle _x, getPos vehicle _x, _seatsCount, _intrusionVehicle] new VehicleContainer);
 				};
 			} foreach units _group as Object;
 			
-			classNull
+			return classNull;
 		};
 		
 		// Gets the closest detected enemy unit.

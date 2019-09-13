@@ -53,7 +53,9 @@ namespace Intrusion.Ai
 				
 				switch (_ourAiFrequency) do {
 					case AiFrequency.Same: { _factor = 1; };
+					case AiFrequency.More25Percent: { _factor = 1.25; };
 					case AiFrequency.More50Percent: { _factor = 1.5; };
+					case AiFrequency.More75Percent: { _factor = 1.75; };
 					case AiFrequency.More100Percent: { _factor = 2; };
 					default { player sideChat "Unknown case in AiUnitBalancer.GetAllowedUnitCount." };
 				};

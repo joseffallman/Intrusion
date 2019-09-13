@@ -5,21 +5,21 @@ class EditorData
 	angleGridStep=0.2617994;
 	scaleGridStep=1;
 	autoGroupingDist=10;
-	toggles=1;
+	toggles=129;
 	class ItemIDProvider
 	{
-		nextID=162;
+		nextID=167;
 	};
 	class MarkerIDProvider
 	{
-		nextID=1;
+		nextID=3;
 	};
 	class Camera
 	{
-		pos[]={4263.1245,43.345432,4237.1719};
-		dir[]={-0.16856052,-0.29227492,-0.9413718};
-		up[]={-0.051511806,0.9563368,-0.28768674};
-		aside[]={-0.9843573,1.1618249e-006,0.1762587};
+		pos[]={4292.7583,47.249306,4211.4536};
+		dir[]={-0.82631695,-0.370323,-0.42435077};
+		up[]={-0.3294726,0.9288801,-0.16919853};
+		aside[]={-0.45682839,-4.7264621e-008,0.88956022};
 	};
 };
 binarizationWanted=0;
@@ -1410,8 +1410,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4264.7646,32.056206,4193.6855};
-						angles[]={6.2248516,0.87830627,6.2727814};
+						position[]={4264.7651,32.056244,4193.686};
+						angles[]={6.2248564,0.87830204,6.2727828};
 					};
 					side="West";
 					flags=6;
@@ -1978,8 +1978,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4264.5923,31.945782,4191.7642};
-						angles[]={6.2248516,1.4753672,6.2727814};
+						position[]={3436.0308,94.43988,4163.7808};
+						angles[]={6.2208662,1.4753672,6.1535168};
 					};
 					side="West";
 					flags=6;
@@ -1991,14 +1991,14 @@ class Mission
 					};
 					id=109;
 					type="B_Soldier_F";
-					atlOffset=1.9073486e-006;
+					atlOffset=1.5258789e-005;
 				};
 			};
 			class Attributes
 			{
 			};
 			id=108;
-			atlOffset=1.9073486e-006;
+			atlOffset=1.5258789e-005;
 		};
 		class Item58
 		{
@@ -2272,8 +2272,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4254.3472,32.137733,4193.4058};
-						angles[]={6.2033563,2.9836268,0.006394445};
+						position[]={4266.4858,32.003326,4193.0864};
+						angles[]={6.2248516,2.0488539,6.2727814};
 					};
 					side="West";
 					flags=6;
@@ -2475,13 +2475,12 @@ class Mission
 		class Item70
 		{
 			dataType="Marker";
-			position[]={5198.2061,50.402,3146.0549};
+			position[]={5197.79,50.586521,3149.7993};
 			name="FACTORY3";
 			text="Forrest Factory (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=151;
-			atlOffset=-0.0001373291;
 		};
 		class Item71
 		{

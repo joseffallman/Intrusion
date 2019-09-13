@@ -14,11 +14,11 @@ using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
-	public class DecisionMaker : IDecisionMaker
+	public class DecisionMaker
 	{
 		#region Construction/Properties/Common
 	
-		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig, "_randomGenerator" as IRandomGenerator)
 		{
 			_self.Time = _time;
 			_self.Knowledge = _knowledge;
@@ -28,6 +28,7 @@ namespace Intrusion.Ai
 			_self.MarkerHandler = _markerHandler;
 			_self.ActionTimeoutConfig = _actionTimeoutConfig;
 			_Self.ResourceLocationConfig = _resourceLocationConfig;
+			_self.RandomGenerator = _randomGenerator;
 		};
 		
 		protected property IMissionTime Time { get; private set; };
@@ -38,6 +39,7 @@ namespace Intrusion.Ai
 		protected property IMarkerHandler MarkerHandler { get; private set; };
 		protected property IActionTimeoutConfig ActionTimeoutConfig { get; private set; };
 		protected property IResourceLocationConfig ResourceLocationConfig { get; private set; };
+		protected property IRandomGenerator RandomGenerator { get; private set; };
 	
 		public method SetState("_state" as AiSquadState, "_action" as IAction) 
 		{
@@ -64,10 +66,6 @@ namespace Intrusion.Ai
 		#endregion
 	
 		#region Brain Events
-	
-		public virtual method OnTargetResourceLocationCaptured()
-		{
-		};
 		
 		// Called when enemies on the ground are spotted near.
 		// _enemyUnitContainer (IUnitContainer): The closest enemy unit.
@@ -75,10 +73,34 @@ namespace Intrusion.Ai
 		public virtual method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
 		{
 			private ["_actionService" as IActionService, "_time" as Scalar];
+			private ["_leaderPos" as Array, "_order" as Order, "_action" as MoveAction];
+			
+			_order = _self.Knowledge.Order;
 			
 			if (isNull _mountedVehicle) then
 			{
-				private _action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED" as String, ""] new MoveAction;
+				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+			
+				// If currently defending a location
+			 	if (_order.Type == OrderType.Defend && _leaderPos distance _order.TargetPosition <= _self.ResourceLocationConfig.AreaRadius) then
+			 	{
+			 		// Set a random waypoint inside the location area.
+			 		private _distance = [_self.ResourceLocationConfig.AreaRadius] call _self.RandomGenerator.GetNumber;
+			 		private _heading = [360] call _self.RandomGenerator.GetNumber;
+			 		private _origin = _order.TargetPosition;
+			 		
+			 		if (!isNull _order.ResourceLocation) then {
+			 			_origin = [_order.ResourceLocation.MarkerName] call _self.MarkerHandler.GetMarkerPos;
+			 		};
+			 		
+			 		private _engagePosition = _origin getPos [_distance, _heading];
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _engagePosition, "MOVE", "LIMITED", "STEALTH", "YELLOW", ""] new MoveAction;
+			 	}
+			 	else
+			 	{
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+			 	};
+			 	
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action] call _self.ActionPerformer.DoMove;
 	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
@@ -297,7 +319,7 @@ namespace Intrusion.Ai
 			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
-        	["Move action created #3: " + str _action] call LogHandler.Debug;
+        	["Move action created (Away): " + str _action] call LogHandler.Debug;
 		};
 		
 		public virtual method OnNothingToDo()
@@ -329,10 +351,11 @@ namespace Intrusion.Ai
 			if (!isNull _mountedVehicle && _distanceToTargetPos <= 150) then
 			{
 				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
-				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn }) then
+				
+				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn && _moveAction.Type != MoveActionType.Patrol }) then
 				{
-		        	["Completed move #1"] call LogHandler.Debug;
-					player sideChat "Completed #1";
+		        	["Completed move (close)"] call LogHandler.Debug;
+					player sideChat "Completed (close)";
 					return true;
 				};
 			};
@@ -378,6 +401,12 @@ namespace Intrusion.Ai
 				{
 					_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
 	        		private _mountedVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
+	        		
+	        		// Move is completed if squad just recieved a new order.
+	        		if (_self.Knowledge.JustGotNewOrder) then {
+	        			_self.Knowledge.JustGotNewOrder = false;
+	        			return true;
+	        		};
 				
 					// Move is completed if the squad is mounted and has detected nearby enemies
 					if (!isNull _unitContainer) then {

@@ -1,0 +1,56 @@
+/*
+ * Name:	StartConfig
+ * Date:	2019-09-10
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Describes all start settings that matters.
+ */
+namespace Intrusion.Common
+{
+	public class StartConfig
+	{
+		public static method Init()
+		{
+			_self.Mode = ReleaseMode.Develop;
+			_self.ShowTutorials = false;
+			
+			_self.LogLevelFile = LogLevel.Debug;
+			_self.LogLevelScreen = LogLevel.Off;
+			
+			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
+			_self.OnlyAllowAiBeMotorized = true;
+			
+			// The following settings are live settings, and are only set if release mode is set to Live.
+			
+			if (_self.Mode == ReleaseMode.Live) then
+			{
+				// Game night time!				
+				_self.Mode = ReleaseMode.Production;
+				_self.ShowTutorials = true;
+				_self.LogLevelFile = LogLevel.Debug;
+				_self.LogLevelScreen = LogLevel.Off;
+				_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
+				_self.OnlyAllowAiBeMotorized = false;
+			};
+		};
+	
+		// Gets whether the mission is in debug mode or not.
+		public static property ReleaseMode Mode { get; private set; };
+		
+		// Gets whether the mission shows tutorials or not
+		public static property Boolean ShowTutorials { get; private set; };
+		
+		// Gets the current log level.
+		public static property LogLevel LogLevelFile { get; private set; };
+		
+		// Gets the current log level.
+		public static property LogLevel LogLevelScreen { get; private set; };
+		
+		// Gets whether the mission will start with special setting about AI groups count or not.
+		public static property Boolean OnlyOneGroupWithTwoWestlyAiUnits { get; private set; };
+		
+		public static property Boolean OnlyAllowAiBeMotorized { get; private set; };
+	};
+};

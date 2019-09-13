@@ -88,12 +88,15 @@ namespace Intrusion.Ai
 		private method CreateOrderOnOwnInitiative()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType];
-			
+			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
+
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
+
 			// Find the three enemy (or neutral) resource locations closest to the base and select a random one of them.
 
 			_resourceLocationCollection = call _mWorld.GetResourceLocationCollection;
 			_orderType = OrderType.Defend;
+			_orderTimeoutTime = (call _mTime.GetMissionTime) + 10000; // Never time out if its the last order given
 			
 			if (!isNull _resourceLocationCollection) then
 			{
@@ -128,6 +131,7 @@ namespace Intrusion.Ai
 						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
 						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
 						_orderType = OrderType.Attack;
+						_orderTimeoutTime = 0;
 						
 			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
 					};
@@ -136,9 +140,19 @@ namespace Intrusion.Ai
 		        	["Group " + str _mKnowledge.Group + " ordered to winner's location " + _location.MarkerName + "."] call LogHandler.Debug;
 				};
 
-				if (!isNull _location) then {
+				if (!isNull _location) then
+				{
+					// Update order info
+					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString);
+					
+					if (!isNull _location) then {
+						_orderInfo = _orderInfo + " " + ([_location.MarkerName] call _mMarkerHandler.GetMarkerText);
+					};
+					
+					_mKnowledge.Group setVariable ["IntrusionOrderInfo", _orderInfo, true];
+					
 					// Create the order
-					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location] new Order;
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};
@@ -148,7 +162,7 @@ namespace Intrusion.Ai
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
 			private ["_mountedVehicle" as VehicleContainer, "_leaderPos" as Array];
-			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer];
+			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer, "_orderResourceLocation" as ResourceLocation];
 			
 			scopeName "main";
 			
@@ -157,21 +171,51 @@ namespace Intrusion.Ai
 			_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
 			
 			
-			// If target resource location is already captured, and the order was on own initiative, request a new order!
-			// OnTargetResourceLocationCaptured
+			// Check if a new order is needed
 
-			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _mKnowledge.Order.ResourceLocation)) then
+			_orderResourceLocation = _mKnowledge.Order.ResourceLocation;
+
+			if (!isNull _orderResourceLocation) then
 			{
 				// If it is time for end game, create order for the winner's location
 				if (call _self.TimeToPushAtEndLocation) then {
-					if (_mKnowledge.Order.ResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+					if (_orderResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
+						if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+					};
+				};
+				
+				// If squad is present at order location
+				if (_orderResourceLocation.Side == side _mKnowledge.Group) then
+				{
+					if (_mKnowledge.Order.Type == OrderType.Attack) then {
+						if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+						
+						if ([_mKnowledge.Group, _orderResourceLocation] call _mWorld.CheckSquadPresenceAtResourceLocation) then {
+							call _self.CreateOrderOnOwnInitiative;
+							return;
+						};
+					};
+				};
+			};
+			
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader && !(isNull _orderResourceLocation)) then
+			{
+				// If it is time for end game, create order for the winner's location
+				if (call _self.TimeToPushAtEndLocation) then {
+					if (_orderResourceLocation.MarkerName != _mKnowledge.WinnersLocation.MarkerName) then {
 						call _self.CreateOrderOnOwnInitiative;
+						return;
 					};
 				}
 				else {
-					if (_mKnowledge.Order.ResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
+					if (_orderResourceLocation.Side == side _mKnowledge.Group && _mKnowledge.Order.Type != OrderType.Defend) then
 					{
-						call _mDecisionMaker.OnTargetResourceLocationCaptured;
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
@@ -470,10 +514,10 @@ namespace Intrusion.Ai
 		private method DecisionMaker NewDecisionMaker("_professionType" as ProfessionType)
 		{
 			if (_professionType == ProfessionType.Motorized || _professionType == ProfessionType.Mechanized || _professionType == ProfessionType.Armored || _professionType == ProfessionType.AttackHelicopter) then {
-				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new MotorizedDecisionMaker;
+				return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig, _mRandomGenerator] new MotorizedDecisionMaker;
 			};
 
-			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker; 
+			return [_mTime, _mKnowledge, new ActionServiceFactory, _mWorld, _mActionPerformer, new MarkerHandler, new ActionTimeoutConfig, _mResourceLocationConfig, _mRandomGenerator] new DecisionMaker; 
 		};
 		
 		// Tries to set the squad's profession if it is still Infantry.
@@ -488,11 +532,16 @@ namespace Intrusion.Ai
 				{
 					// Check that the squad has selected the profession type it wants to be.
 					if (_mKnowledge.WannaBeProfessionType == ProfessionType.Undefined) then {
-						_wannaBeType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
-						
-						// Make sure an attach chopper crew is always at least two members.
-						if (_wannaBeType != ProfessionType.AttackHelicopter || { count _mKnowledge.Members >= 2 }) then {
-							_mKnowledge.WannaBeProfessionType = _wannaBeType;
+						if (StartConfig.OnlyAllowAiBeMotorized) then {
+							_mKnowledge.WannaBeProfessionType = ProfessionType.Motorized;
+						}
+						else {
+							_wannaBeType = [side _self.Group, count _mKnowledge.Members] call _self.GetRandomProfessionType;
+							
+							// Make sure an attack chopper crew is always at least two members.
+							if (_wannaBeType != ProfessionType.AttackHelicopter || { count _mKnowledge.Members >= 2 }) then {
+								_mKnowledge.WannaBeProfessionType = _wannaBeType;
+							};
 						};
 					};
 					
@@ -559,6 +608,10 @@ namespace Intrusion.Ai
 		{
 			_mKnowledge.Order = _order;
 			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+			
+			if (_mKnowledge.State != AiSquadState.Idle) then {
+				_mKnowledge.JustGotNewOrder = true;
+			};
 		};
 		
 		public method Group GetGroup()
@@ -569,7 +622,7 @@ namespace Intrusion.Ai
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
-			private ["_squadVehicle" as VehicleContainer];
+			private ["_squadVehicle" as VehicleContainer, "_time" as Scalar];
 			
 			call _self.SetSquadProfession;
 			[_mKnowledge.Members] call _mActionPerformer.MoveOutDeadUnitFromVehicle;
@@ -584,6 +637,13 @@ namespace Intrusion.Ai
 				call _self.RespawnToBase;
 				[AiSquadState.Idle, classNull] call _mDecisionMaker.SetState;
 				return;
+			};
+			
+			_time = call _mTime.GetMissionTime;
+			
+			// Check if order's timeout time is exceedeed
+			if (!isNull _mKnowledge.Order && { _mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime }) then {
+				_mKnowledge.Order = classNull;
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.

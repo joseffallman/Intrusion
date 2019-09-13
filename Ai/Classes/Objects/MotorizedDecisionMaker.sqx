@@ -16,9 +16,9 @@ namespace Intrusion.Ai
 {
 	public class MotorizedDecisionMaker : VehicularDecisionMaker
 	{
-		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig, "_randomGenerator" as IRandomGenerator)
 		{
-			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig] call _base.Constructor;
+			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig, _randomGenerator] call _base.Constructor;
 		};
 		
 		public override method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
@@ -41,15 +41,26 @@ namespace Intrusion.Ai
 		// Called when the group is closing in on a destination (not necessary a location).
 		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
 		{
+			private ["_order" as Order];
 			private _time = call _self.Time.GetMissionTime;
 			
 			// If mounted on a squad vehicle.
 			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "RED", _self.Knowledge.Order.ResourceLocation.MarkerName, 75] new MoveAction;
-				[AiSquadState.Moving, _action] call _self.SetState;
-				[_action as MoveAction] call _self.ActionPerformer.DoMove;
-	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
+				_order = _self.Knowledge.Order;
+				if (_order.Type == OrderType.Defend) then {
+					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 120] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (patrol in): " + str _action] call LogHandler.Debug;
+				}
+				else {
+					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 30] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
+				};
+				
 	        	return;
 			};
 			
@@ -82,32 +93,6 @@ namespace Intrusion.Ai
 			};
 			
 			return [_mountedVehicle, _closestEnemy] call _base.CompleteMoveWhenEnemiesNearby;
-		};
-		
-		protected override method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
-		{
-			private ["_moveAction" as MoveAction];
-			
-			// If acting as a profession squad
-			
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then {
-				if (_distanceToTargetPos <= 150) then
-				{
-					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
-					
-					if (_moveAction is MoveAction) then {
-						if (_moveAction.Type != MoveActionType.ClosingIn) then {
-				        	["Completed move #1"] call LogHandler.Debug;
-							player sideChat "Completed #1";
-							return true;
-						};
-					};
-				};
-				
-				return false;
-			};
-			
-			return [_mountedVehicle, _distanceToTargetPos] call _base.CompleteMoveWhenCloseToDestination;
 		};
 		
 		// Called when the squad is at a resource location and is performing a move action.

@@ -16,9 +16,9 @@ namespace Intrusion.Ai
 {
 	public class VehicularDecisionMaker : DecisionMaker
 	{
-		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig)
+		public constructor("_time" as IMissionTime, "_knowledge" as Knowledge, "_actionServiceFactory" as IActionServiceFactory, "_world" as IWorld, "_actionPerformer" as IActionPerformer, "_markerHandler" as IMarkerHandler, "_actionTimeoutConfig" as IActionTimeoutConfig, "_resourceLocationConfig" as IResourceLocationConfig, "_randomGenerator" as IRandomGenerator)
 		{
-			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig] call _base.Constructor;
+			[_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _resourceLocationConfig, _randomGenerator] call _base.Constructor;
 		};
 		
 		public override method OnBoardCloseVehicle()
@@ -60,7 +60,7 @@ namespace Intrusion.Ai
 				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _vehicleContainer.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
-	        	["Move action created #3: " + str _action] call LogHandler.Debug;
+	        	["Move action created (found vehicle): " + str _action] call LogHandler.Debug;
 	        	return;
 			};
 			

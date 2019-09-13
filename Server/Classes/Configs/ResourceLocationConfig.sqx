@@ -13,7 +13,7 @@ namespace Intrusion.Server
 	{
 		// Creates a ResourceLocationConfig object.
 		public constructor {
-			_self.AreaRadius = 40;
+			_self.AreaRadius = 50;
 			_self.DominanceTimeBeforeCaptureSek = 30;
 		};
 		

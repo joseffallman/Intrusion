@@ -63,7 +63,13 @@ namespace Intrusion.Ai
 			{
 				_existingUnitsCount = [_x] call _mAiSquadHandler.CountAllUnitsOfSide;
 				_maxUnitsCount = [_x] call _mUnitBalancer.GetAllowedUnitCount;
-				_unitCount = selectRandom [1, 1, 2, 2, 2, 2, 2, 3, 3, 4];
+				
+				if (StartConfig.OnlyOneGroupWithTwoWestlyAiUnits) then {
+					_unitCount = 2;
+				}
+				else {
+					_unitCount = selectRandom [1, 1, 2, 2, 2, 2, 2, 3, 3, 4];
+				};
 				_time = new MissionTime;
 				_mapMarkerInfo = [_x] call _mMapMarkersConfig.GetMapMarkerInfo;
 				_unitInfo = [_x] call _mUnitsConfig.GetUnitInfo;
@@ -92,8 +98,9 @@ namespace Intrusion.Ai
 					private _actionPerformer = [_group, _mResourceLocationHandler, _mUnitSpawner, _mUnitsConfig] new ActionPerformer;
 					private _markerHandler = new MarkerHandler;
 					private _actionTimeoutConfig = new ActionTimeoutConfig;
+					private _randomGenerator = new RandomGenerator;
 
-					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig] new DecisionMaker;
+					_decisionMaker = [_time, _knowledge, _actionServiceFactory, _world, _actionPerformer, _markerHandler, _actionTimeoutConfig, _mResourceLocationConfig, _randomGenerator] new DecisionMaker;
 					
 					_aiSquad = [
 						_group,
@@ -166,12 +173,16 @@ namespace Intrusion.Ai
 			
 			sleep 5;
 		
-			_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+			if (StartConfig.OnlyOneGroupWithTwoWestlyAiUnits) then {
+				_aiUnitBalancer = new Intrusion.Tests.Helpers.TestAiUnitBalancer;
+			}
+			else {
+				_aiUnitBalancer = [gServer.UnitCounter, gCommon.MissionParametersHandler.AiWestFrequency, gCommon.MissionParametersHandler.AiEastFrequency] new AiUnitBalancer;
+			};
 			
 			_aiService = [
 				gServer.AiSquadHandler,
 				_aiUnitBalancer, 
-				//new Intrusion.Tests.Helpers.TestAiUnitBalancer,
 				gServerConfig.Gameplay,
 				gCommonConfig.MapMarkers,
 				gCommonConfig.Professions,
