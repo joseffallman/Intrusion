@@ -49,7 +49,7 @@ namespace Intrusion.Ai
 			{
 				_order = _self.Knowledge.Order;
 				if (_order.Type == OrderType.Defend) then {
-					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 70] new MoveAction;
+					private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _self.Knowledge.Order.TargetPosition, "MOVE", "LIMITED", "COMBAT", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName, 120] new MoveAction;
 					[AiSquadState.Moving, _action] call _self.SetState;
 					[_action as MoveAction] call _self.ActionPerformer.DoMove;
 		        	["Move action created (patrol in): " + str _action] call LogHandler.Debug;

@@ -13,13 +13,13 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.UnitTest;
+			_self.Mode = ReleaseMode.Live;
 			_self.ShowTutorials = false;
 			
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Off;
 			
-			_self.OnlyOneGroupWithTwoWestlyAiUnits = true;
+			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
 			_self.OnlyAllowAiBeMotorized = true;
 			
 			// The following settings are live settings, and are only set if release mode is set to Live.
