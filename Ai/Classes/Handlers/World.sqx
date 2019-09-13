@@ -81,7 +81,7 @@ namespace Intrusion.Ai
 			
 			_seatsCount = [_vehicle] call _self.CountSeats;
 
-			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount] new VehicleContainer;
+			return [_intrusionVehicle.Vehicle, getPos _intrusionVehicle.Vehicle, _seatsCount, _intrusionVehicle] new VehicleContainer;
 		};
 		
 		// Checks if all squad members are mounted in a vehicle.

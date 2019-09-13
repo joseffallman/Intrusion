@@ -65,6 +65,12 @@ using Intrusion.Common;
 
 #region Common Objects
 
+/*
+ * ARE YOU LOOKING FOR START CONFIGURATION SETTINGS?
+ * DO NOT LOOK HERE ANYMORE. INSTEAD, SEE CLASS StartConfig.
+ */
+
+
 // Enum Metas
 call TechnologyMeta.Init;
 

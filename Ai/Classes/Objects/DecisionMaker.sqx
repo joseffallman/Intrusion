@@ -351,10 +351,11 @@ namespace Intrusion.Ai
 			if (!isNull _mountedVehicle && _distanceToTargetPos <= 150) then
 			{
 				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
-				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn }) then
+				
+				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn && _moveAction.Type != MoveActionType.Patrol }) then
 				{
-		        	["Completed move #1"] call LogHandler.Debug;
-					player sideChat "Completed #1";
+		        	["Completed move (close)"] call LogHandler.Debug;
+					player sideChat "Completed (close)";
 					return true;
 				};
 			};

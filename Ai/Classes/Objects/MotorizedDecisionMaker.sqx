@@ -95,32 +95,6 @@ namespace Intrusion.Ai
 			return [_mountedVehicle, _closestEnemy] call _base.CompleteMoveWhenEnemiesNearby;
 		};
 		
-		protected override method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
-		{
-			private ["_moveAction" as MoveAction];
-			
-			// If acting as a profession squad
-			
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then {
-				if (_distanceToTargetPos <= 150) then
-				{
-					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
-					
-					if (_moveAction is MoveAction) then {
-						if (_moveAction.Type != MoveActionType.ClosingIn) then {
-				        	["Completed move #1"] call LogHandler.Debug;
-							player sideChat "Completed #1";
-							return true;
-						};
-					};
-				};
-				
-				return false;
-			};
-			
-			return [_mountedVehicle, _distanceToTargetPos] call _base.CompleteMoveWhenCloseToDestination;
-		};
-		
 		// Called when the squad is at a resource location and is performing a move action.
 		// _mountedVehicle (VehicleContainer): The squad's mounted vehicle. classNull if no vehicle is mounted.
 		// _locationMarkerName (String): The current location's marker name.
