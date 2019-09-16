@@ -22,15 +22,13 @@ namespace Intrusion.Ai
 		
 		public method AiUnitInfo GetUnitInfo("_side" as Side)
 		{
-			scopeName "main";
-			
 			{
 				if (_x.Side == _side) then {
-					_x breakOut "main";
+					return _x;
 				};
 			} foreach _mUnitInfos as AiUnitInfo;
 			
-			classNull;
+			return classNull;
 		};
 	};
 };

@@ -18,14 +18,15 @@ namespace Intrusion.Common
 				[Technology.Transport, "Transport", 2] new TechnologyInfo,
 				[Technology.Services, "Services", 4] new TechnologyInfo,
 				[Technology.Maintenance, "Maintenance", 6] new TechnologyInfo,
-				[Technology.Ordnance, "Ordnance", 8] new TechnologyInfo,
-				[Technology.Motorized, "Motorized Vehicles", 10] new TechnologyInfo,
-				[Technology.AntiAir, "Anti Air", 12] new TechnologyInfo,
-				[Technology.AirRecon, "Air Recon", 14] new TechnologyInfo,
-				[Technology.LightArmor, "Light Armor", 16] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 18] new TechnologyInfo,
-				[Technology.HeavyArmor, "Heavy Armor", 20] new TechnologyInfo,
-				[Technology.AirArmed, "Armed Air Units", 22] new TechnologyInfo,
+				[Technology.AdvancedWeapons, "Advanced Weapons", 8] new TechnologyInfo,
+				[Technology.Ordnance, "Ordnance", 10] new TechnologyInfo,
+				[Technology.Motorized, "Motorized Vehicles", 12] new TechnologyInfo,
+				[Technology.AntiAir, "Anti Air", 14] new TechnologyInfo,
+				[Technology.AirRecon, "Air Recon", 16] new TechnologyInfo,
+				[Technology.LightArmor, "Light Armor", 18] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 20] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 22] new TechnologyInfo,
+				[Technology.AirArmed, "Armed Air Units", 24] new TechnologyInfo,
 			];
 		};
 	};

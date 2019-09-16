@@ -21,11 +21,13 @@ namespace Intrusion.Server
 			_mWeapons = [
 				[west, WeaponBoxType.Basic, "Box_NATO_Wps_F", Technology.None] new WeaponBoxInfo,
 				[west, WeaponBoxType.Grenades, "Box_NATO_Grenades_F", Technology.None] new WeaponBoxInfo,
+				[west, WeaponBoxType.Advanced, "Box_NATO_WpsSpecial_F", Technology.AdvancedWeapons] new WeaponBoxInfo,
 				[west, WeaponBoxType.Launchers, "Box_NATO_WpsLaunch_F", Technology.Ordnance] new WeaponBoxInfo,
 				[west, WeaponBoxType.Ordnance, "Box_NATO_AmmoOrd_F", Technology.Ordnance] new WeaponBoxInfo,
-				
+
 				[east, WeaponBoxType.Basic, "Box_East_Wps_F", Technology.None] new WeaponBoxInfo,
 				[east, WeaponBoxType.Grenades, "Box_East_Grenades_F", Technology.None] new WeaponBoxInfo,
+				[east, WeaponBoxType.Advanced, "Box_East_WpsSpecial_F", Technology.AdvancedWeapons] new WeaponBoxInfo,
 				[east, WeaponBoxType.Launchers, "Box_East_WpsLaunch_F", Technology.Ordnance] new WeaponBoxInfo,
 				[east, WeaponBoxType.Ordnance, "Box_East_AmmoOrd_F", Technology.Ordnance] new WeaponBoxInfo,
 			];
@@ -33,31 +35,26 @@ namespace Intrusion.Server
 		
 		// Gets the weapon box class name that belongs to a defined side and a weapon box type.
 		// Returns (String): A weapon class name. Empty string if the weapon does not exist.
-		public static method String GetWeaponClassNameBySideAndBoxType {
-			params ["_side" as Side, "_weaponBoxType" as WeaponBoxType];
-			
-			scopeName "main";
-			
+		public static method String GetWeaponClassNameBySideAndBoxType("_side" as Side, "_weaponBoxType" as WeaponBoxType)
+		{
 			{
 				if (_x.Side == _side && _x.WeaponBoxType == _weaponBoxType) then {
-					(_x.ClassName) breakOut "main"; // TODO SQX (TEST ADDED): Should work without parenthesis...
+					return _x.ClassName;
 				};
 			} foreach _mWeapons as WeaponBoxInfo;
 			
-			""
+			return "";
 		};
 		
 		public static method WeaponBoxInfo GetWeaponBoxInfo("_weaponBoxType" as WeaponBoxType)
 		{
-			scopeName "main";
-		
 			{
 				if (_x.WeaponBoxType == _weaponBoxType) then {
-					_x breakOut "main";
+					return _x;
 				};
 			} foreach _mWeapons as WeaponBoxInfo;
 			
-			classNull
+			return classNull;
 		};
 	};
 };
