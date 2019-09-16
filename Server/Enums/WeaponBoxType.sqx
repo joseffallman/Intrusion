@@ -13,8 +13,9 @@ namespace Intrusion.Server
 	{
 		Basic = 1,
 		Grenades = 2,
-		Launchers = 3,
-		Ordnance = 4
+		Advanced = 3,
+		Launchers = 4,
+		Ordnance = 5
 	};
 	
 	public class WeaponBoxTypeMeta
