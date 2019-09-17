@@ -21,12 +21,12 @@ namespace Intrusion.Common
 				[Technology.AdvancedWeapons, "Advanced Weapons", 150] new TechnologyInfo,
 				[Technology.Ordnance, "Ordnance", 250] new TechnologyInfo,
 				[Technology.Motorized, "Motorized Vehicles", 300] new TechnologyInfo,
-				[Technology.AntiAir, "Anti Air", 375] new TechnologyInfo,
+				[Technology.AntiAir, "Anti Air", 350] new TechnologyInfo,
 				[Technology.AirRecon, "Air Recon", 400] new TechnologyInfo,
 				[Technology.LightArmor, "Light Armor", 500] new TechnologyInfo,
-				[Technology.Artillery, "Artillery", 575] new TechnologyInfo,
-				[Technology.HeavyArmor, "Heavy Armor", 650] new TechnologyInfo,
-				[Technology.AirArmed, "Armed Air Units", 750] new TechnologyInfo,
+				[Technology.Artillery, "Artillery", 600] new TechnologyInfo,
+				[Technology.HeavyArmor, "Heavy Armor", 700] new TechnologyInfo,
+				[Technology.AirArmed, "Armed Air Units", 800] new TechnologyInfo,
 			];
 		};
 		
