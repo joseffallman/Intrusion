@@ -75,6 +75,6 @@ gServer = [] new IntrusionServer;
 //[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
-[gServer.TargetHandler] call ObservationService.Init;
+[gServer.TargetHandler, gServer.ObservationHandler] call ObservationService.Init;
 
 #endregion

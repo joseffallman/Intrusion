@@ -18,11 +18,11 @@ namespace Intrusion.Server
 		private static fields ["_mMissionTime" as IMissionTime, "_mObservationHandler" as ObservationHandler, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
 		
 		// Initializes the observation service.
-		public static method Init("_targetHandler" as TargetHandler) {
+		public static method Init("_targetHandler" as TargetHandler, "_observationHandler" as ObservationHandler) {
 			_mMissionTime = new MissionTime;
 			_mTargetHandler = _targetHandler;
 			_mCurrentId = 0;
-			_mObservationHandler = new ObservationHandler;
+			_mObservationHandler = _observationHandler;
 		};
 		
 		// Marks all observations in the observation collection as deleted.
