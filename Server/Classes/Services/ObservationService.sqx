@@ -131,7 +131,8 @@ namespace Intrusion.Server
 
 	        	// Broadcast the list of observations
 	        	_mapObservations = call _mObservationHandler.ToMapObservations;
-				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
+	        	
+				["ClientEventReciever.OnObservationsUpdated", [_mapObservations]] call Remote.Invoke;
 	        	
         		sleep 5;
 			};
