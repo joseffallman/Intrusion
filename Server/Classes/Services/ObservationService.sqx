@@ -15,14 +15,17 @@ namespace Intrusion.Server
 {
 	public class ObservationService
 	{
-		private static fields ["_mMissionTime" as IMissionTime, "_mObservationHandler" as ObservationHandler, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
+		private static fields ["_mMissionTime" as IMissionTime, "_mObservationHandler" as ObservationHandler, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler, "_mCompetingSides" as Array /* of Side */];
 		
 		// Initializes the observation service.
-		public static method Init("_targetHandler" as TargetHandler, "_observationHandler" as ObservationHandler) {
-			_mMissionTime = new MissionTime;
+		public static method Init("_targetHandler" as TargetHandler, "_observationHandler" as ObservationHandler, "_competingSides" as Array /* of Side */)
+		{
 			_mTargetHandler = _targetHandler;
-			_mCurrentId = 0;
 			_mObservationHandler = _observationHandler;
+			_mCompetingSides = _competingSides;
+			
+			_mMissionTime = new MissionTime;
+			_mCurrentId = 0;
 		};
 		
 		// Marks all observations in the observation collection as deleted.
@@ -118,7 +121,8 @@ namespace Intrusion.Server
 	        		private ["_unit" as Object];
 	        		_unit = _x;
 	        	
-	        		if (alive _unit) then {
+	        		if (alive _unit && { side group _unit in _mCompetingSides }) then
+	        		{
 		        		_targets = [_unit] call _mTargetHandler.GetEnemyTargets;
 		        		
 		        		{
