@@ -8,11 +8,11 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=287;
+		nextID=288;
 	};
 	class MarkerIDProvider
 	{
-		nextID=3;
+		nextID=4;
 	};
 	class Camera
 	{
@@ -242,7 +242,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=72;
+		items=73;
 		class Item0
 		{
 			dataType="Marker";
@@ -2573,6 +2573,15 @@ class Mission
 			{
 			};
 			id=285;
+		};
+		class Item72
+		{
+			dataType="Marker";
+			position[]={4395.6431,43.199001,4252.957};
+			name="artillery_marker";
+			type="mil_triangle";
+			id=287;
+			atlOffset=0.00048828125;
 		};
 	};
 };

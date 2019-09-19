@@ -14,8 +14,8 @@ namespace Intrusion.Common
 		public static method Init()
 		{
 			_self.Mode = ReleaseMode.Develop;
-			_self.ShowTutorials = false;
 			
+			_self.ShowTutorials = false;
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Off;
 			
