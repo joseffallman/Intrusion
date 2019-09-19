@@ -32,6 +32,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocation
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ObservationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";

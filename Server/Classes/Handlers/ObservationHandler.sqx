@@ -1,0 +1,87 @@
+/*
+ * Name:	ObservationHandler
+ * Date:	2019-09-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Handles all currently visible observations (for all sides).
+ */
+namespace Intrusion.Server
+{
+	public class ObservationHandler
+	{
+		private fields ["_mObservations" as Array /* of Observation */];
+		
+		// Creates a ObservationHandler object.
+		public constructor {
+			_mObservations = [];
+		};
+		
+		// Gets all observations.
+		public method Array GetObservations()
+		{
+			return _mObservations;
+		};
+		
+		// Adds an observation.
+		public method AddObservation("_observation" as Observation)
+		{
+			_mObservations pushBack _observation;
+		};
+		
+		// Deletes all observations that are marked as deleted.
+		public method DeleteMarkedObservations()
+		{
+			private ["_observationsToKeep" as Array];
+			
+			_observationsToKeep = [];
+			
+			{
+				if (!_x.MarkedAsDeleted) then {
+					_observationsToKeep pushBack _x;
+				};
+			} foreach _mObservations as Observation;
+			
+			_mObservations = _observationsToKeep;
+		};
+		
+		// Converts the service's list of observations into broadcastable and client optimized map observations.
+		// Returns (Array): An array of map observations.
+		public method Array ToMapObservations()
+		{
+			private _mapObservations = [];
+			
+			{
+				_mapObservations pushBack (call _x.ToMapObservation);
+			} foreach _mObservations as Observation;
+			
+			return _mapObservations;
+		};
+		
+		// Gets an eventual already existing observation from the list of observations.
+		// Uses different matching techniques to figure out which one it may be.
+		// _target (Target): The target used to find the observation.
+		// Returns (Observation): The found observation. classNull if observation was not found.
+		public method Observation GetExistingObservation("_target" as Target)
+		{
+			private ["_observation" as Observation];
+			
+			_observation = classNull;
+			
+			{
+				scopeName "loop";
+				
+				if (_x.ObservingSide == _target.ObservingSide) then {
+					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 100) then {
+						_observation = _x;
+					
+						breakOut "loop";
+					};
+				}
+			} foreach _mObservations as Observation;
+			
+			return _observation;
+		};
+	};
+};
