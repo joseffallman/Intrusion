@@ -96,7 +96,7 @@ namespace Intrusion.Client
 		};
 		
 		// Updates all map observations on the map.
-		// _mapObservations (Array): All current mapobservations.
+		// _mapObservations (Array of MapObservation): All current mapobservations.
 		public static method UpdateMap("_mapObservations" as Array)
 		{
 			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];

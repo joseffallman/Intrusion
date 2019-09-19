@@ -252,5 +252,10 @@ namespace Intrusion.Client
 			sleep _duration;
 			[_unit] call BIS_fnc_ambientAnim__terminate;
 		};
+		
+		public static method OnObservationsUpdated("_mapObservations" as Array /* of MapObservation */)
+		{
+			[_mapObservations] call MapObservationsHandler.UpdateMap;
+		};
 	};
 };

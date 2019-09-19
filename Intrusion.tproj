@@ -752,6 +752,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MessageHandler.sqx" FileName="Server\Classes\Handlers\MessageHandler.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ObservationHandler.sqx" FileName="Server\Classes\Handlers\ObservationHandler.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationHandler.sqx" FileName="Server\Classes\Handlers\ResourceLocationHandler.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
