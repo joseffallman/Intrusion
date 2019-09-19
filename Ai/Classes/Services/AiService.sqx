@@ -168,8 +168,8 @@ namespace Intrusion.Ai
 		{
 			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
 			
-			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection] new PseudoArtilleryService;
-			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection] new PseudoArtilleryService;
+			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
 			
 			call _westArtilleryService.RunAsync;
 			call _eastArtilleryService.RunAsync;

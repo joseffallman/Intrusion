@@ -15,13 +15,15 @@ namespace Intrusion.Ai
 {
 	public class PseudoArtilleryService : Service
 	{
-		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mRounds" as Scalar];
+		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mCompetingSides" as Array /* of Side */, "_mRounds" as Scalar];
 		
 		// Creates a PseudoArtilleryService object.
-		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection) {
+		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, "_competingSides" as Array /* of Side */) {
 			_mSide = _side;
 			_mObservationHandler = _observationHandler;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mCompetingSides = _competingSides;
+			
 			_mRounds = 10;
 		};
 		
@@ -45,49 +47,74 @@ namespace Intrusion.Ai
 		
 			// If we get here, technology is invented for the side. Now, find a target.
 			
-			while { _roundsFired < _mRounds } do
+			while { true } do
 			{
-				private _targetPos = [];
-				_observations = call _mObservationHandler.GetObservations;
-				
+				while { _roundsFired < _mRounds } do
 				{
-					scopeName "loop";
-					_observation = _x;
+					private _targetPos = [];
+					private _targetObject = objNull;
+					private _targetObjectExactPos = [];
+					_observations = call _mObservationHandler.GetObservations;
 					
-					if (!([_mSide, _observation.PercievedSide] call BIS_fnc_sideIsFriendly)) then
 					{
-						private _pos = _observation.PercievedPos getPos [_observation.PercievedOffsetDistance, _observation.PercievedOffsetDir];
+						scopeName "loop";
+						_observation = _x;
 						
-						// There must be no allied units near the target area
-						private _nearestAlliedUnitDistance = 999999;
-						
+						if (_mSide == _observation.ObservingSide && _observation.PercievedSide in _mCompetingSides && !([_mSide, _observation.PercievedSide] call BIS_fnc_sideIsFriendly)) then
 						{
-							private _leader = leader _x;
-							
-							if ([_mSide, side _x] call BIS_fnc_sideIsFriendly) then {
-								if (!isNull _leader && _leader distance _pos < _nearestAlliedUnitDistance) then {
-									_nearestAlliedUnitDistance = _leader distance _pos;
+							if (!(_observation.Unit isKindOf "Air") && !(_observation.Unit isKindOf "Ship")) then // Only count ground units
+							{
+								private _pos = _observation.PercievedPos getPos [_observation.PercievedOffsetDistance, _observation.PercievedOffsetDir];
+								
+								// There must be no allied units near the target area
+								private _nearestAlliedUnitDistance = 999999;
+								
+								{
+									private _leader = leader _x;
+									
+									if ([_mSide, side _x] call BIS_fnc_sideIsFriendly) then {
+										if (!isNull _leader && _leader distance _pos < _nearestAlliedUnitDistance) then {
+											_nearestAlliedUnitDistance = _leader distance _pos;
+										};
+									};
+								} foreach allGroups;
+		
+								if (_nearestAlliedUnitDistance > 150) then {
+									_targetPos = _pos;
+									_targetObject = _observation.Unit;
+									_targetObjectExactPos = getPos _targetObject;
+									breakOut "loop";
 								};
 							};
-						} foreach allGroups;
-hint str _nearestAlliedUnitDistance;
-						if (_nearestAlliedUnitDistance > 100) then {
-							_targetPos = _pos;
-							breakOut "loop";
+						};
+					} foreach _observations as Observation;
+					
+					sleep 10; // Check if target is moving...
+					
+					if (count _targetPos > 0) then // Launch!
+					{
+						private _newTargetExactPos = getPos _targetObject;
+						private _targetIsStationary = _targetObjectExactPos distance _newTargetExactPos < 5;
+						
+						if (_targetIsStationary) then
+						{
+							_launchService = [_targetPos] new PseudoArtilleryLaunchService;
+							call _launchService.RunAsync;
+							
+							if (StartConfig.ShowArtilleryMarkers) then {
+								private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
+								[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
+							};
+							
+							_roundsFired = _roundsFired + 1;
 						};
 					};
-				} foreach _observations as Observation;
-				
-				if (count _targetPos > 0) then // Launch!
-				{
-					private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
-					[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
-					_launchService = [_targetPos] new PseudoArtilleryLaunchService;
-					call _launchService.RunAsync;
-					_roundsFired = _roundsFired + 1;
+					
+					sleep 60; // Always this time between two fire rounds.
 				};
 				
-				sleep 6;
+				sleep 5 * 60; // Simulate out of ammo. It will take this time to get new.
+				_roundsFired = 0;
 			};
 			
 			call _base.Run;
