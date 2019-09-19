@@ -9,32 +9,85 @@
  */
 
 using Intrusion.Common;
+using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
 	public class PseudoArtilleryService : Service
 	{
-		private fields ["_mTargetPos" as Array];
+		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mRounds" as Scalar];
 		
 		// Creates a PseudoArtilleryService object.
-		public constructor("_side" as Side) {
-			_mTargetPos = _targetPos;
+		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection) {
+			_mSide = _side;
+			_mObservationHandler = _observationHandler;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mRounds = 10;
 		};
 		
 		protected override method Run()
 		{
-			private ["_shell" as Object];
+			private ["_launchService" as PseudoArtilleryLaunchService, "_observations" as Array /* of Observation */, "_observation" as Observation];
+			private ["_roundsFired" as Scalar];
 			
-			sleep 10;
-			
-			for "_i" from 1 to 3 + floor random 10 do {
-				private _pos = [(_mTargetPos select 0) - 30 + random 60, (_mTargetPos select 1) - 30 + random 60, 400];
-			
-				_shell = "Sh_120mm_HE" createvehicle _pos;
-				_shell setVectorDirandUp [[0,0,-1], [0.1,0.1,1]];
-				_shell setVelocity [0,0,-100];
+			_roundsFired = 0;
+		
+			// Wait for technology to be invented
+			while { !([_mSide, Technology.Artillery] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) } do
+			{
+				if (_self.IsCancelling) then {
+					call _base.Run;
+					return;
+				};
 				
-				sleep 1 + random 1;
+				sleep 30;
+			};
+		
+			// If we get here, technology is invented for the side. Now, find a target.
+			
+			while { _roundsFired < _mRounds } do
+			{
+				private _targetPos = [];
+				_observations = call _mObservationHandler.GetObservations;
+				
+				{
+					scopeName "loop";
+					_observation = _x;
+					
+					if (!([_mSide, _observation.PercievedSide] call BIS_fnc_sideIsFriendly)) then
+					{
+						private _pos = _observation.PercievedPos getPos [_observation.PercievedOffsetDistance, _observation.PercievedOffsetDir];
+						
+						// There must be no allied units near the target area
+						private _nearestAlliedUnitDistance = 999999;
+						
+						{
+							private _leader = leader _x;
+							
+							if ([_mSide, side _x] call BIS_fnc_sideIsFriendly) then {
+								if (!isNull _leader && _leader distance _pos < _nearestAlliedUnitDistance) then {
+									_nearestAlliedUnitDistance = _leader distance _pos;
+								};
+							};
+						} foreach allGroups;
+hint str _nearestAlliedUnitDistance;
+						if (_nearestAlliedUnitDistance > 100) then {
+							_targetPos = _pos;
+							breakOut "loop";
+						};
+					};
+				} foreach _observations as Observation;
+				
+				if (count _targetPos > 0) then // Launch!
+				{
+					private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
+					[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
+					_launchService = [_targetPos] new PseudoArtilleryLaunchService;
+					call _launchService.RunAsync;
+					_roundsFired = _roundsFired + 1;
+				};
+				
+				sleep 6;
 			};
 			
 			call _base.Run;

@@ -20,6 +20,7 @@ namespace Intrusion.Ai
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
+		private fields ["_mObservationHandler" as ObservationHandler];
 		
 		// Creates a AiService object.
 		public constructor(
@@ -35,7 +36,8 @@ namespace Intrusion.Ai
 			"_unitsConfig" as IAiUnitsConfig,
 			"_vehicleSpawner" as IVehicleSpawner,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			"_gameLengthMonitor" as IGameLengthMonitor)
+			"_gameLengthMonitor" as IGameLengthMonitor,
+			"_observationHandler" as ObservationHandler)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -50,6 +52,7 @@ namespace Intrusion.Ai
 			_mVehicleSpawner = _vehicleSpawner;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mGameLengthMonitor = _gameLengthMonitor;
+			_mObservationHandler = _observationHandler;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -163,6 +166,14 @@ namespace Intrusion.Ai
 		
 		public method RunAsync()
 		{
+			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
+			
+			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection] new PseudoArtilleryService;
+			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection] new PseudoArtilleryService;
+			
+			call _westArtilleryService.RunAsync;
+			call _eastArtilleryService.RunAsync;
+		
 			_self.IsRunning = true;
 			[] spawn _self.Run;
 		};
@@ -196,7 +207,8 @@ namespace Intrusion.Ai
 				//new AiWeaponsConfig
 				gServer.VehicleSpawner,
 				gServer.InventedTechnologiesCollection,
-				gServer.MissionCounterService
+				gServer.MissionCounterService,
+				gServer.ObservationHandler
 			] new AiService;
 			
 			call _aiService.RunAsync;
