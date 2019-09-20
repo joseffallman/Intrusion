@@ -64,7 +64,7 @@ namespace Intrusion.Ai
 						{
 							if (!(_observation.Unit isKindOf "Air") && !(_observation.Unit isKindOf "Ship")) then // Only count ground units
 							{
-								private _pos = _observation.PercievedPos getPos [_observation.PercievedOffsetDistance, _observation.PercievedOffsetDir];
+								private _pos = _observation.PercievedOffsetPos;
 								
 								// There must be no allied units near the target area
 								private _nearestAlliedUnitDistance = 999999;

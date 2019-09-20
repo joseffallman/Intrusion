@@ -20,7 +20,7 @@ namespace Intrusion.Common
 			_self.LogLevelScreen = LogLevel.Off;
 			
 			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
-			_self.OnlyAllowAiBeMotorized = true;
+			_self.OnlyAllowAiBeMotorized = false;
 			_self.ShowArtilleryMarkers = true;
 			
 			// The following settings are live settings, and are only set if release mode is set to Live.
