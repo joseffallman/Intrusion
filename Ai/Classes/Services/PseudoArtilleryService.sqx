@@ -94,7 +94,7 @@ namespace Intrusion.Ai
 					if (count _targetPos > 0) then // Launch!
 					{
 						private _newTargetExactPos = getPos _targetObject;
-						private _targetIsStationary = _targetObjectExactPos distance _newTargetExactPos < 5;
+						private _targetIsStationary = _targetObjectExactPos distance _newTargetExactPos < 15;
 						
 						if (_targetIsStationary) then
 						{
