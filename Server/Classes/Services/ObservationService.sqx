@@ -61,11 +61,9 @@ namespace Intrusion.Server
 			{
 				// Set a random offset for the observation.
 				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				private _offsetDir = floor random 360;
+				private _offsetHeading = floor random 360;
 				
-				_observation.PercievedOffsetDir = _offsetDir;
-				_observation.ObservedDistance = _target.ObservedDistance;
-				_observation.PercievedOffsetDistance = _offsetDistance;
+				_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
 			};
 		};
 		
@@ -85,7 +83,7 @@ namespace Intrusion.Server
 		// _target (Target): The target to add as an observation.
 		private static method AddTargetToObservations("_target" as Target)
 		{
-			private ["_existingObservation" as Observation, "_newObservation" as Observation, "_offsetDistance" as Scalar, "_offsetDir" as Scalar];
+			private ["_existingObservation" as Observation, "_newObservation" as Observation, "_offsetDistance" as Scalar, "_offsetHeading" as Scalar, "_offsetPos" as Array];
 			
 			_existingObservation = [_target] call _mObservationHandler.GetExistingObservation;
 			
@@ -94,9 +92,10 @@ namespace Intrusion.Server
 				
 				// Set a random offset for the observation.
 				_offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				_offsetDir = floor random 360;
+				_offsetHeading = floor random 360;
+				_offsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
 				
-				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime, _offsetDistance, _offsetDir, _target.ObservedDistance] new Observation;
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime, _offsetPos, _target.ObservedDistance] new Observation;
 			
 				[_newObservation] call _mObservationHandler.AddObservation;
 			} else {
