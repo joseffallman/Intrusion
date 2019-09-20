@@ -98,15 +98,20 @@ namespace Intrusion.Ai
 						
 						if (_targetIsStationary) then
 						{
-							_launchService = [_targetPos] new PseudoArtilleryLaunchService;
-							call _launchService.RunAsync;
+							private _allPlayers = call BIS_fnc_listPlayers;
+							private _sideContainsPlayers = { side group _x == _mSide } count _allPlayers > 0;
 							
-							if (StartConfig.ShowArtilleryMarkers) then {
-								private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
-								[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
+							if (!_sideContainsPlayers) then {
+								_launchService = [_targetPos] new PseudoArtilleryLaunchService;
+								call _launchService.RunAsync;
+								
+								if (StartConfig.ShowArtilleryMarkers) then {
+									private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
+									[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
+								};
+								
+								_roundsFired = _roundsFired + 1;
 							};
-							
-							_roundsFired = _roundsFired + 1;
 						};
 					};
 					
