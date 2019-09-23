@@ -168,7 +168,8 @@ namespace Intrusion.Server
 			_dominantSide = [_resourceLocation.MarkerName] call _self.CheckDominantSide;
 			
 			// If the resource location has changed
-			if (_dominantSide != _resourceLocation.DominantSide) then {
+			if (_dominantSide != _resourceLocation.Side && _dominantSide != _resourceLocation.DominantSide) then
+			{
 				[_resourceLocation.MarkerName, _dominantSide] call _mResourceLocationHandler.SetNewDominantSide;
 				
 				// Save the time for when the resource location was updated with a dominant side
