@@ -117,7 +117,7 @@ namespace Intrusion.Client
 				_optionClaimBrigadeLeadershipVisible = !([playerSide] call _playerInfoCollection.SideHasBrigadeLeader);
 			};
 			
-			_self.OptionLeaveGroupVisible = leader group player != player;
+			_self.OptionLeaveGroupVisible = count units group player > 1;
 			_self.OptionClaimBrigadeLeadershipVisible = _optionClaimBrigadeLeadershipVisible;
 			_self.OptionQuitBrigadeLeadershipVisible = ClientState.IsBrigadeLeader;
 			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
@@ -174,13 +174,20 @@ namespace Intrusion.Client
 		#region Option Event Handlers
 		
 		// Called when the local player selects the "Leave Group" option.
-		private static method OnLeaveGroup {
-			private ["_oldGroup" as Group];
+		private static method OnLeaveGroup() {
+			private ["_oldGroup" as Group, "_newGroup" as Group, "_newLeader" as Object];
 			
 			_oldGroup = group player;
-			[player] joinSilent grpNull;
+			_newGroup = createGroup [side _oldGroup, true];
+			[player] joinSilent _newGroup;
+			_newGroup setVariable ["MapName", name player, true];
+
+			_newLeader = objNull;
+			if (ClientState.IsSquadLeader) then {
+				_newLeader = (units _oldGroup) select 1;
+			};
 			
-			["ClientEventReciever.OnPlayerLeftGroup", [player, _oldGroup]] call Remote.Invoke;
+			["ClientEventReciever.OnPlayerLeftGroup", [player, _oldGroup, _newLeader]] call Remote.Invoke;
 		};
 		
 		// Called when the local player selects the "Claim Brigade Leadership" option.

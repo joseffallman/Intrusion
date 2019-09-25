@@ -78,13 +78,27 @@ namespace Intrusion.Client
 		};
 		
 		// Called when a player left a group
-		public static method OnPlayerLeftGroup("_player" as Object, "_oldGroup" as Group)
+		// _player (Object): The player that left.
+		// _oldGroup (Group): The group that the player left.
+		// _newLeader (Object): The new leader in the old group.
+		public static method OnPlayerLeftGroup("_player" as Object, "_oldGroup" as Group, "_newLeader" as Object)
 		{
+			// If the local player left the group, becoma a new leader for the new group.
+			
 			if (_player == player) then {
 				ClientState.MyGroup = group player;
 				ClientState.IsSquadLeader = true;
 				call gClient.TaskHandler.DeleteAllTasksAndReset;
 			};
+			
+			// If the player that left was the leader of the old group, set a new group leader - maybe the local player
+			
+			if (!isNull _newLeader && { group player == _oldGroup && _newLeader == player && !ClientState.IsSquadLeader }) then {
+				(group player) selectLeader player;
+				ClientState.IsSquadLeader = true;
+			};
+			
+			// For all players
 			
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
 			call IntrusionMenuHandler.UpdateVisibleOptions;
