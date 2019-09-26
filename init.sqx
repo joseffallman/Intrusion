@@ -31,12 +31,3 @@ if (isServer) then {
 		call AiService.StartAsync;
 	};
 };
-
-spawn {
-	private ["_artilleryService" as PseudoArtilleryLaunchService];
-	
-	sleep 5;
-	
-	_artilleryService = [getPos player] new PseudoArtilleryLaunchService;
-	//call _artilleryService.RunAsync;
-};
