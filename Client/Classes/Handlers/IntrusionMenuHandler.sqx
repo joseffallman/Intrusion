@@ -140,7 +140,7 @@ namespace Intrusion.Client
 			};
 			
 			if (_self.OptionLeaveGroupVisible) then {
-				INT_IntrusionMenu pushBack ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1-IsLeader"];
+				INT_IntrusionMenu pushBack ["Leave group", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnLeaveGroup"]], "1", "1"];
 			};
 			
 			if (_self.OptionClaimBrigadeLeadershipVisible) then {
@@ -183,8 +183,9 @@ namespace Intrusion.Client
 			_newGroup setVariable ["MapName", name player, true];
 
 			_newLeader = objNull;
-			if (ClientState.IsSquadLeader) then {
-				_newLeader = (units _oldGroup) select 1;
+			if (ClientState.IsSquadLeader && count units _oldGroup > 0) then {
+				_newLeader = (units _oldGroup) select 0;
+				_oldGroup setVariable ["MapName", name _newLeader, true];
 			};
 			
 			["ClientEventReciever.OnPlayerLeftGroup", [player, _oldGroup, _newLeader]] call Remote.Invoke;
