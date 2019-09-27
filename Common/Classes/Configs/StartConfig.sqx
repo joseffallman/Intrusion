@@ -13,13 +13,13 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.Develop;
+			_self.Mode = ReleaseMode.Production;
 			
 			_self.ShowTutorials = false;
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Off;
 			
-			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
+			_self.OnlyOneGroupWithTwoWestlyAiUnits = true;
 			_self.OnlyAllowAiBeMotorized = false;
 			_self.ShowArtilleryMarkers = true;
 			
