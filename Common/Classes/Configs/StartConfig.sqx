@@ -13,7 +13,7 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.Develop;
+			_self.Mode = ReleaseMode.Production;
 			
 			_self.ShowTutorials = false;
 			_self.LogLevelFile = LogLevel.Debug;

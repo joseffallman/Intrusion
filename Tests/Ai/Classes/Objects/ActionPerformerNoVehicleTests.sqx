@@ -70,6 +70,7 @@ namespace Intrusion.Tests.Ai
 				"OneOfTwoSquadMembersAreDeadMoving_Act_StatusIdle",
 				"OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving",
 				"BrigadeLeaderOrderToDefendOwnLocationIdleAtLocation_EncounterEnemies_StatusMovingPatrolStealth",
+				"OrderToAttackPosition_PresentAndIdle_NewOrderStatusIdle",
 			]] call TestEngine.Register;
 			
 			//[""] call TestEngine.OnlyThisOne;
@@ -99,7 +100,7 @@ namespace Intrusion.Tests.Ai
 			["OFFICE1", [400, 400, 0]] call _mMarkerHandler.AddMarkerPos;
 			["FACTORY2", [600, 600, 0]] call _mMarkerHandler.AddMarkerPos;
 			["OFFICE2", [800, 800, 0]] call _mMarkerHandler.AddMarkerPos;
-			
+
 			_mGroup = createGroup west;
 			_mWorld = [_mResourceLocationCollection, new TestResourceLocationConfig, _mMarkerHandler] new TestWorld;
 			_mActionPerformer = [_mWorld] new TestActionPerformer;
@@ -304,7 +305,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not idle."] call Assert.AreEqual;
 			
 			//_action = _mKnowledge.CurrentAction as MoveAction;
 			
@@ -677,6 +678,30 @@ namespace Intrusion.Tests.Ai
 			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not DEFEND."] call Assert.AreEqual;
 			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+		
+		private static method OrderToAttackPosition_PresentAndIdle_NewOrderStatusIdle
+		{
+			private _leaderPos = [150, 150, 0];
+			
+			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = _leaderPos;
+			_mKnowledge.Members pushBack [_leaderPos] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, [150, 150, 0], classNull, 0] new Order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI is not idle."] call Assert.AreEqual;
+			
+			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
+			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
+			["FACTORY1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
 		};
 	};
 };
