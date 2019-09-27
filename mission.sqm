@@ -1092,7 +1092,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4257.4009,32.174637,4193.9829};
+						position[]={4257.582,32.18605,4194.2256};
 						angles[]={6.2248526,1.6631776,6.2679896};
 					};
 					side="West";

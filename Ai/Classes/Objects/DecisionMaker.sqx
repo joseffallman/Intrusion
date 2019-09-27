@@ -280,6 +280,8 @@ namespace Intrusion.Ai
 		// Called when the group is closing in on a destination (not necessary a location).
 		public virtual method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
 		{
+			private ["_resourceLocation" as ResourceLocation, "_locationMarkerName" as String];
+			
 			private _time = call _self.Time.GetMissionTime;
 			
 			// If mounted on a free vehicle, disembark.
@@ -294,7 +296,15 @@ namespace Intrusion.Ai
 			}
 			else
 			{
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "NORMAL", "AWARE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				_resourceLocation = _self.Knowledge.Order.ResourceLocation;
+				_locationMarkerName = "";
+				
+				if (!isNull _resourceLocation) then {
+					_locationMarkerName = _resourceLocation.MarkerName;
+				};
+				
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.ClosingIn, _self.Knowledge.Order.TargetPosition, "MOVE", "NORMAL", "AWARE", "YELLOW", _locationMarkerName] new MoveAction;
+				
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (closing in): " + str _action] call LogHandler.Debug;
