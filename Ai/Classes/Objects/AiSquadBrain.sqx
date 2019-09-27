@@ -184,22 +184,17 @@ namespace Intrusion.Ai
 					};
 				};
 			};
-hint "1";
+
 			// If squad is present at order position
 			if (isNull _orderResourceLocation || { _orderResourceLocation.Side == side _mKnowledge.Group }) then
 			{
-hint "2";
 				if (_mKnowledge.Order.Type == OrderType.Attack) then {
-hint "3";
 					if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
-hint "4";
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
-hint "5";
 					
 					if (_leaderPos distance _mKnowledge.Order.TargetPosition < 30) then {
-hint "6";
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
