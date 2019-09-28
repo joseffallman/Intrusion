@@ -71,9 +71,10 @@ namespace Intrusion.Tests.Ai
 				"OneOfTwoSquadMembersAreDeadEngaging_Act_StillMoving",
 				"BrigadeLeaderOrderToDefendOwnLocationIdleAtLocation_EncounterEnemies_StatusMovingPatrolStealth",
 				"OrderToAttackPosition_PresentAndIdle_NewOrderStatusIdle",
+				"OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling",
 			]] call TestEngine.Register;
 			
-			//[""] call TestEngine.OnlyThisOne;
+			["OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -682,7 +683,7 @@ namespace Intrusion.Tests.Ai
 		
 		private static method OrderToAttackPosition_PresentAndIdle_NewOrderStatusIdle
 		{
-			private _leaderPos = [150, 150, 0];
+			private _leaderPos = [145, 145, 0];
 			
 			// Arrange
 			_mRandomGenerator.Number = 0;
@@ -702,6 +703,33 @@ namespace Intrusion.Tests.Ai
 			[OrderType.Attack, _mKnowledge.Order.Type, "AI's order is not an attack order."] call Assert.AreEqual;
 			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			["FACTORY1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+		
+		private static method OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling
+		{
+			private ["_moveAction" as MoveAction];
+			private _leaderPos = [145, 145, 0];
+			
+			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = _leaderPos;
+			_mKnowledge.Members pushBack [_leaderPos] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, [150, 150, 0], classNull, 0] new Order;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
+			
+			_moveAction = _mActionPerformer.MoveActions select 0;
+			[[MoveActionType.Patrol] call MoveActionTypeMeta.ToString, [_moveAction.Type] call MoveActionTypeMeta.ToString, "AI not patrolling."] call Assert.AreEqual;
+			
+			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order is not a defend order."] call Assert.AreEqual;
+			[[150, 150, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 		};
 	};
 };
