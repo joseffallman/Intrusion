@@ -74,7 +74,7 @@ namespace Intrusion.Tests.Ai
 				"OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling",
 			]] call TestEngine.Register;
 			
-			["OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling"] call TestEngine.OnlyThisOne;
+			//["AtEnemyLocationIdle_Act_StatusCapturing"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -218,11 +218,11 @@ namespace Intrusion.Tests.Ai
 		
 		private static method AtEnemyLocationIdle_Act_StatusCapturing
 		{
+			private _leaderPos = [210, 210, 0];
 			// Arrange
 			_mLocationFactory1.Side = east;
-			_mWorld.LeaderPos = [210, 210, 0];
-//			_mWorld.SquadPresenceAtResourceLocation = true;
-			_mKnowledge.Members pushBack [[210, 210, 0]] new TestUnitContainer;
+			_mWorld.LeaderPos = _leaderPos;
+			_mKnowledge.Members pushBack [_leaderPos] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, [200, 200, 0], _mLocationFactory1, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			

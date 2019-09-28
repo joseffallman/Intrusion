@@ -160,7 +160,6 @@ namespace Intrusion.Ai
 		
 		private method MakeDecision()
 		{
-			private ["_locationCollection" as ResourceLocationCollection, "_locations" as Array /* of ResourceLocation */];
 			private ["_mountedVehicle" as VehicleContainer, "_leaderPos" as Array];
 			private ["_squadInVehicle" as Boolean, "_enemyContainer" as IUnitContainer, "_orderResourceLocation" as ResourceLocation];
 			
@@ -270,9 +269,16 @@ namespace Intrusion.Ai
 				call _mDecisionMaker.OnLookForVehicle;
 				if (!isNull _mKnowledge.CurrentAction) then { return; };
 			};
-			
 
-			// If inside the perimiters of a resource location that should be captured
+
+			// If inside the perimiters of the target position
+			if (_leaderPos distance _mKnowledge.Order.TargetPosition <= _mResourceLocationConfig.AreaRadius) then {
+				[_mountedVehicle, _mKnowledge.Order.TargetPosition, _mKnowledge.Order.ResourceLocation] call _mDecisionMaker.OnPresentAtTargetPosition;
+				if (!isNull _mKnowledge.CurrentAction) then { return; };
+			};
+
+/*
+			// If inside the perimiters of a resource location
 			// OnPresentAtLocation
 
 			_locationCollection = call _mWorld.GetResourceLocationCollection;
@@ -285,7 +291,7 @@ namespace Intrusion.Ai
 					if (!isNull _mKnowledge.CurrentAction) then { return; };
 				};
 			} foreach _locations as ResourceLocation;
-
+*/
 
 			// If squad is near a destination (<150m)
 			// OnClosingInOnDestination

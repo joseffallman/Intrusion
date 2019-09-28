@@ -241,6 +241,43 @@ namespace Intrusion.Ai
 			};
 		};
 		
+		// Called when AI squad is present at their order's target position (might be a location).
+		// _mountedVehicle (VehicleContainer): The vehicle they are mounted to. classNull if not mounted.
+		// _position (Array): The order's position.
+		// _location (ResourceLocation): The resource location associated with the order's position (might be classNull).
+		public virtual method OnPresentAtTargetPosition("_mountedVehicle" as VehicleContainer, "_position" as Array, "_location" as ResourceLocation)
+		{
+			private _side = side _self.Knowledge.Group;
+			private _time = call _self.Time.GetMissionTime;
+
+			if (!isNull _location && { _location.Side != _side }) then // If position is a location and it is theirs, capture it.
+			{
+				private _time = call _self.Time.GetMissionTime;
+				private _pos = [_location.MarkerName] call _self.MarkerHandler.GetMarkerPos;
+				
+				private _action = [_time + _self.ActionTimeoutConfig.CaptureActionTimeout, _pos, _location.MarkerName] new CaptureAction;
+				[AiSquadState.Capturing, _action] call _self.SetState;
+				[_self.Knowledge.CurrentAction as CaptureAction] call _self.ActionPerformer.DoCapture;
+	        	["Capture action created: " + str _action] call LogHandler.Debug;
+			}
+			else // If target position is not a location, or it is ours
+			{
+				// If squad's order typ is Defend
+				if (_self.Knowledge.Order.Type == OrderType.Defend) then
+				{
+					if (isNull _mountedVehicle) then
+					{
+						private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Patrol, _position, "MOVE", "LIMITED", "SAFE", "YELLOW", "", _self.ResourceLocationConfig.AreaRadius] new MoveAction;
+						
+						[AiSquadState.Moving, _action] call _self.SetState;
+						[_action as MoveAction] call _self.ActionPerformer.DoMove;
+			        	["Move action created (defencd patrol): " + str _action] call LogHandler.Debug;
+					};
+				};
+			};
+		};
+
+/*
 		public virtual method OnPresentAtLocation("_mountedVehicle" as VehicleContainer, "_location" as ResourceLocation)
 		{
 			private _side = side _self.Knowledge.Group;
@@ -276,7 +313,7 @@ namespace Intrusion.Ai
 				};
 			};
 		};
-		
+*/
 		// Called when the group is closing in on a destination (not necessary a location).
 		public virtual method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
 		{
