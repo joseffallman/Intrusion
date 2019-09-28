@@ -15,12 +15,14 @@ namespace Intrusion.Client
 {
 	public class GiveOrderService : IService
 	{
-		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType, "_mMissionTime" as IMissionTime];
+		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType, "_mMissionTime" as IMissionTime, "_mResouceLocationConfig" as IResourceLocationConfig];
 	
 		// Creates a GiveOrderService object.
-		public constructor("_missionTime" as IMissionTime)
+		public constructor("_missionTime" as IMissionTime, "_resourceLocationConfig" as IResourceLocationConfig)
 		{
 			_mMissionTime = _missionTime;
+			_mResouceLocationConfig = _resourceLocationConfig;
+			
 			call _self.Reset;
 		};
 		
@@ -77,7 +79,7 @@ namespace Intrusion.Client
 		
 		private method Run()
 		{
-			private ["_orderResult" as String, "_enoughWaitingTime" as Scalar, "_location" as ResourceLocation, "_orderTimeoutTime" as Scalar];
+			private ["_orderResult" as String, "_enoughWaitingTime" as Scalar, "_location" as ResourceLocation, "_orderTimeoutTime" as Scalar, "_orderPos" as Array];
 				
 			_orderResult = "Order cancelled.";
 		
@@ -91,6 +93,7 @@ namespace Intrusion.Client
 			
 			if (!_mWaitingForMapClick) then
 			{
+				_orderPos = _mMapPos;
 				_mSelectedGroup = [_mMapPos] call _self.FindClosestGroup;
 				player sideChat ("Group '" + name leader _mSelectedGroup + "' selected.");
 				
@@ -110,12 +113,16 @@ namespace Intrusion.Client
 					
 					waitUntil {	!_mWaitingForMapClick || time > _enoughWaitingTime};
 					
-					if (!_mWaitingForMapClick) then {
+					if (!_mWaitingForMapClick) then
+					{
 						// Is the target area a resource location?
 						_location = [_mMapPos] call _self.FindClosestResourceLocation;
 						
-						if (_mMapPos distance getMarkerPos _location.MarkerName > 150) then {
+						if (_mMapPos distance getMarkerPos _location.MarkerName > _mResouceLocationConfig.AreaRadius) then {
 							_location = classNull;
+						}
+						else {
+							_orderPos = getMarkerPos _location.MarkerName;
 						};
 					
 						// Update order info
@@ -130,11 +137,11 @@ namespace Intrusion.Client
 						_mSelectedGroup setVariable ["IntrusionOrderInfo", _orderInfo, true];
 						
 						if (!(isPlayer leader _mSelectedGroup)) then {
-							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
+							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
 							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' have a new order.");
 						}
 						else {
-							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mMapPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
+							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
 							_orderResult = ("Human group '" + name leader _mSelectedGroup + "' have a new order.");
 						};
 					};
