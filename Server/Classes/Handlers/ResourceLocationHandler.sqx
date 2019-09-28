@@ -70,8 +70,7 @@ namespace Intrusion.Server
 			
 			// Set winner's location
 			private _resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
-			private _winnersIndex = floor random count _resourceLocations;
-			_self.WinnersLocation = _resourceLocations select _winnersIndex;
+			_self.WinnersLocation = selectRandom _resourceLocations;
 			_self.WinnersLocation.IsWinnersLocation = true;
 			_self.WinnersLocation.MarkerName setMarkerType _mMapMarkersConfig.WinnersLocationMarkerType;
 			
