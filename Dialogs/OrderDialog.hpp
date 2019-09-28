@@ -23,12 +23,13 @@ class IntOrderDialog
 			text = "Select Order";
 			x = 1 * GUI_GRID_W + GUI_GRID_X;
 		};
-		
+		/*
 		class IntOrderDialog_ReconButton : IntOrderDialog_PlaceButton {
 			text = "Recon";
 			y = 3 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnReconButtonPressed;";
 		};
+		*/
 		
 		class IntOrderDialog_AttackButton : IntOrderDialog_PlaceButton {
 			text = "Attack";
