@@ -51,12 +51,20 @@ namespace Intrusion.Client
 		private static method UpdateAlliedForcesMarkers()
 		{
         	private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_leader" as Object, "_profession" as Profession, "_marker" as Marker, "_professionType" as ProfessionType];
-        	private ["_squadIsNearVehicle" as Boolean, "_group" as Group, "_mapMarkersToKeep" as Array];
+        	private ["_squadIsNearVehicle" as Boolean, "_group" as Group, "_mapMarkersToKeep" as Array, "_allNamedGroups" as Array];
 
 			_squadCollection = call PublicVariableHandler.GetSquadCollection;
 			
 			// Remove all groups that no longer exist or is empty
+			_allNamedGroups = [];
 			_mapMarkersToKeep = [];
+			
+			{
+				if (_x getVariable ["MapName", ""] != "") then {
+					_allNamedGroups pushBack _x;
+				};
+			} foreach allGroups as Group;
+			
 			{
 				private ["_marker" as Marker];
 				_marker = _x as Marker;
@@ -131,7 +139,7 @@ namespace Intrusion.Client
         				[(_group getVariable ["MapName", ""]) + " (" + str count units _group + ")" + _orderInfo] call _marker.SetText;
         			};
 				};
-    		} foreach allGroups as Group;
+    		} foreach _allNamedGroups as Group;
 		};
 		
 		// Updates the squad's vehicle marker.

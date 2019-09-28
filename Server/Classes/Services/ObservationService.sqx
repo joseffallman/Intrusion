@@ -15,14 +15,17 @@ namespace Intrusion.Server
 {
 	public class ObservationService
 	{
-		private static fields ["_mMissionTime" as IMissionTime, "_mObservations" as Array, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler];
+		private static fields ["_mMissionTime" as IMissionTime, "_mObservationHandler" as ObservationHandler, "_mCurrentId" as Scalar, "_mTargetHandler" as TargetHandler, "_mCompetingSides" as Array /* of Side */];
 		
 		// Initializes the observation service.
-		public static method Init("_targetHandler" as TargetHandler) {
-			_mMissionTime = new MissionTime;
+		public static method Init("_targetHandler" as TargetHandler, "_observationHandler" as ObservationHandler, "_competingSides" as Array /* of Side */)
+		{
 			_mTargetHandler = _targetHandler;
+			_mObservationHandler = _observationHandler;
+			_mCompetingSides = _competingSides;
+			
+			_mMissionTime = new MissionTime;
 			_mCurrentId = 0;
-			_mObservations = [];
 		};
 		
 		// Marks all observations in the observation collection as deleted.
@@ -31,61 +34,13 @@ namespace Intrusion.Server
 				if (call _mMissionTime.GetMissionTime > _x.Time + 45) then {
 					_x.MarkedAsDeleted = true;
 				};
-			} foreach _mObservations as Observation;
+			} foreach (call _mObservationHandler.GetObservations) as Observation;
 		};
 		
 		// Deletes all observations that are marked as deleted.
 		private static method DeleteMarkedObservations()
 		{
-			private ["_observationsToKeep" as Array];
-			
-			_observationsToKeep = [];
-			
-			{
-				if (!_x.MarkedAsDeleted) then {
-					_observationsToKeep pushBack _x;
-				};
-			} foreach _mObservations as Observation;
-			
-			_mObservations = _observationsToKeep;
-		};
-		
-		// Converts the service's list of observations into broadcastable and client optimized map observations.
-		// Returns (Array): An array of map observations.
-		private static method ConvertToMapObservations()
-		{
-			private _mapObservations = [];
-			
-			{
-				_mapObservations pushBack (call _x.ToMapObservation);
-			} foreach _mObservations as Observation;
-			
-			_mapObservations
-		};
-		
-		// Gets an eventual already existing observation from the list of observations.
-		// Uses different matching techniques to figure out which one it may be.
-		// _target (Target): The target used to find the observation.
-		// Returns (Observation): The found observation. classNull if observation was not found.
-		private static method Observation GetExistingObservation("_target" as Target)
-		{
-			private ["_observation" as Observation];
-			
-			_observation = classNull;
-			
-			{
-				scopeName "loop";
-				
-				if (_x.ObservingSide == _target.ObservingSide) then {
-					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 100) then {
-						_observation = _x;
-					
-						breakOut "loop";
-					};
-				}
-			} foreach _mObservations as Observation;
-			
-			_observation
+			call _mObservationHandler.DeleteMarkedObservations;
 		};
 		
 		// Prioritizes the properties of an observation. All "better" properties of the target will be 
@@ -106,11 +61,9 @@ namespace Intrusion.Server
 			{
 				// Set a random offset for the observation.
 				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				private _offsetDir = floor random 360;
+				private _offsetHeading = floor random 360;
 				
-				_observation.PercievedOffsetDir = _offsetDir;
-				_observation.ObservedDistance = _target.ObservedDistance;
-				_observation.PercievedOffsetDistance = _offsetDistance;
+				_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
 			};
 		};
 		
@@ -130,20 +83,21 @@ namespace Intrusion.Server
 		// _target (Target): The target to add as an observation.
 		private static method AddTargetToObservations("_target" as Target)
 		{
-			private ["_existingObservation" as Observation, "_newObservation" as Observation, "_offsetDistance" as Scalar, "_offsetDir" as Scalar];
+			private ["_existingObservation" as Observation, "_newObservation" as Observation, "_offsetDistance" as Scalar, "_offsetHeading" as Scalar, "_offsetPos" as Array];
 			
-			_existingObservation = [_target] call _self.GetExistingObservation;
+			_existingObservation = [_target] call _mObservationHandler.GetExistingObservation;
 			
 			if (isNull _existingObservation) then {
 				_mCurrentId = _mCurrentId + 1;
 				
 				// Set a random offset for the observation.
 				_offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				_offsetDir = floor random 360;
+				_offsetHeading = floor random 360;
+				_offsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
 				
-				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime, _offsetDistance, _offsetDir, _target.ObservedDistance] new Observation;
+				_newObservation = [_mCurrentId, _target.ObservingSide, _target.PercievedPos, _target.PercievedSide, group _target.Unit, _target.Unit, _target.PercievedProfessionType, _target.Accuracy, call _mMissionTime.GetMissionTime, _offsetPos, _target.ObservedDistance] new Observation;
 			
-				_mObservations pushBack _newObservation;
+				[_newObservation] call _mObservationHandler.AddObservation;
 			} else {
 				_existingObservation.Time = call _mMissionTime.GetMissionTime;
 				[_existingObservation, _target] call _self.PrioritizeObservation;
@@ -166,7 +120,8 @@ namespace Intrusion.Server
 	        		private ["_unit" as Object];
 	        		_unit = _x;
 	        	
-	        		if (alive _unit) then {
+	        		if (alive _unit && { side group _unit in _mCompetingSides }) then
+	        		{
 		        		_targets = [_unit] call _mTargetHandler.GetEnemyTargets;
 		        		
 		        		{
@@ -178,10 +133,11 @@ namespace Intrusion.Server
 	        	call _self.DeleteMarkedObservations;
 
 	        	// Broadcast the list of observations
-	        	_mapObservations = call _self.ConvertToMapObservations;
-				["MapObservationsHandler.UpdateMap", [_mapObservations]] call Remote.Invoke;
+	        	_mapObservations = call _mObservationHandler.ToMapObservations;
 	        	
-        		sleep 10;
+				["ClientEventReciever.OnObservationsUpdated", [_mapObservations]] call Remote.Invoke;
+	        	
+        		sleep 5;
 			};
 		};
 		

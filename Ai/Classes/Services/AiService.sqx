@@ -20,6 +20,7 @@ namespace Intrusion.Ai
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
 		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
+		private fields ["_mObservationHandler" as ObservationHandler];
 		
 		// Creates a AiService object.
 		public constructor(
@@ -35,7 +36,8 @@ namespace Intrusion.Ai
 			"_unitsConfig" as IAiUnitsConfig,
 			"_vehicleSpawner" as IVehicleSpawner,
 			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
-			"_gameLengthMonitor" as IGameLengthMonitor)
+			"_gameLengthMonitor" as IGameLengthMonitor,
+			"_observationHandler" as ObservationHandler)
 		{
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
@@ -50,6 +52,7 @@ namespace Intrusion.Ai
 			_mVehicleSpawner = _vehicleSpawner;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
 			_mGameLengthMonitor = _gameLengthMonitor;
+			_mObservationHandler = _observationHandler;
 		};
 		
 		public property Boolean IsRunning { get; private set; };
@@ -141,17 +144,8 @@ namespace Intrusion.Ai
 				{
 					private _squad = _x as AiSquadBrain;
 					
-					/* // Seems to mess up AI unit's behaviour.
-					private _group = call _squad.GetGroup;
-					
-					{
-						if (leader _group distance _x <= 100) then {
-							_group reveal _x;
-						};
-					} foreach allUnits;
-					*/
-					
 					call _squad.Act;
+					
 					sleep 0.1;
 				} foreach _allSquads as AiSquadBrain;
 				
@@ -163,6 +157,14 @@ namespace Intrusion.Ai
 		
 		public method RunAsync()
 		{
+			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
+			
+			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			
+			call _westArtilleryService.RunAsync;
+			call _eastArtilleryService.RunAsync;
+		
 			_self.IsRunning = true;
 			[] spawn _self.Run;
 		};
@@ -190,13 +192,14 @@ namespace Intrusion.Ai
 				//gCommon.MissionParametersHandler.AiSkillLevel, 
 				gServer.ResourceLocationHandler,
 				gServer.UnitSpawner,
-				gServerConfig.ResourceLocation,
+				gCommonConfig.ResourceLocation,
 				//gCommonConfig.Professions,
 				new AiUnitsConfig, 
 				//new AiWeaponsConfig
 				gServer.VehicleSpawner,
 				gServer.InventedTechnologiesCollection,
-				gServer.MissionCounterService
+				gServer.MissionCounterService,
+				gServer.ObservationHandler
 			] new AiService;
 			
 			call _aiService.RunAsync;

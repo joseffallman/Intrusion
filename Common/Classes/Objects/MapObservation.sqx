@@ -19,16 +19,14 @@ namespace Intrusion.Common
 		// _observingSide (Side): The observing side.
 		// _isIdentifiedAsEnemy (Boolean): Whether the target is identified as an enemy or not.
 		// _professionType (ProfessionType): The supposed profession type.
-		public constructor("_id" as Scalar, "_observingSide" as Side, "_percievedPos" as Array, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType, "_isPercieved" as Boolean, "_percievedOffsetDistance" as Scalar, "_percievedOffsetDir" as Scalar)
+		public constructor("_id" as Scalar, "_observingSide" as Side, "_isIdentifiedAsEnemy" as Boolean, "_percievedProfessionType" as ProfessionType, "_isPercieved" as Boolean, "_percievedOffsetPos" as Array)
 		{
 			_self.Id = _id;
 			_self.ObservingSide = _observingSide;
-			_self.PercievedPos = _percievedPos;
 			_self.IsIdentifiedAsEnemy = _isIdentifiedAsEnemy;
 			_self.PercievedProfessionType = _percievedProfessionType;
 			_self.IsPercieved = _isPercieved;
-			_self.PercievedOffsetDistance = _percievedOffsetDistance;
-			_self.PercievedOffsetDir = _percievedOffsetDir;
+			_self.PercievedOffsetPos = _percievedOffsetPos;
 		};
 		
 		// Gets the unique and persistent ID of the observation.
@@ -36,9 +34,6 @@ namespace Intrusion.Common
 		
 		// Gets the side
 		public property Side ObservingSide { get; private set; };
-		
-		// Gets the position of the observation.
-		public property Array PercievedPos { get; set; };
 		
 		// Gets whether the observation is identified as an enemy or not.
 		public property Boolean IsIdentifiedAsEnemy { get; set; };
@@ -50,9 +45,6 @@ namespace Intrusion.Common
 		public property Boolean IsPercieved { get; set; };
 		
 		// Gets the distance of the offset of the percieved position in meters.
-		public property Scalar PercievedOffsetDistance { get; set; };
-		
-		// Gets the direction of th offset of the percieved position in degrees.
-		public property Scalar PercievedOffsetDir { get; set; };
+		public property Array PercievedOffsetPos { get; set; };
 	};
 };

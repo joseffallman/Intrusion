@@ -66,17 +66,5 @@ namespace Intrusion.Ai
 			
 			call _base.OnLookForVehicle;
 		};
-/*
-		public override method OnClosingInOnDestination("_mountedVehicle" as VehicleContainer)
-		{
-			// If squad is in its intrusion vehicle, don't do anything
-
-			if (!isNull _mountedVehicle.IntrusionVehicle) then {
-				return;
-			};
-			
-			[_mountedVehicle] call _base.OnClosingInOnDestination;
-		};
-*/
 	};
 };

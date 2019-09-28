@@ -13,14 +13,15 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.Develop;
-			_self.ShowTutorials = false;
+			_self.Mode = ReleaseMode.Live;
 			
+			_self.ShowTutorials = false;
 			_self.LogLevelFile = LogLevel.Debug;
 			_self.LogLevelScreen = LogLevel.Off;
 			
-			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
+			_self.OnlyOneGroupWithTwoWestlyAiUnits = true;
 			_self.OnlyAllowAiBeMotorized = true;
+			_self.ShowArtilleryMarkers = true;
 			
 			// The following settings are live settings, and are only set if release mode is set to Live.
 			
@@ -33,6 +34,7 @@ namespace Intrusion.Common
 				_self.LogLevelScreen = LogLevel.Off;
 				_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
 				_self.OnlyAllowAiBeMotorized = false;
+				_self.ShowArtilleryMarkers = false;
 			};
 		};
 	
@@ -52,5 +54,7 @@ namespace Intrusion.Common
 		public static property Boolean OnlyOneGroupWithTwoWestlyAiUnits { get; private set; };
 		
 		public static property Boolean OnlyAllowAiBeMotorized { get; private set; };
+		
+		public static property Boolean ShowArtilleryMarkers { get; private set; };
 	};
 };

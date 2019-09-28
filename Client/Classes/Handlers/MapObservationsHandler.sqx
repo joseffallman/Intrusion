@@ -28,12 +28,11 @@ namespace Intrusion.Client
 		// _mapObservation (MapObservation): The map observation to draw a marker for.
 		private static method AddMarker("_mapObservation" as MapObservation)
 		{
-			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession, "_percievedPos" as Array];
+			private ["_name" as String, "_color" as String, "_markerType" as String, "_profession" as Profession];
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			_percievedPos = _mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDistance, _mapObservation.PercievedOffsetDir];
-			createMarkerLocal [_name, _percievedPos];
+			createMarkerLocal [_name, _mapObservation.PercievedOffsetPos];
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
@@ -63,7 +62,7 @@ namespace Intrusion.Client
 			
 			_name = "INT_MapObservationMarker_" + str _mapObservation.Id;
 			
-			_name setMarkerPosLocal (_mapObservation.PercievedPos getPos [_mapObservation.PercievedOffsetDistance, _mapObservation.PercievedOffsetDir]);
+			_name setMarkerPosLocal (_mapObservation.PercievedOffsetPos);
 			
 			_color = "ColorGrey";
 			_markerType = "n_unknown";
@@ -96,7 +95,7 @@ namespace Intrusion.Client
 		};
 		
 		// Updates all map observations on the map.
-		// _mapObservations (Array): All current mapobservations.
+		// _mapObservations (Array of MapObservation): All current mapobservations.
 		public static method UpdateMap("_mapObservations" as Array)
 		{
 			private ["_newMapObservationIds" as Array, "_mapObservation" as MapObservation, "_id" as Scalar];

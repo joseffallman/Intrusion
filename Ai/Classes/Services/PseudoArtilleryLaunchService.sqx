@@ -1,0 +1,44 @@
+/*
+ * Name:	PseudoArtilleryLaunchService
+ * Date:	2019-09-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A service that handles the AI's pseudo artillery launces.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Ai
+{
+	public class PseudoArtilleryLaunchService : Service
+	{
+		private fields ["_mTargetPos" as Array];
+		
+		// Creates a PseudoArtilleryService object.
+		public constructor("_targetPos" as Array) {
+			_mTargetPos = _targetPos;
+		};
+		
+		protected override method Run()
+		{
+			private ["_shell" as Object];
+			
+			sleep 30; // Bombs away...!
+			
+			for "_i" from 1 to 3 + floor random 10 do {
+				private _pos = [(_mTargetPos select 0) - 30 + random 60, (_mTargetPos select 1) - 30 + random 60, 400];
+			
+				_shell = "Sh_120mm_HE" createvehicle _pos;
+				_shell setVectorDirandUp [[0,0,-1], [0.1,0.1,1]];
+				_shell setVelocity [0,0,-100];
+				
+				sleep 1 + random 3;
+			};
+			
+			call _base.Run;
+		};
+	};
+};
+

@@ -1,0 +1,128 @@
+/*
+ * Name:	PseudoArtilleryService
+ * Date:	2019-09-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Service that handles a simulated artillery fire, to enable artillery for AI.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class PseudoArtilleryService : Service
+	{
+		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mCompetingSides" as Array /* of Side */, "_mRounds" as Scalar];
+		
+		// Creates a PseudoArtilleryService object.
+		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, "_competingSides" as Array /* of Side */) {
+			_mSide = _side;
+			_mObservationHandler = _observationHandler;
+			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mCompetingSides = _competingSides;
+			
+			_mRounds = 10;
+		};
+		
+		protected override method Run()
+		{
+			private ["_launchService" as PseudoArtilleryLaunchService, "_observations" as Array /* of Observation */, "_observation" as Observation];
+			private ["_roundsFired" as Scalar];
+			
+			_roundsFired = 0;
+		
+			// Wait for technology to be invented
+			while { !([_mSide, Technology.Artillery] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) } do
+			{
+				if (_self.IsCancelling) then {
+					call _base.Run;
+					return;
+				};
+				
+				sleep 30;
+			};
+		
+			// If we get here, technology is invented for the side. Now, find a target.
+			
+			while { true } do
+			{
+				while { _roundsFired < _mRounds } do
+				{
+					private _targetPos = [];
+					private _targetObject = objNull;
+					private _targetObjectExactPos = [];
+					_observations = call _mObservationHandler.GetObservations;
+					
+					{
+						scopeName "loop";
+						_observation = _x;
+						
+						if (_mSide == _observation.ObservingSide && _observation.PercievedSide in _mCompetingSides && !([_mSide, _observation.PercievedSide] call BIS_fnc_sideIsFriendly)) then
+						{
+							if (!(_observation.Unit isKindOf "Air") && !(_observation.Unit isKindOf "Ship")) then // Only count ground units
+							{
+								private _pos = _observation.PercievedOffsetPos;
+								
+								// There must be no allied units near the target area
+								private _nearestAlliedUnitDistance = 999999;
+								
+								{
+									private _leader = leader _x;
+									
+									if ([_mSide, side _x] call BIS_fnc_sideIsFriendly) then {
+										if (!isNull _leader && _leader distance _pos < _nearestAlliedUnitDistance) then {
+											_nearestAlliedUnitDistance = _leader distance _pos;
+										};
+									};
+								} foreach allGroups;
+		
+								if (_nearestAlliedUnitDistance > 150) then {
+									_targetPos = _pos;
+									_targetObject = _observation.Unit;
+									_targetObjectExactPos = getPos _targetObject;
+									breakOut "loop";
+								};
+							};
+						};
+					} foreach _observations as Observation;
+					
+					sleep 10; // Check if target is moving...
+					
+					if (count _targetPos > 0) then // Launch!
+					{
+						private _newTargetExactPos = getPos _targetObject;
+						private _targetIsStationary = _targetObjectExactPos distance _newTargetExactPos < 15;
+						
+						if (_targetIsStationary) then
+						{
+							private _allPlayers = call BIS_fnc_listPlayers;
+							private _sideContainsPlayers = { side group _x == _mSide } count _allPlayers > 0;
+							
+							if (!_sideContainsPlayers) then {
+								_launchService = [_targetPos] new PseudoArtilleryLaunchService;
+								call _launchService.RunAsync;
+								
+								if (StartConfig.ShowArtilleryMarkers) then {
+									private _color = if (_mSide == west) then { "ColorBlufor" } else { "ColorOpfor" };
+									[_targetPos, "mil_destroy", _color] call Sqx.Markers.Marker.CreateIconMarker;
+								};
+								
+								_roundsFired = _roundsFired + 1;
+							};
+						};
+					};
+					
+					sleep 60; // Always this time between two fire rounds.
+				};
+				
+				sleep 5 * 60; // Simulate out of ammo. It will take this time to get new.
+				_roundsFired = 0;
+			};
+			
+			call _base.Run;
+		};
+	};
+};

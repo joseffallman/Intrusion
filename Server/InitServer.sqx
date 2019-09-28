@@ -5,8 +5,6 @@ call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfig.sqx"
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponsConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\WeaponBoxesConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\ServerConfigFactory.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ResourceLocationConfig.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Configs\ResourceLocationTestConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceBook.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceCollector.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideManager.sqx";
@@ -32,6 +30,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Handlers\ResourceLocation
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\ObservationHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -74,6 +73,6 @@ gServer = [] new IntrusionServer;
 //[gCommonConfig.MapMarkers, gCommon.MissionParametersHandler.AiSkillLevel] call ResourceLocationHandler.Init;
 
 /* Services */
-[gServer.TargetHandler] call ObservationService.Init;
+[gServer.TargetHandler, gServer.ObservationHandler, gServerConfig.Gameplay.CompetingSides] call ObservationService.Init;
 
 #endregion

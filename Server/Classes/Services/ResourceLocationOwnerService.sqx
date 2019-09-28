@@ -163,16 +163,17 @@ namespace Intrusion.Server
 		
 		private method HandleLocation("_resourceLocation" as ResourceLocation)
 		{
-			private ["_dominantSide" as Side, "_domInfo" as ResourceLocationDominanceInfo, "_presentUnits" as Array];
+			private ["_actualDominantSide" as Side, "_domInfo" as ResourceLocationDominanceInfo, "_presentUnits" as Array];
 			
-			_dominantSide = [_resourceLocation.MarkerName] call _self.CheckDominantSide;
+			_actualDominantSide = [_resourceLocation.MarkerName] call _self.CheckDominantSide;
 			
 			// If the resource location has changed
-			if (_dominantSide != _resourceLocation.DominantSide) then {
-				[_resourceLocation.MarkerName, _dominantSide] call _mResourceLocationHandler.SetNewDominantSide;
+			if (_actualDominantSide == civilian || (_actualDominantSide != _resourceLocation.Side && _actualDominantSide != _resourceLocation.DominantSide)) then
+			{
+				[_resourceLocation.MarkerName, _actualDominantSide] call _mResourceLocationHandler.SetNewDominantSide;
 				
 				// Save the time for when the resource location was updated with a dominant side
-				[_resourceLocation.MarkerName, _dominantSide] call _self.UpdateLocationDominanceInfo;
+				[_resourceLocation.MarkerName, _actualDominantSide] call _self.UpdateLocationDominanceInfo;
 			}
 			else // If the resource location has not changed, check if the dominant side should capture the location
 			{

@@ -51,7 +51,6 @@ namespace Intrusion.Communication
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
 					case "ClientEventReciever.OnMissionTimeIsUp": { _parameters spawn ClientEventReciever.OnMissionTimeIsUp };
-					case "MapObservationsHandler.UpdateMap": { _parameters spawn MapObservationsHandler.UpdateMap };
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
 					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };
 					case "ClientEventReciever.OnBrigadeLeaderQuit": { _parameters spawn ClientEventReciever.OnBrigadeLeaderQuit };
@@ -71,6 +70,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnStaticWeaponAssebled": { _parameters spawn ClientEventReciever.OnStaticWeaponAssebled; };
 					case "ClientEventReciever.OnUnitChangedSeat": { _parameters spawn ClientEventReciever.OnUnitChangedSeat};
 					case "ClientEventReciever.OnPlayUnitAnimation": { _parameters spawn ClientEventReciever.OnPlayUnitAnimation};
+					case "ClientEventReciever.OnObservationsUpdated": { _parameters spawn ClientEventReciever.OnObservationsUpdated };
 				};
 			};
 		};

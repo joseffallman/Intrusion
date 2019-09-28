@@ -7,7 +7,7 @@
  * Description:
  * Handles configurations about resource locations.
  */
-namespace Intrusion.Server
+namespace Intrusion.Common
 {
 	public class ResourceLocationConfig : IResourceLocationConfig
 	{

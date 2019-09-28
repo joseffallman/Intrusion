@@ -22,6 +22,8 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\CommonConfigFacto
 call compile preprocessFileLineNumbers "Common\Classes\Configs\SquadConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\RatingConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\UniformConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ResourceLocationConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\ResourceLocationTestConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\PublicVariableHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
