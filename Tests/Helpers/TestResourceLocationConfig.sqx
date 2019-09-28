@@ -8,7 +8,7 @@
  * Handles configurations about resource locations.
  */
 
-using Intrusion.Server;
+using Intrusion.Common;
 
 namespace Intrusion.Tests.Helpers
 {

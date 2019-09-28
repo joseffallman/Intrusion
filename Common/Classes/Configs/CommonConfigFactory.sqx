@@ -24,7 +24,8 @@ namespace Intrusion.Common
 					new TechnologyConfig, 
 					new VehicleClassNamesConfig, 
 					new ProfessionVehiclesConfig, 
-					new BaseConfig] new CommonConfig;
+					new BaseConfig,
+					new ResourceLocationConfig] new CommonConfig;
 			}
 			else {
 				if (StartConfig.Mode == ReleaseMode.Test) then {
@@ -34,7 +35,8 @@ namespace Intrusion.Common
 						new TechnologyTestConfig, 
 						new VehicleClassNamesConfig, 
 						new ProfessionVehiclesTestConfig, 
-						new BaseTestConfig] new CommonConfig;
+						new BaseTestConfig,
+						new ResourceLocationTestConfig] new CommonConfig;
 				}
 				else { // Dev
 					_commonConfig = [
@@ -43,7 +45,8 @@ namespace Intrusion.Common
 						new TechnologyDevConfig, 
 						new VehicleClassNamesConfig, 
 						new ProfessionVehiclesDevConfig, 
-						new BaseTestConfig] new CommonConfig;
+						new BaseTestConfig,
+						new ResourceLocationTestConfig] new CommonConfig;
 				};
 			};
 			

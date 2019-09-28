@@ -350,6 +350,9 @@
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IRatingConfig.sqx" FileName="Common\Classes\Configs\Interfaces\IRatingConfig.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IResourceLocationConfig.sqx" FileName="Common\Classes\Configs\Interfaces\IResourceLocationConfig.sqx">
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ISquadConfig.sqx" FileName="Common\Classes\Configs\Interfaces\ISquadConfig.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -392,6 +395,12 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingConfig.sqx" FileName="Common\Classes\Configs\RatingConfig.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationConfig.sqx" FileName="Common\Classes\Configs\ResourceLocationConfig.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationTestConfig.sqx" FileName="Common\Classes\Configs\ResourceLocationTestConfig.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SquadConfig.sqx" FileName="Common\Classes\Configs\SquadConfig.sqx">
@@ -697,9 +706,6 @@
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IGameplayConfig.sqx" FileName="Server\Classes\Configs\Interfaces\IGameplayConfig.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IResourceLocationConfig.sqx" FileName="Server\Classes\Configs\Interfaces\IResourceLocationConfig.sqx">
-                        <SubNodes />
-                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IServerConfig.sqx" FileName="Server\Classes\Configs\Interfaces\IServerConfig.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -709,12 +715,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="GameplayTestConfig.sqx" FileName="Server\Classes\Configs\GameplayTestConfig.sqx">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationConfig.sqx" FileName="Server\Classes\Configs\ResourceLocationConfig.sqx">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationTestConfig.sqx" FileName="Server\Classes\Configs\ResourceLocationTestConfig.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ServerConfig.sqx" FileName="Server\Classes\Configs\ServerConfig.sqx">

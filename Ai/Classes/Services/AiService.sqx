@@ -192,7 +192,7 @@ namespace Intrusion.Ai
 				//gCommon.MissionParametersHandler.AiSkillLevel, 
 				gServer.ResourceLocationHandler,
 				gServer.UnitSpawner,
-				gServerConfig.ResourceLocation,
+				gCommonConfig.ResourceLocation,
 				//gCommonConfig.Professions,
 				new AiUnitsConfig, 
 				//new AiWeaponsConfig

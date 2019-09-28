@@ -14,13 +14,11 @@ namespace Intrusion.Server
 	public class ServerConfig : IServerConfig
 	{
 		// Creates a ServerConfig object.
-		public constructor("_gameplayConfig" as IGameplayConfig, "_resourceLocationConfig" as IResourceLocationConfig) {
+		public constructor("_gameplayConfig" as IGameplayConfig) {
 			_self.Gameplay = _gameplayConfig;
-			_self.ResourceLocation = _resourceLocationConfig;
 		};
 		
 		// Gets the gameplay configs.
 		public property IGameplayConfig Gameplay { get; private set; };
-		public property IResourceLocationConfig ResourceLocation { get; private set; };
 	};
 };

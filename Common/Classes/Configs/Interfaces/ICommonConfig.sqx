@@ -28,5 +28,7 @@ namespace Intrusion.Common
 		
 		// Gets the base config.
 		property BaseConfig BaseConfig { get; private set; };
+		
+		property IResourceLocationConfig ResourceLocation { get; };
 	};
 };
