@@ -145,6 +145,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ActionService.sqx" FileName="Ai\Classes\Services\ActionService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiBrigadeLeaderService.sqx" FileName="Ai\Classes\Services\AiBrigadeLeaderService.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiService.sqx" FileName="Ai\Classes\Services\AiService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>

@@ -1,0 +1,32 @@
+/*
+ * Name:	AiBrigadeLeaderService
+ * Date:	2019-09-30
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class that models an AI brigade leader, making decisions and giving orders.
+ */
+
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class AiBrigadeLeaderService : Service
+	{
+		private fields ["_mSide" as Side];
+		
+		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler)
+		{
+			_mSide = _side;
+		};
+		
+		protected override method Run()
+		{
+			
+		
+			call _base.Run;
+		};
+	};
+};
