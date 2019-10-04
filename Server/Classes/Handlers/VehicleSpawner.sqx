@@ -226,6 +226,11 @@ namespace Intrusion.Server
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
 		    
+		    // If squad vehicle, do not automatically eject AI squads when vehicle becomes immobile.
+		    if (!isNull _group) then {
+			    _vehicleObj allowCrewInImmobile true;
+		    };
+		    
 		    clearWeaponCargoGlobal _vehicleObj;
 		    clearMagazineCargoGlobal _vehicleObj;
 		    clearBackpackCargoGlobal _vehicleObj;

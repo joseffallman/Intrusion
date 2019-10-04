@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=288;
+		nextID=289;
 	};
 	class MarkerIDProvider
 	{
@@ -16,7 +16,7 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={6456.7349,86.881393,3433.3267};
+		pos[]={6455.9727,88.74427,3432.1133};
 		dir[]={-0.94036603,-0.22202609,0.25773245};
 		up[]={-0.21413174,0.97503972,0.058687996};
 		aside[]={0.2643303,-7.2293915e-008,0.96443695};
@@ -242,7 +242,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=72;
+		items=73;
 		class Item0
 		{
 			dataType="Marker";
@@ -2601,6 +2601,22 @@ class Mission
 			};
 			id=285;
 			atlOffset=-7.6293945e-006;
+		};
+		class Item72
+		{
+			dataType="Trigger";
+			position[]={6423.9351,80.417145,3465.3479};
+			class Attributes
+			{
+				onActivation="{ _x setHitIndex [6, 1, false]; } forEach vehicles;";
+				sizeA=0;
+				sizeB=0;
+				repeatable=1;
+				activationBy="ALPHA";
+			};
+			id=288;
+			type="EmptyDetector";
+			atlOffset=7.6293945e-006;
 		};
 	};
 };
