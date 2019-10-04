@@ -38,6 +38,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Services\MissionCounterSe
 call compile preprocessFileLineNumbers "Server\Classes\Services\ObservationService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MoveBaseService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\ResourceLocationOwnerService.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Services\SupportVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerReciever.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Ai\InitAi.sqx";

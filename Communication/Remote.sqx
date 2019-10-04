@@ -71,6 +71,7 @@ namespace Intrusion.Communication
 					case "ClientEventReciever.OnUnitChangedSeat": { _parameters spawn ClientEventReciever.OnUnitChangedSeat};
 					case "ClientEventReciever.OnPlayUnitAnimation": { _parameters spawn ClientEventReciever.OnPlayUnitAnimation};
 					case "ClientEventReciever.OnObservationsUpdated": { _parameters spawn ClientEventReciever.OnObservationsUpdated };
+					case "ClientEventReciever.OnVehicleSupported": { _parameters spawn ClientEventReciever.OnVehicleSupported };					
 				};
 			};
 		};
