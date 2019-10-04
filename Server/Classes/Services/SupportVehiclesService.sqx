@@ -24,7 +24,7 @@ namespace Intrusion.Server
 		{
 			{
 				if (_x != _supportVehicle) then {
-					if (_x distance _supportVehicle < 15) then {
+					if (_x distance _supportVehicle < 10) then {
 						return _x;
 					};
 				};
@@ -50,6 +50,40 @@ namespace Intrusion.Server
 							if (damage _closeVehicle > 0.01 || !canMove _closeVehicle) then {
 								_closeVehicle setDamage 0;
 								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
+							};
+						};
+					};
+					
+					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Fuel }) then
+					{
+						_closeVehicle = [_intrusionVehicle.Vehicle] call _self.GetClosestVehicleWithinHealDistance;
+						
+						if (!isNull _closeVehicle && { alive _closeVehicle }) then
+						{
+							if (fuel _closeVehicle < 0.9) then {
+								_closeVehicle setFuel 1;
+								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was refueld by allied refuel vehicle.", "Vehicle was refueld."]] call Remote.Invoke;
+							};
+						};
+					};
+					
+					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
+					{
+						_closeVehicle = [_intrusionVehicle.Vehicle] call _self.GetClosestVehicleWithinHealDistance;
+						
+						if (!isNull _closeVehicle && { alive _closeVehicle }) then
+						{
+							private _maxAmmoMainGun = _closeVehicle getVariable ["MaxAmmoMaingun", 0];
+						    private _weapons = weapons _closeVehicle;
+						    private _ammoMainGun = 0;
+						    
+						    if (count _weapons > 0) then {
+						    	_ammoMainGun = _closeVehicle ammo (_weapons select 0);
+						    };
+						    
+							if (_ammoMainGun < _maxAmmoMainGun) then {
+								_closeVehicle setVehicleAmmo 1;
+								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
 							};
 						};
 					};
