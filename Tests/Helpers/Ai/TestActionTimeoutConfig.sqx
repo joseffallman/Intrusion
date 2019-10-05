@@ -17,7 +17,7 @@ namespace Intrusion.Tests.Helpers
 		// Creates an ActionTimeoutConfig object.
 		public constructor()
 		{
-			_self.LeaderStationaryTimeout = 10;
+			_self.LeaderStationaryTimeout = 180;
 			_self.MoveActionTimeout = 120;
 			_self.CaptureActionTimeout = 30;
 		};

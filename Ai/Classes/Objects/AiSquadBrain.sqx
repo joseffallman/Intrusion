@@ -435,7 +435,7 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
 		private method Boolean CheckActionTimeout()
 		{
-			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService];
+			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService, "_mountedVehicle" as VehicleContainer];
 			
 			// If the action has a service, check if that service has timed out or not.
 			
@@ -445,13 +445,20 @@ namespace Intrusion.Ai
 				if (!isNull _actionService) then {
 					if (!_actionService.IsRunning) then {
 						if (!_actionService.Success) then {
-				        	["Timeout occurred #1"] call LogHandler.Debug;
+				        	["Timeout occurred (action service)"] call LogHandler.Debug;
 							return true;
 						};
 					};
 					
 					return false;
 				};
+			};
+			
+			// Check if the current action has timed out
+			_action = _mKnowledge.CurrentAction;
+			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
+	        	["Timeout occurred (action)"] call LogHandler.Debug;
+				return true;
 			};
 			
 			// If leader has moved since last time, update position and time
@@ -462,21 +469,17 @@ namespace Intrusion.Ai
 				_mKnowledge.LeaderPos = _leaderPos;
 				_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
 			}
-			else
+			else // If leader has not moved since last time, check if current action should time out
 			{
-				// If leader has not moved since last time, check if current action should time out
-				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
-		        	["Timeout occurred #2"] call LogHandler.Debug;
+				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then
+				{
+					_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
+					
+		        	["Timeout occurred (stationary)"] call LogHandler.Debug;
 					_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
+					[_mKnowledge.Group, _mountedVehicle] call _mActionPerformer.ReplaceGroupOnNearestRoad;
 					return true;
 				};
-			};
-			
-			// Check if the current action has timed out
-			_action = _mKnowledge.CurrentAction;
-			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
-	        	["Timeout occurred #3"] call LogHandler.Debug;
-				return true;
 			};
 			
 			return false;

@@ -883,6 +883,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationOwnerService.sqx" FileName="Server\Classes\Services\ResourceLocationOwnerService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SupportVehiclesService.sqx" FileName="Server\Classes\Services\SupportVehiclesService.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="WeaponsService.sqx" FileName="Server\Classes\Services\WeaponsService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>

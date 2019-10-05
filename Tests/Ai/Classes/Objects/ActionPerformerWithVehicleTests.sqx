@@ -59,9 +59,10 @@ namespace Intrusion.Tests.Ai
 				"MovingToNearbyVehicle_Act_StatusIdle",
 				"CloseToDestinationDisembarkedSuccessfully_Act_StatusIdle",
 				"MovingCloseToLocation_Patrolling_ContinueStatusMoving",
+				"VehicularSquadStuckOnStone_StationaryForLongTime_MoveToNearestRoad",
 			]] call TestEngine.Register;
 			
-			//["MovingCloseToLocation_Patrolling_ContinueStatusMoving"] call TestEngine.OnlyThisOne;
+			//["VehicularSquadStuckOnStone_StationaryForLongTime_MoveToNearestRoad"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -419,8 +420,7 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI did not disembark."] call Assert.AreEqual;
 		};
-		
-		
+
 		private static method MovingCloseToLocation_Patrolling_ContinueStatusMoving()
 		{
 			private ["_leaderPos" as Array, "_action" as MoveAction];
@@ -452,6 +452,30 @@ namespace Intrusion.Tests.Ai
 			[[400, 400, 0], _mKnowledge.Order.TargetPosition, "AI's order has wrong position."] call Assert.AreEqual;
 			[OrderType.Defend, _mKnowledge.Order.Type, "AI's order has wrong type."] call Assert.AreEqual;
 			["OFFICE1", _mKnowledge.Order.ResourceLocation.MarkerName, "AI's order has wrong location marker."] call Assert.AreEqual;
+		};
+
+		private static method VehicularSquadStuckOnStone_StationaryForLongTime_MoveToNearestRoad()
+		{
+			private ["_leaderPos" as Array];
+		
+			// Arrange
+			_leaderPos = [100, 100];
+			_mLocationOffice1.Side = west;
+			_mWorld.LeaderPos = _leaderPos;
+			_mWorld.MountedVehicle = [objNull, _leaderPos, 4] new VehicleContainer;
+			_mKnowledge.LeaderPos = _leaderPos;
+			_mKnowledge.Members pushBack [_leaderPos] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, [400, 400, 0], _mLocationOffice1, 20 * 60] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [350, MoveActionType.Move, [400, 400, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "OFFICE1", 30] new MoveAction;
+			_mTime.MissionTime = 190;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[true, _mActionPerformer.ReplaceGroupOnNearestRoadCalled, "Group still stuck."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "Stuck squad not set to Idle when moved."] call Assert.AreEqual;
 		};
 	};
 };

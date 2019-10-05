@@ -13,7 +13,9 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.Live;
+			_self.Mode = ReleaseMode.Develop;
+			
+			// The following settings are settings that apply when mode is not set to Live.
 			
 			_self.ShowTutorials = false;
 			_self.LogLevelFile = LogLevel.Debug;
@@ -23,7 +25,7 @@ namespace Intrusion.Common
 			_self.OnlyAllowAiBeMotorized = true;
 			_self.ShowArtilleryMarkers = true;
 			
-			// The following settings are live settings, and are only set if release mode is set to Live.
+			// The following settings are live settings that override the settings above. Used only when release mode is set to Live.
 			
 			if (_self.Mode == ReleaseMode.Live) then
 			{

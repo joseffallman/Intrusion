@@ -58,6 +58,8 @@ namespace Intrusion.Server
         	// Start the mission counter.
         	call gServer.MissionCounterService.RunAsync;
         	
+        	call gServer.SupportVehiclesService.RunAsync;
+        	
         	// Start the weapon service
         	[_mServerConfig.Gameplay, _mCommonConfig.MapMarkers, gServer.InventedTechnologiesCollection] call WeaponsService.RunAsync;
         	
