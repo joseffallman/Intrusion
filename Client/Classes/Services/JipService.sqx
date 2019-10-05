@@ -29,6 +29,12 @@ namespace Intrusion.Client
 			_playerInfoCollection = call PublicVariableHandler.GetPlayerInfoCollection;
 			_playerInfo = [getPlayerUID player] call _playerInfoCollection.GetPlayerInfoByUid;
 			_isCheating = !(isNull _playerInfo || { _playerInfo.Side == playerSide });
+			
+			{
+				[[_x]] call gClient.ClientVehicleHandler.GroupLockVehicles;
+				[_x] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
+				[[_x]] call gClient.ClientVehicleHandler.AddGroupMarkerToVehicles;
+			} foreach vehicles;
 
 			if (_isCheating) then {
 				ClientState.IsOnCorrectSide = false;
