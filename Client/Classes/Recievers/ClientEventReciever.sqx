@@ -200,8 +200,9 @@ namespace Intrusion.Client
 		public static method OnSquadVehiclesSpawned("_group" as Group, "_professionType" as ProfessionType, "_vehicles" as Array)
 		{
 			[_vehicles] call gClient.ClientVehicleHandler.GroupLockVehicles;
+			
 			{
-				[_x as Object] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
+				[_x] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
 			} forEach _vehicles;
 			
 			if (_group == group player) then {
