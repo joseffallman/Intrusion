@@ -47,7 +47,7 @@ namespace Intrusion.Server
 						
 						if (!isNull _closeVehicle && { alive _closeVehicle }) then
 						{
-							if (damage _closeVehicle > 0.01 || !canMove _closeVehicle) then {
+							if (([_closeVehicle] call Functions.GetVehicleDamage) > 0.1 || !canMove _closeVehicle) then {
 								_closeVehicle setDamage 0;
 								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
 							};
@@ -60,7 +60,8 @@ namespace Intrusion.Server
 						
 						if (!isNull _closeVehicle && { alive _closeVehicle }) then
 						{
-							if (fuel _closeVehicle < 0.9) then {
+							if (fuel _closeVehicle < 0.9) then
+							{
 								_closeVehicle setFuel 1;
 								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was refueld by allied refuel vehicle.", "Vehicle was refueld."]] call Remote.Invoke;
 							};
@@ -73,6 +74,7 @@ namespace Intrusion.Server
 						
 						if (!isNull _closeVehicle && { alive _closeVehicle }) then
 						{
+/*
 							private _maxAmmoMainGun = _closeVehicle getVariable ["MaxAmmoMaingun", 0];
 						    private _weapons = weapons _closeVehicle;
 						    private _ammoMainGun = 0;
@@ -81,13 +83,15 @@ namespace Intrusion.Server
 						    	_ammoMainGun = _closeVehicle ammo (_weapons select 0);
 						    };
 						    
-							if (_ammoMainGun < _maxAmmoMainGun) then {
+							// if (_ammoMainGun < _maxAmmoMainGun) then {
+*/						    
+							if ([_closeVehicle] call Functions.GetVehicleAmmo < 0.9) then
+							{
 								_closeVehicle setVehicleAmmo 1;
 								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
 							};
 						};
-					};
-					
+					};					
 				} foreach vehicles;
 				
 				sleep 5;

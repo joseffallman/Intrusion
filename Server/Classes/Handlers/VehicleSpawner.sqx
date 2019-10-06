@@ -248,6 +248,8 @@ namespace Intrusion.Server
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	
+        	_vehicleObj setFuel 0.4 + random 0.3;
+        	
 	    	{
 	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleBoxAttachmentInfo];
 	    		_attachObjInfo = _x;

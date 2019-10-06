@@ -14,7 +14,8 @@ namespace Intrusion.Server
 		private fields ["_mObservations" as Array /* of Observation */];
 		
 		// Creates a ObservationHandler object.
-		public constructor {
+		public constructor()
+		{
 			_mObservations = [];
 		};
 		
