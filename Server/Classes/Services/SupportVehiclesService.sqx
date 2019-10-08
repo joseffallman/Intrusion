@@ -41,57 +41,43 @@ namespace Intrusion.Server
 				{
 					_intrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
 					
-					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Repair }) then
+					// If vehicle is an intrusion vehicle of a support type
+					
+					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Repair || _intrusionVehicle.OwnerProfession == ProfessionType.Fuel || _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
 					{
-						_closeVehicle = [_intrusionVehicle.Vehicle] call _self.GetClosestVehicleWithinHealDistance;
+						_closeVehicle = [_x] call _self.GetClosestVehicleWithinHealDistance;
 						
-						if (!isNull _closeVehicle && { alive _closeVehicle }) then
+						// If there is a close vehicle near, and if both vehicles is stationary
+						
+						if (!isNull _closeVehicle && { alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
 						{
-							if (([_closeVehicle] call Functions.GetVehicleDamage) > 0.1 || !canMove _closeVehicle) then {
-								_closeVehicle setDamage 0;
-								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
+							if (_intrusionVehicle.OwnerProfession == ProfessionType.Repair) then
+							{
+								if (([_closeVehicle] call Functions.GetVehicleDamage) > 0.1 || !canMove _closeVehicle) then {
+									_closeVehicle setDamage 0;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
+								};
 							};
+							
+							if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Fuel }) then
+							{
+								if (fuel _closeVehicle < 0.9) then
+								{
+									_closeVehicle setFuel 1;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was refueld by allied refuel vehicle.", "Vehicle was refueld."]] call Remote.Invoke;
+								};
+							};
+							
+							if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
+							{
+								if ([_closeVehicle] call Functions.GetVehicleAmmo < 0.9) then
+								{
+									_closeVehicle setVehicleAmmo 1;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
+								};
+							};					
 						};
 					};
-					
-					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Fuel }) then
-					{
-						_closeVehicle = [_intrusionVehicle.Vehicle] call _self.GetClosestVehicleWithinHealDistance;
-						
-						if (!isNull _closeVehicle && { alive _closeVehicle }) then
-						{
-							if (fuel _closeVehicle < 0.9) then
-							{
-								_closeVehicle setFuel 1;
-								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was refueld by allied refuel vehicle.", "Vehicle was refueld."]] call Remote.Invoke;
-							};
-						};
-					};
-					
-					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
-					{
-						_closeVehicle = [_intrusionVehicle.Vehicle] call _self.GetClosestVehicleWithinHealDistance;
-						
-						if (!isNull _closeVehicle && { alive _closeVehicle }) then
-						{
-/*
-							private _maxAmmoMainGun = _closeVehicle getVariable ["MaxAmmoMaingun", 0];
-						    private _weapons = weapons _closeVehicle;
-						    private _ammoMainGun = 0;
-						    
-						    if (count _weapons > 0) then {
-						    	_ammoMainGun = _closeVehicle ammo (_weapons select 0);
-						    };
-						    
-							// if (_ammoMainGun < _maxAmmoMainGun) then {
-*/						    
-							if ([_closeVehicle] call Functions.GetVehicleAmmo < 0.9) then
-							{
-								_closeVehicle setVehicleAmmo 1;
-								["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
-							};
-						};
-					};					
 				} foreach vehicles;
 				
 				sleep 5;
