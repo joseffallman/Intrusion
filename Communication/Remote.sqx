@@ -50,6 +50,7 @@ namespace Intrusion.Communication
 					case "ClientMessageHandler.ShowHint": { _parameters spawn ClientMessageHandler.ShowHint };
 					case "ClientMessageHandler.ShowMessage": { _parameters spawn ClientMessageHandler.ShowMessage };
 					case "ClientMessageHandler.ShowSubTitle": { _parameters spawn ClientMessageHandler.ShowSubTitle };
+					case "ClientMessageHandler.ShowTaskInfo": { _parameters spawn ClientMessageHandler.ShowTaskInfo };
 					case "ClientEventReciever.OnMissionTimeIsUp": { _parameters spawn ClientEventReciever.OnMissionTimeIsUp };
 					case "ClientEventReciever.OnNewBrigadeLeader": { _parameters spawn ClientEventReciever.OnNewBrigadeLeader };
 					case "ClientEventReciever.OnBrigadeLeaderRejected": { _parameters spawn ClientEventReciever.OnBrigadeLeaderRejected };

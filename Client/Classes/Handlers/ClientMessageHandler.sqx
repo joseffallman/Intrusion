@@ -76,5 +76,27 @@ namespace Intrusion.Client
 			    };
 			};
 		};
+
+        // Shows a sub title to the user.
+        // _message (String): The message to be shown.
+        public static method ShowTaskInfo("_message" as String, ["_address" as Any, objNull])
+        {
+        	if (ClientState.IsOnCorrectSide) then {
+			    if (isNull _address) then {
+					["TaskSucceeded",["", _message]] call BIS_fnc_showNotification;
+			    }
+			    else {
+			    	if (_address is Object && {_address == player}) then {
+						["TaskSucceeded",["", _message]] call BIS_fnc_showNotification;
+			    	};
+			    	if (typeName _address == "Group" && {_address == group player}) then {
+						["TaskSucceeded",["", _message]] call BIS_fnc_showNotification;
+			    	};
+			    	if (typeName _address == "Side" && {_address == side player}) then {
+						["TaskSucceeded",["", _message]] call BIS_fnc_showNotification;
+			    	};
+			    };
+			};
+		};
 	};
 };
