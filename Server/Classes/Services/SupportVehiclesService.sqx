@@ -48,9 +48,9 @@ namespace Intrusion.Server
 					{
 						_closeVehicle = [_x] call _self.GetClosestVehicleWithinHealDistance;
 						
-						// If there is a close vehicle near, and if both vehicles are stationary
+						// If there is a close vehicle near for the same faction, and if both vehicles are stationary
 						
-						if (!isNull _closeVehicle && { alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
+						if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
 						{
 							if (_intrusionVehicle.OwnerProfession == ProfessionType.Repair) then
 							{
