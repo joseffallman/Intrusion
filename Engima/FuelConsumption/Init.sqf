@@ -1,0 +1,1 @@
+execVM "Engima\FuelConsumption\Server\Functions.sqf";
