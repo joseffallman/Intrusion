@@ -20,8 +20,13 @@ namespace Intrusion.Common
 			_mGameLengthMinutes = _gameLengthMinutes;
 		};
 		
-		private method AddLargeGroupBonusAndGameLengthFactor("_rating" as Scalar, "_groupMemberCount" as Scalar)
+		private method Scalar AddLargeGroupBonusAndGameLengthFactor("_rating" as Scalar, "_groupMemberCount" as Scalar)
 		{
+        	["_rating = " + str _rating] call LogHandler.Debug;
+        	["_groupMemberCount = " + str _groupMemberCount] call LogHandler.Debug;
+        	["GroupExtraMemberRatingFactor = " + str _mRatingConfig.GroupExtraMemberRatingFactor] call LogHandler.Debug;
+        	["_mGameLengthMinutes = " + str _mGameLengthMinutes] call LogHandler.Debug;
+        	
 			return _rating * (_groupMemberCount + 1) * _mRatingConfig.GroupExtraMemberRatingFactor * (60 / _mGameLengthMinutes);
 		};
 		
@@ -47,7 +52,7 @@ namespace Intrusion.Common
 		// Returns (Scalar): The rating to add to each unit in the group.
 		public method Scalar CalculateGroupRatingVehicleSupport("_groupMemberCount" as Scalar, "_supportVolume" as Scalar)
 		{
-			return floor _supportVolume * ([_mRatingConfig.VehicleSupport, _groupMemberCount] call _self.AddLargeGroupBonusAndGameLengthFactor);
+			return floor (_supportVolume * ([_mRatingConfig.VehicleSupport, _groupMemberCount] call _self.AddLargeGroupBonusAndGameLengthFactor));
 		};
 	};
 };

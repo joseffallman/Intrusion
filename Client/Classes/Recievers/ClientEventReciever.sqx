@@ -277,9 +277,10 @@ namespace Intrusion.Client
 		{
 			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			
-			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
-			
-			if (!isNull _intrusionVehicles) then {
+			if (call PublicVariableHandler.IntrusionVehiclesHasValue) then
+			{
+				_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+				
 				{
 					if (_x.Vehicle == _supportedVehicle) then
 					{
