@@ -15,6 +15,7 @@ namespace Intrusion.Common
 		public constructor {
 			_self.CapturingFlag = 200;
 			_self.EnemyUnitKill = 150;
+			_self.VehicleSupport = 400;
 			_self.GroupExtraMemberRatingFactor = 0.4;
 		};
 		
@@ -23,6 +24,10 @@ namespace Intrusion.Common
 		
 		// How much rating dealt to a group (with one person) when the group kills an enemy unit.
 		public property Scalar EnemyUnitKill { get; private set; };
+		
+		// How much rating dealt to units in a group (with one person in a 60 minutes game and vehicle to support has empty 
+		// fuel tank, 100% damage or empty rounds) for when another vehicle is supported.
+		public property Scalar VehicleSupport { get; private set; };
 		
 		// Gets how much bonus rating is given for each extra team member in the team (0 is like 
 		// group having one member, and 1 is like the rating doubles for each extra team member).

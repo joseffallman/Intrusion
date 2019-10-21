@@ -275,14 +275,29 @@ namespace Intrusion.Client
 		
 		public static method OnVehicleSupported("_supportedVehicle" as Object, "_supportVehicle" as Object, "_messageToSupported" as String, "_messageToSupporter" as String)
 		{
-			if (_supportedVehicle == vehicle player) then {
-				hint _messageToSupported;
-				["TaskSucceeded",["", _messageToSupported]] call BIS_fnc_showNotification;
-			};
+			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			
-			if (_supportVehicle == vehicle player) then {
-				hint _messageToSupporter;
-				["TaskSucceeded",["", _messageToSupporter]] call BIS_fnc_showNotification;
+			if (call PublicVariableHandler.IntrusionVehiclesHasValue) then
+			{
+				_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+				
+				{
+					if (_x.Vehicle == _supportedVehicle) then
+					{
+						if (_x.OwnerGroup == group player) then {
+							[_messageToSupported] call ClientMessageHandler.ShowTaskInfo;
+							return;
+						};
+					};
+					
+					if (_x.Vehicle == _supportVehicle) then
+					{
+						if (_x.OwnerGroup == group player) then {
+							[_messageToSupporter] call ClientMessageHandler.ShowTaskInfo;
+							return;
+						};
+					};
+				} foreach _intrusionVehicles as IntrusionVehicle;
 			};
 		};
 	};
