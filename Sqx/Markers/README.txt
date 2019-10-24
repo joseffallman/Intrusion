@@ -10,3 +10,9 @@
 0.99 Added a Tag property so that markers can be tagged with meaningful values or objects.
      Changed information stored in private fields to public properties.
      Added setter methods for all properties.
+1.0  Added possibility to create local markers.
+     Added create methods for local markers.
+     Added public properties for all marker settings.
+     Added setter methods for all marker settings.
+     Added property "Tag" to store any interesting information.
+     
