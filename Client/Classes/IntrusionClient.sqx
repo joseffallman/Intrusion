@@ -21,7 +21,7 @@ namespace Intrusion.Client
 			
 			_mapMarkersConfig = new MapMarkersConfig;
 			
-			_self.MoveBaseHandler = [_baseConfig] new MoveBaseHandler;
+			_self.MoveBaseHandler = [_baseConfig, new MarkerHandler] new MoveBaseHandler;
 			_self.TeleportHandler = [_mapMarkersConfig, _baseConfig] new TeleportHandler;
 			_self.SquadMarkersConfig = new SquadMarkersConfig;
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;

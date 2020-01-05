@@ -67,7 +67,7 @@ namespace Intrusion.Client
 			};
 		};
 		
-		// Called by the .hpp-dialog when the Cancel button is pressed.
+		// Called by the .hpp-dialog when the OK button is pressed.
 		public static method OnOkButtonPressed {
 			if (call gClient.MoveBaseHandler.StartMoveBaseService) then {
 				call _self.CloseDialog;

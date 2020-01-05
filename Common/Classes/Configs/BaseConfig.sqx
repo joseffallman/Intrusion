@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * Contains all client non-side base configs.
+ * Contains all non-side base configs.
  */
 namespace Intrusion.Common
 {
@@ -20,21 +20,31 @@ namespace Intrusion.Common
 			_self.MoveBaseVehiclesArrowClassName = "Sign_Arrow_Large_F";
 			_self.MoveBaseWeaponsArrowClassName = "Sign_Arrow_Large_Green_F";
 			_self.TimeRequiredToMoveBase = 60;
+			_self.MinDistanceFromResourceLocation = 150;
 		};
 		
+		// Gets the base radius.
 		public property Scalar BaseRadius { get; protected set; };
 		
+		// Gets the minimum distance to nearest enemy needed to be allowed to spawn back to base.
 		public property Scalar BeamToBaseEnemiesMinDistance { get; protected set; };
 		
+		// Gets the maximum distance between group members to be allowed to spawn back to base.
 		public property Scalar BeamToBaseGroupMembersMaxDistance { get; protected set; };
 		
+		// Gets the class name for the build base respawn arrow.
 		public property String MoveBaseRespawnArrowClassName { get; protected set; };
 		
+		// Gets the class name for the build base vehicle park arrow.
 		public property String MoveBaseVehiclesArrowClassName { get; protected set; };
 		
+		// Gets the class name for the build base weapon depot arrow.
 		public property String MoveBaseWeaponsArrowClassName { get; protected set; };
 		
 		// Gets the time in seconds it takes from when the brigade leader moves the base until it is actually moved.
 		public property Scalar TimeRequiredToMoveBase { get; protected set; };
+		
+		// Gets the minimum distance allowed between the base and a resource location.
+		public property Scalar MinDistanceFromResourceLocation { get; protected set; };
 	};
 };
