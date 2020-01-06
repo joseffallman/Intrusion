@@ -32,6 +32,9 @@ namespace Intrusion.Client
         	// AI
         	// Intrusion - The Philosophy
 			
+			player createDiaryRecord ["Diary", ["The Intrusion Menu",
+			"All special Intrusion actions that can be taken is put into the Intrusion Menu, which is a context based action menu that can be reached from anyone and anywhere. The Intrusion menu is context based, which means that only maningful actions are shown. E.g. only a group leader has an option for selecting a profession for its squad, and only the brigade leader has an option for moving the base."]];
+			
 			player createDiaryRecord ["Diary", ["Rank and Rating",
 			"RANK AND RATING<br /><br />" +
 			"Each player has a rank, and each player's starting rank is 'Private'. The more the player's group performs, the more rating is generated to its members, and at certains levels the players 'rank' is increased. The ranks are Private, Corpral, Seargent, Leutenant, Captain, Major and Colonel. Note that rating is shared equally among the members of the group, so the ability that increases the rating morstly is cooperation. The possibility for the leader to select a profession is sometimes limited by his or her rank.<br /><br />" +
@@ -46,43 +49,46 @@ namespace Intrusion.Client
 
 			player createDiaryRecord ["Diary", ["Weapons",
 			"HANDHELD WEAPONS<br /><br />" +
-			"All hand held weapons show up in ammo boxes in the base. In the beginning, the only weapons that exist are basic weapons. The longer the mission progresses - and the more technology that is collected from offices - the more advanced weapons will show up later in the game.<br /><br />" +
-			"Note that some of the weapons are associated with certain professions, and cannot be used by everyone.<br /><br />" +
+			"All hand held weapons show up in ammo boxes in the base. In the beginning, the only weapons that exist are basic weapons. The longer the mission progresses - and the more technology that is collected from offices (see Resources) - the more advanced weapons will become available.<br /><br />" +
+			"Note that some of the weapons are associated with certain professions, and therefore cannot be used by everyone.<br /><br />" +
 			"WEAPONS IN VEHICLES<br /><br />" +
-			"The heavy weapons (static weapons like mortars and anti armor) that belong to some of the professions as loaded in the squad vehicles' cargo space."]];
+			"The heavy weapons (static weapons like mortars and anti armor) that belong to some of the professions are loaded into the squad vehicles' cargo space. A profession vehicle's cargo space can be opened by the squad that owns it."]];
 
 			player createDiaryRecord ["Diary", ["Professions",
-			"A squad assigned to a profession will get the vehicles and weapons that are associated with the profession. However, weapons and vehicles will not be delivered from start, but when the side has earned enough of both kinds of resources. A few requirements must be met before a group leader can select a profession. Such requirements are among max. and min. number of players in the group, limited number of groups on a side, and required rank of the players. All information is listed in the profession dialog.<br /><br />" +
-			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use.<br /><br />"+
-			"HOW TO SELECT A PROFESSION<br />" +
+			"WHAT IS A PROFESSION?<br /><br />" +
+			"A profession is a military role for the squad, such as Transport, Infantry, Artillery or Attack Helicopter among others. A squad assigned to a profession will get the vehicles and weapons that are associated with that profession. However, weapons and vehicles will not be delivered from start.<br /><br />" +
+			"ALL SQUADS START OUT AS INFANTRY<br /><br />" +
+			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use. All squads - even the ones selecting a profession from start - start out as infantry. Some professions require a certain rank for the squad leader to be able to select it (see Rank And Rating). Later when the side has earned enough technology to establish the squad's materiel and enough resources to build it, the materiel will be delivered to the base. The squad can then 'respawn to base' using the Intrusion Menu, and start acting as its selected profession.<br /><br />"+
+			"HOW TO SELECT A PROFESSION<br /><br />" +
 			"1. Only the squad leader can select a profession for the squad.<br />" +
 			"2. From the Intrusion menu, select 'Set group profession'.<br />" +
 			"3. On the profession dialog, select a profession that is not greyed out and press 'Select'."]];
 
 			player createDiaryRecord ["Diary", ["Squads",
-			"All players are divided into squads. From start each inidividual player is the leader of his or her own squad. Creating squads enable some of the professions and makes it easier to increase player's rank.<br /><br />"+
-			"HOW TO GROUP UP WITH ANOTHER PLAYER<br />" +
-			"1. Move next to another player. The player need to be alone in his or her group.<br />" +
-			"2. Turn to the player and from the action menu select 'Invite player to group'."]];
+			"All players belong to a squad. From start each inidividual player is the leader of his or her own one man squad. As a one man squad you are fine to play, but only a few of the professions will be available. You can invite other one man squad players into you squad to bild a greater team. Then other professions will be available to your squad, and the greater squad the more rating (and rank) your squad members will be rewarded for the squad's deeds.<br /><br />"+
+			"HOW TO GROUP UP WITH ANOTHER PLAYER<br /><br />" +
+			"1. Move next to another player. That player needs to be alone in his or her group.<br />" +
+			"2. Turn to the player, and from the action menu select 'Invite player to group'."]];
 
 			player createDiaryRecord ["Diary", ["Resources",
-			"For each side to get more advanced vehicles and weapons they will need to bring in resources by securing the resource locations marked on the map. The resources are of two types, production and technology. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
+			"Like in real life, winning a war is about securing necessary kinds of resources. For each side to get more advanced vehicles and weapons they will need to bring in resources. They do that by securing resource locations marked on the map. The resources are of two kinds: production and technology. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
 			"FACTORIES AND PRODUCTION<br /><br />" +
-			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'.<br /><br />" +
+			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'. Or even better: facilities that improves the manufacturing of new material.<br /><br />" +
 			"When a squad assigns to a profession that has a vehicle, a vehicle order/reservation is placed in a queue at the side's production manager. The first vehicle in the queue is delivered when the vehicle's required technology is established and when the side has enough production to create it. Then the next order in the queue is handled. When a vehicle is delivered, its cost is withdrawn from the side's total production. And the production cost of a vehicle that is removed by the framework (e.g. its owner logged out) will be returned to the side upon removal.<br /><br />" +
 			"OFFICES AND TECHNOLOGY<br /><br />" +
 			"Offices generate technology, and technology leads to 'establishments' of new and upgraded units. Technology is the resource needed for the brigade to establish more and more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of technology."]];
 
-			player createDiaryRecord ["Diary", ["The Intrusion Menu",
-			"All special Intrusion actions that can be taken is put into the Intrusion Menu, which is a context based action menu that can be reached from anyone and anywhere. The Intrusion menu is context based, which means that only maningful actions are shown. E.g. only a group leader has an option for selecting a profession for its squad, and only the brigade leader has an option for moving the base."]];
-			
 			player createDiaryRecord ["Diary", ["Philosophy",
-			"The main philosophy behind Intrusion is to encourage a gameplay style that simulates the use of weapons and vehicles in the way they are used in real life, and at the same time offers a fun gameplay relatively easy to embrace. You should be able to play and do good if ju just join an Intrusion server for the first time, and at the same time your side should be uncontested if you and all your side members develop good communication and everyone stick to their roles. Like in real life, the use of teams, roles, communications and leadership strategies on different levels are essential to form a winning army. What a single unit does is of importance, but not compared to what the side can accomplish when its members are supporting each other in all kinds of situations. Like in a real battle there are a limited amount of resources available, but even an outcounted group of people may beat a superior enemy if fighting well together."]];
+			"The main philosophy behind Intrusion is to encourage a gameplay style where players make use of weapons and vehicles in the way they are used in real life, and at the same time offers a fun gameplay relatively easy to embrace.<br /><br />" +
+			"You should be able to play and do good if you join an Intrusion server for the first time, and at the same time your side should be uncontested if you and all your side members develop good communication and everyone stick to their roles. Like in real life, the use of teams, roles, communications and leadership strategies on different levels are essential for victory. What a single unit does is of importance, but not compared to what the side can accomplish when its members are supporting each other in all kinds of evolving situations. Like in a real battle available resources are limited, but even an outcounted group of people may beat a superior enemy if fighting well together and acting unexpectingly."]];
 
-			player createDiaryRecord ["Diary", ["Overview",
+			player createDiaryRecord ["Diary", ["Overview (if you do not read anything else)",
+			"LIMITED GAME TIME AND PROGRESSION<br /><br />" +
 			"An intrusion battle is limited in time and played like a match between two sides - blufor and opfor. A game of Intrusion has a clear progression, which means that both sides starts out with basic weapons and primitive vehicles. Then the longer the game progresses the more advanced vehicles and wepons will come into play.<br /><br />" +
+			"RESOURCES<br /><br />" +
 			"The map contains resource locations, and the more resources that a side can bring in, the quicker its squads with different specializations (professions) will be equipped with stronger weapons and vehicles that increase the side's chances of winning the battle.<br /><br />" +
-			"One of the resource locations are randomly selected as the winner's location. The side holding the winner's location when the time is up will be the winning side of the battle."]];
+			"WHO WINS?<br /><br />" +
+			"One of the resource locations is randomly selected as the winner's location (the only resource location with a flag symbol). The side holding the winner's location when the time is up will be the winning side of the battle."]];
 /*
 			player createDiaryRecord ["Story", ["Overview",
 			"After a long build up of tentions the world has once again come into conflict, and the enemy is on the move. For quite a while your brigade has been stationed on a relatively calm area, where <br /><br />" +
