@@ -8,6 +8,7 @@
  * A service that "heals" vehicles when a support vehicle comes near.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Communication;
 
@@ -18,6 +19,7 @@ namespace Intrusion.Server
 		// Creates a SupportVehiclesService object.
 		public constructor()
 		{
+			call _base.Constructor;
 		};
 		
 		private method Object GetClosestVehicleWithinHealDistance("_supportVehicle" as Object)

@@ -61,7 +61,6 @@ call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoItemInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleBoxAttachmentInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\CommonEventHandlers.sqx";
-call compile preprocessFileLineNumbers "Common\Classes\Services\Service.sqx";
 
 using Intrusion.Common;
 

@@ -6,6 +6,7 @@ enableSaving [false, false];
 
 // First common
 call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
+call compile preprocessFileLineNumbers "Sqx\Services\Service.sqx";
 call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
 
 // Then server

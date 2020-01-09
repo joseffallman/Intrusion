@@ -8,6 +8,7 @@
  * Service that handles the process when a brigade leader is building a new base.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 
 namespace Intrusion.Server

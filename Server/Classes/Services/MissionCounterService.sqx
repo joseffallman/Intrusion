@@ -8,6 +8,7 @@
  * Performs the countdown of the mission time.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Communication;
 
@@ -17,6 +18,8 @@ namespace Intrusion.Server
 	{
 		public constructor("_matchLengthMinutes" as Scalar)
 		{
+			call _base.Constructor;
+			
 			_self.MinutesFromStart = _matchLengthMinutes;
 		};
 		

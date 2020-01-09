@@ -8,6 +8,7 @@
  * Service that handles a simulated artillery fire, to enable artillery for AI.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Server;
 
@@ -19,6 +20,8 @@ namespace Intrusion.Ai
 		
 		// Creates a PseudoArtilleryService object.
 		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, "_competingSides" as Array /* of Side */) {
+			call _base.Constructor;
+			
 			_mSide = _side;
 			_mObservationHandler = _observationHandler;
 			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;

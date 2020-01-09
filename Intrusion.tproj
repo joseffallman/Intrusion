@@ -559,20 +559,6 @@
                   </ProjectNodeViewModel>
                 </SubNodes>
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" FileName="Common\Classes\Services">
-                <SubNodes>
-                  <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" FileName="Common\Classes\Services\Interfaces">
-                    <SubNodes>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IService.sqx" FileName="Common\Classes\Services\Interfaces\IService.sqx">
-                        <SubNodes />
-                      </ProjectNodeViewModel>
-                    </SubNodes>
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Service.sqx" FileName="Common\Classes\Services\Service.sqx">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                </SubNodes>
-              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IntrusionCommon.sqx" FileName="Common\Classes\IntrusionCommon.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
@@ -952,6 +938,16 @@
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MarkerHelper.sqx" FileName="Sqx\Markers\MarkerHelper.sqx">
+                <SubNodes />
+              </ProjectNodeViewModel>
+            </SubNodes>
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Services" FileName="Sqx\Services">
+            <SubNodes>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IService.sqx" FileName="Sqx\Services\IService.sqx">
+                <SubNodes />
+              </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Service.sqx" FileName="Sqx\Services\Service.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
             </SubNodes>

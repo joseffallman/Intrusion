@@ -7,13 +7,14 @@
  * Description:
  * Handles the ownership of resource locations.
  */
- 
+
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Communication;
  
 namespace Intrusion.Server
 {
-	public class ResourceLocationOwnerService : IService
+	public class ResourceLocationOwnerService : Service
 	{
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mResourceLocationDomInfos" as Array /* of ResourceLocationDominanceInfo */];
 		private fields ["_mGameplayConfig" as IGameplayConfig, "_mResourceLocationConfig" as IResourceLocationConfig, "_mMissionTime" as IMissionTime, "_mRatingCalculator" as RatingCalculator];
@@ -26,17 +27,16 @@ namespace Intrusion.Server
 			"_missionTime" as IMissionTime,
 			"_ratingCalculator" as RatingCalculator)
 		{
+			call _base.Constructor;
+			
 			_mGameplayConfig = _gameplayConfig;
 			_mResourceLocationHandler = _resourceLocationHandler;
 			_mResourceLocationConfig = _resourceLocationConfig;
 			_mMissionTime = _missionTime;
 			_mRatingCalculator = _ratingCalculator;
 			
-			_self.IsRunning = false;
 			_mResourceLocationDomInfos = [];
 		};
-		
-		public property Boolean IsRunning { get; private set; };
 		
 		private method GetPresentUnits("_markerName" as String, "_side" as Side)
 		{
@@ -194,7 +194,7 @@ namespace Intrusion.Server
 			};
 		};
 		
-		private method Run()
+		protected override method Run()
 		{
 			private ["_resourceLocationCollection" as ResourceLocationCollection, "_resourceLocations" as Array /* of ResourceLocation */];
 			
@@ -211,12 +211,8 @@ namespace Intrusion.Server
 			
 				sleep 3;
 			};
-		};
-		
-		public method RunAsync()
-		{
-			_self.IsRunning = true;
-			[] spawn _self.Run;
+			
+			call _base.Run;
 		};
 	};
 };

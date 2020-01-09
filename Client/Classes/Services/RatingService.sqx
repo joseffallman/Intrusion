@@ -8,25 +8,25 @@
  * A service checking status for squad rating.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 
 namespace Intrusion.Client
 {
-	public class RatingService : IService
+	public class RatingService : Service
 	{
 		private fields ["_mSquadConfig" as ISquadConfig, "_mMissionTime" as IMissionTime];
 	
 		// Creates a RatingService object.
 		public constructor("_squadConfig" as ISquadConfig, "_missionTime" as IMissionTime)
 		{
-			_self.IsRunning = false;
+			call _base.Constructor;
+			
 			_mSquadConfig = _squadConfig;
 			_mMissionTime = _missionTime;
 		};
 		
-		public property Boolean IsRunning { get; private set; };
-		
-		private method Run()
+		protected override method Run()
 		{
 			private ["_okDistances" as Boolean, "_ratingLock" as RatingLock];
 			
@@ -54,12 +54,8 @@ namespace Intrusion.Client
 				
 				sleep 5;
 			};
-		};
-		
-		public method RunAsync()
-		{
-			_self.IsRunning = true;
-			[] spawn _self.Run;
+			
+			call _base.Run;
 		};
 	};
 };
