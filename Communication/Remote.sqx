@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * Handles all remote execution. All calls that need to be done across the network must be registered here.
+ * Handles remote execution. All calls that need to be done across the network must be registered here.
  */
 
 using Intrusion.Client;
@@ -16,19 +16,23 @@ namespace Intrusion.Communication
 {
 	public class Remote
 	{
-		public static method Invoke {
-			params ["_methodFullName" as String, ["_parameter" as Any, []]];
-
+		// Invokes a method on another machine.
+		// _methodFullName (String): The full name of the method to execute on another machine.
+		// _parameter (Any): The parameter (or list of parameters) to use in the method call.
+		public static method Invoke("_methodFullName" as String, ["_parameter" as Any, []])
+		{
 			[_methodFullName, _parameter] remoteExec ["Intrusion_Communication_Remote_Recieve", RemoteTargetOptions.All];
 		};
 		
-		public static method Recieve {
-			params ["_methodFullName" as String, "_parameters" as Any];
-        	[(str _this) + " Remote.Recieve"] call LogHandler.Debug;
-			
-			// If the server is the reciever
-			
-			if (isServer) then {
+		// Remotely called by the invoking machine and executed locally. Fires the intended invoked method.
+		// _methodFullName (String): The name of the method (including class name) to execute on this current machine.
+		// _parameter (Any): The parameter (or list of parameters) to use in the method call.
+		public static method Recieve("_methodFullName" as String, "_parameters" as Any)
+		{
+			if (isServer) then
+			{
+				// Messages routed to the server
+				
 				switch (_methodFullName) do {
 					case "SquadHandlerReciever.SetSquadProfession": { _parameters spawn SquadHandlerReciever.SetSquadProfession; };
 					case "ServerEventReciever.OnPlayerClaimBrigadeLeadership": { _parameters spawn ServerEventReciever.OnPlayerClaimBrigadeLeadership; };
@@ -40,9 +44,10 @@ namespace Intrusion.Communication
 				};
 			};
 			
-			// If the client is the reciever
+			if (!isDedicated) then
+			{
+				// Messages routed to a client (or to a hosted server)
 			
-			if (!isDedicated) then {
 				switch (_methodFullName) do {
 					case "ClientResourceLocationHandler.UpdateResourceLocations": { _parameters spawn ClientResourceLocationHandler.UpdateResourceLocations; };
 					case "ClientSquadHandler.OnGroupProfessionChanged": { _parameters spawn ClientSquadHandler.OnGroupProfessionChanged };

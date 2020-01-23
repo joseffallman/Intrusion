@@ -3,5 +3,4 @@ call compile preprocessFileLineNumbers "Communication\Remote.sqx";
 
 using Intrusion.Communication;
 
-/* Options */
 call RemoteTargetOptions.Init;

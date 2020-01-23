@@ -11,7 +11,8 @@ namespace Intrusion.Communication
 	public class RemoteTargetOptions
 	{
         // Creates a RemoteTargetOptions object.
-        public static method Init {
+        public static method Init()
+        {
         	_self.All = 0;
         	_self.Server = 2;
         	_self.ClientsNotServer = -2;
