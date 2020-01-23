@@ -8,6 +8,7 @@
  * A helper class for some target logic.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Server

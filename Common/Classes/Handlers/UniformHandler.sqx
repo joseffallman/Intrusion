@@ -7,6 +7,9 @@
  * Description:
  * A class that could change the uniform on a unit.
  */
+ 
+using Intrusion.Communication;
+
 namespace Intrusion.Common
 {
 	public class UniformHandler

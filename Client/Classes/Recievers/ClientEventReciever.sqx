@@ -8,6 +8,7 @@
  * Static class that handles all Intrusion events sent from the server.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Client

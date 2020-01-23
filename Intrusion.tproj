@@ -453,9 +453,6 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionParametersHandler.sqx" FileName="Common\Classes\Handlers\MissionParametersHandler.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PublicVariableHandler.sqx" FileName="Common\Classes\Handlers\PublicVariableHandler.sqx">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="UniformHandler.sqx" FileName="Common\Classes\Handlers\UniformHandler.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -609,6 +606,9 @@
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Communication" FileName="Communication">
         <SubNodes>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InitCommunication.sqx" FileName="Communication\InitCommunication.sqx">
+            <SubNodes />
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PublicVariableHandler.sqx" FileName="Communication\PublicVariableHandler.sqx">
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Remote.sqx" FileName="Communication\Remote.sqx">

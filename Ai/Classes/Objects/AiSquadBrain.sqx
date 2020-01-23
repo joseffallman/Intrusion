@@ -8,6 +8,7 @@
  * Models the brain of the squad leader that takes all decisions of the team.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 using Intrusion.Server;
 using Sqx.Collections;

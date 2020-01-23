@@ -8,6 +8,7 @@
  * Updates the player's map with map markers (observations not included).
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 using Sqx.Markers;
 
