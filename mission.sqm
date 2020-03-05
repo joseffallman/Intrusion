@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={4283.0146,43.933548,4203.9985};
-		dir[]={-0.80730939,-0.41944647,-0.41518387};
-		up[]={-0.37304369,0.90776068,-0.19184947};
-		aside[]={-0.45735827,4.5598426e-007,0.8893165};
+		pos[]={4316.0415,52.548546,4055.5107};
+		dir[]={0,-0.70710683,0.70710683};
+		up[]={0,0.70710677,0.70710677};
+		aside[]={0.99999994,0,-0};
 	};
 };
 binarizationWanted=0;
@@ -242,7 +242,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=73;
+		items=72;
 		class Item0
 		{
 			dataType="Marker";
@@ -2601,21 +2601,6 @@ class Mission
 			};
 			id=285;
 			atlOffset=-7.6293945e-006;
-		};
-		class Item72
-		{
-			dataType="Trigger";
-			position[]={4316.0415,27.548546,4080.5107};
-			class Attributes
-			{
-				onActivation="{ _x setHitIndex [6, 1, false]; } forEach vehicles;";
-				sizeA=0;
-				sizeB=0;
-				repeatable=1;
-				activationBy="ALPHA";
-			};
-			id=288;
-			type="EmptyDetector";
 		};
 	};
 };
