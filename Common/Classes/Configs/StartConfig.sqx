@@ -13,7 +13,7 @@ namespace Intrusion.Common
 	{
 		public static method Init()
 		{
-			_self.Mode = ReleaseMode.Live;
+			_self.Mode = ReleaseMode.Test;
 			
 			// The following settings are settings that apply when mode is not set to Live.
 			

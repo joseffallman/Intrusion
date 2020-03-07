@@ -137,7 +137,7 @@ namespace Intrusion.Server
 	        	
 				["ClientEventReciever.OnObservationsUpdated", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 5;
+        		sleep 1;
 			};
 		};
 		
