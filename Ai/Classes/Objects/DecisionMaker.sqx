@@ -379,18 +379,28 @@ namespace Intrusion.Ai
 		
 		protected virtual method Boolean CompleteMoveWhenEnemiesNearby("_mountedVehicle" as VehicleContainer, "_closestEnemy" as IUnitContainer)
 		{
+			private ["_moveAction" as MoveAction];
 			private ["_leaderPos" as Array];
 			
-			_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-			
-			if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then
-			{				
-				private _moveAction = _self.Knowledge.CurrentAction as MoveAction;
-				
-				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.Engage }) then {
-					return true;
+			// If acting as a profession squad
+			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			{
+				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
+					
+				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction) then {
+						if (_moveAction.Type != MoveActionType.Engage) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
+						};
+					};
 				};
 			};
+			
+			return true;
 		};
 		
 		protected virtual method Boolean CompleteMoveWhenCloseToDestination("_mountedVehicle" as VehicleContainer, "_distanceToTargetPos" as Scalar)
