@@ -381,23 +381,34 @@ namespace Intrusion.Ai
 		{
 			private ["_moveAction" as MoveAction];
 			private ["_leaderPos" as Array];
+			private ["_order" as Order];
 			
 			// If acting as a profession squad
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			//if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
+			
+			// If mounted
+			if (!isNull _mountedVehicle) then
 			{
 				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
 					
 				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
-					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					_order = _self.Knowledge.Order;
 					
-					if (_moveAction is MoveAction) then {
-						if (_moveAction.Type != MoveActionType.Engage) then {
-				        	["Completed move #1"] call LogHandler.Debug;
-							player sideChat "Completed #1";
-							return true;
+					if (_leaderPos distance _order.TargetPosition < 350) then
+					{
+						_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+						
+						if (_moveAction is MoveAction) then {
+							if (_moveAction.Type != MoveActionType.Engage) then {
+					        	["Completed move #1"] call LogHandler.Debug;
+								player sideChat "Completed #1";
+								return true;
+							};
 						};
 					};
 				};
+				
+				return false;
 			};
 			
 			return true;
