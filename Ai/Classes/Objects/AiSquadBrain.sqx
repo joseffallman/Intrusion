@@ -328,21 +328,6 @@ namespace Intrusion.Ai
 			call _mDecisionMaker.OnNothingToDo;
 		};
 		
-/*
-		private method SetState("_state" as AiSquadState, "_action" as IAction) 
-		{
-			_mKnowledge.State = _state;
-			
-			if (_state == AiSquadState.Idle) then {
-				_mKnowledge.CurrentAction = classNull;
-			}
-			else {
-				_mKnowledge.CurrentAction = _action;
-			};
-			
-			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
-		};
-*/
 		#endregion
 		
 		#region Completion and Timeout

@@ -507,21 +507,23 @@ namespace Intrusion.Ai
 						return true;
 					};
 					
-					// Move is completed if the squad is at the destination location
-					if (_moveAction.LocationMarkerName != "" && { _leaderPos distance ([_moveAction.LocationMarkerName] call _self.MarkerHandler.GetMarkerPos) < _self.ResourceLocationConfig.AreaRadius }) then {
-						if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
-							player sideChat "Completed (at location)";
-				        	["Completed move (at location)"] call LogHandler.Debug;
-							return true;
-						};
-					}
-					else // If the move position is not related to a resource location
+					if (_moveAction.Type != MoveActionType.Patrol) then
 					{
-						if (_leaderPos distance _moveAction.Position < 20) then {
-							//[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarker;
-							player sideChat "Completed (at position)";
-				        	["Completed move (at position)"] call LogHandler.Debug;
-							return true;
+						// Move is completed if the squad is at the destination location
+						if (_moveAction.LocationMarkerName != "" && { _leaderPos distance ([_moveAction.LocationMarkerName] call _self.MarkerHandler.GetMarkerPos) < _self.ResourceLocationConfig.AreaRadius }) then {
+							if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
+								player sideChat "Completed (at location)";
+					        	["Completed move (at location)"] call LogHandler.Debug;
+								return true;
+							};
+						}
+						else // If the move position is not related to a resource location
+						{
+							if (_leaderPos distance _moveAction.Position < 20) then {
+								player sideChat "Completed (at position)";
+					        	["Completed move (at position)"] call LogHandler.Debug;
+								return true;
+							};
 						};
 					};
 					
