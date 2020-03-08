@@ -38,7 +38,8 @@ namespace Intrusion.Server
 		};
 
         // Runs the mission.
-        private static method Run() {
+        private static method Run()
+        {
         	private ["_sideManagers" as Array];
 			private ["_resourceReportCollection" as ResourceReportCollection, "_resourceReport" as ResourceReport];
         	

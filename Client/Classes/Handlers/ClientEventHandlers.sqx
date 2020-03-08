@@ -31,6 +31,9 @@ namespace Intrusion.Client
 				// Set the name of the group for the map
 				(group player) setVariable ["MapName", name player, true];
 				
+				// Remove backpacks
+				removeBackpackGlobal player;
+				
 				if (didJIP) then {
 					// Perform JIP stuff
 					[gCommonConfig.MapMarkers] call JipService.StartAsync;
@@ -63,6 +66,9 @@ namespace Intrusion.Client
 			player addEventHandler ["Respawn", {
 				params ["_player" as Object, "_corpse"];
 				["ClientEventReciever.OnPlayerRespawn", [_player, _corpse]] call Remote.Invoke;
+				
+				// Remove backpacks
+				removeBackpackGlobal _player;
 			}];
 			
 			player addEventHandler ["GetInMan", {
