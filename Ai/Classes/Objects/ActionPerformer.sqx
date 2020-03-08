@@ -41,9 +41,9 @@ namespace Intrusion.Ai
 			//[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarkerLocal;
 			
 			_behavior = _moveAction.Behavior;
-//			if (_moveAction.WaypointType == "MOVE" && _moveAction.Behavior == "SAFE") then {
-//				_behavior = "CARELESS";
-//			};
+			if (_moveAction.WaypointType == "MOVE" && _moveAction.Behavior == "SAFE") then {
+				_behavior = "CARELESS";
+			};
 			
 			_waypoint setWaypointSpeed _moveAction.SpeedMode;
 			_waypoint setWaypointType _moveAction.WaypointType;

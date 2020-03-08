@@ -120,12 +120,13 @@ namespace Intrusion.Client
 						// Is the target area a resource location?
 						_location = [_mMapPos] call _self.FindClosestResourceLocation;
 						
+						_orderPos = _mMapPos;
 						if (_mMapPos distance getMarkerPos _location.MarkerName > _mResouceLocationConfig.AreaRadius) then {
 							_location = classNull;
-						}
-						else {
-							_orderPos = getMarkerPos _location.MarkerName;
 						};
+//						else {
+//							_orderPos = getMarkerPos _location.MarkerName;
+//						};
 					
 						// Update order info
 						private _orderInfo = ([_mOrderType] call OrderTypeMeta.ToString);

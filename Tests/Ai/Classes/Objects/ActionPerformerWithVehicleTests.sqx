@@ -49,7 +49,7 @@ namespace Intrusion.Tests.Ai
 				"MountedArrivingFarMoving_EnteringClose_StatusIdle",
 				"MountedCloseToDestinationIdle_Act_StatusDisembarking",
 				"CloseToDestinationTimeoutWhenDisembarking_Act_StatusIdle",
-				"MountedMovingDetectedEnemies_Act_StatusIdle",
+				"MountedMovingDetectedEnemies_Act_StatusMoving",
 				"MountedIdleDetectedEnemies_Act_StatusDisembarking",
 				"MovingMediumNearVehicle_Act_StatusMovingToVehicle",
 				"MovingMediumVehicleHalfNear_Act_StatusMovingToLocation",
@@ -218,7 +218,7 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI not disembarking."] call Assert.AreEqual;
 		};
 		
-		private static method MountedMovingDetectedEnemies_Act_StatusIdle
+		private static method MountedMovingDetectedEnemies_Act_StatusMoving
 		{
 			// Arrange
 			_mWorld.LeaderPos = [300, 300, 0];
@@ -234,7 +234,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI does not stop when detecting enemies."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI not continuing when detecting enemies."] call Assert.AreEqual;
 		};
 		
 		private static method MountedIdleDetectedEnemies_Act_StatusDisembarking

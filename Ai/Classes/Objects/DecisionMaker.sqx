@@ -234,7 +234,12 @@ namespace Intrusion.Ai
 			if (!isNull _aiVehicle) then
 			{
 				private _time = call _self.Time.GetMissionTime;
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _self.Knowledge.Order.ResourceLocation.MarkerName] new MoveAction;
+				private _resourceLocation = _self.Knowledge.Order.ResourceLocation;
+				private _locationMarkerName = "";
+				if (!isNull _resourceLocation) then {
+					_locationMarkerName = _resourceLocation.MarkerName;
+				};
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (to vehicle): " + str _action] call LogHandler.Debug;
@@ -513,6 +518,7 @@ namespace Intrusion.Ai
 					else // If the move position is not related to a resource location
 					{
 						if (_leaderPos distance _moveAction.Position < 20) then {
+							//[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarker;
 							player sideChat "Completed (at position)";
 				        	["Completed move (at position)"] call LogHandler.Debug;
 							return true;

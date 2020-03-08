@@ -185,7 +185,7 @@ namespace Intrusion.Ai
 				};
 			};
 
-			// If squad is present at order position
+			// If squad is present at order's position
 			if (isNull _orderResourceLocation || { _orderResourceLocation.Side == side _mKnowledge.Group }) then
 			{
 				if (_mKnowledge.Order.Type == OrderType.Attack) then {
@@ -195,6 +195,7 @@ namespace Intrusion.Ai
 					};
 					
 					if (_leaderPos distance _mKnowledge.Order.TargetPosition < 30) then {
+						//[_mKnowledge.Order.TargetPosition] call Sqx.Markers.Marker.CreateIconMarker;
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
@@ -395,7 +396,7 @@ namespace Intrusion.Ai
 		
 		// Gets whether the last action has completed or not.
 		// Returns (Boolean): true if the last action has completed, otherwise false.
-		public method Boolean GetHasCompleted()
+		private method Boolean GetHasCompleted()
 		{
 			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
 

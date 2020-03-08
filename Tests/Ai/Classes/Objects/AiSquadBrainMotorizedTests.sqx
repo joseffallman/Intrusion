@@ -53,7 +53,7 @@ namespace Intrusion.Tests.Ai
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationClosingIn_Act_NotCompletedAndNotSetIdle",
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
-				"MountedDetectedEnemiesSafe_Act_CompletedAndIdle",
+				"MountedDetectedEnemiesSafe_Act_Continuing",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
 				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
 				"AtLocationDefendOrderIdle_Act_StartPatrolling",
@@ -332,7 +332,7 @@ namespace Intrusion.Tests.Ai
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
 		};
 		
-		private static method MountedDetectedEnemiesSafe_Act_CompletedAndIdle
+		private static method MountedDetectedEnemiesSafe_Act_Continuing
 		{	
 			// Arrange
 			_mWorld.LeaderPos = [220, 220, 0];
@@ -351,9 +351,9 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			private _expectedState = [AiSquadState.Idle] call AiSquadStateMeta.ToString;
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
 			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
-			[_expectedState, _actualState, "AI still moving."] call Assert.AreEqual;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
 		};
 		
 		private static method MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle
