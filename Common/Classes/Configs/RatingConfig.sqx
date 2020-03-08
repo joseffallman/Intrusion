@@ -15,7 +15,7 @@ namespace Intrusion.Common
 		public constructor {
 			_self.CapturingFlag = 200;
 			_self.EnemyUnitKill = 150;
-			_self.VehicleSupport = 400;
+			_self.VehicleSupport = 800;
 			_self.GroupExtraMemberRatingFactor = 0.4;
 		};
 		
