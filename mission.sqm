@@ -342,14 +342,14 @@ class Mission
 		class Item9
 		{
 			dataType="Marker";
-			position[]={4321.1689,34.594482,4275.7397};
+			position[]={4283.9893,29.070557,4209.3911};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=210.54347;
+			angle=61.917225;
 			drawBorder=1;
 			id=72;
-			atlOffset=-4.0811119;
+			atlOffset=-3.8070679;
 		};
 		class Item10
 		{
