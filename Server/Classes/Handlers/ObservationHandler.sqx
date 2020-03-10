@@ -66,23 +66,15 @@ namespace Intrusion.Server
 		// Returns (Observation): The found observation. classNull if observation was not found.
 		public method Observation GetExistingObservation("_target" as Target)
 		{
-			private ["_observation" as Observation];
-			
-			_observation = classNull;
-			
 			{
-				scopeName "loop";
-				
 				if (_x.ObservingSide == _target.ObservingSide) then {
 					if (group _x.Unit == group _target.Unit && _x.Unit distance _target.Unit < 100) then {
-						_observation = _x;
-					
-						breakOut "loop";
+						return _x;
 					};
 				}
 			} foreach _mObservations as Observation;
 			
-			return _observation;
+			return classNull;
 		};
 	};
 };

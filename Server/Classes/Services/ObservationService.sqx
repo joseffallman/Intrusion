@@ -57,7 +57,7 @@ namespace Intrusion.Server
 			_observation.PercievedSide = if (_observation.PercievedSide != sideUnknown) then { _observation.PercievedSide } else { _target.PercievedSide };
 			_observation.PercievedProfessionType = if ((_observation.PercievedProfessionType as Scalar) > (_target.PercievedProfessionType as Scalar)) then { _observation.PercievedProfessionType } else { _target.PercievedProfessionType };
 			
-			if (_target.ObservedDistance < _observation.ObservedDistance) then
+			if (_target.ObservedDistance < _observation.ObservedDistance - 50) then
 			{
 				// Set a random offset for the observation.
 				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
