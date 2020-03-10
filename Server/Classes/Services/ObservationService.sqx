@@ -59,17 +59,19 @@ namespace Intrusion.Server
 			
 			if (_target.ObservedDistance < _observation.ObservedDistance - 50) then
 			{
-				// Set a random offset for the observation.
+				// Set a random offset for the observation, if it is more exact than the earlier one.
 				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				private _offsetHeading = floor random 360;
+				private _offsetHeading = _observation.PercievedPos getDir _observation.PercievedOffsetPos;
 				
-				_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
+				if (_offsetDistance < _observation.PercievedPos distance _observation.PercievedOffsetPos) then {
+					_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
+				};
 			};
 		};
 		
 		private static method Scalar CalculateRandomOffsetDistance("_observedDistance" as Scalar)
 		{
-			private _maxOffsetDistance = 50;
+			private _maxOffsetDistance = 100;
 			private _offsetDistance = _observedDistance / 7;
 			
 			if (_offsetDistance > _maxOffsetDistance) then {
