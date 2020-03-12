@@ -60,6 +60,7 @@ namespace Intrusion.Tests.Ai
 				"SquadTemporaryStationary_Act_NoTimeoutStatusMoving",
 				"MovingButNeverArrives_Act_TimeoutStatusIdle",
 				"MovingToDestinationFarOffDetectingNearEnemiesIdle_Act_StatusEngaging",
+				"MovingToDestinationFarOffDetectingNearEnemiesCarelessOrderIdle_Act_StatusMoving",
 				"MovingToDestinationFarOffDetectingNearEnemiesMoving_Act_StatusIdle",
 				"AllSquadMembersAreDeadMoving_Act_RespawnedAndStatusIdle",
 				"SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn",
@@ -189,7 +190,7 @@ namespace Intrusion.Tests.Ai
 			// Arrange
 			_mWorld.LeaderPos = [10, 10, 0];
 			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [200, 200, 0], _mLocationFactory1, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [200, 200, 0], _mLocationFactory1, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			
 			// Act
@@ -452,8 +453,33 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Moving, _mKnowledge.State, "AI did not engage near enemies."] call Assert.AreEqual;
 			
 			_action = _mKnowledge.CurrentAction as MoveAction;
-			[_action is MoveAction, "Action is not an engage action."] call Assert.IsNotNull;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
+			[_action.Behavior, "COMBAT", "Infantry squad not moving COMBAT."] call Assert.AreEqual;
+		};
+		
+		private static method MovingToDestinationFarOffDetectingNearEnemiesCarelessOrderIdle_Act_StatusMoving
+		{
+			private ["_action" as MoveAction];
+		
+			// Arrange
+			_mWorld.LeaderPos = [10, 10, 0];
+			_mWorld.ClosestDetectedEnemy = [[50, 50, 0]] new TestUnitContainer;
+			_mKnowledge.Members pushBack [[10, 10, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [200, 200, 0], _mLocationFactory1, 0] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI did not move."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			["MOVE", _action.WaypointType, "Moving but not a MOVE waypoint."] call Assert.AreEqual;
+			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "Infantry dit not get waypoint to order destination."] call Assert.AreEqual;
+			[_action.Behavior, "SAFE", "Infantry squad not moving SAFE."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToDestinationFarOffDetectingNearEnemiesMoving_Act_StatusIdle

@@ -53,7 +53,9 @@ namespace Intrusion.Tests.Ai
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationClosingIn_Act_NotCompletedAndNotSetIdle",
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
+				"MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingCombat",
 				"MountedDetectedEnemiesSafe_Act_Continuing",
+				"MountedMovingOrderEngageDetectedEnemies_Act_StatusIdle",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
 				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
 				"AtLocationDefendOrderIdle_Act_StartPatrolling",
@@ -332,7 +334,64 @@ namespace Intrusion.Tests.Ai
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
 		};
 		
+		private static method MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingCombat
+		{	
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [220, 220, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [220, 220, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
+			
+			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = classNull;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			[[600, 600, 0], _action.Position, "AI moving in the wrong direction."] call Assert.AreEqual;
+			["CARELESS", _action.Behavior, "AI not moving CARELESS."] call Assert.AreEqual;
+			["MOVE", _action.WaypointType, "Moving but not waypoint type MOVE."] call Assert.AreEqual;
+		};
+		
 		private static method MountedDetectedEnemiesSafe_Act_Continuing
+		{	
+			// Arrange
+			_mWorld.LeaderPos = [220, 220, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [220, 220, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
+			
+			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "CARELESS", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+		};
+		
+		private static method MountedMovingOrderEngageDetectedEnemies_Act_StatusIdle
 		{	
 			// Arrange
 			_mWorld.LeaderPos = [220, 220, 0];
@@ -351,9 +410,9 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _expectedState = [AiSquadState.Idle] call AiSquadStateMeta.ToString;
 			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
-			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+			[_expectedState, _actualState, "AI not interrupting move when detecting enemies."] call Assert.AreEqual;
 		};
 		
 		private static method MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle
