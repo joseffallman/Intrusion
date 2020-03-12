@@ -48,25 +48,37 @@ namespace Intrusion.Client
 		
 		public static method OnReconButtonPressed()
 		{
-			[OrderType.Recon] call gClient.GiveOrderService.SendOrderType;
+			[OrderType.Recon, true] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
-		public static method OnAttackButtonPressed()
+		public static method OnAttackEngageButtonPressed()
 		{
-			[OrderType.Attack] call gClient.GiveOrderService.SendOrderType;
+			[OrderType.Attack, true] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
-		public static method OnDefendButtonPressed()
+		public static method OnAttackCarelessButtonPressed()
 		{
-			[OrderType.Defend] call gClient.GiveOrderService.SendOrderType;
+			[OrderType.Attack, false] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+		
+		public static method OnDefendEngageButtonPressed()
+		{
+			[OrderType.Defend, true] call gClient.GiveOrderService.SendOrderType;
+			call _self.CloseDialog;
+		};
+		
+		public static method OnDefendCarelessButtonPressed()
+		{
+			[OrderType.Defend, false] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 		
 		// Called by the .hpp-dialog when the Cancel button is pressed.
 		public static method OnCancelButtonPressed {
-			[OrderType.None] call gClient.GiveOrderService.SendOrderType;
+			[OrderType.None, true] call gClient.GiveOrderService.SendOrderType;
 			call _self.CloseDialog;
 		};
 	};

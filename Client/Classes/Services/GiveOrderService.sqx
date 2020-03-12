@@ -16,7 +16,7 @@ namespace Intrusion.Client
 {
 	public class GiveOrderService : Service
 	{
-		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType, "_mMissionTime" as IMissionTime, "_mResouceLocationConfig" as IResourceLocationConfig];
+		private fields ["_mWaitingForMapClick" as Boolean, "_mMapPos" as Array, "_mSelectedGroup" as Group, "_mOrderType" as OrderType, "_mEngageDetectedEnemies" as Boolean, "_mMissionTime" as IMissionTime, "_mResouceLocationConfig" as IResourceLocationConfig];
 	
 		// Creates a GiveOrderService object.
 		public constructor("_missionTime" as IMissionTime, "_resourceLocationConfig" as IResourceLocationConfig)
@@ -45,9 +45,10 @@ namespace Intrusion.Client
 			};
 		};
 		
-		public method SendOrderType("_orderType" as OrderType)
+		public method SendOrderType("_orderType" as OrderType, "_engageDetectedEnemies" as Boolean)
 		{
 			_mOrderType = _orderType;
+			_mEngageDetectedEnemies = _engageDetectedEnemies;
 		};
 		
 		private method Group FindClosestGroup("_pos" as Array)
@@ -124,9 +125,6 @@ namespace Intrusion.Client
 						if (_mMapPos distance getMarkerPos _location.MarkerName > _mResouceLocationConfig.AreaRadius) then {
 							_location = classNull;
 						};
-//						else {
-//							_orderPos = getMarkerPos _location.MarkerName;
-//						};
 					
 						// Update order info
 						private _orderInfo = ([_mOrderType] call OrderTypeMeta.ToString);
@@ -140,12 +138,12 @@ namespace Intrusion.Client
 						_mSelectedGroup setVariable ["IntrusionOrderInfo", _orderInfo, true];
 						
 						if (!(isPlayer leader _mSelectedGroup)) then {
-							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
-							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' have a new order.");
+							["ServerEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mEngageDetectedEnemies, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
+							_orderResult = ("AI group '" + name leader _mSelectedGroup + "' has a new order.");
 						}
 						else {
-							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
-							_orderResult = ("Human group '" + name leader _mSelectedGroup + "' have a new order.");
+							["ClientEventReciever.OnBrigadeLeaderGivingOrder", [[_mSelectedGroup, _mOrderType, _mEngageDetectedEnemies, _orderPos, _location, _orderTimeoutTime] new Order]] call Remote.Invoke;
+							_orderResult = ("Human group '" + name leader _mSelectedGroup + "' has a new order.");
 						};
 					};
 				};

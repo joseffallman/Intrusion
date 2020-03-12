@@ -153,7 +153,7 @@ namespace Intrusion.Ai
 					_mKnowledge.Group setVariable ["IntrusionOrderInfo", _orderInfo, true];
 					
 					// Create the order
-					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, true, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};
