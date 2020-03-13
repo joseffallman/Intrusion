@@ -32,7 +32,7 @@ namespace Intrusion.Ai
 		// _moveAction (MoveAction): Information about the movement.
 		public method DoMove("_moveAction" as MoveAction)
 		{
-			private ["_waypoint" as Array, "_behavior" as String];
+			private ["_waypoint" as Array];
 			
 			[_mGroup] call WaypointHelper.DeleteAllWaypointsFromGroup;
 			
@@ -40,20 +40,15 @@ namespace Intrusion.Ai
 			
 			//[_moveAction.Position] call Sqx.Markers.Marker.CreateIconMarkerLocal;
 			
-			_behavior = _moveAction.Behavior;
-			if (_moveAction.WaypointType == "MOVE" && _moveAction.Behavior == "SAFE") then {
-				_behavior = "CARELESS";
-			};
-			
 			_waypoint setWaypointSpeed _moveAction.SpeedMode;
 			_waypoint setWaypointType _moveAction.WaypointType;
-			_waypoint setWaypointCombatMode "YELLOW";
-			_waypoint setWaypointBehaviour _behavior;
+			_waypoint setWaypointCombatMode _moveAction.CombatMode;
+			_waypoint setWaypointBehaviour _moveAction.Behavior;
 			_waypoint setWaypointFormation "WEDGE";
 			
 			_mGroup setSpeedMode _moveAction.SpeedMode;
-			_mGroup setCombatMode "YELLOW";
-			_mGroup setBehaviour _behavior;
+			_mGroup setCombatMode _moveAction.CombatMode;
+			_mGroup setBehaviour _moveAction.Behavior;
 			
 			//player sideChat "expected: " + _moveAction.SpeedMode; // TODO SQX: Semicolon disappears on build.
 		};

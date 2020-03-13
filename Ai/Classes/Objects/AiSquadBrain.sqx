@@ -246,7 +246,7 @@ namespace Intrusion.Ai
 			};
 			
 
-			// If squad is mounted and enemies spotted near, disembark
+			// If squad is mounted and enemies spotted near
 			// OnNearEnemiesSpottedOnGround
 			
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then

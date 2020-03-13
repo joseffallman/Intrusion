@@ -47,6 +47,7 @@ namespace Intrusion.Tests.Ai
 			["Intrusion.Tests.Ai", "ActionPerformerNoVehicleTests", [
 				"StateIdleAndNoOrder_Act_NotIdleAndHasOrder",
 				"AtBaseAttackOrder_Act_StatusMove",
+				"AtBaseAttackCarelessOrder_Act_StatusMove",
 				"MovingToDestinationFarOff_Act_StatusMoving",
 				"ArrivingAtDestination_Act_StatusIdle",
 				"AtEnemyLocationIdle_Act_StatusCapturing",
@@ -75,7 +76,7 @@ namespace Intrusion.Tests.Ai
 				"OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling",
 			]] call TestEngine.Register;
 			
-			//["AtEnemyLocationIdle_Act_StatusCapturing"] call TestEngine.OnlyThisOne;
+			//["MovingToDestinationFarOffDetectingNearEnemiesCarelessOrderIdle_Act_StatusMoving"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -183,6 +184,32 @@ namespace Intrusion.Tests.Ai
 			
 			_moveAction = _mActionPerformer.MoveActions select 0;
 			[[200, 200, 0], _moveAction.Position, "AI moves to the wrong destination."] call Assert.AreEqual;
+			["SAFE", _moveAction.Behavior, "Moving with wrong behavior."] call Assert.AreEqual;
+			["YELLOW", _moveAction.CombatMode, "Moving with wrong combat mode."] call Assert.AreEqual;
+		};
+		
+		private static method AtBaseAttackCarelessOrder_Act_StatusMove
+		{
+			private ["_moveAction" as MoveAction];
+		
+			// Arrange
+			_mRandomGenerator.Number = 0;
+			_mWorld.LeaderPos = [0, 0, 0];
+			_mKnowledge.Members pushBack [[0, 0, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [200, 200, 0], _mLocationFactory1, 0] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Moving, _mKnowledge.State, "AI did not start movement."] call Assert.AreEqual;
+			[1, count _mActionPerformer.MoveActions, "AI did not decide to perform a move action."] call Assert.AreEqual;
+			
+			_moveAction = _mActionPerformer.MoveActions select 0;
+			[[200, 200, 0], _moveAction.Position, "AI moves to the wrong destination."] call Assert.AreEqual;
+			["SAFE", _moveAction.Behavior, "Moving with wrong behavior."] call Assert.AreEqual;
+			["YELLOW", _moveAction.CombatMode, "Moving with wrong combat mode."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToDestinationFarOff_Act_StatusMoving
@@ -480,6 +507,8 @@ namespace Intrusion.Tests.Ai
 			["MOVE", _action.WaypointType, "Moving but not a MOVE waypoint."] call Assert.AreEqual;
 			[[200, 200, 0], _mKnowledge.Order.TargetPosition, "Infantry dit not get waypoint to order destination."] call Assert.AreEqual;
 			[_action.Behavior, "SAFE", "Infantry squad not moving SAFE."] call Assert.AreEqual;
+			
+			[count _mActionPerformer.MoveActions, 1, "Squad got wrong number of move actions."] call Assert.AreEqual;
 		};
 		
 		private static method MovingToDestinationFarOffDetectingNearEnemiesMoving_Act_StatusIdle

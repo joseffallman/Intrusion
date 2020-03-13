@@ -64,7 +64,7 @@ namespace Intrusion.Tests.Ai
 				"VehicularSquadStuckOnStone_StationaryForLongTime_MoveToNearestRoad",
 			]] call TestEngine.Register;
 			
-			//["VehicularSquadStuckOnStone_StationaryForLongTime_MoveToNearestRoad"] call TestEngine.OnlyThisOne;
+			//["MountedIdleOrderAttackCarelessDetectedEnemies_Act_StatusMoving"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -302,11 +302,11 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
 			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
-			[_expectedState, _actualState, "AI did not start moving when moving careless and detecting enemies."] call Assert.AreEqual;
+			[_expectedState, _actualState, "AI did not start moving when ordered careless and detecting enemies."] call Assert.AreEqual;
 			
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
-			[_action.Behavior, "CARELESS", "Move action behavior is not CARELESS."] call Assert.AreEqual;
+			["CARELESS", _action.Behavior, "Move action behavior is not CARELESS."] call Assert.AreEqual;
 		};
 		
 		private static method MovingMediumNearVehicle_Act_StatusMovingToVehicle

@@ -98,7 +98,12 @@ namespace Intrusion.Ai
 			 	}
 			 	else
 			 	{
-					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+			 		if (_order.EngageDetectedEnemies) then {
+						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+			 		}
+			 		else {
+						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Move, _order.TargetPosition, "MOVE", "NORMAL", "SAFE", "YELLOW", ""] new MoveAction;
+			 		};
 			 	};
 			 	
 				[AiSquadState.Moving, _action] call _self.SetState;
@@ -107,18 +112,20 @@ namespace Intrusion.Ai
 	        }
 	        else
 	        {
-	        	// If the group is not in its profession vehicle, disembark and fight on foot
+	        	// If the group is in a vehicle that is not its profession vehicle, disembark and fight on foot
 	        	
 	        	if (isNull _mountedVehicle.OwnerGroup) then {
-		        	_time = call _self.Time.GetMissionTime;
-		        	
-					_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
-					call _actionService.RunAsync;
-					
-					private _action = [_time + 20, _actionService, _mountedVehicle] new DisembarkAction;
-					
-					[AiSquadState.Disembarking, _action] call _self.SetState;
-		        	["Disembark action created (enemies spotted): " + str _action] call LogHandler.Debug;
+	        		if (_order.EngageDetectedEnemies) then {
+			        	_time = call _self.Time.GetMissionTime;
+			        	
+						_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
+						call _actionService.RunAsync;
+						
+						private _action = [_time + 20, _actionService, _mountedVehicle] new DisembarkAction;
+						
+						[AiSquadState.Disembarking, _action] call _self.SetState;
+			        	["Disembark action created (enemies spotted): " + str _action] call LogHandler.Debug;
+	        		};
 	        	};
 	        };
 		};
@@ -364,11 +371,17 @@ namespace Intrusion.Ai
 			};
 			
 			private _speedMode = "NORMAL";
+			private _behavior = "SAFE";
+			
 			if (_squadInVehicle) then {
 				_speedMode = "LIMITED";
+				
+				if (!_order.EngageDetectedEnemies) then {
+					_behavior = "CARELESS";
+				};
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, _behavior, "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created (Away): " + str _action] call LogHandler.Debug;
@@ -399,16 +412,23 @@ namespace Intrusion.Ai
 				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
 					_order = _self.Knowledge.Order;
 					
+					private _engageDetectedEnemies = _order.EngageDetectedEnemies;
 					if (_leaderPos distance _order.TargetPosition < 350) then
 					{
-						_moveAction = _self.Knowledge.CurrentAction as MoveAction;
-						
-						if (_moveAction is MoveAction) then {
-							if (_moveAction.Type != MoveActionType.Engage) then {
-					        	["Completed move #1"] call LogHandler.Debug;
-								player sideChat "Completed #1";
-								return true;
-							};
+						_engageDetectedEnemies = true;
+					};
+					
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction && { _moveAction.Type == MoveActionType.Engage }) then
+					{
+						return false;
+					}
+					else {
+						if (_engageDetectedEnemies) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
 						};
 					};
 				};
@@ -416,6 +436,8 @@ namespace Intrusion.Ai
 				return false;
 			};
 			
+        	["Completed move #1 (no vehicle)"] call LogHandler.Debug;
+			player sideChat "Completed #1 (no vehicle)";
 			return true;
 		};
 		
