@@ -93,6 +93,32 @@ namespace Intrusion.Common
 			return false;
 		};
 		
+		// Checks whether all slots of a profession type is occupied for a side or not, and also tests against current group size.
+		// _side (Side): The side to check.
+		// _professionType (ProfessionType): The profession type to check.
+		// _professionConfig (ProfessionConfig): The profession config (since this is a distributed class).
+		// Returns (Boolean): true if the profession is still available on the side, false if all slots of the 
+		// current profession is occupied.
+		public method Boolean ProfessionTypeAvailableForGroup("_side" as Side, "_professionType" as ProfessionType, "_professionConfig" as ProfessionConfig, "_squadSize" as Scalar)
+		{
+			private ["_available" as Boolean, "_profession" as Profession];
+			
+			_available = [_side, _professionType, _professionConfig] call _self.ProfessionTypeAvailable;
+			
+			if (_available) then
+			{
+				_profession = [_professionType] call _professionConfig.GetProfession;
+				
+				if (!isNull _profession) then {
+					if (_profession.MaxGroupSize == 0 || _profession.MaxGroupSize >= _squadSize) then {
+						return true;
+					};
+				};
+			};
+			
+			return false;
+		};
+		
 		// Checks whether all slots of a profession type is selectable for a squad.
 		// _side (Side): The side to check.
 		// _professionType (ProfessionType): The profession type to check.

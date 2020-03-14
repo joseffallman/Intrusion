@@ -491,7 +491,7 @@ namespace Intrusion.Ai
 				
 				if (_ok) then {
 					_squadCollection = call PublicVariableHandler.GetSquadCollection;
-					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
+					_ok = [_side, _professionType, _mProfessionConfig, _unitCount] call _squadCollection.ProfessionTypeAvailableForGroup;
 				};
 				
 				_tries = _tries + 1;
