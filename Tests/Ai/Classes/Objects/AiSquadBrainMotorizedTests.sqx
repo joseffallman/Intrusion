@@ -53,15 +53,15 @@ namespace Intrusion.Tests.Ai
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationClosingIn_Act_NotCompletedAndNotSetIdle",
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
-				"MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingCombat",
+				"MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingAway",
 				"MountedDetectedEnemiesSafe_Act_Continuing",
 				"MountedMovingOrderEngageDetectedEnemies_Act_StatusIdle",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
 				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
 				"AtLocationDefendOrderIdle_Act_StartPatrolling",
 			]] call TestEngine.Register;
-			
-			//["AtLocationDefendOrderIdle_Act_StartPatrolling"] call TestEngine.OnlyThisOne;
+
+			//["MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingAway"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -334,7 +334,7 @@ namespace Intrusion.Tests.Ai
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
 		};
 		
-		private static method MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingCombat
+		private static method MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingAway
 		{	
 			private ["_action" as MoveAction];
 			
