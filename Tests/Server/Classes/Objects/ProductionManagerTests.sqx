@@ -49,8 +49,8 @@ namespace Intrusion.Tests.Server
 				"GroupAndAnotherGroupInReservationQueue_GroupChangingProfession_ReservationReplacedAndLast",
 				"EmptyReservationQueue_GroupChangingToProfessionWithoutVehicle_NoReservationCreated",
 				"GroupAlreadyInReservationQueue_GroupChangingProfession_ProductionDeposited",
-				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced",
-				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced",
+				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_OneItemProduced",
+				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_OneItemProduced",
 				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
 				"TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast"
 			]] call TestEngine.Register;
@@ -296,7 +296,7 @@ namespace Intrusion.Tests.Server
 			[1100, _mResourceBook.TotalProduction, "Returned profession vehicle did not return production."] call Assert.AreEqual;
 		};
 		
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_NoItemsProduced
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordOne_OneItemProduced
 		{
 			private ["_reservation" as Reservation];
 		
@@ -314,12 +314,12 @@ namespace Intrusion.Tests.Server
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[1, call _mReservationQueue.Count, "Reservation should still be active."] call Assert.AreEqual;
-			[1000, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "Reservation should still be active."] call Assert.AreEqual;
+			[400, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
-		private static method OneGroupTwoItemsToProduce_GroupsCanAffordTwo_TwoItemsProduced
+		private static method OneGroupTwoItemsToProduce_GroupsCanAffordTwo_OneItemProduced
 		{
 			private ["_reservation" as Reservation];
 		
@@ -337,9 +337,9 @@ namespace Intrusion.Tests.Server
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[2, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
-			[0, call _mReservationQueue.Count, "Reservation should still be active."] call Assert.AreEqual;
-			[0, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "Reservation still active."] call Assert.AreEqual;
+			[500, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
 		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
