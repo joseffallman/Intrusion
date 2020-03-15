@@ -144,7 +144,7 @@ namespace Intrusion.Ai
 				if (!isNull _location) then
 				{
 					// Update order info
-					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString);
+					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString) + "-E";
 					
 					if (!isNull _location) then {
 						_orderInfo = _orderInfo + " " + ([_location.MarkerName] call _mMarkerHandler.GetMarkerText);
@@ -153,7 +153,7 @@ namespace Intrusion.Ai
 					_mKnowledge.Group setVariable ["IntrusionOrderInfo", _orderInfo, true];
 					
 					// Create the order
-					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, true, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};
@@ -246,7 +246,7 @@ namespace Intrusion.Ai
 			};
 			
 
-			// If squad is mounted and enemies spotted near, disembark
+			// If squad is mounted and enemies spotted near
 			// OnNearEnemiesSpottedOnGround
 			
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
@@ -491,7 +491,7 @@ namespace Intrusion.Ai
 				
 				if (_ok) then {
 					_squadCollection = call PublicVariableHandler.GetSquadCollection;
-					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
+					_ok = [_side, _professionType, _mProfessionConfig, _unitCount] call _squadCollection.ProfessionTypeAvailableForGroup;
 				};
 				
 				_tries = _tries + 1;
@@ -604,12 +604,40 @@ namespace Intrusion.Ai
 			
 			if (_mKnowledge.State != AiSquadState.Idle) then {
 				_mKnowledge.JustGotNewOrder = true;
+			}
+			else {
+				[_mKnowledge.Group] call _mActionPerformer.MakeGroupForgetAllTargets;
 			};
 		};
 		
 		public method Group GetGroup()
 		{
 			return _mKnowledge.Group;
+		};
+		
+		private method Boolean OrderIsObsolete()
+		{
+			private ["_orderLocation" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_order" as Order];
+		
+			// Any is completed if the order is related to a resource location that is already ours
+			
+			_order = _mKnowledge.Order;
+			_orderLocation = _order.ResourceLocation as ResourceLocation;
+			
+			if (!isNull _orderLocation && _order.Type != OrderType.Defend) then
+			{
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_orderLocation = [_orderLocation.MarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_orderLocation.Side == side _mKnowledge.Group) then
+				{
+					// Remove current order
+					_mKnowledge.Order = classNull;
+					
+		        	["Order is obsolete"] call LogHandler.Debug;
+					return true;
+				};
+			};
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.
@@ -635,8 +663,17 @@ namespace Intrusion.Ai
 			_time = call _mTime.GetMissionTime;
 			
 			// Check if order's timeout time is exceedeed
-			if (!isNull _mKnowledge.Order && { _mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime }) then {
-				_mKnowledge.Order = classNull;
+			if (!isNull _mKnowledge.Order) then
+			{
+				if (call _self.OrderIsObsolete) then {
+					_mKnowledge.Order = classNull;
+				}
+				else {				
+					if (_mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime) then
+					{
+						_mKnowledge.Order = classNull;
+					};
+				};
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.

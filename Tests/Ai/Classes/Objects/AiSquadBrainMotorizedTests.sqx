@@ -53,13 +53,15 @@ namespace Intrusion.Tests.Ai
 				"MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle",
 				"MountedCloseToDestinationClosingIn_Act_NotCompletedAndNotSetIdle",
 				"MountedDetectedEnemiesIdle_Act_MovingCombat",
+				"MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingAway",
 				"MountedDetectedEnemiesSafe_Act_Continuing",
+				"MountedMovingOrderEngageDetectedEnemies_Act_StatusIdle",
 				"MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle",
 				"MountedAtLocationAnotherGroupCloser_Act_NotCompletedAndNotSetIdle",
 				"AtLocationDefendOrderIdle_Act_StartPatrolling",
 			]] call TestEngine.Register;
-			
-			//["AtLocationDefendOrderIdle_Act_StartPatrolling"] call TestEngine.OnlyThisOne;
+
+			//["AtBaseAndStateIdleFreeVehicleIsAvailable_SquadVehicleReady_MovingToSquadVehicle"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -168,6 +170,8 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
 			[[0, 35, 0], _action.Position, "AI not moving to their squad vehicle."] call Assert.AreEqual;
+			["SAFE", _action.Behavior, "Move action behavior is not SAFE."] call Assert.AreEqual;
+			["GREEN", _action.CombatMode, "Not moving in combat mode GREEN."] call Assert.AreEqual;
 		};
 		
 		private static method IdleAtBaseBesideFreeVehicleAndSquadVehicle_Boarding_CorrectVehicle()
@@ -215,6 +219,8 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsTrue;
 			[[0, 1600, 0], _action.Position, "AI not moving to vehicle."] call Assert.AreEqual;
+			["SAFE", _action.Behavior, "Move action behavior is not SAFE."] call Assert.AreEqual;
+			["GREEN", _action.CombatMode, "Not moving in combat mode GREEN."] call Assert.AreEqual;
 		};
 		
 		private static method MountedCloseToDestinationAttackIdle_Act_ClosingInCorrectly
@@ -229,7 +235,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = classNull;
 			
@@ -243,9 +249,10 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
 			[[MoveActionType.ClosingIn] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "Wrong movement type."] call Assert.AreEqual;
-			["COMBAT", _action.Behavior, "AI not moving AWARE."] call Assert.AreEqual;
-			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
 			[30, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
+			["LIMITED", _action.SpeedMode, "AI not moving LIMITED."] call Assert.AreEqual;
+			["COMBAT", _action.Behavior, "AI not moving with behavior AWARE."] call Assert.AreEqual;
+			["YELLOW", _action.CombatMode, "Not moving in combat mode YELLOW."] call Assert.AreEqual;
 		};
 		
 		private static method MountedCloseToDestinationMovingSafe_Act_CompletedAndIdle
@@ -258,7 +265,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
@@ -283,7 +290,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.MountedVehicle = [objNull, [600, 500, 0], 4, _intrusionVehicle] new VehicleContainer;
 			
 			_mKnowledge.Members pushBack [[600, 500, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2", 75] new MoveAction;
 			
@@ -313,7 +320,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = classNull;
 			
@@ -327,9 +334,44 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
 			[[300, 300, 0], _action.Position, "AI engaging in the wrong direction."] call Assert.AreEqual;
-			["COMBAT", _action.Behavior, "AI not moving combat."] call Assert.AreEqual;
 			[10, _action.Radius, "Wrong destination radius."] call Assert.AreEqual;
 			["SAD", _action.WaypointType, "Engaging but not SAD."] call Assert.AreEqual;
+			["COMBAT", _action.Behavior, "AI not moving combat."] call Assert.AreEqual;
+			["RED", _action.CombatMode, "Not moving in combat mode RED."] call Assert.AreEqual;
+		};
+		
+		private static method MountedDetectedEnemiesOrderAttackCarelessIdle_Act_MovingAway
+		{	
+			private ["_action" as MoveAction];
+			
+			// Arrange
+			_mWorld.LeaderPos = [220, 220, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [220, 220, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
+			
+			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.State = AiSquadState.Idle;
+			_mKnowledge.CurrentAction = classNull;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+			
+			_action = _mKnowledge.CurrentAction as MoveAction;
+			
+			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
+			[[600, 600, 0], _action.Position, "AI moving in the wrong direction."] call Assert.AreEqual;
+			["MOVE", _action.WaypointType, "Moving but not waypoint type MOVE."] call Assert.AreEqual;
+			["AWARE", _action.Behavior, "AI not moving with behavior AWARE."] call Assert.AreEqual;
+			["YELLOW", _action.CombatMode, "Not moving in combat mode YELLOW."] call Assert.AreEqual;
 		};
 		
 		private static method MountedDetectedEnemiesSafe_Act_Continuing
@@ -343,9 +385,9 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, false, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "LIMITED", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -354,6 +396,30 @@ namespace Intrusion.Tests.Ai
 			private _expectedState = [AiSquadState.Moving] call AiSquadStateMeta.ToString;
 			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
 			[_expectedState, _actualState, "AI not moving."] call Assert.AreEqual;
+		};
+		
+		private static method MountedMovingOrderEngageDetectedEnemies_Act_StatusIdle
+		{	
+			// Arrange
+			_mWorld.LeaderPos = [220, 220, 0];
+			_mWorld.SquadMounted = true;
+			
+			private _intrusionVehicle = [objNull, west, ProfessionType.Motorized, _mKnowledge.Group, 0] new IntrusionVehicle;
+			_mWorld.MountedVehicle = [objNull, [220, 220, 0], 4, _intrusionVehicle] new VehicleContainer;
+			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
+			
+			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			private _expectedState = [AiSquadState.Idle] call AiSquadStateMeta.ToString;
+			private _actualState = [_mKnowledge.State] call AiSquadStateMeta.ToString;
+			[_expectedState, _actualState, "AI not interrupting move when detecting enemies."] call Assert.AreEqual;
 		};
 		
 		private static method MountedDetectedEnemiesEngaging_Act_NotCompletedAndNotSetIdle
@@ -369,7 +435,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.ClosestDetectedEnemy = [[300, 300, 0]] new TestUnitContainer;
 			
 			_mKnowledge.Members pushBack [[220, 220, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Engage, [300, 300, 0], "SAD", "NORMAL", "COMBAT", "RED", ""] new MoveAction;
 			
@@ -402,9 +468,9 @@ namespace Intrusion.Tests.Ai
 			_mWorld.AlliedGroupClosestToLocation = _alliedGroup;
 			
 			_mKnowledge.Members pushBack [[600, 580, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Attack, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
-			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "NORMAL", "COMBAT", "YELLOW", "FACTORY2", 75] new MoveAction;
+			_mKnowledge.CurrentAction = [300, MoveActionType.ClosingIn, [600, 600, 0], "MOVE", "LIMITED", "COMBAT", "RED", "FACTORY2", 75] new MoveAction;
 			
 			// Act
 			call _mBrain.Act;
@@ -424,7 +490,7 @@ namespace Intrusion.Tests.Ai
 		};
 		
 		private static method AtLocationDefendOrderIdle_Act_StartPatrolling
-		{	
+		{
 			private ["_action" as MoveAction];
 			
 			// Arrange
@@ -437,7 +503,7 @@ namespace Intrusion.Tests.Ai
 			_mWorld.AlliedGroupClosestToLocation = _mKnowledge.Group;
 			
 			_mKnowledge.Members pushBack [[600, 580, 0]] new TestUnitContainer;
-			_mKnowledge.Order = [_mGroup, OrderType.Defend, [600, 600, 0], _mLocationFactory2, 0] new Order;
+			_mKnowledge.Order = [_mGroup, OrderType.Defend, true, [600, 600, 0], _mLocationFactory2, 0] new Order;
 			_mKnowledge.State = AiSquadState.Idle;
 			
 			// Act
@@ -450,6 +516,8 @@ namespace Intrusion.Tests.Ai
 			_action = _mKnowledge.CurrentAction as MoveAction;
 			[_action is MoveAction, "Action is not a move action."] call Assert.IsNotNull;
 			[[MoveActionType.Patrol] call MoveActionTypeMeta.ToString, [_action.Type] call MoveActionTypeMeta.ToString, "AI not patrolling."] call Assert.AreEqual;
+			["COMBAT", _action.Behavior, "AI not moving with behavior COMBAT."] call Assert.AreEqual;
+			["YELLOW", _action.CombatMode, "Not moving in combat mode YELLOW."] call Assert.AreEqual;
 		};
 	};
 };

@@ -94,11 +94,16 @@ namespace Intrusion.Ai
 			 		};
 			 		
 			 		private _engagePosition = _origin getPos [_distance, _heading];
-					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _engagePosition, "MOVE", "LIMITED", "STEALTH", "YELLOW", ""] new MoveAction;
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _engagePosition, "MOVE", "NORMAL", "COMBAT", "YELLOW", ""] new MoveAction;
 			 	}
 			 	else
 			 	{
-					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+			 		if (_order.EngageDetectedEnemies) then {
+						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+			 		}
+			 		else {
+						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Move, _order.TargetPosition, "MOVE", "NORMAL", "SAFE", "GREEN", ""] new MoveAction;
+			 		};
 			 	};
 			 	
 				[AiSquadState.Moving, _action] call _self.SetState;
@@ -107,18 +112,20 @@ namespace Intrusion.Ai
 	        }
 	        else
 	        {
-	        	// If the group is not in its profession vehicle, disembark and fight on foot
+	        	// If the group is in a vehicle that is not its profession vehicle, disembark and fight on foot
 	        	
 	        	if (isNull _mountedVehicle.OwnerGroup) then {
-		        	_time = call _self.Time.GetMissionTime;
-		        	
-					_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
-					call _actionService.RunAsync;
-					
-					private _action = [_time + 20, _actionService, _mountedVehicle] new DisembarkAction;
-					
-					[AiSquadState.Disembarking, _action] call _self.SetState;
-		        	["Disembark action created (enemies spotted): " + str _action] call LogHandler.Debug;
+	        		if (_order.EngageDetectedEnemies) then {
+			        	_time = call _self.Time.GetMissionTime;
+			        	
+						_actionService = [_self.Time, _time + 20, _self.World, _self.ActionPerformer, _self.Knowledge.Group, _mountedVehicle] call _self.ActionServiceFactory.CreateDisembarkService as DisembarkActionService;
+						call _actionService.RunAsync;
+						
+						private _action = [_time + 20, _actionService, _mountedVehicle] new DisembarkAction;
+						
+						[AiSquadState.Disembarking, _action] call _self.SetState;
+			        	["Disembark action created (enemies spotted): " + str _action] call LogHandler.Debug;
+	        		};
 	        	};
 	        };
 		};
@@ -239,7 +246,7 @@ namespace Intrusion.Ai
 				if (!isNull _resourceLocation) then {
 					_locationMarkerName = _resourceLocation.MarkerName;
 				};
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "GREEN", _locationMarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (to vehicle): " + str _action] call LogHandler.Debug;
@@ -364,11 +371,25 @@ namespace Intrusion.Ai
 			};
 			
 			private _speedMode = "NORMAL";
+			private _behavior = "SAFE";
+			private _combatMode = "GREEN";
+			
+			if (_order.EngageDetectedEnemies) then {
+				_combatMode = "YELLOW";
+			};
+
 			if (_squadInVehicle) then {
 				_speedMode = "LIMITED";
+				_combatMode = "YELLOW";
+				
+//				if (!_order.EngageDetectedEnemies) then {
+//					_behavior = "CARELESS";
+//				};
 			};
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
+			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
+			
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, _behavior, _combatMode, _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created (Away): " + str _action] call LogHandler.Debug;
@@ -399,16 +420,23 @@ namespace Intrusion.Ai
 				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
 					_order = _self.Knowledge.Order;
 					
+					private _engageDetectedEnemies = _order.EngageDetectedEnemies;
 					if (_leaderPos distance _order.TargetPosition < 350) then
 					{
-						_moveAction = _self.Knowledge.CurrentAction as MoveAction;
-						
-						if (_moveAction is MoveAction) then {
-							if (_moveAction.Type != MoveActionType.Engage) then {
-					        	["Completed move #1"] call LogHandler.Debug;
-								player sideChat "Completed #1";
-								return true;
-							};
+						_engageDetectedEnemies = true;
+					};
+					
+					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
+					
+					if (_moveAction is MoveAction && { _moveAction.Type == MoveActionType.Engage }) then
+					{
+						return false;
+					}
+					else {
+						if (_engageDetectedEnemies) then {
+				        	["Completed move #1"] call LogHandler.Debug;
+							player sideChat "Completed #1";
+							return true;
 						};
 					};
 				};
@@ -416,6 +444,8 @@ namespace Intrusion.Ai
 				return false;
 			};
 			
+        	["Completed move #1 (no vehicle)"] call LogHandler.Debug;
+			player sideChat "Completed #1 (no vehicle)";
 			return true;
 		};
 		
@@ -459,10 +489,11 @@ namespace Intrusion.Ai
 		public virtual method Boolean HasCompletedMove()
 		{
 			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_unitContainer" as IUnitContainer];
-			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
+			private ["_currentAction" as IAction, "_order" as Order];
 			
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
 			_currentAction = _self.Knowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
+			_order = _self.Knowledge.Order;
 			
 			if (_currentAction is MoveAction) then
 			{
@@ -472,12 +503,22 @@ namespace Intrusion.Ai
 				// If Engaging nearby enemies, never complete the move for any other reason.
 				if (_moveAction.Type != MoveActionType.Engage) then
 				{
+					// Check if movement location fits with order location. Otherwise complete move.
+					if (!isNull _order.ResourceLocation) then {
+						if (_order.ResourceLocation.MarkerName != _moveAction.LocationMarkerName) then {
+				        	["Completed move (got new order)"] call LogHandler.Debug;
+							player sideChat "Completed (got new order)";
+							return true;
+						};
+					};
+					
 					_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
 	        		private _mountedVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
 	        		
 	        		// Move is completed if squad just recieved a new order.
 	        		if (_self.Knowledge.JustGotNewOrder) then {
 	        			_self.Knowledge.JustGotNewOrder = false;
+	        			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
 	        			return true;
 	        		};
 				
@@ -524,19 +565,6 @@ namespace Intrusion.Ai
 					        	["Completed move (at position)"] call LogHandler.Debug;
 								return true;
 							};
-						};
-					};
-					
-					// Move is completed if the order movement is related to a resource location that is already ours
-					if (_moveAction.LocationMarkerName != "" && !_self.Knowledge.OrderIsGivenByBrigadeLeader && _self.Knowledge.Order.Type != OrderType.Defend) then {
-						_locationCollection = call _self.World.GetResourceLocationCollection;
-						_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
-						
-						if (_location.Side == side _self.Knowledge.Group) then
-						{
-							player sideChat "Completed (location captured)";
-				        	["Completed move (location captured)"] call LogHandler.Debug;
-							return true;
 						};
 					};
 				};

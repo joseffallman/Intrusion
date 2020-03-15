@@ -121,7 +121,7 @@ namespace Intrusion.Server
 	        	{
 	        		private ["_unit" as Object];
 	        		_unit = _x;
-	        	
+	        		
 	        		if (alive _unit && { side group _unit in _mCompetingSides }) then
 	        		{
 		        		_targets = [_unit] call _mTargetHandler.GetEnemyTargets;
