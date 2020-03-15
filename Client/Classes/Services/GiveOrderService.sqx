@@ -129,11 +129,18 @@ namespace Intrusion.Client
 						// Update order info
 						private _orderInfo = ([_mOrderType] call OrderTypeMeta.ToString);
 						
-						if (!isNull _location) then {
-							_orderInfo = _orderInfo + " " + markerText _location.MarkerName;
+						if (_mEngageDetectedEnemies) then {
+							_orderInfo = _orderInfo + "(E)"; // Engage upon sight
+						}
+						else {
+							_orderInfo = _orderInfo + "(C)"; // Careless
 						};
 						
 						_orderInfo = _orderInfo + "*";
+						
+						if (!isNull _location) then {
+							_orderInfo = _orderInfo + " " + markerText _location.MarkerName;
+						};
 						
 						_mSelectedGroup setVariable ["IntrusionOrderInfo", _orderInfo, true];
 						
