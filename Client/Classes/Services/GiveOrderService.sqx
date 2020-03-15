@@ -130,10 +130,10 @@ namespace Intrusion.Client
 						private _orderInfo = ([_mOrderType] call OrderTypeMeta.ToString);
 						
 						if (_mEngageDetectedEnemies) then {
-							_orderInfo = _orderInfo + "(E)"; // Engage upon sight
+							_orderInfo = _orderInfo + "-E"; // Engage upon sight
 						}
 						else {
-							_orderInfo = _orderInfo + "(C)"; // Careless
+							_orderInfo = _orderInfo + "-C"; // Careless
 						};
 						
 						_orderInfo = _orderInfo + "*";
