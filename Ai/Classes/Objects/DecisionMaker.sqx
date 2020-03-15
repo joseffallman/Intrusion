@@ -94,7 +94,7 @@ namespace Intrusion.Ai
 			 		};
 			 		
 			 		private _engagePosition = _origin getPos [_distance, _heading];
-					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _engagePosition, "MOVE", "LIMITED", "STEALTH", "YELLOW", ""] new MoveAction;
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _engagePosition, "MOVE", "NORMAL", "COMBAT", "YELLOW", ""] new MoveAction;
 			 	}
 			 	else
 			 	{
@@ -102,7 +102,7 @@ namespace Intrusion.Ai
 						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
 			 		}
 			 		else {
-						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Move, _order.TargetPosition, "MOVE", "NORMAL", "SAFE", "YELLOW", ""] new MoveAction;
+						_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Move, _order.TargetPosition, "MOVE", "NORMAL", "SAFE", "GREEN", ""] new MoveAction;
 			 		};
 			 	};
 			 	
@@ -372,18 +372,24 @@ namespace Intrusion.Ai
 			
 			private _speedMode = "NORMAL";
 			private _behavior = "SAFE";
+			private _combatMode = "GREEN";
 			
+			if (_order.EngageDetectedEnemies) then {
+				_combatMode = "YELLOW";
+			};
+
 			if (_squadInVehicle) then {
 				_speedMode = "LIMITED";
+				_combatMode = "YELLOW";
 				
-				if (!_order.EngageDetectedEnemies) then {
-					_behavior = "CARELESS";
-				};
+//				if (!_order.EngageDetectedEnemies) then {
+//					_behavior = "CARELESS";
+//				};
 			};
 			
 			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
 			
-			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, _behavior, "YELLOW", _locationMarkerName] new MoveAction;
+			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, _behavior, _combatMode, _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
         	["Move action created (Away): " + str _action] call LogHandler.Debug;
