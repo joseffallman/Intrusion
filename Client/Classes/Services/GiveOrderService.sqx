@@ -51,7 +51,7 @@ namespace Intrusion.Client
 			_mEngageDetectedEnemies = _engageDetectedEnemies;
 		};
 		
-		private method Group FindClosestGroup("_pos" as Array)
+		private static method Group FindClosestGroup("_pos" as Array)
 		{
 		    private ["_group" as Group];
 		    private ["_closestDistance" as Scalar];
@@ -60,7 +60,7 @@ namespace Intrusion.Client
 		    _closestDistance = vehicle player distance _pos;
 		    
 		    {
-		        if (vehicle leader _x distance _pos < _closestDistance) then {
+		        if (side _x == side group player && vehicle leader _x distance _pos < _closestDistance) then {
 		            _closestDistance = vehicle leader _x distance _pos;
 		            _group = _x;
 		        };
@@ -84,11 +84,11 @@ namespace Intrusion.Client
 
 			call _self.Reset;
 			
-			_orderResult = "Order cancelled.";
+			_orderResult = "Ordering timed out and was cancelled.";
 		
 			// Open the map and ask player to select a group
 			openMap true;
-			player sideChat "Select a group by clicking near it on the map.";
+			["Select a group by clicking near it on the map."] call ClientMessageHandler.ShowSubTitle;
 			
 			_mWaitingForMapClick = true;
 			_enoughWaitingTime = time + 30;
@@ -98,7 +98,7 @@ namespace Intrusion.Client
 			{
 				_orderPos = _mMapPos;
 				_mSelectedGroup = [_mMapPos] call _self.FindClosestGroup;
-				player sideChat ("Group '" + name leader _mSelectedGroup + "' selected.");
+				["Group '" + name leader _mSelectedGroup + "' selected."] call ClientMessageHandler.ShowSubTitle;
 				
 				// Open the give order GUI
 				
@@ -149,7 +149,7 @@ namespace Intrusion.Client
 				};
 			};
 			
-			player sideChat _orderResult;
+			[_orderResult] call ClientMessageHandler.ShowSubTitle;
 			
 			call _base.Run;
 		};
