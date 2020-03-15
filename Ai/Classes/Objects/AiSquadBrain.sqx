@@ -615,6 +615,31 @@ namespace Intrusion.Ai
 			return _mKnowledge.Group;
 		};
 		
+		private method Boolean OrderIsObsolete()
+		{
+			private ["_orderLocation" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_order" as Order];
+		
+			// Any is completed if the order is related to a resource location that is already ours
+			
+			_order = _mKnowledge.Order;
+			_orderLocation = _order.ResourceLocation as ResourceLocation;
+			
+			if (!isNull _orderLocation && _order.Type != OrderType.Defend) then
+			{
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_orderLocation = [_orderLocation.MarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_orderLocation.Side == side _mKnowledge.Group) then
+				{
+					// Remove current order
+					_mKnowledge.Order = classNull;
+					
+		        	["Order is obsolete"] call LogHandler.Debug;
+					return true;
+				};
+			};
+		};
+		
 		// Gives the AI brain an opportunity to make a new decision.
 		public method Act()
 		{
@@ -638,8 +663,17 @@ namespace Intrusion.Ai
 			_time = call _mTime.GetMissionTime;
 			
 			// Check if order's timeout time is exceedeed
-			if (!isNull _mKnowledge.Order && { _mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime }) then {
-				_mKnowledge.Order = classNull;
+			if (!isNull _mKnowledge.Order) then
+			{
+				if (call _self.OrderIsObsolete) then {
+					_mKnowledge.Order = classNull;
+				}
+				else {				
+					if (_mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime) then
+					{
+						_mKnowledge.Order = classNull;
+					};
+				};
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.

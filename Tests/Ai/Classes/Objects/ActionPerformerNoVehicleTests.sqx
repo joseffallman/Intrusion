@@ -53,6 +53,7 @@ namespace Intrusion.Tests.Ai
 				"AtEnemyLocationIdle_Act_StatusCapturing",
 				"AfterCapturingLocation_Act_StatusIdle",
 				"AttackingLocationCapturedBeforeArrival_Act_StatusIdle",
+				"AttackingLocationCapturedBeforeArrivalBrigadeLeaderOrder_Act_StatusIdle",
 				"OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToAttackOwnLocationAlreadyPresentAndIdle_Act_NewOrderStatusIdle",
 				"OwnOrderToDefendOwnLocationAlreadyPresentAndIdle_Act_PatrolTheArea",
@@ -76,7 +77,7 @@ namespace Intrusion.Tests.Ai
 				"OrderToDefendPosition_PresentAndIdle_NewOrderStatusPatrolling",
 			]] call TestEngine.Register;
 			
-			//["AtBaseAttackCarelessOrder_Act_StatusMove"] call TestEngine.OnlyThisOne;
+			//["AttackingLocationCapturedBeforeArrival_Act_StatusIdle"] call TestEngine.OnlyThisOne;
 		};
 		
 		private static method BeforeEach()
@@ -284,15 +285,36 @@ namespace Intrusion.Tests.Ai
 		{
 			// Arrange
 			_mWorld.LeaderPos = [25, 25, 0];
+			_mLocationFactory1.Side = west;
 			_mKnowledge.Members pushBack [[25, 25, 0]] new TestUnitContainer;
 			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [200, 200, 0], _mLocationFactory1, 0] new Order;
 			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [120, MoveActionType.Move, [200, 200, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY1"] new MoveAction;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
 			
 			// Act
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Moving, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
+			[AiSquadState.Idle, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
+		};
+		
+		private static method AttackingLocationCapturedBeforeArrivalBrigadeLeaderOrder_Act_StatusIdle
+		{
+			// Arrange
+			_mWorld.LeaderPos = [25, 25, 0];
+			_mLocationFactory1.Side = west;
+			_mKnowledge.Members pushBack [[25, 25, 0]] new TestUnitContainer;
+			_mKnowledge.Order = [_mGroup, OrderType.Attack, true, [200, 200, 0], _mLocationFactory1, 0] new Order;
+			_mKnowledge.State = AiSquadState.Moving;
+			_mKnowledge.CurrentAction = [120, MoveActionType.Move, [200, 200, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY1"] new MoveAction;
+			_mKnowledge.OrderIsGivenByBrigadeLeader = true;
+			
+			// Act
+			call _mBrain.Act;
+			
+			// Assert
+			[AiSquadState.Idle, _mKnowledge.State, "AI attacking but location is already captured."] call Assert.AreEqual;
 		};
 		
 		private static method OwnOrderToAttackOwnLocationNotPresentAndIdle_Act_NewOrderStatusIdle
@@ -310,7 +332,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is moving."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
 			
 			//_action = _mKnowledge.CurrentAction as MoveAction;
 			
@@ -334,7 +356,7 @@ namespace Intrusion.Tests.Ai
 			call _mBrain.Act;
 			
 			// Assert
-			[AiSquadState.Idle, _mKnowledge.State, "AI is not idle."] call Assert.AreEqual;
+			[AiSquadState.Moving, _mKnowledge.State, "AI is not moving."] call Assert.AreEqual;
 			
 			//_action = _mKnowledge.CurrentAction as MoveAction;
 			

@@ -489,10 +489,11 @@ namespace Intrusion.Ai
 		public virtual method Boolean HasCompletedMove()
 		{
 			private ["_moveAction" as MoveAction, "_leaderPos" as Array, "_unitContainer" as IUnitContainer];
-			private ["_location" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_currentAction" as IAction];
+			private ["_currentAction" as IAction, "_order" as Order];
 			
 			//if ((_mKnowledge.CurrentAction) is MoveAction) then // TODO SQX: Generates error that 'required variable before is'.
 			_currentAction = _self.Knowledge.CurrentAction; // TODO SQX: This is the temporary workaround...
+			_order = _self.Knowledge.Order;
 			
 			if (_currentAction is MoveAction) then
 			{
@@ -502,6 +503,15 @@ namespace Intrusion.Ai
 				// If Engaging nearby enemies, never complete the move for any other reason.
 				if (_moveAction.Type != MoveActionType.Engage) then
 				{
+					// Check if movement location fits with order location. Otherwise complete move.
+					if (!isNull _order.ResourceLocation) then {
+						if (_order.ResourceLocation.MarkerName != _moveAction.LocationMarkerName) then {
+				        	["Completed move (got new order)"] call LogHandler.Debug;
+							player sideChat "Completed (got new order)";
+							return true;
+						};
+					};
+					
 					_unitContainer = [_self.Knowledge.Group] call _self.World.GetClosestDetectedEnemy;
 	        		private _mountedVehicle = [_self.Knowledge.Group] call _self.World.GetMountedVehicle;
 	        		
@@ -555,19 +565,6 @@ namespace Intrusion.Ai
 					        	["Completed move (at position)"] call LogHandler.Debug;
 								return true;
 							};
-						};
-					};
-					
-					// Move is completed if the order movement is related to a resource location that is already ours
-					if (_moveAction.LocationMarkerName != "" && !_self.Knowledge.OrderIsGivenByBrigadeLeader && _self.Knowledge.Order.Type != OrderType.Defend) then {
-						_locationCollection = call _self.World.GetResourceLocationCollection;
-						_location = [_moveAction.LocationMarkerName] call _locationCollection.GetResourceLocationByMarkerName;
-						
-						if (_location.Side == side _self.Knowledge.Group) then
-						{
-							player sideChat "Completed (location captured)";
-				        	["Completed move (location captured)"] call LogHandler.Debug;
-							return true;
 						};
 					};
 				};

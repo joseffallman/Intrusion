@@ -309,8 +309,8 @@ namespace Intrusion.Ai
 				private _targets = _unit nearTargets 10000;
 				
 				{
-					_group forgetTarget _x;
-				} foreach _targets as Object;
+					_group forgetTarget (_x select 4);
+				} foreach _targets as Array;
 			};
 		};
 	};
