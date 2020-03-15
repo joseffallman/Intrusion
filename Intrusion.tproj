@@ -211,6 +211,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionDialog.sqx" FileName="Client\Classes\Dialogs\ProfessionDialog.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyDialog.sqx" FileName="Client\Classes\Dialogs\TechnologyDialog.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TutorialDialog.sqx" FileName="Client\Classes\Dialogs\TutorialDialog.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
@@ -643,6 +646,9 @@
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="DialogControls.hpp" FileName="Dialogs\DialogControls.hpp">
             <SubNodes />
           </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ListBoxDialog.hpp" FileName="Dialogs\ListBoxDialog.hpp">
+            <SubNodes />
+          </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MoveBaseDialog.hpp" FileName="Dialogs\MoveBaseDialog.hpp">
             <SubNodes />
           </ProjectNodeViewModel>
@@ -650,6 +656,9 @@
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProfessionDialog.hpp" FileName="Dialogs\ProfessionDialog.hpp">
+            <SubNodes />
+          </ProjectNodeViewModel>
+          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyDialog.hpp" FileName="Dialogs\TechnologyDialog.hpp">
             <SubNodes />
           </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TutorialDialog.hpp" FileName="Dialogs\TutorialDialog.hpp">

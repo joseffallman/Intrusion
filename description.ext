@@ -5,6 +5,8 @@
 #include "Dialogs\ProfessionDialog.hpp"
 #include "Dialogs\MoveBaseDialog.hpp"
 #include "Dialogs\OrderDialog.hpp"
+#include "Dialogs\ListBoxDialog.hpp"
+#include "Dialogs\TechnologyDialog.hpp"
 
 // Mission Header
 class Header

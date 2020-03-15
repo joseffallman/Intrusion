@@ -166,9 +166,11 @@ namespace Intrusion.Client
 		public static method OnResourceReportCollectionUpdated("_resourceReportCollection" as ResourceReportCollection)
 		{
 			private ["_resourceReport" as ResourceReport];
-			
 			_resourceReport = [playerSide] call _resourceReportCollection.GetReport;
 			[_resourceReport] call gClient.DisplayHandler.DisplayResourceReport;
+			if (!isNull _resourceReport) then {
+				[_resourceReport] call TechnologyDialog.OnResourceReportUpdated;
+			};
 		};
 		
 		public static method OnPlayerRespawn("_player" as Object, "_corpse" as Object)

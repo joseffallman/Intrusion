@@ -5,6 +5,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sq
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\OrderDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TechnologyDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\BriefingHandler.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\GroupActionHandler.sqx";
@@ -62,6 +63,7 @@ gClient = [gCommonConfig.BaseConfig] new IntrusionClient;
 
 // Dialogs
 [gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionVehicles] call ProfessionDialog.Init;
+[gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionVehicles] call TechnologyDialog.Init;
 call MoveBaseDialog.Init;
 
 // Create the briefing

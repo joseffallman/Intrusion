@@ -1,0 +1,222 @@
+/*
+ * Name:	TechnologyDialog
+ * Date:	2020-03-14
+ * Version: 1.0
+ * Author:  Josef
+ *
+ * Description:
+ * A dialog that gives you an overview of different technologys
+ */
+ 
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class TechnologyDialog
+	{
+		private static fields [
+			"_mTechnologyConfig" as ITechnologyConfig,
+			"_mResourceReport" as ResourceReport,
+			"_mDefaultColor" as Array,
+			"_mDisabledColor" as Array,
+			"_mCurrentColor" as Array,
+			"_mCurrentIndex" as Scalar
+		];
+		
+		// Initializes the profession dialog.
+		public static method Init(
+			"_professionConfig" as ProfessionConfig,
+			"_technologyConfig" as ITechnologyConfig,
+			"_vehicleClassNamesConfig" as IVehicleClassNamesConfig,
+			"_vehiclesConfig" as IProfessionVehiclesConfig)
+		{
+			_mTechnologyConfig = _technologyConfig;
+			//_mVehiclesConfig = _vehiclesConfig;
+			
+			_mDefaultColor = [1,1,1,1];
+			_mDisabledColor = [0.5,0.5,0.5,1];
+			_mCurrentColor = [0.85,0.4,0,1];
+			
+			_mCurrentIndex = -1;
+			_self.IsOpen = false;
+
+		};
+		
+		// Gets whether the dialog is open or not.
+		public static property Boolean IsOpen { get; private set; };
+		
+
+		// Adds all Technologys to the combo box.
+		private static method AddOptions()
+		{
+			{
+				_mCurrentIndex = 0;
+				lbAdd [DialogControl.OptionsListBox, _x.Name];
+			} foreach _mTechnologyConfig.Technologies as TechnologyInfo;
+
+		};
+		
+		// Change color in list.
+		private static method UpdateListBoxItemsColor()
+		{
+			//private _selectedIndex = lbCurSel (DialogControl.OptionsListBox as Scalar);
+			{
+				lbSetColor[DialogControl.OptionsListBox, _forEachIndex, _mDefaultColor];
+				if (_forEachIndex == _mCurrentIndex) then {
+					lbSetColor[DialogControl.OptionsListBox, _forEachIndex, _mCurrentColor];
+				} else {
+					if(_x.RequiredResearch > floor (_mResourceReport.Research)) then {
+					lbSetColor[DialogControl.OptionsListBox, _forEachIndex, _mDisabledColor];
+					};
+				};
+			} forEach _mTechnologyConfig.Technologies as TechnologyInfo;
+		};
+		
+		// Set the latest ResourceReport
+		// Called by ClientEventReciever when any report in the colleciton is updated.
+		public static method OnResourceReportUpdated("_report" as ResourceReport)
+		{
+			_mResourceReport = + _report;
+			if (_self.IsOpen) then {
+				call _self.UpdateListBoxItemsColor;
+			};
+		};
+		
+ 		// Change Image and text when a new selection is made in the listbox.
+		// Called by the .hpp-dialog
+		public static method OnListSelectChanged("_listbox" as Control, "_selectedIndex" as Scalar)
+		{
+			private [
+				"_technology" as TechnologyInfo,
+				"_techDesc" as String
+			];
+			//private _ctrlPicture = (findDisplay 2600) displayCtrl 2550;
+			private _ctrlDescription = (findDisplay 2600) displayCtrl 2553;
+			_technology = _mTechnologyConfig.Technologies select _selectedIndex;
+			_mCurrentIndex = _selectedIndex;
+			
+			// Description text
+			_techDesc = [_technology.Technology] call _self.GetTechnologyDesc;
+			
+ 			private _description = [
+				"<t size='2.2' underline='false'>" + _technology.Name + "</t>",
+				"",
+				"Required technology: " + str _technology.RequiredResearch,
+				"",
+				_techDesc
+			];
+			_ctrlDescription ctrlSetStructuredText parseText (_description joinString "<br/>");
+			
+			call _self.UpdateListBoxItemsColor;
+		};
+		
+		// The descriptiontext for each technology.
+		public static method String GetTechnologyDesc("_technology" as Technology) {
+			
+			private "_text" as String;
+			
+			_text = "";
+			
+			switch(_technology) do {
+			
+				case Technology.Transport: 
+				{
+				_text = _text + "This will give you access to some basic vehicles/trucks.";
+				};
+				
+				case Technology.Services: 
+				{
+				_text = _text + "Now you can be a repair truck or a fuel truck.";
+				};
+				
+				case Technology.Maintenance: 
+				{
+				_text = _text + "This is the Shit!";
+				};
+				
+				case Technology.AdvancedWeapons: 
+				{
+				_text = _text + "When you have invented this technology you have access to sniper and uav.";
+				};
+				
+				case Technology.Ordnance: 
+				{
+				_text = _text + "";
+				};
+				
+				case Technology.Motorized: 
+				{
+				_text = _text + "Now you have access to armed trucks.";
+				};
+				
+				case Technology.AntiAir: 
+				{
+				_text = _text + "Now you have invented mortars and rocket-launcer";
+				};
+				
+				case Technology.AirRecon: 
+				{
+				_text = _text + "This technology gives you access to transport helicopter.";
+				};
+				
+				case Technology.LightArmor: 
+				{
+				_text = _text + "";
+				};
+				
+				case Technology.Artillery: 
+				{
+				_text = _text + "";
+				};
+				
+				case Technology.HeavyArmor: 
+				{
+				_text = _text + "";
+				};
+				
+				case Technology.AirArmed: 
+				{
+				_text = _text + "Now the deadly helicopter is your friend, but will you master it?";
+				};
+			};
+			
+			return _text;
+		};
+		
+		
+		// Shows the dialog.
+		// Returns (DialogResult): A dialog result.
+		public static method DialogResult ShowDialog()
+		{
+			waitUntil { !dialog };
+			
+			// Create the dialog
+            createDialog "IntTechnologyDialog";
+			
+			// Add professions to list and change there's color
+			call _self.AddOptions;
+			call _self.UpdateListBoxItemsColor;
+			
+			if ( _mCurrentIndex > -1 ) then {
+				lbSetCurSel [DialogControl.OptionsListBox, _mCurrentIndex];
+			};
+			
+			_self.IsOpen = true;
+
+			// Wait until dialog is closed
+			waitUntil { !dialog };
+			
+			// Return OK.
+			return DialogResult.Ok;
+		};
+		
+		// Closes the dialog if it is open.
+		public static method CloseDialog()
+		{
+			if (_self.IsOpen) then {
+				closeDialog 0;
+			};
+		};
+	};
+};
+

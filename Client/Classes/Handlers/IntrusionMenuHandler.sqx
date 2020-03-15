@@ -41,6 +41,8 @@ namespace Intrusion.Client
 		
 		public static property Boolean OptionSelectProfessionVisible { get; private set; };
 		
+		public static property Boolean OptionViewTechnologyVisible { get; private set; };
+		
 		public static property Boolean OptionGiveOrderVisible { get; private set; };
 		
 		#endregion
@@ -94,6 +96,14 @@ namespace Intrusion.Client
 				call _self.BuildIntrusionMenu;
 			};
 		};
+		
+		private static method ShowOptionViewTechnology("_show" as Boolean)
+		{
+			if (!(_show isEqualTo _self.OptionViewTechnologyVisible)) then {
+				_self.OptionViewTechnologyVisible = _show;
+				call _self.BuildIntrusionMenu;
+			};
+		};
 
 		private static method ShowOptionGiveOrder("_show" as Boolean)
 		{
@@ -123,6 +133,7 @@ namespace Intrusion.Client
 			_self.OptionMoveBaseVisible = ClientState.IsBrigadeLeader;
 			_self.OptionBeamToBaseVisible = leader group player == player;
 			_self.OptionSelectProfessionVisible = leader group player == player;
+			_self.OptionViewTechnologyVisible = True;
 			_self.OptionGiveOrderVisible = ClientState.IsBrigadeLeader;
 			
 			call _self.BuildIntrusionMenu;
@@ -134,6 +145,10 @@ namespace Intrusion.Client
 			[
 			  ["Intrusion Menu", true]
 			];
+			
+			if (_self.OptionViewTechnologyVisible) then {
+				INT_IntrusionMenu pushBack ["View different technologys", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnViewTechnologys"]], "1", "1"];
+			};
 			
 			if (_self.OptionSelectProfessionVisible) then {
 				INT_IntrusionMenu pushBack ["Set group's profession", [0], "", -5, [["expression", "call Intrusion_Client_IntrusionMenuHandler_OnSelectProfession"]], "1", "1"];
@@ -215,6 +230,11 @@ namespace Intrusion.Client
 		// Called when the local player selects the "Move Base" option.
 		private static method OnSelectProfession {
 			spawn ProfessionDialog.ShowDialog;
+		};
+		
+		// Called when the local player selects the "View Technologys" option.
+		private static method OnViewTechnologys {
+			spawn TechnologyDialog.ShowDialog;
 		};
 		
 		// Called when the local brigade leader selects the "Give Order" option.
