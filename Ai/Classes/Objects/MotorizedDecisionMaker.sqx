@@ -36,6 +36,12 @@ namespace Intrusion.Ai
 					[AiSquadState.Moving, _action] call _self.SetState;
 					[_action] call _self.ActionPerformer.DoMove;
 		        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
+				}
+				else {
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _order.TargetPosition, "MOVE", "LIMITED", "AWARE", "YELLOW", ""] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (enemies spotted 2): " + str _action] call LogHandler.Debug;
 				};
 			};
 			
