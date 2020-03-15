@@ -246,7 +246,7 @@ namespace Intrusion.Ai
 				if (!isNull _resourceLocation) then {
 					_locationMarkerName = _resourceLocation.MarkerName;
 				};
-				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "YELLOW", _locationMarkerName] new MoveAction;
+				private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _aiVehicle.Position, "MOVE", "NORMAL", "SAFE", "GREEN", _locationMarkerName] new MoveAction;
 				[AiSquadState.Moving, _action] call _self.SetState;
 				[_action as MoveAction] call _self.ActionPerformer.DoMove;
 	        	["Move action created (to vehicle): " + str _action] call LogHandler.Debug;
