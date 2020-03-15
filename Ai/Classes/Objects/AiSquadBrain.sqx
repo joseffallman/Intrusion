@@ -604,6 +604,9 @@ namespace Intrusion.Ai
 			
 			if (_mKnowledge.State != AiSquadState.Idle) then {
 				_mKnowledge.JustGotNewOrder = true;
+			}
+			else {
+				[_mKnowledge.Group] call _mActionPerformer.MakeGroupForgetAllTargets;
 			};
 		};
 		

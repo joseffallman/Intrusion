@@ -381,6 +381,8 @@ namespace Intrusion.Ai
 				};
 			};
 			
+			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
+			
 			private _action = [_time + _self.ActionTimeoutConfig.MoveActionTimeout, MoveActionType.Move, _self.Knowledge.Order.TargetPosition, "MOVE", _speedMode, _behavior, "YELLOW", _locationMarkerName] new MoveAction;
 			[AiSquadState.Moving, _action] call _self.SetState;
 			[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
@@ -500,6 +502,7 @@ namespace Intrusion.Ai
 	        		// Move is completed if squad just recieved a new order.
 	        		if (_self.Knowledge.JustGotNewOrder) then {
 	        			_self.Knowledge.JustGotNewOrder = false;
+	        			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
 	        			return true;
 	        		};
 				

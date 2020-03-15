@@ -170,6 +170,8 @@ namespace Intrusion.Ai
 				};
 			} foreach _oldUnits as Object;
 			
+			[_group] call _self.MakeGroupForgetAllTargets;
+			
 			_newUnits
 		};
 		
@@ -292,6 +294,23 @@ namespace Intrusion.Ai
 					_vehicleContainer.Vehicle setPos (getPos _roadSegment);
 					_vehicleContainer.Vehicle setDir (getDir _roadSegment);
 				};
+			};
+		};
+		
+		// Makes a group forget all their known targets.
+		// _group (Group): The group.
+		public method MakeGroupForgetAllTargets("_group" as Group)
+		{
+			private "_unit" as Object;
+			
+			if (count units _group > 0) then
+			{
+				_unit = units _group select 0;
+				private _targets = _unit nearTargets 10000;
+				
+				{
+					_group forgetTarget _x;
+				} foreach _targets as Object;
 			};
 		};
 	};

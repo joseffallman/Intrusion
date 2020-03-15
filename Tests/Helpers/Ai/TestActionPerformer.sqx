@@ -165,5 +165,11 @@ namespace Intrusion.Tests.Helpers
 		{
 			_self.ReplaceGroupOnNearestRoadCalled = true;
 		};
+		
+		// Makes a group forget all their known targets.
+		// _group (Group): The group.
+		public method MakeGroupForgetAllTargets("_group" as Group)
+		{
+		};
 	};
 };
