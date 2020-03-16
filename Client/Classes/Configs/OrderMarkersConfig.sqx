@@ -1,0 +1,44 @@
+/*
+ * Name:	OrderMarkersConfig
+ * Date:	2020-03-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Config entries for order markers.
+ */
+namespace Intrusion.Client
+{
+	public class OrderMarkersConfig : IOrderMarkersConfig
+	{
+		// Creates a OrderMarkersConfig object.
+		public constructor()
+		{
+			_self.AttackEngageMarker = "mil_objective";
+			_self.AttackCarelessMarker = "mil_objective";
+			_self.DefendEngageMarker = "mil_marker";
+			_self.DefendCarelessMarker = "mil_marker";
+			
+			_self.AttackEngageColor = "ColorOrange";
+			_self.AttackCarelessColor = "ColorRed";
+			_self.DefendEngageColor = "ColorOrange";
+			_self.DefendCarelessColor = "ColorRed";
+		};
+		
+		public property String AttackEngageMarker { get; private set; };
+		
+		public property String AttackEngageColor { get; private set; };
+		
+		public property String AttackCarelessMarker { get; private set; };
+
+		public property String AttackCarelessColor { get; private set; };
+
+		public property String DefendEngageMarker { get; private set; };
+		
+		public property String DefendEngageColor { get; private set; };
+		
+		public property String DefendCarelessMarker { get; private set; };
+
+		public property String DefendCarelessColor { get; private set; };
+	};
+};

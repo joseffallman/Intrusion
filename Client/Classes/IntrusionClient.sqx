@@ -25,7 +25,7 @@ namespace Intrusion.Client
 			_self.TeleportHandler = [_mapMarkersConfig, _baseConfig] new TeleportHandler;
 			_self.SquadMarkersConfig = new SquadMarkersConfig;
 			_self.DisplayHandler = [gCommonConfig.Technology] new DisplayHandler;
-			_self.GiveOrderService = [new MissionTime, gCommonConfig.ResourceLocation] new GiveOrderService;
+			_self.GiveOrderService = [new MissionTime, gCommonConfig.ResourceLocation, new OrderMarkersConfig] new GiveOrderService;
 			_self.TaskHandler = new TaskHandler;
 			_self.ClientVehicleHandler = [gCommonConfig.Professions] new ClientVehicleHandler;
 			_self.RatingService = [new SquadConfig, new MissionTime] new RatingService;

@@ -82,7 +82,7 @@ namespace Intrusion.Client
 			"The main philosophy behind Intrusion is to encourage a gameplay style where players make use of weapons and vehicles in the way they are used in real life, and at the same time offers a fun gameplay relatively easy to embrace.<br /><br />" +
 			"You should be able to play and do good if you join an Intrusion server for the first time, and at the same time your side should be uncontested if you and all your side members develop good communication and everyone stick to their roles. Like in real life, the use of teams, roles, communications and leadership strategies on different levels are essential for victory. What a single unit does is of importance, but not compared to what the side can accomplish when its members are supporting each other in all kinds of evolving situations. Like in a real battle available resources are limited, but even an outcounted group of people may beat a superior enemy if fighting well together and acting unexpectingly."]];
 
-			player createDiaryRecord ["Diary", ["10 THINGS YOU MUST KNOW TO PLAY",
+			player createDiaryRecord ["Diary", ["10 THINGS YOU MUST KNOW TO PLAY INTRUSION",
 			"The more resource locations your side owns, the more income your side will have.<br /><br />" +
 			"The more income your side has, the more vehicles and weapons will spawn and become available.<br /><br />" +
 			"Income is of two types - production (comes from factories) and administration (comes from offices).<br /><br />" +
@@ -92,7 +92,7 @@ namespace Intrusion.Client
 			"A brigade leader on each side commands the squads, giving different kinds of orders to be carried out, fulfilling the purpose of the brigade's strategic warfare.<br /><br />" +
 			"The side that owns the resource location marked with a flag when the time is up wins the battle.<br /><br />" +
 			"All players have a rating that increases when performing good deeds (like killing enemies, capturing flags, and fulfilling brigade leader orders). Players get rating bonuses the more players there are in their squad.<br /><br />" +
-			"All players belong to a squad (even though there is only one player in it), and each squad selects a profession that determines what kind of vehicle and weapons they are allowed to control. You cannot select between all professions. Which ones that are available depends on brigade leader's rating, squad size, and how many of a profession that are already occupied."]];
+			"All players belong to a squad (even though there is only one player in it), and each squad selects a profession that determines what kind of vehicle and weapons they are allowed to control. You cannot select between all professions. Which ones that are available depends on the current squad leader's rating, squad size, and how many of a profession that the brigade already occupies."]];
 /*
 			player createDiaryRecord ["Story", ["Overview",
 			"After a long build up of tentions the world has once again come into conflict, and the enemy is on the move. For quite a while your brigade has been stationed on a relatively calm area, where <br /><br />" +

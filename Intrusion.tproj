@@ -187,10 +187,16 @@
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Interfaces" FileName="Client\Classes\Configs\Interfaces">
                     <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IOrderMarkersConfig.sqx" FileName="Client\Classes\Configs\Interfaces\IOrderMarkersConfig.sqx">
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ISquadMarkersConfig.sqx" FileName="Client\Classes\Configs\Interfaces\ISquadMarkersConfig.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
                     </SubNodes>
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="OrderMarkersConfig.sqx" FileName="Client\Classes\Configs\OrderMarkersConfig.sqx">
+                    <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SquadMarkersConfig.sqx" FileName="Client\Classes\Configs\SquadMarkersConfig.sqx">
                     <SubNodes />

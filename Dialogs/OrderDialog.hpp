@@ -20,7 +20,7 @@ class IntOrderDialog
 		
 		class IntOrderDialog_Header : IntBaseDialog_Header
 		{
-			text = "Select Order";
+			text = "Select an order. Then single click on the map to select its target position.";
 			x = 1 * GUI_GRID_W + GUI_GRID_X;
 		};
 		/*
@@ -32,25 +32,25 @@ class IntOrderDialog
 		*/
 		
 		class IntOrderDialog_AttackEngageButton : IntOrderDialog_PlaceButton {
-			text = "Attack (engage contacts)";
+			text = "Attack (Engage upon sight)";
 			y = 5 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnAttackEngageButtonPressed;";
 		};
 		
 		class IntOrderDialog_AttackCarelessButton : IntOrderDialog_PlaceButton {
-			text = "Attack (move careless)";
+			text = "Attack (Move fast)";
 			y = 7 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnAttackCarelessButtonPressed;";
 		};
 		
 		class IntOrderDialog_DefendEngageButton : IntOrderDialog_PlaceButton {
-			text = "Defend (engage contacts)";
+			text = "Defend (Engage upon sight)";
 			y = 9 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnDefendEngageButtonPressed;";
 		};
 		
 		class IntOrderDialog_DefendCarelessButton : IntOrderDialog_PlaceButton {
-			text = "Defend (move careless)";
+			text = "Defend (Move fast)";
 			y = 11 * GUI_GRID_H + GUI_GRID_Y;
 			action = "call Intrusion_Client_OrderDialog_OnDefendCarelessButtonPressed;";
 		};

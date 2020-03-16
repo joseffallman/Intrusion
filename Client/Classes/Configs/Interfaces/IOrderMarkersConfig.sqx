@@ -1,0 +1,30 @@
+/*
+ * Name:	OrderMarkersConfig
+ * Date:	2020-03-16
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Config entries for order markers.
+ */
+namespace Intrusion.Client
+{
+	public interface IOrderMarkersConfig
+	{
+		property String AttackEngageMarker { get; };
+		
+		property String AttackEngageColor { get; };
+		
+		property String AttackCarelessMarker { get; };
+
+		property String AttackCarelessColor { get; };
+
+		property String DefendEngageMarker { get; };
+		
+		property String DefendEngageColor { get; };
+		
+		property String DefendCarelessMarker { get; };
+
+		property String DefendCarelessColor { get; };
+	};
+};
