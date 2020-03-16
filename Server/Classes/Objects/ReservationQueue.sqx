@@ -29,7 +29,7 @@ namespace Intrusion.Server
 		
 		// Removes all reservations that belong to a certain group
 		// _group (Group): The group's reservations that will be removed.
-		public method Boolean RemoveReservationsByGroup("_group" as Group)
+		public method RemoveReservationsByGroup("_group" as Group)
 		{
 			private ["_reservationsToKeep" as Array];
 			

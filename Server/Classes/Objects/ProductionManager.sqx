@@ -142,6 +142,11 @@ namespace Intrusion.Server
 				_tryOneMore = false;
 				_squad = [_mReservationQueue.CurrentReservation.Group] call _mSquadHandler.GetSquadByGroup;
 				
+				if (isNull _squad) then {
+					call _mReservationQueue.RemoveCurrentReservation;
+					_tryOneMore = true;
+				};
+				
 				["_totalProduction: " + str _totalProduction] call LogHandler.Debug;
 				["_cost: " + str _cost] call LogHandler.Debug;
 				["_tryOneMore: " + str _tryOneMore] call LogHandler.Debug;

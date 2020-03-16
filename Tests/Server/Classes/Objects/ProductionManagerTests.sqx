@@ -43,6 +43,8 @@ namespace Intrusion.Tests.Server
 				"ItemToProduce_GroupCanNotAfford_ItemNotProduced",
 				"TwoItemsToProduce_GroupsCanAffordOne_ItemProduced",
 				"TwoItemsToProduce_GroupsCanAffordTwo_ItemsProduced",
+				"NullGroupFirstInReservationQueue_ExistingGroupAdded_NullGroupRemoved",
+				"NullGroupAloneInReservationQueue_PerformProduction_NullGroupRemoved",
 				"EmptyReservationQueue_GroupChangingProfession_ReservationPutInQueue",
 				"GroupAlreadyInReservationQueue_GroupChangingProfession_ReservationInQueueReplaced",
 				"AnotherGroupAlreadyInReservationQueue_GroupChangingProfession_ReservationAddedLast",
@@ -54,6 +56,8 @@ namespace Intrusion.Tests.Server
 				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
 				"TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast"
 			]] call TestEngine.Register;
+			
+			//["NullGroupAloneInReservationQueue_PerformProduction_NullGroupRemoved"] call TestEngine.OnlyThisOne;
 		};
 		
 		// Creates a production manager and a group.
@@ -240,6 +244,59 @@ namespace Intrusion.Tests.Server
 			
 			// Cleanup
 			[_anotherGroup] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method NullGroupFirstInReservationQueue_ExistingGroupAdded_NullGroupRemoved
+		{
+			private ["_nullGroup" as Group, "_reservation1" as Reservation, "_reservation2" as Reservation];
+		
+			// Arrange
+			[west, ProfessionType.Repair, ["REPAIR_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
+			
+			_nullGroup = grpNull;
+			_reservation1 = [_nullGroup, "REPAIR_TRUCK", 150] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+
+			_reservation2 = [_mGroup, "TANK", 800] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[3000] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[1, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			
+			private _spawnedVehicle = _mVehicleSpawner.SpawnedVehicles select 0;
+			
+			["TANK", _spawnedVehicle, "Wrong vehicle spawned."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "All reservations should be gone."] call Assert.AreEqual;
+			[2200, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
+		};
+		
+		private static method NullGroupAloneInReservationQueue_PerformProduction_NullGroupRemoved
+		{
+			private ["_nullGroup" as Group, "_reservation" as Reservation];
+		
+			// Arrange
+			[west, ProfessionType.Repair, ["REPAIR_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
+			
+			_nullGroup = grpNull;
+			_reservation = [_nullGroup, "REPAIR_TRUCK", 150] new Reservation;
+			[_reservation] call _mReservationQueue.PutReservation;
+
+			[3000] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Wrong number of vehicles spawned."] call Assert.AreEqual;
+			[0, call _mReservationQueue.Count, "All reservations should be gone."] call Assert.AreEqual;
+			[3000, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
 		private static method GroupAndAnotherGroupInReservationQueue_GroupChangingProfession_ReservationReplacedAndLast
