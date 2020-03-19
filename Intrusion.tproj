@@ -799,7 +799,7 @@
                       </ProjectNodeViewModel>
                     </SubNodes>
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="InventedTechnologiesCollection.sqx" FileName="Server\Classes\Objects\InventedTechnologiesCollection.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="EstablishedTechnologiesCollection.sqx" FileName="Server\Classes\Objects\EstablishedTechnologiesCollection.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Observation.sqx" FileName="Server\Classes\Objects\Observation.sqx">

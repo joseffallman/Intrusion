@@ -14,7 +14,7 @@ namespace Intrusion.Server
 {
 	public class WeaponsService
 	{
-		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private static fields ["_mGameplayConfig" as IGameplayConfig, "_mWeaponBoxes" as Array /* of WeaponBox */, "_mMapMarkersConfig" as IMapMarkersConfig, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection];
 		
 		private static method WeaponBox GetWeaponBox("_side" as Side, "_weaponBoxType" as WeaponBoxType)
 		{
@@ -65,7 +65,7 @@ namespace Intrusion.Server
 		// Runs the weapons service.
 		private static method Run()
 		{
-			private ["_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo, "_weaponBoxInfo" as WeaponBoxInfo, "_weaponBoxInvented" as Boolean];
+			private ["_weaponBox" as WeaponBox, "_markerInfo" as MapMarkerInfo, "_weaponBoxInfo" as WeaponBoxInfo, "_weaponBoxEstablished" as Boolean];
 			
 			while { true } do
 			{
@@ -83,9 +83,9 @@ namespace Intrusion.Server
 						
 						_weaponBox = [_side, _weaponBoxType] call _self.GetWeaponBox;
 						_weaponBoxInfo = [_weaponBoxType] call WeaponBoxesConfig.GetWeaponBoxInfo;
-						_weaponBoxInvented = [_side, _weaponBoxInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+						_weaponBoxEstablished = [_side, _weaponBoxInfo.RequiredTechnology] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
 
-						if (_weaponBoxInvented && (isNull _weaponBox || { !(call _weaponBox.IsAlive) })) then
+						if (_weaponBoxEstablished && (isNull _weaponBox || { !(call _weaponBox.IsAlive) })) then
 						{
 							_weaponBox = [_side, getMarkerPos _markerInfo.WeaponDepotMarkerName, _weaponBoxType] new WeaponBox;
 							[_weaponBox] call WeaponsService.AddWeaponBox;
@@ -102,8 +102,8 @@ namespace Intrusion.Server
 								private ["_weaponInfo" as WeaponInfo];
 								_weaponInfo = _x;
 								
-								// If the required technology for the weapon is invented
-								if ([_side, _weaponInfo.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) then
+								// If the required technology for the weapon is established
+								if ([_side, _weaponInfo.RequiredTechnology] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished) then
 								{
 									if (_weaponInfo.ItemType == CrateItemType.Weapon) then {
 										if (_weaponInfo.ClassName != "") then {
@@ -135,11 +135,11 @@ namespace Intrusion.Server
 		};
 		
 		// Starts the weapons service.
-		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+		public static method RunAsync("_gameplayConfig" as IGameplayConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection)
 		{
 			_mGameplayConfig = _gameplayConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mWeaponBoxes = [];
 			
 			[] spawn _self.Run;

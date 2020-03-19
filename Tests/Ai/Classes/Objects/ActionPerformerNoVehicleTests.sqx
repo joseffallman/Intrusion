@@ -36,7 +36,7 @@ namespace Intrusion.Tests.Ai
 			"_mTime" as TestMissionTime,
 			"_mActionService" as TestActionService,
 			"_mActionServiceFactory" as TestActionServiceFactory,
-			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_mSquadHandler" as TestSquadHandler
 		];
 		
@@ -111,7 +111,7 @@ namespace Intrusion.Tests.Ai
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
-			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = new EstablishedTechnologiesCollection;
 			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
 			private _professionConfig = new ProfessionConfig;
 			_mSquadHandler = new TestSquadHandler;
@@ -130,7 +130,7 @@ namespace Intrusion.Tests.Ai
 				_mTime, 
 				_mapMarkerInfo,
 				new TestAiWeaponsConfig,
-				_mInventedTechnologiesCollection,
+				_mEstablishedTechnologiesCollection,
 				_mKnowledge,
 				_decisionMaker,
 				new BaseConfig,
@@ -564,7 +564,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Moving;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
-			[west, Technology.Transport] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			[west, Technology.Transport] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			_mRandomGenerator.Number = 0.2;
 			
 			// Act
@@ -573,7 +573,7 @@ namespace Intrusion.Tests.Ai
 			// Assert
 			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
-			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher but it's not invented."] call Assert.IsFalse;
+			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher but it's not established."] call Assert.IsFalse;
 		};
 		
 		private static method SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn
@@ -586,7 +586,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
-			[west, Technology.Ordnance] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			[west, Technology.Ordnance] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			_mRandomGenerator.Number = 0.2;
 			
 			// Act
@@ -610,7 +610,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
-			[west, Technology.Ordnance] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			[west, Technology.Ordnance] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			_mRandomGenerator.Number = 0.4;
 			
 			// Act
@@ -632,7 +632,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
-			[west, Technology.AntiAir] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			[west, Technology.AntiAir] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			_mRandomGenerator.Number = 0.4;
 			
 			// Act
@@ -656,7 +656,7 @@ namespace Intrusion.Tests.Ai
 			_mKnowledge.State = AiSquadState.Idle;
 			_mKnowledge.CurrentAction = [300, MoveActionType.Move, [600, 600, 0], "MOVE", "NORMAL", "SAFE", "YELLOW", "FACTORY2"] new MoveAction;
 			
-			[west, Technology.AntiAir] call _mInventedTechnologiesCollection.AddInventedTechnology;
+			[west, Technology.AntiAir] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			_mRandomGenerator.Number = 0.7;
 			
 			// Act

@@ -41,7 +41,7 @@ namespace Intrusion.Tests.Helpers
 		
 		// Gets the next technology to investigate.
 		// _research (Scalar): The current research points.
-		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been invented.
+		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been established.
 		public method TechnologyInfo GetNextTechnology("_research" as Scalar)
 		{
 			scopeName "main";

@@ -36,7 +36,7 @@ namespace Intrusion.Tests.Ai
 			"_mTime" as TestMissionTime,
 			"_mActionService" as TestActionService,
 			"_mActionServiceFactory" as TestActionServiceFactory,
-			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_mSquadHandler" as ISquadHandler
 		];
 		
@@ -95,7 +95,7 @@ namespace Intrusion.Tests.Ai
 			_mRandomGenerator = [0] new TestRandomGenerator;
 			_mKnowledge = [_mGroup, []] new Knowledge;
 			_mTime = [0] new TestMissionTime;
-			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = new EstablishedTechnologiesCollection;
 			private _testActionTimeoutConfig = new TestActionTimeoutConfig;
 			private _professionConfig = new ProfessionConfig;
 			_mSquadHandler = new TestSquadHandler;
@@ -114,7 +114,7 @@ namespace Intrusion.Tests.Ai
 				_mTime, 
 				_mapMarkerInfo,
 				new TestAiWeaponsConfig,
-				_mInventedTechnologiesCollection,
+				_mEstablishedTechnologiesCollection,
 				_mKnowledge,
 				_decisionMaker,
 				new BaseConfig,

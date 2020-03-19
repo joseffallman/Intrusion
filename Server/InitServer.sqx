@@ -18,7 +18,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\InventedTechnologiesCollection.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\EstablishedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitSpawner.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ResourceLocationDominanceInfo.sqx";

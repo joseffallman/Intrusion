@@ -121,7 +121,7 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method PerformProduction {
-			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
+			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyEstablished" as Boolean];
 			private ["_profession" as Profession];
 			private ["_totalProduction" as Scalar, "_cost" as Scalar];
 
@@ -159,21 +159,21 @@ namespace Intrusion.Server
 					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 					["_profession: " + str _profession] call LogHandler.Debug;
 					
-					_technologyInvented = [_profession.RequiredTechnology] call _mScientist.TechnologyIsInvented;
-					["_technologyInvented: " + str _technologyInvented] call LogHandler.Debug;
+					_technologyEstablished = [_profession.RequiredTechnology] call _mScientist.TechnologyIsEstablished;
+					["_technologyEstablished: " + str _technologyEstablished] call LogHandler.Debug;
 					
-					if (!_technologyInvented) then
+					if (!_technologyEstablished) then
 					{
-						["if (!_technologyInvented) then"] call LogHandler.Debug;
+						["if (!_technologyEstablished) then"] call LogHandler.Debug;
 						call _mReservationQueue.MoveCurrentReservationLast;
 					}
 					else
 					{
-						["else (if _technologyInvented)"] call LogHandler.Debug;
+						["else (if _technologyEstablished)"] call LogHandler.Debug;
 						
-						if (_totalProduction >= _cost && _technologyInvented) then
+						if (_totalProduction >= _cost && _technologyEstablished) then
 						{
-							["if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented)"] call LogHandler.Debug;
+							["if (_totalProduction >= _cost * _vehiclesCount && _technologyEstablished)"] call LogHandler.Debug;
 							
 							// Create the vehicle
 							[_squad.Group, _squad.ProfessionType, _mReservationQueue.CurrentReservation.VehicleClassName, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;

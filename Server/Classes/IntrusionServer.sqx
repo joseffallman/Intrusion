@@ -23,8 +23,8 @@ namespace Intrusion.Server
 		
 			_self.MessageHandler = new MessageHandler;
 			_self.VehicleSpawner = [gCommonConfig.VehicleClassNames, gCommonConfig.MapMarkers, _missionTime] new VehicleSpawner;
-			_self.InventedTechnologiesCollection = new InventedTechnologiesCollection;
-			_self.TargetHandler = [gCommonConfig.Professions, _self.InventedTechnologiesCollection] new TargetHandler;
+			_self.EstablishedTechnologiesCollection = new EstablishedTechnologiesCollection;
+			_self.TargetHandler = [gCommonConfig.Professions, _self.EstablishedTechnologiesCollection] new TargetHandler;
 			_self.AiSquadHandler = new AiSquadHandler;
 			_self.UnitCounter = [gServerConfig.Gameplay, _self.AiSquadHandler] new UnitCounter;
 			_self.SquadHandler = [_self.VehicleSpawner, gCommonConfig.Professions] new SquadHandler;
@@ -40,7 +40,7 @@ namespace Intrusion.Server
 		public property IMessageHandler MessageHandler { get; private set; };
 		public property IVehicleSpawner VehicleSpawner { get; private set; };
 		public property TargetHandler TargetHandler { get; private set; };
-		public property InventedTechnologiesCollection InventedTechnologiesCollection { get; private set; };
+		public property EstablishedTechnologiesCollection EstablishedTechnologiesCollection { get; private set; };
 		public property IUnitCounter UnitCounter { get; private set; };
 		public property SquadHandler SquadHandler { get; private set; };
 		public property BrigadeLeadershipHandler BrigadeLeadershipHandler { get; private set; };

@@ -19,7 +19,7 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
-						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+						"_mAiWeaponInfo" as AiWeaponInfo, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
 						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor,
 						"_mResourceLocationConfig" as IResourceLocationConfig];
@@ -38,7 +38,7 @@ namespace Intrusion.Ai
 			"_time" as IMissionTime,
 			"_baseMarkerInfo" as MapMarkerInfo,
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_establishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_knowledge" as Knowledge,
 			"_decisionMaker" as DecisionMaker,
 			"_baseConfig" as BaseConfig,
@@ -55,7 +55,7 @@ namespace Intrusion.Ai
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
 			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mDecisionMaker = _decisionMaker;
 			_mKnowledge = _knowledge;
 			_mBaseConfig = _baseConfig;
@@ -575,20 +575,20 @@ namespace Intrusion.Ai
 		
 		private method RespawnToBase()
 		{
-			private ["_newMembers" as Array /* of IUnitContainer */, "_atLaunchersInvented" as Boolean, "_aaLaunchersInvented" as Boolean];
+			private ["_newMembers" as Array /* of IUnitContainer */, "_atLaunchersEstablished" as Boolean, "_aaLaunchersEstablished" as Boolean];
 			
 			_newMembers = [_mKnowledge.Group, _mKnowledge.Members, _mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mActionPerformer.RespawnAiSquad;
 			_mKnowledge.Members = _newMembers;
 			
-			_atLaunchersInvented = [side _mKnowledge.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
-			_aaLaunchersInvented = [side _mKnowledge.Group, Technology.AntiAir] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+			_atLaunchersEstablished = [side _mKnowledge.Group, Technology.Ordnance] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
+			_aaLaunchersEstablished = [side _mKnowledge.Group, Technology.AntiAir] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
 
 			{
-				if (_atLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
+				if (_atLaunchersEstablished && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
 					[_x, _mAiWeaponInfo.AtLauncherClassName, _mAiWeaponInfo.AtLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 				}
 				else {
-					if (_aaLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
+					if (_aaLaunchersEstablished && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
 						[_x, _mAiWeaponInfo.AaLauncherClassName, _mAiWeaponInfo.AaLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 					};
 				};

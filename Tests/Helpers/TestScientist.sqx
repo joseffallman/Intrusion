@@ -15,11 +15,11 @@ namespace Intrusion.Tests.Helpers
 {
 	public class TestScientist : IScientist
 	{
-		private fields ["_mInventedTechnologies" as Array /* of Technology */];
+		private fields ["_mEstablishedTechnologies" as Array /* of Technology */];
 	
 		// Creates a TestScientist object.
 		public constructor() {
-			_mInventedTechnologies = [];
+			_mEstablishedTechnologies = [];
 			_self.CurrentTechnology = classNull;
 		};
 		
@@ -28,16 +28,16 @@ namespace Intrusion.Tests.Helpers
 		{
 		};
 
-		// Adds a technology to invented technologies
-		public method AddInventedTechnology("_technology" as Technology)
+		// Adds a technology to established technologies
+		public method AddEstablishedTechnology("_technology" as Technology)
 		{
-			_mInventedTechnologies pushBack _technology as Scalar;
+			_mEstablishedTechnologies pushBack _technology as Scalar;
 		};
 		
-		// Gets whether a technology is invented yet or not.
-		public method Boolean TechnologyIsInvented("_technology" as Technology)
+		// Gets whether a technology is established yet or not.
+		public method Boolean TechnologyIsEstablished("_technology" as Technology)
 		{
-			_technology in _mInventedTechnologies
+			_technology in _mEstablishedTechnologies
 		};
 		
 		public property TechnologyInfo CurrentTechnology { get; private set; };

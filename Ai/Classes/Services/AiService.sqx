@@ -20,7 +20,7 @@ namespace Intrusion.Ai
 		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadHandler" as ISquadHandler];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
+		private fields ["_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
 		private fields ["_mObservationHandler" as ObservationHandler];
 
 		// Creates a AiService object.
@@ -36,7 +36,7 @@ namespace Intrusion.Ai
 			"_resourceLocationConfig" as IResourceLocationConfig,
 			"_unitsConfig" as IAiUnitsConfig,
 			"_vehicleSpawner" as IVehicleSpawner,
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_establishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_gameLengthMonitor" as IGameLengthMonitor,
 			"_observationHandler" as ObservationHandler)
 		{
@@ -53,7 +53,7 @@ namespace Intrusion.Ai
 			_mResourceLocationConfig = _resourceLocationConfig;
 			_mUnitsConfig = _unitsConfig;
 			_mVehicleSpawner = _vehicleSpawner;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mGameLengthMonitor = _gameLengthMonitor;
 			_mObservationHandler = _observationHandler;
 		};
@@ -116,7 +116,7 @@ namespace Intrusion.Ai
 						_time,
 						_mapMarkerInfo,
 						new AiWeaponsConfig,
-						_mInventedTechnologiesCollection,
+						_mEstablishedTechnologiesCollection,
 						_knowledge,
 						_decisionMaker,
 						new BaseConfig,
@@ -140,8 +140,8 @@ namespace Intrusion.Ai
 			
 			// Start the pseudo artillery
 			
-			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
-			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_westArtilleryService = [west, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_eastArtilleryService = [east, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
 			
 			call _westArtilleryService.RunAsync;
 			call _eastArtilleryService.RunAsync;
@@ -195,7 +195,7 @@ namespace Intrusion.Ai
 				new AiUnitsConfig, 
 				//new AiWeaponsConfig
 				gServer.VehicleSpawner,
-				gServer.InventedTechnologiesCollection,
+				gServer.EstablishedTechnologiesCollection,
 				gServer.MissionCounterService,
 				gServer.ObservationHandler
 			] new AiService;

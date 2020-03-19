@@ -16,15 +16,15 @@ namespace Intrusion.Ai
 {
 	public class PseudoArtilleryService : Service
 	{
-		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mCompetingSides" as Array /* of Side */, "_mRounds" as Scalar];
+		private fields ["_mSide" as Side, "_mObservationHandler" as ObservationHandler, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection, "_mCompetingSides" as Array /* of Side */, "_mRounds" as Scalar];
 		
 		// Creates a PseudoArtilleryService object.
-		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_inventedTechnologiesCollection" as InventedTechnologiesCollection, "_competingSides" as Array /* of Side */) {
+		public constructor("_side" as Side, "_observationHandler" as ObservationHandler, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection, "_competingSides" as Array /* of Side */) {
 			call _base.Constructor;
 			
 			_mSide = _side;
 			_mObservationHandler = _observationHandler;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mCompetingSides = _competingSides;
 			
 			_mRounds = 10;
@@ -37,8 +37,8 @@ namespace Intrusion.Ai
 			
 			_roundsFired = 0;
 		
-			// Wait for technology to be invented
-			while { !([_mSide, Technology.Artillery] call _mInventedTechnologiesCollection.SideTechnologyIsInvented) } do
+			// Wait for technology to be established
+			while { !([_mSide, Technology.Artillery] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished) } do
 			{
 				if (_self.IsCancelling) then {
 					call _base.Run;
@@ -48,7 +48,7 @@ namespace Intrusion.Ai
 				sleep 30;
 			};
 		
-			// If we get here, technology is invented for the side. Now, find a target.
+			// If we get here, technology is established for the side. Now, find a target.
 			
 			while { true } do
 			{

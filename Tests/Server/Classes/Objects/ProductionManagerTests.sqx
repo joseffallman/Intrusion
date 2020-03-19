@@ -53,8 +53,8 @@ namespace Intrusion.Tests.Server
 				"GroupAlreadyInReservationQueue_GroupChangingProfession_ProductionDeposited",
 				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_OneItemProduced",
 				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_OneItemProduced",
-				"ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced",
-				"TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast"
+				"ItemToProduce_GroupCanAffordButTechNotEstablished_ItemNotProduced",
+				"TwoReservationsInQueue_TechNotEstablishedForFirst_ReservationMovedLast"
 			]] call TestEngine.Register;
 			
 			//["NullGroupAloneInReservationQueue_PerformProduction_NullGroupRemoved"] call TestEngine.OnlyThisOne;
@@ -103,7 +103,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -123,7 +123,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[100] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -147,7 +147,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -176,7 +176,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -261,7 +261,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[3000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -288,7 +288,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 
 			[3000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -365,7 +365,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -388,7 +388,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddInventedTechnology;
+			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -399,7 +399,7 @@ namespace Intrusion.Tests.Server
 			[500, _mResourceBook.TotalProduction, "Production left is miscalculated."] call Assert.AreEqual;
 		};
 		
-		private static method ItemToProduce_GroupCanAffordButTechNotInvented_ItemNotProduced
+		private static method ItemToProduce_GroupCanAffordButTechNotEstablished_ItemNotProduced
 		{
 			private ["_reservation" as Reservation];
 
@@ -412,10 +412,10 @@ namespace Intrusion.Tests.Server
 			call _mProductionManager.PerformProduction;
 			
 			// Assert
-			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not invented."] call Assert.AreEqual;
+			[0, count _mVehicleSpawner.SpawnedVehicles, "Vehicles spawned but tech not established."] call Assert.AreEqual;
 		};
 		
-		private static method TwoReservationsInQueue_TechNotInventedForFirst_ReservationMovedLast
+		private static method TwoReservationsInQueue_TechNotEstablishedForFirst_ReservationMovedLast
 		{
 			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
 
@@ -428,7 +428,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.LightArmor] call _mScientist.AddInventedTechnology;
+			[Technology.LightArmor] call _mScientist.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
