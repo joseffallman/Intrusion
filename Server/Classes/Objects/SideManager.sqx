@@ -17,7 +17,7 @@ namespace Intrusion.Server
 			"_mResourceBook" as ResourceBook,
 			"_mResourceCollector" as ResourceCollector,
 			"_mProductionManager" as ProductionManager,
-			"_mScientist" as Scientist,
+			"_mOfficeWorker" as OfficeWorker,
 			"_mReservationQueue" as ReservationQueue,
 			"_mSquadHandler" as ISquadHandler,
 			"_mProfessionConfig" as ProfessionConfig,
@@ -46,9 +46,9 @@ namespace Intrusion.Server
             
             _mResourceBook = new ResourceBook;
             _mResourceCollector = [new MissionTime, _serverConfig.Gameplay, _resourceLocationHandler, _matchLengthMinutes, _side, _mResourceBook, _unitCounter] new ResourceCollector;
-            _mScientist = [_side, _mResourceBook, _commonConfig.Technology, _messageHandler, _establishedTechnologiesCollection] new Scientist;
+            _mOfficeWorker = [_side, _mResourceBook, _commonConfig.Technology, _messageHandler, _establishedTechnologiesCollection] new OfficeWorker;
             _mReservationQueue = new ReservationQueue;
-            _mProductionManager = [_commonConfig.ProfessionVehicles, _commonConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mScientist, _messageHandler, _commonConfig.Professions, _mReservationQueue] new ProductionManager;
+            _mProductionManager = [_commonConfig.ProfessionVehicles, _commonConfig.VehicleClassNames, _side, _vehicleSpawner, _mResourceBook, _squadHandler, _mOfficeWorker, _messageHandler, _commonConfig.Professions, _mReservationQueue] new ProductionManager;
 		};
 		
 		// Gets the side of the side handler.
@@ -63,7 +63,7 @@ namespace Intrusion.Server
 			
 			if (!isNull _squad) then {
 				_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
-				_technologyEstablished = [_profession.RequiredTechnology] call _mScientist.TechnologyIsEstablished;
+				_technologyEstablished = [_profession.RequiredTechnology] call _mOfficeWorker.TechnologyIsEstablished;
 			};
 			
 			_technologyEstablished
@@ -75,7 +75,7 @@ namespace Intrusion.Server
 			private ["_resourceReport" as ResourceReport];
 		
 			call _mResourceCollector.CollectResources;
-			call _mScientist.PerformOfficeWork;
+			call _mOfficeWorker.PerformOfficeWork;
 			call _mProductionManager.DeleteProfessionVehiclesWithNoOwner;
 			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;

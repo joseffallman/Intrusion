@@ -16,10 +16,10 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as ProfessionConfig];
+		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mOfficeWorker" as IOfficeWorker, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as ProfessionConfig];
 
 		// Creates a ProductionManager object.
-		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as ProfessionConfig, "_reservationQueue" as ReservationQueue)
+		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_officeWorker" as IOfficeWorker, "_messageHandler" as IMessageHandler, "_professionConfig" as ProfessionConfig, "_reservationQueue" as ReservationQueue)
 		{
 			_mProfessionVehiclesConfig = _professionVehiclesConfig;
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
@@ -27,7 +27,7 @@ namespace Intrusion.Server
 			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadHandler = _squadHandler;
 			_mResourceBook = _resourceBook;
-			_mScientist = _scientist;
+			_mOfficeWorker = _officeWorker;
 			_mMessageHandler = _messageHandler;
 			_mProfessionConfig = _professionConfig;
 			_mReservationQueue = _reservationQueue;
@@ -159,7 +159,7 @@ namespace Intrusion.Server
 					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 					["_profession: " + str _profession] call LogHandler.Debug;
 					
-					_technologyEstablished = [_profession.RequiredTechnology] call _mScientist.TechnologyIsEstablished;
+					_technologyEstablished = [_profession.RequiredTechnology] call _mOfficeWorker.TechnologyIsEstablished;
 					["_technologyEstablished: " + str _technologyEstablished] call LogHandler.Debug;
 					
 					if (!_technologyEstablished) then

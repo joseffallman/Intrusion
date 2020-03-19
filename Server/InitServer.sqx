@@ -16,7 +16,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Objects\WeaponBox.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Target.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\Observation.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\ProductionManager.sqx";
-call compile preprocessFileLineNumbers "Server\Classes\Objects\Scientist.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Objects\OfficeWorker.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\SideTechnology.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\EstablishedTechnologiesCollection.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Objects\UnitCounter.sqx";

@@ -28,7 +28,7 @@ namespace Intrusion.Tests.Server
 			"_mSquad" as Squad,
 			"_mSquadHandler" as TestSquadHandler,
 			"_mResourceBook" as ResourceBook,
-			"_mScientist" as TestScientist,
+			"_mOfficeWorker" as TestOfficeWorker,
 			"_mMessageHandler" as TestMessageHandler,
 			"_mProfessionConfig" as TestProfessionConfig,
 			"_mProductionManager" as ProductionManager];
@@ -68,7 +68,7 @@ namespace Intrusion.Tests.Server
 			_mReservationQueue = new ReservationQueue;
 			_mSquadHandler = new TestSquadHandler;
 			_mResourceBook = new ResourceBook;
-			_mScientist = new TestScientist;
+			_mOfficeWorker = new TestOfficeWorker;
 			_mMessageHandler = new TestMessageHandler;
 			_mProfessionConfig = new TestProfessionConfig;
 			[Professiontype.Armored, "Armored Forces", Technology.HeavyArmor, Rank.Lieutenant, 1, 1, 9, 3, false, true, "", ""] call _mProfessionConfig.AddProfession;
@@ -77,7 +77,7 @@ namespace Intrusion.Tests.Server
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
 			
-			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mScientist, _mMessageHandler, _mProfessionConfig, _mReservationQueue] new ProductionManager;
+			_mProductionManager = [_mProfessionVehiclesConfig, _mVehicleClassNamesConfig, west, _mVehicleSpawner, _mResourceBook, _mSquadHandler, _mOfficeWorker, _mMessageHandler, _mProfessionConfig, _mReservationQueue] new ProductionManager;
 		};
 		
 		private static method AfterEach {
@@ -103,7 +103,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -123,7 +123,7 @@ namespace Intrusion.Tests.Server
 			_reservation = [_mGroup, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[100] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -147,7 +147,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -176,7 +176,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -261,7 +261,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[3000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -288,7 +288,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 
 			[3000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -365,7 +365,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -388,7 +388,7 @@ namespace Intrusion.Tests.Server
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.HeavyArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;
@@ -428,7 +428,7 @@ namespace Intrusion.Tests.Server
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
-			[Technology.LightArmor] call _mScientist.AddEstablishedTechnology;
+			[Technology.LightArmor] call _mOfficeWorker.AddEstablishedTechnology;
 			
 			// Act
 			call _mProductionManager.PerformProduction;

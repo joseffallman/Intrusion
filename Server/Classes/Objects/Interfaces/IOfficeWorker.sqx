@@ -1,18 +1,18 @@
 /*
- * Name:	IScientist
+ * Name:	IOfficeWorker
  * Date:	2018-12-19
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Modeling a side's R&D refining generated technology (i.e. unlocks new technology).
+ * Modeling a side's office administration refining generated technologies (i.e. unlocks new technology).
  */
 
 using Intrusion.Common;
 
 namespace Intrusion.Server
 {
-	public interface IScientist
+	public interface IOfficeWorker
 	{
 		// Performs office work and notifies players when different technology progress steps are achieved.
 		method PerformOfficeWork();
@@ -24,4 +24,3 @@ namespace Intrusion.Server
 		property TechnologyInfo CurrentTechnology { get; };
 	};
 };
-

@@ -1,11 +1,11 @@
 /*
- * Name:	TestScientist
+ * Name:	TestOfficeWorker
  * Date:	2018-12-19
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Test class that represents the scientist.
+ * Test class that represents the office worker.
  */
 
 using Intrusion.Common;
@@ -13,12 +13,13 @@ using Intrusion.Server;
 
 namespace Intrusion.Tests.Helpers
 {
-	public class TestScientist : IScientist
+	public class TestOfficeWorker : IOfficeWorker
 	{
 		private fields ["_mEstablishedTechnologies" as Array /* of Technology */];
 	
-		// Creates a TestScientist object.
-		public constructor() {
+		// Creates a TestOfficeWorker object.
+		public constructor()
+		{
 			_mEstablishedTechnologies = [];
 			_self.CurrentTechnology = classNull;
 		};

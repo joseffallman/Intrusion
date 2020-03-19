@@ -788,7 +788,7 @@
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IGroupChangingProfessionListener.sqx" FileName="Server\Classes\Objects\Interfaces\IGroupChangingProfessionListener.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IScientist.sqx" FileName="Server\Classes\Objects\Interfaces\IScientist.sqx">
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IOfficeWorker.sqx" FileName="Server\Classes\Objects\Interfaces\IOfficeWorker.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="IUnitCounter.sqx" FileName="Server\Classes\Objects\Interfaces\IUnitCounter.sqx">
@@ -803,6 +803,9 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Observation.sqx" FileName="Server\Classes\Objects\Observation.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="OfficeWorker.sqx" FileName="Server\Classes\Objects\OfficeWorker.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProductionManager.sqx" FileName="Server\Classes\Objects\ProductionManager.sqx">
@@ -821,9 +824,6 @@
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocationDominanceInfo.sqx" FileName="Server\Classes\Objects\ResourceLocationDominanceInfo.sqx">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Scientist.sqx" FileName="Server\Classes\Objects\Scientist.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SideManager.sqx" FileName="Server\Classes\Objects\SideManager.sqx">
@@ -1077,6 +1077,9 @@
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestMissionTime.sqx" FileName="Tests\Helpers\TestMissionTime.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestOfficeWorker.sqx" FileName="Tests\Helpers\TestOfficeWorker.sqx">
+                <SubNodes />
+              </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestProfessionConfig.sqx" FileName="Tests\Helpers\TestProfessionConfig.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
@@ -1090,9 +1093,6 @@
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestResourceLocationHandler.sqx" FileName="Tests\Helpers\TestResourceLocationHandler.sqx">
-                <SubNodes />
-              </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestScientist.sqx" FileName="Tests\Helpers\TestScientist.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TestSquadHandler.sqx" FileName="Tests\Helpers\TestSquadHandler.sqx">
@@ -1118,6 +1118,9 @@
                 <SubNodes>
                   <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Objects" FileName="Tests\Server\Classes\Objects">
                     <SubNodes>
+                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="OfficeWorkerTests.sqx" FileName="Tests\Server\Classes\Objects\OfficeWorkerTests.sqx">
+                        <SubNodes />
+                      </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ProductionManagerTests.sqx" FileName="Tests\Server\Classes\Objects\ProductionManagerTests.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
@@ -1125,9 +1128,6 @@
                         <SubNodes />
                       </ProjectNodeViewModel>
                       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceCollectorTests.sqx" FileName="Tests\Server\Classes\Objects\ResourceCollectorTests.sqx">
-                        <SubNodes />
-                      </ProjectNodeViewModel>
-                      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ScientistTests.sqx" FileName="Tests\Server\Classes\Objects\ScientistTests.sqx">
                         <SubNodes />
                       </ProjectNodeViewModel>
                     </SubNodes>
