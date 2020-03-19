@@ -12,7 +12,10 @@ namespace Intrusion.Common
 	public class ProfessionTestConfig : ProfessionConfig
 	{
         // Initializes all professions.
-        public constructor {
+        public constructor()
+        {
+        	call _base.Constructor;
+        	
         	_self.Professions = [
         		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, false, "b_inf", "o_inf", false] new Profession,
 			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, false, true, "b_service", "o_service", true] new Profession,

@@ -12,7 +12,10 @@ namespace Intrusion.Common
 	public class ProfessionVehiclesDevConfig : ProfessionVehiclesConfig
 	{
 		// Creates a ProVehiclesConfig object.
-		public constructor {
+		public constructor()
+		{
+			call _base.Constructor;
+			
 			_self.Vehicles = [
 				[ProfessionType.Transport, 10] new ProfessionVehicleInfo,
 				[ProfessionType.Fuel, 10] new ProfessionVehicleInfo,

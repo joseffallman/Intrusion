@@ -15,7 +15,9 @@ namespace Intrusion.Tests.Helpers
 	public class TestProfessionConfig : ProfessionConfig
 	{
         // Initializes all professions.
-        public constructor {
+        public constructor()
+        {
+			call _base.Constructor;
         	_self.Professions = [];
 		};
 		
