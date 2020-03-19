@@ -19,8 +19,8 @@ namespace Intrusion.Common
 		property Array Technologies { get; };
 		
 		// Gets the next technology to investigate.
-		// _research (Scalar): The current research points.
-		// Returns (TechnologyInfo): The technology currently being researched. classNull if all technologies have been established.
-		method TechnologyInfo GetNextTechnology("_research" as Scalar);
+		// _administration (Scalar): The current administration points.
+		// Returns (TechnologyInfo): The technology currently being administered. classNull if all technologies have been established.
+		method TechnologyInfo GetNextTechnology("_administration" as Scalar);
 	};
 };

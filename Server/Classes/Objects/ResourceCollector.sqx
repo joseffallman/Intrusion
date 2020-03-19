@@ -74,10 +74,10 @@ namespace Intrusion.Server
 			_points
 		};
 		
-		// Calculates how much technology has been generated since last aquire.
-		// Returns (Scalar): Amount of technology.
-		private method Scalar AquireTechnology {
-			private _pointsPerFacility = (_mGameplayConfig.TotalResearch / _mResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
+		// Calculates how much administration has been generated since last aquire.
+		// Returns (Scalar): Amount of administration.
+		private method Scalar AquireAdministration {
+			private _pointsPerFacility = (_mGameplayConfig.TotalAdministration / _mResourceLocationHandler.TechLabLocationsCount) * (_mSecondsSinceLastAquire / (_mMatchLengthMinutes * 60));
 			private _neutralCount = [civilian] call _mResourceLocationHandler.GetTechLabsCountBySide;
 			private _ourCount = [_self.Side] call _mResourceLocationHandler.GetTechLabsCountBySide;
 
@@ -88,16 +88,16 @@ namespace Intrusion.Server
 		
 		// Aquires map resources and makes deposits to the resource book.
 		public method CollectResources {
-			private ["_production" as Scalar, "_technology" as Scalar, "_time" as Scalar];
+			private ["_production" as Scalar, "_administration" as Scalar, "_time" as Scalar];
 			
 			_time = (call _mMissionTime.GetMissionTime);
 			_mSecondsSinceLastAquire = _time - _mLastAquireTime;
 
 			_production = call _self.AquireProduction;
-			_technology = call _self.AquireTechnology;
+			_administration = call _self.AquireAdministration;
 			
 			[_production] call _mResourceBook.DepositProduction;
-			[_technology] call _mResourceBook.DepositResearch;
+			[_administration] call _mResourceBook.DepositAdministration;
 			
 			_mLastAquireTime = _time;
 		};

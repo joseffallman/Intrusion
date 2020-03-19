@@ -5,7 +5,7 @@
  * Author:  Engima
  *
  * Description:
- * A class modeling a side's R&D manager refining generated technology (i.e. unlocks new technology).
+ * A class modeling a side's R&D manager refining generated administration (i.e. unlocks new technology).
  */
 
 using Sqx.Collections;
@@ -20,7 +20,7 @@ namespace Intrusion.Server
 		private fields ["_mAllTechnologiesEstablished" as Boolean];
 		
 		// Creates a Sceintist object.
-		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection, ["_firstTechToResearch" as Technology, 1 as Technology])
+		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection, ["_firstTechToAdminister" as Technology, 1 as Technology])
 		{
 			_mSide = _side;
 			_mResourceBook = _resourceBook;
@@ -28,14 +28,14 @@ namespace Intrusion.Server
 			_mMessageHandler = _messageHandler;
 			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			
-			_self.CurrentTechnology = [_firstTechToResearch] call _mTechnologyConfig.GetTechnology;
+			_self.CurrentTechnology = [_firstTechToAdminister] call _mTechnologyConfig.GetTechnology;
 			_mAllTechnologiesEstablished = false;
 		};
 		
-		// Gets the technology currently being researched.
+		// Gets the technology currently being administered.
 		public property TechnologyInfo CurrentTechnology { get; private set;};
 		
-		// Sets the current technology as established, notifies players, and starts research on next.
+		// Sets the current technology as established, notifies players, and starts administration for next.
 		private method SetTechnologyAsEstablished()
 		{
 			private ["_technology" as Technology];
@@ -43,7 +43,7 @@ namespace Intrusion.Server
 			[_mSide, _self.CurrentTechnology.Technology] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
 			["Your side has established '" + _self.CurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
 			
-			// Get next technology to research
+			// Get next technology to administer
 			if (_self.CurrentTechnology.Technology != TechnologyMeta.LastTechnology) then {
 				_technology = (_self.CurrentTechnology.Technology as Scalar) + 1 as Technology;
 				_self.CurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
@@ -53,11 +53,11 @@ namespace Intrusion.Server
 			};
 		};
 		
-		// Performs research and development, and notifies players when different technology progress steps are achieved.
-		public method PerformResearch()
+		// Performs office work and notifies players when different technology progress steps are achieved.
+		public method PerformOfficeWork()
 		{
 			if (!_mAllTechnologiesEstablished) then {
-				if (_mResourceBook.TotalResearch >= _self.CurrentTechnology.RequiredResearch) then {
+				if (_mResourceBook.TotalAdministration >= _self.CurrentTechnology.RequiredAdministration) then {
 					call _self.SetTechnologyAsEstablished;
 				};
 			};

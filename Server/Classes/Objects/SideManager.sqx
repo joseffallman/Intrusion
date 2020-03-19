@@ -75,7 +75,7 @@ namespace Intrusion.Server
 			private ["_resourceReport" as ResourceReport];
 		
 			call _mResourceCollector.CollectResources;
-			call _mScientist.PerformResearch;
+			call _mScientist.PerformOfficeWork;
 			call _mProductionManager.DeleteProfessionVehiclesWithNoOwner;
 			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
@@ -94,7 +94,7 @@ namespace Intrusion.Server
 				};
 			};
 			
-			_resourceReport = [_self.Side, _factoryCount, _techLabCount, _mResourceBook.TotalProduction, _mResourceBook.TotalResearch, _nextVehicleGroup, _nextVehicleCost] new ResourceReport;
+			_resourceReport = [_self.Side, _factoryCount, _techLabCount, _mResourceBook.TotalProduction, _mResourceBook.TotalAdministration, _nextVehicleGroup, _nextVehicleCost] new ResourceReport;
 			["_resourceReport: (" + str _self.Side + "): " + str _resourceReport] call LogHandler.Debug;
 			
 			_resourceReport

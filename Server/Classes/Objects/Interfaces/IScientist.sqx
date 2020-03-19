@@ -14,13 +14,13 @@ namespace Intrusion.Server
 {
 	public interface IScientist
 	{
-		// Performs research and development, and notifies players when different technology progress steps are achieved.
-		method PerformResearch();
+		// Performs office work and notifies players when different technology progress steps are achieved.
+		method PerformOfficeWork();
 
 		// Gets whether a technology is established yet or not.
 		method Boolean TechnologyIsEstablished("_technology" as Technology);
 		
-		// Gets the technology currently being researched.
+		// Gets the technology currently being administered.
 		property TechnologyInfo CurrentTechnology { get; };
 	};
 };

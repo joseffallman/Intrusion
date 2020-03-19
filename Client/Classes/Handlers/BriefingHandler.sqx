@@ -21,7 +21,7 @@ namespace Intrusion.Client
         	// Intrusion Menu
         	// Resources - General
         	// (Resources - Production)
-        	// (Resources - Technology)
+        	// (Resources - Administration)
         	// Weapons
         	// Squads
         	// Professions - General
@@ -49,7 +49,7 @@ namespace Intrusion.Client
 
 			player createDiaryRecord ["Diary", ["Weapons",
 			"HANDHELD WEAPONS<br /><br />" +
-			"All hand held weapons show up in ammo boxes in the base. In the beginning, the only weapons that exist are basic weapons. The longer the mission progresses - and the more technology that is collected from offices (see Resources) - the more advanced weapons will become available.<br /><br />" +
+			"All hand held weapons show up in ammo boxes in the base. In the beginning, the only weapons that exist are basic weapons. The longer the mission progresses - and the more administration that is collected from offices (see Resources) - the more advanced weapons will become available.<br /><br />" +
 			"Note that some of the weapons are associated with certain professions, and therefore cannot be used by everyone.<br /><br />" +
 			"WEAPONS IN VEHICLES<br /><br />" +
 			"The heavy weapons (static weapons like mortars and anti armor) that belong to some of the professions are loaded into the squad vehicles' cargo space. A profession vehicle's cargo space can be opened by the squad that owns it."]];
@@ -58,7 +58,7 @@ namespace Intrusion.Client
 			"WHAT IS A PROFESSION?<br /><br />" +
 			"A profession is a military role for the squad, such as Transport, Infantry, Artillery or Attack Helicopter among others. A squad assigned to a profession will get the vehicles and weapons that are associated with that profession. However, weapons and vehicles will not be delivered from start.<br /><br />" +
 			"ALL SQUADS START OUT AS INFANTRY<br /><br />" +
-			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use. All squads - even the ones selecting a profession from start - start out as infantry. Some professions require a certain rank for the squad leader to be able to select it (see Rank And Rating). Later when the side has earned enough technology to establish the squad's materiel and enough resources to deliver it, the materiel will be delivered to the base. The squad can then 'respawn to base' using the Intrusion Menu, and start acting as its selected profession.<br /><br />"+
+			"While no profession is selected, the squad will be of profession type Infantry. Infantry only has the ammo box weapons and the basic 'free vehicles' that anyone can use. All squads - even the ones selecting a profession from start - start out as infantry. Some professions require a certain rank for the squad leader to be able to select it (see Rank And Rating). Later when the side has earned enough administration to establish the technology required for the squad's materiel and enough resources to deliver it, the materiel will be delivered to the base. The squad can then 'respawn to base' using the Intrusion Menu, and start acting as its selected profession.<br /><br />"+
 			"HOW TO SELECT A PROFESSION<br /><br />" +
 			"1. Only the squad leader can select a profession for the squad.<br />" +
 			"2. From the Intrusion menu, select 'Set group profession'.<br />" +
@@ -71,12 +71,12 @@ namespace Intrusion.Client
 			"2. Turn to the player, and from the action menu select 'Invite player to group'."]];
 
 			player createDiaryRecord ["Diary", ["Resources",
-			"Like in real life, winning a war is about securing necessary kinds of resources. For each side to get more advanced vehicles and weapons they will need to bring in resources. They do that by securing resource locations marked on the map. The resources are of two kinds: production and technology. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
+			"Like in real life, winning a war is about securing necessary kinds of resources. For each side to get more advanced vehicles and weapons they will need to bring in resources. They do that by securing resource locations marked on the map. The resources are of two kinds: production and administration. The brigade's current resource income can be seen in the top left corner of the screen.<br /><br />" +
 			"FACTORIES AND PRODUCTION<br /><br />" +
 			"Factories generate production. Production is needed for the brigade to produce vehicles. It can be thought of as money for which vehicles can be 'bought'. Or even better: facilities that speed up the manufacturing of new material.<br /><br />" +
 			"When a squad assigns to a profession that has a vehicle, a vehicle order/reservation is placed in a queue at the side's production manager. The first vehicle in the queue is delivered when the vehicle's required technology is established and when the side has enough production to create it. Then the next order in the queue is handled. When a vehicle is delivered, its cost is withdrawn from the side's total production. And the production cost of a vehicle that is removed by the framework (e.g. its owner logged out) will be returned to the side upon removal.<br /><br />" +
-			"OFFICES AND TECHNOLOGY<br /><br />" +
-			"Offices generate technology, and technology leads to 'establishments' of new and upgraded units. Technology is the resource needed for the brigade to establish more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of technology."]];
+			"OFFICES AND ADMINISTRATION<br /><br />" +
+			"Offices generate administration, and administration leads to 'establishments' of new technology, i.e. new and upgraded units. Administration is the resource needed for the brigade to establish more advanced vehicles and materiel. In opposite to production it is not withdrawn when technologies are established, but each technology is unlocked at a certain level of administration."]];
 
 			player createDiaryRecord ["Diary", ["Philosophy",
 			"The main philosophy behind Intrusion is to encourage a gameplay style where players make use of weapons and vehicles in the way they are used in real life, and at the same time offers a fun gameplay relatively easy to embrace.<br /><br />" +

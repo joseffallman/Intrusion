@@ -15,10 +15,10 @@ namespace Intrusion.Tests.Helpers
 	public class TestGameplayConfig : IGameplayConfig
 	{
 		// Creates a DefaultGameSettings object.
-		public constructor("_totalProduction" as Scalar, "_totalResearch" as Scalar)
+		public constructor("_totalProduction" as Scalar, "_totalAdministration" as Scalar)
 		{
 			_self.TotalProduction = _totalProduction;
-			_self.TotalResearch = _totalResearch;
+			_self.TotalAdministration = _totalAdministration;
 			
 			_self.CompetingSides = [east, west];
 			_self.MaxFreeVehiclesAtBase = 3;
@@ -30,8 +30,8 @@ namespace Intrusion.Tests.Helpers
 		// Gets the total production that will be shared by both sides during a game (if there are 60 players and the game is one hour long).
 		public property Scalar TotalProduction { get; set; };
 		
-		// Gets the total technology that will be shared by both sides during a game.
-		public property Scalar TotalResearch { get; set; };
+		// Gets the total administration that will be shared by both sides during a game.
+		public property Scalar TotalAdministration { get; set; };
 		
 		// Get the maximun number of free vehicles at base.
 		public property Scalar MaxFreeVehiclesAtBase { get; set; };

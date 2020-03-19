@@ -23,8 +23,8 @@ namespace Intrusion.Tests.Helpers
 			_self.CurrentTechnology = classNull;
 		};
 		
-		// Performs research and development, and notifies players when different technology progress steps are achieved.
-		public method PerformResearch()
+		// Performs administration and notifies players when different technology progress steps are achieved.
+		public method PerformOfficeWork()
 		{
 		};
 

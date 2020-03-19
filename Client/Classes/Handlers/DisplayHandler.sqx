@@ -36,7 +36,7 @@ namespace Intrusion.Client
 				_mBrigadeInfoCtrl ctrlCommit 0;
 			};
 
-			_technologyInfo = [_report.Research] call _mTechnologyConfig.GetNextTechnology;
+			_technologyInfo = [_report.Administration] call _mTechnologyConfig.GetNextTechnology;
 			
 			_text = "Production: " + str floor _report.Production;
 			
@@ -44,13 +44,13 @@ namespace Intrusion.Client
 				_text = _text + " (Vehicle at " + str _report.NextVehicleCost + ")";
 			};
 			
-			_text = _text + ", Technology: " + str floor _report.Research + " ";
+			_text = _text + ", Administration: " + str floor _report.Administration + " ";
 			
 			if (isNull _technologyInfo) then {
 				_text = _text + "(all done)";
 			}
 			else {
-				_text = _text + "(" + _technologyInfo.Name + " at " + str _technologyInfo.RequiredResearch + ")";
+				_text = _text + "(" + _technologyInfo.Name + " at " + str _technologyInfo.RequiredAdministration + ")";
 			};
 			
 			_playerText = "Rank: " + ([ClientState.CurrentRank] call RankMeta.GetRankText);
@@ -70,14 +70,14 @@ namespace Intrusion.Client
 /*
 			if (!isNull _technologyInfo) then {
 				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
-					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Technology: %2 (%3 at %4)</t>",
-					str floor _report.Production, str floor _report.Research, _technologyInfo.Name, str _technologyInfo.RequiredResearch;
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Administration: %2 (%3 at %4)</t>",
+					str floor _report.Production, str floor _report.Administration, _technologyInfo.Name, str _technologyInfo.RequiredAdministration;
 				];
 			}
 			else {
 				_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[
-					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Technology: %2 (all done)</t>",
-					str floor _report.Production, str floor _report.Research;
+					"<t color='#ffffff' align='left' size='1.4'> Production: %1, Administration: %2 (all done)</t>",
+					str floor _report.Production, str floor _report.Administration;
 				];
 			};
 */
