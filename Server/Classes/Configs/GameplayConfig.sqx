@@ -18,8 +18,8 @@ namespace Intrusion.Server
 		public constructor()
 		{
 			_self.CompetingSides = [east, west];
-			_self.TotalProduction = 30000;
-			_self.TotalResearch = 2000;
+			_self.TotalProduction = 15000;
+			_self.TotalAdministration = 2000;
 			_self.MaxFreeVehiclesAtBase = 3;
 		};
 		
@@ -29,8 +29,8 @@ namespace Intrusion.Server
 		// Gets the total production that will be shared by both sides during a game (if there are 60 players and the game is one hour long).
 		public property Scalar TotalProduction { get; protected set; };
 		
-		// Gets the total technology that will be shared by both sides during a game.
-		public property Scalar TotalResearch { get; protected set; };
+		// Gets the total administration that will be shared by both sides during a game.
+		public property Scalar TotalAdministration { get; protected set; };
 		
 		// Get the maximun number of free vehicles at base.
 		public property Scalar MaxFreeVehiclesAtBase { get; protected set; };

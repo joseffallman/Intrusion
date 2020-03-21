@@ -66,5 +66,13 @@ namespace Intrusion.Ai
 		// Moves out a dead unit from a vehicle.
 		// _members (Array of UnitContainer): The members to check.
 		method MoveOutDeadUnitFromVehicle("_members" as Array);
+		
+		// Instantly moves a group with a vehicle from its position to some nearby road segment, if no players
+		// are near. (used for timeout purposes).
+		method ReplaceGroupOnNearestRoad("_group" as Group, "_vehicleContainer" as VehicleContainer);
+		
+		// Makes a group forget all their known targets.
+		// _group (Group): The group.
+		method MakeGroupForgetAllTargets("_group" as Group);
 	};
 };

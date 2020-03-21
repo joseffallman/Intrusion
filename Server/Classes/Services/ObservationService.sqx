@@ -57,19 +57,21 @@ namespace Intrusion.Server
 			_observation.PercievedSide = if (_observation.PercievedSide != sideUnknown) then { _observation.PercievedSide } else { _target.PercievedSide };
 			_observation.PercievedProfessionType = if ((_observation.PercievedProfessionType as Scalar) > (_target.PercievedProfessionType as Scalar)) then { _observation.PercievedProfessionType } else { _target.PercievedProfessionType };
 			
-			if (_target.ObservedDistance < _observation.ObservedDistance) then
+			if (_target.ObservedDistance < _observation.ObservedDistance - 50) then
 			{
-				// Set a random offset for the observation.
+				// Set a random offset for the observation, if it is more exact than the earlier one.
 				private _offsetDistance = [_target.ObservedDistance] call _self.CalculateRandomOffsetDistance;
-				private _offsetHeading = floor random 360;
+				private _offsetHeading = _observation.PercievedPos getDir _observation.PercievedOffsetPos;
 				
-				_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
+				if (_offsetDistance < _observation.PercievedPos distance _observation.PercievedOffsetPos) then {
+					_observation.PercievedOffsetPos = _target.PercievedPos getPos [_offsetDistance, _offsetHeading];
+				};
 			};
 		};
 		
 		private static method Scalar CalculateRandomOffsetDistance("_observedDistance" as Scalar)
 		{
-			private _maxOffsetDistance = 50;
+			private _maxOffsetDistance = 100;
 			private _offsetDistance = _observedDistance / 7;
 			
 			if (_offsetDistance > _maxOffsetDistance) then {
@@ -119,7 +121,7 @@ namespace Intrusion.Server
 	        	{
 	        		private ["_unit" as Object];
 	        		_unit = _x;
-	        	
+	        		
 	        		if (alive _unit && { side group _unit in _mCompetingSides }) then
 	        		{
 		        		_targets = [_unit] call _mTargetHandler.GetEnemyTargets;
@@ -137,7 +139,7 @@ namespace Intrusion.Server
 	        	
 				["ClientEventReciever.OnObservationsUpdated", [_mapObservations]] call Remote.Invoke;
 	        	
-        		sleep 5;
+        		sleep 1;
 			};
 		};
 		

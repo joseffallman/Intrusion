@@ -1,0 +1,26 @@
+/*
+ * Name:	IOfficeWorker
+ * Date:	2018-12-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Modeling a side's office administration refining generated technologies (i.e. unlocks new technology).
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public interface IOfficeWorker
+	{
+		// Performs office work and notifies players when different technology progress steps are achieved.
+		method PerformOfficeWork();
+
+		// Gets whether a technology is established yet or not.
+		method Boolean TechnologyIsEstablished("_technology" as Technology);
+		
+		// Gets the technology currently being administered.
+		property TechnologyInfo CurrentTechnology { get; };
+	};
+};

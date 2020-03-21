@@ -8,6 +8,7 @@
  * Static class that handles all Intrusion events sent from the server.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Client
@@ -200,8 +201,9 @@ namespace Intrusion.Client
 		public static method OnSquadVehiclesSpawned("_group" as Group, "_professionType" as ProfessionType, "_vehicles" as Array)
 		{
 			[_vehicles] call gClient.ClientVehicleHandler.GroupLockVehicles;
+			
 			{
-				[_x as Object] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
+				[_x] call CommonEventHandlers.AddVehicleAttachmentEventHandler;
 			} forEach _vehicles;
 			
 			if (_group == group player) then {
@@ -270,6 +272,34 @@ namespace Intrusion.Client
 		public static method OnObservationsUpdated("_mapObservations" as Array /* of MapObservation */)
 		{
 			[_mapObservations] call MapObservationsHandler.UpdateMap;
+		};
+		
+		public static method OnVehicleSupported("_supportedVehicle" as Object, "_supportVehicle" as Object, "_messageToSupported" as String, "_messageToSupporter" as String)
+		{
+			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
+			
+			if (call PublicVariableHandler.IntrusionVehiclesHasValue) then
+			{
+				_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+				
+				{
+					if (_x.Vehicle == _supportedVehicle) then
+					{
+						if (_x.OwnerGroup == group player) then {
+							[_messageToSupported] call ClientMessageHandler.ShowTaskInfo;
+							return;
+						};
+					};
+					
+					if (_x.Vehicle == _supportVehicle) then
+					{
+						if (_x.OwnerGroup == group player) then {
+							[_messageToSupporter] call ClientMessageHandler.ShowTaskInfo;
+							return;
+						};
+					};
+				} foreach _intrusionVehicles as IntrusionVehicle;
+			};
 		};
 	};
 };

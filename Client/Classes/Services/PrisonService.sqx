@@ -8,24 +8,24 @@
  * A prison service that is used to warn and punish players that misbehave.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 
 namespace Intrusion.Client
 {
-	public class PrisonService : IService
+	public class PrisonService : Service
 	{
 		private fields ["_mPrisonTimeMin" as Scalar];
 	
 		// Creates a PrisonService object.
 		// _prisonTimeMin (Scalar): The time to spend in prison in minutes.
 		public constructor("_prisonTimeMin" as Scalar) {
+			call _base.Constructor;
+			
 			_mPrisonTimeMin = _prisonTimeMin;
-			_self.IsRunning = false;
 		};
 		
-		public property Boolean IsRunning { get; private set; };
-		
-		private method Run()
+		protected override method Run()
 		{
 			private ["_startTime" as Scalar];
 			
@@ -36,13 +36,7 @@ namespace Intrusion.Client
 				sleep 1;
 			};
 			
-			_self.IsRunning = false;
-		};
-		
-		public method RunAsync()
-		{
-			_self.IsRunning = true;
-			[] spawn _self.Run;
+			call _base.Run;
 		};
 	};
 };

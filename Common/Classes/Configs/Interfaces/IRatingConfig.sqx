@@ -11,11 +11,15 @@ namespace Intrusion.Common
 {
 	public interface IRatingConfig
 	{
-		// How much rating dealt to a group (with one person) for when the group captures a flag.
+		// How much rating dealt to units in a group (with one person in a 60 minutes game) for when the group captures a flag.
 		property Scalar CapturingFlag { get; };
 		
-		// How much rating dealt to a group (with one person) when the group kills an enemy unit.
+		// How much rating dealt to units in a group (with one person in a 60 minutes game) when the group kills an enemy unit.
 		property Scalar EnemyUnitKill { get; };
+		
+		// How much rating dealt to units in a group (with one person in a 60 minutes game and vehicle to support has empty 
+		// fuel tank, 100% damage or empty rounds) for when another vehicle is supported.
+		property Scalar VehicleSupport { get; };
 		
 		// Gets how much bonus rating is given for each extra team member in the team (0 is like 
 		// group having one member, and 1 is like the rating doubles for each extra team member).

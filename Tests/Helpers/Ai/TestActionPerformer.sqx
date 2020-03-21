@@ -26,11 +26,10 @@ namespace Intrusion.Tests.Helpers
 			_self.MoveActions = [];
 			_self.CaptureActions = [];
 			_self.MountActions = [];
-			//_self.DisembarkActions = [];
-			//_self.ReviveActions = [];
 			_self.EquipMemberWithLauncherCalled = false;
 			_self.EquippedLauncherClassName = "";
 			_self.EquippedLauncherMagazineClassName = "";
+			_self.ReplaceGroupOnNearestRoadCalled = false;
 		};
 		
 		public property Array MoveActions { get; private set; };
@@ -155,6 +154,21 @@ namespace Intrusion.Tests.Helpers
 		// Moves out a dead unit from a vehicle.
 		// _members (Array of UnitContainer): The members to check.
 		public method MoveOutDeadUnitFromVehicle("_members" as Array)
+		{
+		};
+		
+		public property boolean ReplaceGroupOnNearestRoadCalled { get; private set; };
+		
+		// Instantly moves a group with a vehicle from its position to some nearby road segment, if no players
+		// are near. (used for timeout purposes).
+		public method ReplaceGroupOnNearestRoad("_group" as Group, "_vehicleContainer" as VehicleContainer)
+		{
+			_self.ReplaceGroupOnNearestRoadCalled = true;
+		};
+		
+		// Makes a group forget all their known targets.
+		// _group (Group): The group.
+		public method MakeGroupForgetAllTargets("_group" as Group)
 		{
 		};
 	};

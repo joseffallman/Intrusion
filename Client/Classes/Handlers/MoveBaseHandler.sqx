@@ -15,13 +15,14 @@ namespace Intrusion.Client
 {
 	public class MoveBaseHandler
 	{
-		private fields ["_mBaseConfig" as BaseConfig];
+		private fields ["_mBaseConfig" as BaseConfig, "_mMarkerHandler" as IMarkerHandler];
 		private fields ["_mRespawnPoint" as ViewPos, "_mCarParkPoint" as ViewPos, "_mWeaponDepotPoint" as ViewPos];
 		private fields ["_mRespawnArrow" as Object, "_mCarParkArrow" as Object, "_mWeaponDepotArrow" as Object];
 
 		// Creates a MoveBaseHandler object.
-		public constructor("_baseConfig" as BaseConfig) {
+		public constructor("_baseConfig" as BaseConfig, "_markerHandler" as IMarkerHandler) {
 			_mBaseConfig = _baseConfig;
+			_mMarkerHandler = _markerHandler;
 			
 			_mRespawnArrow = objNull;
 			_mCarParkArrow = objNull;
@@ -105,29 +106,43 @@ namespace Intrusion.Client
 		
 		public method Boolean Validate()
 		{
-			scopeName "main";
-			
 			if (!_self.RespawnPointSet) then {
 				["No respawn position is set.", player] call ClientMessageHandler.ShowMessage;
-				false breakOut "main";
+				return false;
 			};
 			
 			if (!_self.CarParkPointSet) then {
 				["No vehicles park position is set.", player] call ClientMessageHandler.ShowMessage;
-				false breakOut "main";
+				return false;
 			};
 			
 			if (!_self.WeaponsPointSet) then {
 				["No weapon depot position is set.", player] call ClientMessageHandler.ShowMessage;
-				false breakOut "main";
+				return false;
 			};
 			
 			if (_mCarParkPoint.Position distance _mRespawnPoint.Position > _mBaseConfig.BaseRadius || _mWeaponDepotPoint.Position distance _mRespawnPoint.Position > _mBaseConfig.BaseRadius) then {
-				["Too far between base markers. All markers must be within " + str _mBaseConfig.BaseRadius + " meters from the player respawn marker.", player] call ClientMessageHandler.ShowMessage;
-				false breakOut "main";
+				["Too far between base markers. All markers must be within " + str _mBaseConfig.BaseRadius + " meters away from the player respawn marker.", player] call ClientMessageHandler.ShowMessage;
+				return false;
 			};
 			
-			true
+			// If the new position is too close to a resource location, invalidate.
+			if (call PublicVariableHandler.ResourceLocationCollectionHasValue) then
+			{
+				private ["_locationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locationPos" as Array];
+
+				_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+				_location = [_mRespawnPoint.Position] call _locationCollection.GetClosestResourceLocation;
+				_locationPos = [_location.MarkerName] call _mMarkerHandler.GetMarkerPos;
+
+				if (_locationPos distance _mRespawnPoint.Position < _mBaseConfig.MinDistanceFromResourceLocation + _mBaseConfig.BaseRadius) then
+				{
+					["Too close to resource location. The respawn position must be at least " + str _mBaseConfig.MinDistanceFromResourceLocation + " meters away from nearest resource location.", player] call ClientMessageHandler.ShowMessage;
+					return false;
+				};
+			};
+			
+			return true;
 		};
 		
 		public method Boolean StartMoveBaseService()

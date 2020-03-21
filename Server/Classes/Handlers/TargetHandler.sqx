@@ -8,18 +8,19 @@
  * A helper class for some target logic.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Server
 {
 	public class TargetHandler
 	{
-		private fields ["_mProfessionConfig" as ProfessionConfig, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection];
+		private fields ["_mProfessionConfig" as ProfessionConfig, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection];
 	
-		public constructor("_professionConfig" as ProfessionConfig, "_inventedTechnologiesCollection" as InventedTechnologiesCollection)
+		public constructor("_professionConfig" as ProfessionConfig, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection)
 		{
 			_mProfessionConfig = _professionConfig;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 		};
 		
 		// Gets a unit's all enemy targets
@@ -48,7 +49,7 @@ namespace Intrusion.Server
 			_intrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
 	        
 			{
-			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar, "_profession" as Profession, "_technologyInvented" as Boolean];
+			    private ["_percievedPos" as Array, "_percievedSide" as Side, "_targetUnit" as Object, "_accuracy" as Scalar, "_profession" as Profession, "_technologyEstablished" as Boolean];
 			    
 			    _percievedPos = _x select 0;
 			    _percievedSide = _x select 2;
@@ -69,12 +70,12 @@ namespace Intrusion.Server
 							{
 								_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 								
-								_technologyInvented = true;
+								_technologyEstablished = true;
 								if (!isNull _profession) then {
-									_technologyInvented = [side group _unit, _profession.RequiredTechnology] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+									_technologyEstablished = [side group _unit, _profession.RequiredTechnology] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
 								};
 								
-								if (_technologyInvented) then
+								if (_technologyEstablished) then
 								{
 									if (_profession.ManRevealsProfessionType) then {
 										_professionType = _squad.ProfessionType;

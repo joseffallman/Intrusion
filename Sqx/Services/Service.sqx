@@ -7,10 +7,12 @@
  * Description:
  * A base class for all services.
  */
-namespace Intrusion.Common
+namespace Sqx.Services
 {
 	public class Service : IService
 	{
+		private fields ["_mScriptHandle" as Handle];
+		
 		// Creates a Service object.
 		public constructor()
 		{
@@ -37,19 +39,21 @@ namespace Intrusion.Common
 			_self.IsCancelling = false;
 		};
 		
-		// Starts the service in a separate process.
-		// Returns (Handle): The script handle.
+		// Starts the service to run concurrently.
+		// If service is already running, service will not restart, but only return the currently running script handle.
+		// Returns (Handle): The script handle for the running script.
 		public method Handle RunAsync()
 		{
-			private ["_handle" as Handle];
-		
-			_self.IsRunning = true;
-			_self.IsCancelling = false;
+			if (!_self.IsRunning) then
+			{
+				_self.IsRunning = true;
+				_self.IsCancelling = false;
+				
+				call _self.Initialize;
+				_mScriptHandle = spawn _self.Run;
+			};
 			
-			call _self.Initialize;
-			_handle = spawn _self.Run;
-			
-			return _handle;
+			return _mScriptHandle;
 		};
 		
 		// Asks the service to stop processing. If supported, script will close as soon as possible, and its IsRunning will be

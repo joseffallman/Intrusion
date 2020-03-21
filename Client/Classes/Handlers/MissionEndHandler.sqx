@@ -8,6 +8,7 @@
  * Handles all about camera and cutscenes.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Client

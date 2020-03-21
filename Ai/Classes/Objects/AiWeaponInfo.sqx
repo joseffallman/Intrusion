@@ -36,14 +36,14 @@ namespace Intrusion.Ai
 		
 		public property AtLauncherAmmoClassName { get; private set; };
 		
-		// Gets the probability that AI picking up an AT launcher on respawn (if AT launchers have been invented).
+		// Gets the probability that AI picking up an AT launcher on respawn (if AT launchers have been established).
 		public property ProbabilityAiTakesAtLauncher { get; private set; };
 		
 		public property AaLauncherClassName { get; private set; };
 		
 		public property AaLauncherAmmoClassName { get; private set; };
 		
-		// Gets the probability that AI picking up an AA launcher on respawn (if AA launchers have been invented and it did not pick up an AT launcher).
+		// Gets the probability that AI picking up an AA launcher on respawn (if AA launchers have been established and it did not pick up an AT launcher).
 		public property ProbabilityAiTakesAaLauncher { get; private set; };
 	};
 };

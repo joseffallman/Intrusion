@@ -8,6 +8,7 @@
  * Models the brain of the squad leader that takes all decisions of the team.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 using Intrusion.Server;
 using Sqx.Collections;
@@ -18,7 +19,7 @@ namespace Intrusion.Ai
 	{
 		private fields ["_mKnowledge" as Knowledge, "_mWorld" as IWorld, "_mActionPerformer" as IActionPerformer, "_mRandomGenerator" as IRandomGenerator,
 						"_mMarkerHandler" as IMarkerHandler, "_mActionTimeoutConfig" as IActionTimeoutConfig, "_mTime" as IMissionTime,
-						"_mAiWeaponInfo" as AiWeaponInfo, "_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
+						"_mAiWeaponInfo" as AiWeaponInfo, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 						"_mDecisionMaker" as DecisionMaker, "_mBaseConfig" as BaseConfig, "_mProfessionConfig" as ProfessionConfig,
 						"_mSquadHandler" as ISquadHandler, "_mSelectProfessionTime" as Scalar, "_mGameLengthMonitor" as IGameLengthMonitor,
 						"_mResourceLocationConfig" as IResourceLocationConfig];
@@ -37,7 +38,7 @@ namespace Intrusion.Ai
 			"_time" as IMissionTime,
 			"_baseMarkerInfo" as MapMarkerInfo,
 			"_aiWeaponsConfig" as IAiWeaponsConfig,
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_establishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_knowledge" as Knowledge,
 			"_decisionMaker" as DecisionMaker,
 			"_baseConfig" as BaseConfig,
@@ -54,7 +55,7 @@ namespace Intrusion.Ai
 			_mActionTimeoutConfig = _actionTimeoutConfig;
 			_mTime = _time;
 			_mAiWeaponInfo = [side _group] call _aiWeaponsConfig.GetWeaponInfo;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mDecisionMaker = _decisionMaker;
 			_mKnowledge = _knowledge;
 			_mBaseConfig = _baseConfig;
@@ -87,8 +88,8 @@ namespace Intrusion.Ai
 		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()
 		{
-			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedEnemyLocations" as Array /* of ValuedObject */, "_allValuedLocations" as Array /* of ValuedObject */];
+			private ["_locationsCount" as Scalar, "_enemyLocationsCount" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
 
 			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
 
@@ -101,8 +102,10 @@ namespace Intrusion.Ai
 			if (!isNull _resourceLocationCollection) then
 			{
 				_locations = call _resourceLocationCollection.GetResourceLocations;
-				_count = 0;
-				_valuedLocations = [];
+				_locationsCount = 0;
+				_enemyLocationsCount = 0;
+				_valuedEnemyLocations = [];
+				_allValuedLocations = [];
 				
 				_location = _mKnowledge.WinnersLocation;
 				
@@ -111,29 +114,73 @@ namespace Intrusion.Ai
 				{
 					// Value the locations after distance from home base
 					{
+						_locationsCount = _locationsCount + 1;
+						_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+						
 						if (_x.Side != side _mKnowledge.Group) then {
-							_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
-							_valuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
-							_count = _count + 1;
+							_valuedEnemyLocations pushBack [_x, _distanceFromBase] new ValuedObject;
+							_enemyLocationsCount = _enemyLocationsCount + 1;
 						};
+						
+						_allValuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
 					} foreach _locations as ResourceLocation;
 					
-					_valuedLocations = [_valuedLocations] call Sorter.QSort;
+					_valuedEnemyLocations = [_valuedEnemyLocations] call Sorter.QSort;
+					_allValuedLocations = [_allValuedLocations] call Sorter.QSort;
 					
-					if (_count > 3) then {
-						_count = 3;
+					private _wantsAttackOrder = ([100] call _mRandomGenerator.GetNumber) < 67;
+					
+					if (!_wantsAttackOrder) then
+					{
+						// If this group is the closest group to a friendly location, go and defend it
+						
+						private _locationFound = false;
+						private _locationIndex = 0;
+						
+						private ["_currentLocation" as ResourceLocation];
+						_currentLocation = classNull;
+						
+						while { !_locationFound && _locationIndex < _locationsCount } do
+						{
+							_currentLocation = ((_allValuedLocations select _locationIndex) as ValuedObject).Object as ResourceLocation;
+							
+							if (_currentLocation.Side == side _mKnowledge.Group) then
+							{
+								private _closestGroup = [_currentLocation.MarkerName, _currentLocation.Side] call _mWorld.GetAlliedGroupClosestToLocation;
+								
+								if (!isNull _closestGroup && { _closestGroup == _mKnowledge.Group }) then {
+									_locationFound = true;
+									_location = _currentLocation;
+									_orderType = OrderType.Defend;
+									_orderTimeoutTime = 20;
+								};
+							};
+							
+							_locationIndex = _locationIndex + 1;
+						};
+						
+						if (!_locationFound) then {
+							_wantsAttackOrder = true;
+						};
 					};
 					
-					if (_count > 0) then {
-						_index = floor ([_count] call _mRandomGenerator.GetNumber);
-						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+					if (_wantsAttackOrder) then // Attack order
+					{
+						if (_enemyLocationsCount > 3) then {
+							_enemyLocationsCount = 3;
+						};
 						
-						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
-						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
-						_orderType = OrderType.Attack;
-						_orderTimeoutTime = 0;
-						
-			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
+						if (_enemyLocationsCount > 0) then {
+							_index = floor ([_enemyLocationsCount] call _mRandomGenerator.GetNumber);
+							_location = ((_valuedEnemyLocations select _index) as ValuedObject).Object as ResourceLocation;
+							
+							// _location is here a copied object (since it has been sorted) but we want it to be a reference.
+							_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+							_orderType = OrderType.Attack;
+							_orderTimeoutTime = 0;
+							
+				        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
+						};
 					};
 				}
 				else {
@@ -143,7 +190,7 @@ namespace Intrusion.Ai
 				if (!isNull _location) then
 				{
 					// Update order info
-					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString);
+					private _orderInfo = ([_orderType] call OrderTypeMeta.ToString) + "-E";
 					
 					if (!isNull _location) then {
 						_orderInfo = _orderInfo + " " + ([_location.MarkerName] call _mMarkerHandler.GetMarkerText);
@@ -152,7 +199,7 @@ namespace Intrusion.Ai
 					_mKnowledge.Group setVariable ["IntrusionOrderInfo", _orderInfo, true];
 					
 					// Create the order
-					_mKnowledge.Order = [_mKnowledge.Group, _orderType, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
+					_mKnowledge.Order = [_mKnowledge.Group, _orderType, true, [_location.MarkerName] call _mMarkerHandler.GetMarkerPos, _location, _orderTimeoutTime] new Order;
 		        	["Group " + str _mKnowledge.Group + " got the new order: " + str _mKnowledge.Order + "."] call LogHandler.Debug;
 				};
 			};
@@ -184,7 +231,7 @@ namespace Intrusion.Ai
 				};
 			};
 
-			// If squad is present at order position
+			// If squad is present at order's position
 			if (isNull _orderResourceLocation || { _orderResourceLocation.Side == side _mKnowledge.Group }) then
 			{
 				if (_mKnowledge.Order.Type == OrderType.Attack) then {
@@ -194,6 +241,7 @@ namespace Intrusion.Ai
 					};
 					
 					if (_leaderPos distance _mKnowledge.Order.TargetPosition < 30) then {
+						//[_mKnowledge.Order.TargetPosition] call Sqx.Markers.Marker.CreateIconMarker;
 						call _self.CreateOrderOnOwnInitiative;
 						return;
 					};
@@ -244,7 +292,7 @@ namespace Intrusion.Ai
 			};
 			
 
-			// If squad is mounted and enemies spotted near, disembark
+			// If squad is mounted and enemies spotted near
 			// OnNearEnemiesSpottedOnGround
 			
 			if (_squadInVehicle && !isNull _enemyContainer && { _leaderPos distance (call _enemyContainer.GetPosition) < 250 }) then
@@ -326,21 +374,6 @@ namespace Intrusion.Ai
 			call _mDecisionMaker.OnNothingToDo;
 		};
 		
-/*
-		private method SetState("_state" as AiSquadState, "_action" as IAction) 
-		{
-			_mKnowledge.State = _state;
-			
-			if (_state == AiSquadState.Idle) then {
-				_mKnowledge.CurrentAction = classNull;
-			}
-			else {
-				_mKnowledge.CurrentAction = _action;
-			};
-			
-			player sideChat "Setting status for " + str _mKnowledge.Group + " (" + str (count units _mKnowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString);
-		};
-*/
 		#endregion
 		
 		#region Completion and Timeout
@@ -394,7 +427,7 @@ namespace Intrusion.Ai
 		
 		// Gets whether the last action has completed or not.
 		// Returns (Boolean): true if the last action has completed, otherwise false.
-		public method Boolean GetHasCompleted()
+		private method Boolean GetHasCompleted()
 		{
 			private ["_hasCompleted" as Boolean, "_currentAction" as IAction, "_actionService" as IActionService];
 
@@ -435,7 +468,7 @@ namespace Intrusion.Ai
 		// Returns (Boolean): true if an action timeout has occurred, otherwise false.
 		private method Boolean CheckActionTimeout()
 		{
-			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService];
+			private ["_leaderPos" as Array, "_action" as IAction, "_actionService" as IActionService, "_mountedVehicle" as VehicleContainer];
 			
 			// If the action has a service, check if that service has timed out or not.
 			
@@ -445,13 +478,20 @@ namespace Intrusion.Ai
 				if (!isNull _actionService) then {
 					if (!_actionService.IsRunning) then {
 						if (!_actionService.Success) then {
-				        	["Timeout occurred #1"] call LogHandler.Debug;
+				        	["Timeout occurred (action service)"] call LogHandler.Debug;
 							return true;
 						};
 					};
 					
 					return false;
 				};
+			};
+			
+			// Check if the current action has timed out
+			_action = _mKnowledge.CurrentAction;
+			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
+	        	["Timeout occurred (action)"] call LogHandler.Debug;
+				return true;
 			};
 			
 			// If leader has moved since last time, update position and time
@@ -462,21 +502,17 @@ namespace Intrusion.Ai
 				_mKnowledge.LeaderPos = _leaderPos;
 				_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
 			}
-			else
+			else // If leader has not moved since last time, check if current action should time out
 			{
-				// If leader has not moved since last time, check if current action should time out
-				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then {
-		        	["Timeout occurred #2"] call LogHandler.Debug;
+				if ((call _mTime.GetMissionTime) > _mKnowledge.LeaderPosTime + _mActionTimeoutConfig.LeaderStationaryTimeout) then
+				{
+					_mountedVehicle = [_mKnowledge.Group] call _mWorld.GetMountedVehicle;
+					
+		        	["Timeout occurred (stationary)"] call LogHandler.Debug;
 					_mKnowledge.LeaderPosTime = call _mTime.GetMissionTime;
+					[_mKnowledge.Group, _mountedVehicle] call _mActionPerformer.ReplaceGroupOnNearestRoad;
 					return true;
 				};
-			};
-			
-			// Check if the current action has timed out
-			_action = _mKnowledge.CurrentAction;
-			if (!isNull _action && { (call _mTime.GetMissionTime) >= _action.TimeoutTime }) then {
-	        	["Timeout occurred #3"] call LogHandler.Debug;
-				return true;
 			};
 			
 			return false;
@@ -501,7 +537,7 @@ namespace Intrusion.Ai
 				
 				if (_ok) then {
 					_squadCollection = call PublicVariableHandler.GetSquadCollection;
-					_ok = [_side, _professionType, _mProfessionConfig] call _squadCollection.ProfessionTypeAvailable;
+					_ok = [_side, _professionType, _mProfessionConfig, _unitCount] call _squadCollection.ProfessionTypeAvailableForGroup;
 				};
 				
 				_tries = _tries + 1;
@@ -585,24 +621,28 @@ namespace Intrusion.Ai
 		
 		private method RespawnToBase()
 		{
-			private ["_newMembers" as Array /* of IUnitContainer */, "_atLaunchersInvented" as Boolean, "_aaLaunchersInvented" as Boolean];
+			private ["_newMembers" as Array /* of IUnitContainer */, "_atLaunchersEstablished" as Boolean, "_aaLaunchersEstablished" as Boolean];
 			
 			_newMembers = [_mKnowledge.Group, _mKnowledge.Members, _mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mActionPerformer.RespawnAiSquad;
 			_mKnowledge.Members = _newMembers;
 			
-			_atLaunchersInvented = [side _mKnowledge.Group, Technology.Ordnance] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
-			_aaLaunchersInvented = [side _mKnowledge.Group, Technology.AntiAir] call _mInventedTechnologiesCollection.SideTechnologyIsInvented;
+			_atLaunchersEstablished = [side _mKnowledge.Group, Technology.Ordnance] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
+			_aaLaunchersEstablished = [side _mKnowledge.Group, Technology.AntiAir] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished;
 
 			{
-				if (_atLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
+				if (_atLaunchersEstablished && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAtLauncher) then {
 					[_x, _mAiWeaponInfo.AtLauncherClassName, _mAiWeaponInfo.AtLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 				}
 				else {
-					if (_aaLaunchersInvented && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
+					if (_aaLaunchersEstablished && ([1] call _mRandomGenerator.GetNumber) < _mAiWeaponInfo.ProbabilityAiTakesAaLauncher) then {
 						[_x, _mAiWeaponInfo.AaLauncherClassName, _mAiWeaponInfo.AaLauncherAmmoClassName] call _mActionPerformer.EquipMemberWithLauncher;
 					};
 				};
 			} foreach _newMembers as IUnitContainer;
+			
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+				_mKnowledge.Order = classNull;
+			};
 		};
 		
 		#region Public Methods
@@ -614,12 +654,40 @@ namespace Intrusion.Ai
 			
 			if (_mKnowledge.State != AiSquadState.Idle) then {
 				_mKnowledge.JustGotNewOrder = true;
+			}
+			else {
+				[_mKnowledge.Group] call _mActionPerformer.MakeGroupForgetAllTargets;
 			};
 		};
 		
 		public method Group GetGroup()
 		{
 			return _mKnowledge.Group;
+		};
+		
+		private method Boolean OrderIsObsolete()
+		{
+			private ["_orderLocation" as ResourceLocation, "_locationCollection" as ResourceLocationCollection, "_order" as Order];
+		
+			// Any is completed if the order is related to a resource location that is already ours
+			
+			_order = _mKnowledge.Order;
+			_orderLocation = _order.ResourceLocation as ResourceLocation;
+			
+			if (!isNull _orderLocation && _order.Type != OrderType.Defend) then
+			{
+				_locationCollection = call _mWorld.GetResourceLocationCollection;
+				_orderLocation = [_orderLocation.MarkerName] call _locationCollection.GetResourceLocationByMarkerName;
+				
+				if (_orderLocation.Side == side _mKnowledge.Group) then
+				{
+					// Remove current order
+					_mKnowledge.Order = classNull;
+					
+		        	["Order is obsolete"] call LogHandler.Debug;
+					return true;
+				};
+			};
 		};
 		
 		// Gives the AI brain an opportunity to make a new decision.
@@ -645,8 +713,17 @@ namespace Intrusion.Ai
 			_time = call _mTime.GetMissionTime;
 			
 			// Check if order's timeout time is exceedeed
-			if (!isNull _mKnowledge.Order && { _mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime }) then {
-				_mKnowledge.Order = classNull;
+			if (!isNull _mKnowledge.Order) then
+			{
+				if (call _self.OrderIsObsolete) then {
+					_mKnowledge.Order = classNull;
+				}
+				else {				
+					if (_mKnowledge.Order.Type == OrderType.Defend && _time > _mKnowledge.Order.TimeoutTime) then
+					{
+						_mKnowledge.Order = classNull;
+					};
+				};
 			};
 			
 			// If there is no order, create one on own initiative so the squad always has an order.

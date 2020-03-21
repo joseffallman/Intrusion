@@ -1,4 +1,4 @@
-/*9
+/*
  * Name:	Functions
  * Date:	2019-03-01
  * Version: 1.0
@@ -64,6 +64,59 @@ namespace Intrusion.Common
 			};
 			
 			false
+		};
+		
+		// Gets vehicle damage on a scale from 0 to 1.
+		// _vehicle (Object): The vehicle to test.
+		// Returns (Scalar): 1 if vehicle is fully damaged. 0 if it is completely healthy. For objects with no hit point, 0 is returned.
+		public static method Scalar GetVehicleDamage("_vehicle" as Object)
+		{
+			private _hitpointsArray = getAllHitPointsDamage _vehicle;
+			
+			if (count _hitpointsArray > 0) then
+			{
+				private _hitpointDamageValues = _hitpointsArray select 2;
+				
+				if (count _hitpointDamageValues > 0) then
+				{
+					private _total = 0;
+					
+					{
+						_total = _total + _x;
+					} foreach _hitpointDamageValues;
+					
+					return (_total / count _hitpointDamageValues);
+				};
+			};
+		
+			return 0;
+		};
+		
+		public static method Scalar GetVehicleMaxAmmo("_vehicle" as Object)
+		{
+			return _vehicle getVariable ["MaxAmmoMaingun", 0];
+		};
+		
+		// Gets vehicle ammo on a scale 0 to 1.
+		// _vehicle (Object): The vehicle to test.
+		// Returns (Scalar): 1 if vehicle is fully loaded. 0 if it is empty. If vehicle has no gun, 0 is returned.
+		public static method Scalar GetVehicleAmmo("_vehicle" as Object)
+		{
+			private _maxAmmoMainGun = _vehicle getVariable ["MaxAmmoMaingun", 0];
+			
+		    if (_maxAmmoMainGun > 0) then
+		    {
+			    private _weapons = weapons _vehicle;
+			    private _ammoMainGun = 0;
+			    
+			    if (count _weapons > 0) then {
+			    	_ammoMainGun = _vehicle ammo (_weapons select 0);
+			    };
+		    
+			    return _ammoMainGun / _maxAmmoMainGun;
+		    };
+		    
+		    return 0;
 		};
 	};
 };

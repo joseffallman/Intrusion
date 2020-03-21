@@ -12,10 +12,11 @@ namespace Intrusion.Common
 	public class Order
 	{
 		// Creates a Order object.
-		public constructor("_group" as Group, "_type" as OrderType, "_targetPosition" as Array, "_resourceLocation" as ResourceLocation, "_timeoutTime" as Scalar)
+		public constructor("_group" as Group, "_type" as OrderType, "_engageDetectedEnemies" as Boolean, "_targetPosition" as Array, "_resourceLocation" as ResourceLocation, "_timeoutTime" as Scalar)
 		{
 			_self.Group = _group;
 			_self.Type = _type;
+			_self.EngageDetectedEnemies = _engageDetectedEnemies;
 			_self.TargetPosition = _targetPosition;
 			_self.ResourceLocation = _resourceLocation;
 			_self.TimeoutTime = _timeoutTime;
@@ -24,6 +25,8 @@ namespace Intrusion.Common
 		public property Group Group { get; private set; };
 		
 		public property OrderType Type { get; private set; };
+		
+		public property Boolean EngageDetectedEnemies { get; private set; };
 		
 		public property Array TargetPosition { get; private set; };
 		

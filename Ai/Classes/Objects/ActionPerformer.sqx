@@ -42,13 +42,13 @@ namespace Intrusion.Ai
 			
 			_waypoint setWaypointSpeed _moveAction.SpeedMode;
 			_waypoint setWaypointType _moveAction.WaypointType;
-			_waypoint setWaypointCombatMode "YELLOW";
-			_waypoint setWaypointBehaviour "SAFE";
+			_waypoint setWaypointCombatMode _moveAction.CombatMode;
+			_waypoint setWaypointBehaviour _moveAction.Behavior;
 			_waypoint setWaypointFormation "WEDGE";
 			
 			_mGroup setSpeedMode _moveAction.SpeedMode;
-			_mGroup setCombatMode "YELLOW";
-			_mGroup setBehaviour "SAFE";
+			_mGroup setCombatMode _moveAction.CombatMode;
+			_mGroup setBehaviour _moveAction.Behavior;
 			
 			//player sideChat "expected: " + _moveAction.SpeedMode; // TODO SQX: Semicolon disappears on build.
 		};
@@ -110,22 +110,6 @@ namespace Intrusion.Ai
 				};
 			} foreach units _mGroup;
 		};
-	
-/*
-		// Performs a disembark action for an AI group.
-		// _disembarkAction (DisembarkAction): Information about the disembarkment.
-		public method DoDisembark("_disembarkAction" as DisembarkAction)
-		{
-			call _disembarkAction.Service.RunAsync;
-		};
-		
-		// Performs a revive action for an AI group.
-		// _reviveAction (ReviveAction): Information about the revive.
-		public method DoRevive("_action" as ReviveAction)
-		{
-			call _action.Service.RunAsync;
-		};
-*/
 
 		// Limits the speed of a vehicle.
 		// _vehicle (Vehicle): The vehicle to have a limited speed.
@@ -185,6 +169,8 @@ namespace Intrusion.Ai
 					deleteVehicle _x;
 				};
 			} foreach _oldUnits as Object;
+			
+			[_group] call _self.MakeGroupForgetAllTargets;
 			
 			_newUnits
 		};
@@ -266,6 +252,66 @@ namespace Intrusion.Ai
 					_unit setPos _pos;
 				};
 			} foreach _members as UnitContainer;
+		};
+		
+		private method Boolean PositionIsNearAnyPlayer("_pos" as Array)
+		{
+			private _allPlayers = call BIS_fnc_listPlayers;
+			
+			{
+				if (_pos distance2D getPos _x < 600) then {
+					return true;
+				};
+			} foreach _allPlayers;
+			
+			return false;
+		};
+		
+		// Instantly moves a group with a vehicle from its position to some nearby road segment, if no players
+		// are near. (used for timeout purposes).
+		public method ReplaceGroupOnNearestRoad("_group" as Group, "_vehicleContainer" as VehicleContainer)
+		{
+			// Only perform an instant move if group has a vehicle and if the vehicle is in "can move" status.
+			
+			if (!isNull _vehicleContainer && { canMove _vehicleContainer.Vehicle }) then
+			{
+				if ([_vehicleContainer.Position] call _self.PositionIsNearAnyPlayer) then {
+					return;
+				};
+				
+				private _roadSegments = _vehicleContainer.Position nearRoads 30;
+				
+				if (count _roadSegments > 0) then
+				{
+					private _roadSegment = selectRandom _roadSegments;
+					
+					if ([getPos _roadSegment] call _self.PositionIsNearAnyPlayer) then {
+						return;
+					};
+					
+					// Perform instant movement
+					
+					_vehicleContainer.Vehicle setPos (getPos _roadSegment);
+					_vehicleContainer.Vehicle setDir (getDir _roadSegment);
+				};
+			};
+		};
+		
+		// Makes a group forget all their known targets.
+		// _group (Group): The group.
+		public method MakeGroupForgetAllTargets("_group" as Group)
+		{
+			private "_unit" as Object;
+			
+			if (count units _group > 0) then
+			{
+				_unit = units _group select 0;
+				private _targets = _unit nearTargets 10000;
+				
+				{
+					_group forgetTarget (_x select 4);
+				} foreach _targets as Array;
+			};
 		};
 	};
 };

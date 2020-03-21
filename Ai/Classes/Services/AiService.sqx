@@ -8,20 +8,21 @@
  * The service that performs actions on all AI squads.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Server;
 
 namespace Intrusion.Ai
 {
-	public class AiService : IService
+	public class AiService : Service
 	{
 		private fields ["_mUnitBalancer" as IAiUnitBalancer, "_mGameplayConfig" as IGameplayConfig, "_mAiSquadHandler" as IAiSquadHandler /* of AiSquad */];
 		private fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadHandler" as ISquadHandler];
 		private fields ["_mResourceLocationHandler" as IResourceLocationHandler, "_mUnitsConfig" as IAiUnitsConfig];
 		private fields ["_mUnitSpawner" as IUnitSpawner, "_mResourceLocationConfig" as IResourceLocationConfig, "_mVehicleSpawner" as IVehicleSpawner];
-		private fields ["_mInventedTechnologiesCollection" as InventedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
+		private fields ["_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection, "_mGameLengthMonitor" as IGameLengthMonitor];
 		private fields ["_mObservationHandler" as ObservationHandler];
-		
+
 		// Creates a AiService object.
 		public constructor(
 			"_aiSquadHandler" as IAiSquadHandler, 
@@ -35,10 +36,12 @@ namespace Intrusion.Ai
 			"_resourceLocationConfig" as IResourceLocationConfig,
 			"_unitsConfig" as IAiUnitsConfig,
 			"_vehicleSpawner" as IVehicleSpawner,
-			"_inventedTechnologiesCollection" as InventedTechnologiesCollection,
+			"_establishedTechnologiesCollection" as EstablishedTechnologiesCollection,
 			"_gameLengthMonitor" as IGameLengthMonitor,
 			"_observationHandler" as ObservationHandler)
 		{
+			call _base.Constructor;
+			
 			_mAiSquadHandler = _aiSquadHandler;
 			_mUnitBalancer = _unitBalancer;
 			_mGameplayConfig = _gameplayConfig;
@@ -50,12 +53,10 @@ namespace Intrusion.Ai
 			_mResourceLocationConfig = _resourceLocationConfig;
 			_mUnitsConfig = _unitsConfig;
 			_mVehicleSpawner = _vehicleSpawner;
-			_mInventedTechnologiesCollection = _inventedTechnologiesCollection;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
 			_mGameLengthMonitor = _gameLengthMonitor;
 			_mObservationHandler = _observationHandler;
 		};
-		
-		public property Boolean IsRunning { get; private set; };
 		
 		// Creates a new squad if more squads are alive.
 		private method CreateNewSquads()
@@ -115,7 +116,7 @@ namespace Intrusion.Ai
 						_time,
 						_mapMarkerInfo,
 						new AiWeaponsConfig,
-						_mInventedTechnologiesCollection,
+						_mEstablishedTechnologiesCollection,
 						_knowledge,
 						_decisionMaker,
 						new BaseConfig,
@@ -132,9 +133,20 @@ namespace Intrusion.Ai
 			} foreach _mGameplayConfig.CompetingSides as Side;
 		};
 		
-		private method Run()
+		protected override method Run()
 		{
+			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
 			private ["_allSquads" as Array];
+			
+			// Start the pseudo artillery
+			
+			_westArtilleryService = [west, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_eastArtilleryService = [east, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			
+			call _westArtilleryService.RunAsync;
+			call _eastArtilleryService.RunAsync;
+			
+			// Run the ai service
 			
 			while { true } do
 			{
@@ -152,21 +164,7 @@ namespace Intrusion.Ai
 				sleep 1;
 			};
 			
-			_self.IsRunning = false;
-		};
-		
-		public method RunAsync()
-		{
-			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
-			
-			_westArtilleryService = [west, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
-			_eastArtilleryService = [east, _mObservationHandler, _mInventedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
-			
-			call _westArtilleryService.RunAsync;
-			call _eastArtilleryService.RunAsync;
-		
-			_self.IsRunning = true;
-			[] spawn _self.Run;
+			call _base.Run;
 		};
 		
 		private static method Start()
@@ -197,7 +195,7 @@ namespace Intrusion.Ai
 				new AiUnitsConfig, 
 				//new AiWeaponsConfig
 				gServer.VehicleSpawner,
-				gServer.InventedTechnologiesCollection,
+				gServer.EstablishedTechnologiesCollection,
 				gServer.MissionCounterService,
 				gServer.ObservationHandler
 			] new AiService;

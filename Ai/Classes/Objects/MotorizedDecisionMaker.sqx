@@ -23,16 +23,26 @@ namespace Intrusion.Ai
 		
 		public override method OnNearEnemiesOnGroundSpotted("_enemy" as IUnitContainer, "_mountedVehicle" as VehicleContainer)
 		{
-			private ["_action" as MoveAction];
+			private ["_action" as MoveAction, "_order" as Order];
 			
 			// If acting as a profession squad
 			
 			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
 			{
-				_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
-				[AiSquadState.Moving, _action] call _self.SetState;
-				[_action] call _self.ActionPerformer.DoMove;
-	        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
+				_order = _self.Knowledge.Order;
+				
+				if (_order.EngageDetectedEnemies) then {
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, (call _enemy.GetPosition), "SAD", "LIMITED", "COMBAT", "RED", ""] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_action] call _self.ActionPerformer.DoMove;
+		        	["Move action created (enemies spotted): " + str _action] call LogHandler.Debug;
+				}
+				else {
+					_action = [(call _self.Time.GetMissionTime) + 60, MoveActionType.Engage, _order.TargetPosition, "MOVE", "LIMITED", "AWARE", "YELLOW", ""] new MoveAction;
+					[AiSquadState.Moving, _action] call _self.SetState;
+					[_self.Knowledge.CurrentAction as MoveAction] call _self.ActionPerformer.DoMove;
+		        	["Move action created (enemies spotted 2): " + str _action] call LogHandler.Debug;
+				};
 			};
 			
 			[_enemy, _mountedVehicle] call _base.OnNearEnemiesOnGroundSpotted;
@@ -73,34 +83,6 @@ namespace Intrusion.Ai
 			};
 			
 			[_mountedVehicle] call _base.OnClosingInOnDestination;
-		};
-		
-		protected override method Boolean CompleteMoveWhenEnemiesNearby("_mountedVehicle" as VehicleContainer, "_closestEnemy" as IUnitContainer)
-		{
-			private ["_moveAction" as MoveAction];
-			private ["_leaderPos" as Array];
-			
-			// If acting as a profession squad
-			if (!isNull _mountedVehicle && { !isNull _mountedVehicle.OwnerGroup }) then
-			{
-				_leaderPos = [_self.Knowledge.Group] call _self.World.GetLeaderPos;
-					
-				if (_leaderPos distance (call _closestEnemy.GetPosition) < 250) then {
-					_moveAction = _self.Knowledge.CurrentAction as MoveAction;
-					
-					if (_moveAction is MoveAction) then {
-						if (_moveAction.Type != MoveActionType.Engage) then {
-				        	["Completed move #1"] call LogHandler.Debug;
-							player sideChat "Completed #1";
-							return true;
-						};
-					};
-				};
-				
-				return false;
-			};
-			
-			return [_mountedVehicle, _closestEnemy] call _base.CompleteMoveWhenEnemiesNearby;
 		};
 		
 		// Called when the squad is at a resource location and is performing a move action.

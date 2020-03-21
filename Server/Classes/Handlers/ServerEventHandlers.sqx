@@ -52,7 +52,7 @@ namespace Intrusion.Server
 				params ["_unit" as Object, "_killer" as Object, "_instigator" as Object, "_useEffects" as Boolean];
 				private ["_rating" as Scalar, "_addingRating" as Scalar];
 				
-				// If the killer is an enemy and the killer is an AI, add killed rating.
+				// If the killer is an enemy, add killed rating.
 				if ([side group _unit, side group _killer] call BIS_fnc_sideIsEnemy) then
 				{
 					_addingRating = [count units group _killer] call gCommon.RatingCalculator.CalculateGroupRatingEnemyKill;

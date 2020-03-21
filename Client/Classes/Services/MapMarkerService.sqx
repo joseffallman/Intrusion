@@ -8,6 +8,7 @@
  * Updates the player's map with map markers (observations not included).
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 using Sqx.Markers;
 
@@ -17,6 +18,7 @@ namespace Intrusion.Client
 	{
 		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
 		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarkers" as Array /* of Marker */, "_mSquadMemberMarkers" as Array /* of Marker */];
+		private static fields ["_mSupportMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
 		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as ProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
@@ -27,6 +29,7 @@ namespace Intrusion.Client
 			_mSquadMemberMarkers = [];
 		
 			_mMapMarkers = [];
+			_mSupportMarkers = [];
 			_mBaseMarker = classNull;
 		};
 		
@@ -43,6 +46,23 @@ namespace Intrusion.Client
 					return _marker;
 				};
 			} foreach _mMapMarkers as Marker;
+			
+			return classNull;
+		};
+		
+		// Gets a support marker tagged with a certain vehicle.
+		// _vehicle (Object): The vehicle whose marker to get.
+		// Returns (Marker): The marker associated with the vehicle. classNull if such a marker was not found.
+		private static method Marker GetSupportMarkerByVehicle("_vehicle" as Object)
+		{
+			{
+				private ["_marker" as Marker];
+				_marker = _x as Marker;
+
+				if (_marker.Tag == _vehicle) then {
+					return _marker;
+				};
+			} foreach _mSupportMarkers as Marker;
 			
 			return classNull;
 		};
@@ -142,6 +162,125 @@ namespace Intrusion.Client
     		} foreach _allNamedGroups as Group;
 		};
 		
+		private static method Scalar GetVehicleSupportNeed("_vehicle" as Object, "_vehicleNeeds" as Array /* DictionaryItem */)
+		{
+			{
+				if (_vehicle == _x.Key) then {
+					return _x.Value;
+				};
+			} foreach _vehicleNeeds as DictionaryItem;
+			
+			return 0;
+		};
+		
+		// Puts support warning icons close to all vehicles in need of support.
+		private static method UpdateVehiclesInNeedOfSupport()
+		{
+			private ["_allIntrusionVehicles" as Array /* of IntrusionVehicle */, "_vehicleNeeds" as Array /* of DictionaryItem */];
+			private ["_supportMarkersToKeep" as Array /* of Marker */];
+			private ["_squadCollection" as SquadCollection, "_squad" as Squad, "_professionType" as ProfessionType];
+			
+			_professionType = ProfessionType.Undefined;
+			_squadCollection = call PublicVariableHandler.GetSquadCollection;
+			_squad = [group player] call _squadCollection.GetSquadByGroup;
+			
+			if (!isNull _squad) then {
+				_professionType = _squad.ProfessionType;
+			};
+			
+			_allIntrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
+
+			_vehicleNeeds = [];
+			_supportMarkersToKeep = [];
+			
+			// Collect needs for each vehicle
+			
+			{
+				if (_x.Side == side group player) then
+				{
+					if (_professionType == ProfessionType.Repair) then
+					{
+						private _health = 1 - ([_x.Vehicle] call Functions.GetVehicleDamage);
+						if (alive _x.Vehicle && (!canMove _x.Vehicle || _health < 0.95)) then
+						{
+							if (!canMove _x.Vehicle) then {
+								_health = 0.25 * _health;
+							};
+							
+							_vehicleNeeds pushBack [_x.Vehicle, _health] new DictionaryItem;
+						};
+					};
+					
+					if (_professionType == ProfessionType.Fuel) then
+					{
+						private _fuel = fuel _x.Vehicle;
+						if (alive _x.Vehicle && _fuel < 0.5) then
+						{
+							_vehicleNeeds pushBack [_x.Vehicle, _fuel] new DictionaryItem;
+						};
+					};
+					
+					if (_professionType == ProfessionType.Ammo) then
+					{	
+						if (alive _x.Vehicle) then {
+							if (([_x.Vehicle] call Functions.GetVehicleMaxAmmo) > 0) then
+							{
+								private _ammo = [_x.Vehicle] call Functions.GetVehicleAmmo;
+								
+								if (_ammo < 0.75) then
+								{
+									_vehicleNeeds pushBack [_x.Vehicle, _ammo] new DictionaryItem;
+								};
+							};
+						};						
+					};
+				};
+			} foreach _allIntrusionVehicles as IntrusionVehicle;
+			
+			// Remove all markers that should not be visible anymore, either if the vehicle is gone, or if it has no need.
+			
+			{
+				private _marker = _x as Marker;				
+				private _vehicle = _marker.Tag as Object;
+				
+				if (isNull _vehicle || { ([_vehicle, _vehicleNeeds] call _self.GetVehicleSupportNeed) == 0 }) then {
+					call _marker.Hide;
+				}
+				else {
+					_supportMarkersToKeep pushBack _marker;
+				};
+			} foreach _mSupportMarkers as Marker;
+			
+			_mSupportMarkers = _supportMarkersToKeep;
+
+
+			// Add and update all vehicle support markers
+			
+			{
+				private _marker = [_x.Key] call _self.GetSupportMarkerByVehicle as Marker;
+				
+				if (isNull _marker) then
+				{
+					private _percent = floor (_x.Value * 100);
+					private _color = "ColorYellow";
+					
+					if (_percent < 50) then {
+						_color = "ColorOrange";
+					};
+					if (_percent < 25) then {
+						_color = "ColorRed";
+					};
+					
+					_marker = [getPos _x.Key, "mil_triangle", _color, "(" + str _percent + "%)"] call Marker.CreateIconMarkerLocal;
+					_mSupportMarkers pushBack _marker;
+				}
+				else
+				{
+					[getPos _x.Key] call _marker.SetPosition;
+				};
+			} foreach _vehicleNeeds as DictionaryItem;
+		};
+		
 		// Updates the squad's vehicle marker.
 		private static method UpdateSquadVehicleMarker()
 		{
@@ -153,6 +292,7 @@ namespace Intrusion.Client
 			_markersToKeep = [];
 			_squadsIntrusionVehicles = [];
 			_squadsVehicles = [];
+			
 			_allIntrusionVehicles = call PublicVariableHandler.GetIntrusionVehicles;
 			
 			// Find the vehicles belonging to the squad
@@ -178,7 +318,7 @@ namespace Intrusion.Client
 				};
 			} foreach _mSquadVehicleMarkers as Marker;
 			
-			// See if there are any new vehicles that ar not yet marked on the map
+			// See if there are any new vehicles that are not yet marked on the map
 			{
 				if (!(_x in _markedVehicles)) then {
 					_marker = [getPos _x, _mSquadMarkersConfig.SquadVehicleMarkerType, "ColorBlufor"] call Marker.CreateIconMarkerLocal;
@@ -275,6 +415,7 @@ namespace Intrusion.Client
         	while { true } do {
         		call _self.UpdateAlliedBaseMarker;
         		call _self.UpdateAlliedForcesMarkers;
+        		call _self.UpdateVehiclesInNeedOfSupport;
         		call _self.UpdateSquadVehicleMarker;
         		call _self.UpdateSquadMemberMarkers;
         		

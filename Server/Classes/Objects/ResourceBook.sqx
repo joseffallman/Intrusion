@@ -14,14 +14,14 @@ namespace Intrusion.Server
 		// Creates a ResourceBook object.
 		public constructor {
 			_self.TotalProduction = 0;
-			_self.TotalResearch = 0;
+			_self.TotalAdministration = 0;
 		};
 		
 		// Gets the total available production.
 		public property Scalar TotalProduction { get; private set; };
 		
-		// Gets the total available technology.
-		public property Scalar TotalResearch { get; private set; };
+		// Gets the total available administration.
+		public property Scalar TotalAdministration { get; private set; };
 		
 		// Makes a deposito into the resource account.
 		// _amount (Scalar): The amount to deposit.
@@ -30,11 +30,11 @@ namespace Intrusion.Server
 			_self.TotalProduction = _self.TotalProduction + _amount;
 		};
 		
-		// Makes a deposit into the technology account.
-		// _amount (Scalar): The amount to deposit.
-		public method DepositResearch {
+		// Makes a deposit into the administration account.
+		// _amount (Scalar): The amount of administration to deposit.
+		public method DepositAdministration {
 			params ["_amount" as Scalar];
-			_self.TotalResearch = _self.TotalResearch + _amount;
+			_self.TotalAdministration = _self.TotalAdministration + _amount;
 		};
 		
 		// Makes a withdrawal from the resource account.
@@ -55,7 +55,7 @@ namespace Intrusion.Server
 		// Prints the resource book to a readable text.
 		// Retursn (String): A text string.
 		public method String ToString {
-			"Production: " + str _self.TotalProduction + ", Administraton: " + str _self.TotalResearch
+			"Production: " + str _self.TotalProduction + ", Administraton: " + str _self.TotalAdministration
 		};
 	};
 };

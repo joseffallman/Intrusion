@@ -6,7 +6,11 @@ enableSaving [false, false];
 
 // First common
 call compile preprocessFileLineNumbers "Sqx\Collections\ArrayHandler.sqx";
+call compile preprocessFileLineNumbers "Sqx\Services\Service.sqx";
 call compile preprocessFileLineNumbers "Common\InitCommon.sqx";
+
+// Remote
+call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // Then server
 if (isServer) then {
@@ -17,9 +21,6 @@ if (isServer) then {
 if (!isDedicated) then {
 	call compile preprocessFileLineNumbers "Client\InitClient.sqx";
 };
-
-// And finally Remote
-call compile preprocessFileLineNumbers "Communication\InitCommunication.sqx";
 
 // And then start the mission
 if (isServer) then {

@@ -12,21 +12,24 @@ namespace Intrusion.Common
 	public class ProfessionTestConfig : ProfessionConfig
 	{
         // Initializes all professions.
-        public constructor {
+        public constructor()
+        {
+        	call _base.Constructor;
+        	
         	_self.Professions = [
         		[ProfessionType.Infantry, "Infantry", Technology.None, Rank.Private, -1, 1, 10, 0, false, false, "b_inf", "o_inf", false] new Profession,
 			    [ProfessionType.Transport, "Transport Service", Technology.Transport, Rank.Private, 1, 1, 1, 2, false, true, "b_service", "o_service", true] new Profession,
-			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 2, 2, false, true, "b_service", "o_service", false] new Profession,
-			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, Rank.Private, 1, 1, 2, 2, false, true, "b_service", "o_service", false] new Profession,
-			    [ProfessionType.Repair, "Repair Service", Technology.Services, Rank.Private, 1, 1, 2, 2, false, true, "b_maint", "o_maint", false] new Profession,
-			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, Rank.Private, 3, 2, 10, 5, false, true, "b_motor_inf", "o_motor_inf", false] new Profession,
+			    [ProfessionType.Fuel, "Fuel Service", Technology.Services, Rank.Private, 1, 1, 1, 2, false, true, "b_service", "o_service", false] new Profession,
+			    [ProfessionType.Ammo, "Ammo Service", Technology.Services, Rank.Private, 1, 1, 1, 2, false, true, "b_service", "o_service", false] new Profession,
+			    [ProfessionType.Repair, "Repair Service", Technology.Services, Rank.Private, 1, 1, 1, 2, false, true, "b_maint", "o_maint", false] new Profession,
+			    [ProfessionType.Motorized, "Motorized Infantry", Technology.Motorized, Rank.Private, 3, 1, 4, 4, false, true, "b_motor_inf", "o_motor_inf", false] new Profession,
 			    [ProfessionType.Sniper, "Sniper Teams", Technology.Ordnance, Rank.Private, 1, 1, 2, 2, true, false, "b_support", "o_support", false] new Profession,
 			    [ProfessionType.Mortars, "Mortars", Technology.Artillery, Rank.Private, 1, 1, 2, 2, false, false, "b_art", "o_art", true] new Profession,
 			    [ProfessionType.Uav, "UAV Teams", Technology.AirRecon, Rank.Private, 1, 1, 2, 2, true, false, "b_art", "o_art", true] new Profession,
 			    [ProfessionType.ReconChopper, "Recon Helicopter", Technology.AirRecon, Rank.Private, 1, 1, 2, 4, false, true, "b_air", "o_air", true] new Profession,
 			    [ProfessionType.AntiArmor, "Anti Armor", Technology.LightArmor, Rank.Private, 2, 1, 2, 4, true, false, "b_support", "o_support", true] new Profession,
-			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, Rank.Private, 2, 2, 10, 10, false, true, "b_mech_inf", "o_mech_inf", false] new Profession,
-			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Private, 1, 2, 9, 3, false, true, "b_armor", "o_armor", false] new Profession,
+			    [ProfessionType.Mechanized, "Mechanized Infantry", Technology.LightArmor, Rank.Private, 2, 1, 10, 10, false, true, "b_mech_inf", "o_mech_inf", false] new Profession,
+			    [ProfessionType.Armored, "Armored Troops", Technology.HeavyArmor, Rank.Private, 1, 1, 3, 3, false, true, "b_armor", "o_armor", false] new Profession,
 			    [ProfessionType.AttackHelicopter, "Attack Helicopters", Technology.AirArmed, Rank.Private, 1, 1, 2, 2, false, true, "b_air", "o_air", false] new Profession
         	];
 		};

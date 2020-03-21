@@ -11,10 +11,10 @@
  * Remarks:
  * This is the *only* only file where the global public network variables are actually written.
  */ 
+ 
+using Intrusion.Common;
 
-using Intrusion.Client;
-
-namespace Intrusion.Common
+namespace Intrusion.Communication
 {
 	public class PublicVariableHandler
 	{

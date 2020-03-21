@@ -1,0 +1,50 @@
+/*
+ * Name:	EstablishedTechnologiesCollection
+ * Date:	2018-12-29
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Keeps established technologies for all sides in the game.
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class EstablishedTechnologiesCollection
+	{
+		private fields ["_mEstablishedTechnologies" as Array /* of SideTechnology */];
+		
+		// Creates a EstablishedTechnologiesCollection object.
+		public constructor {
+			_mEstablishedTechnologies = [];
+		};
+		
+		public method AddEstablishedTechnology("_side" as Side, "_technology" as Technology)
+		{
+			_mEstablishedTechnologies pushBack [_side, _technology] new SideTechnology;
+		};
+		
+		public method Boolean SideTechnologyIsEstablished("_side" as Side, "_technology" as Technology)
+		{
+			scopeName "main";
+			
+			if (_technology == Technology.None) then {
+				true breakOut "main";
+			}
+			else {
+				{
+					private ["_sideTech" as SideTechnology];
+					_sideTech = _x;
+					
+					if (_sideTech.Side == _side && _sideTech.Technology == _technology) then {
+						true breakOut "main";
+					};
+				} foreach _mEstablishedTechnologies as SideTechnology;
+			};
+			
+			false
+		};
+	};
+};

@@ -1,7 +1,7 @@
 call compile preprocessFileLineNumbers "Communication\RemoteTargetOptions.sqx";
 call compile preprocessFileLineNumbers "Communication\Remote.sqx";
+call compile preprocessFileLineNumbers "Communication\PublicVariableHandler.sqx";
 
 using Intrusion.Communication;
 
-/* Options */
 call RemoteTargetOptions.Init;

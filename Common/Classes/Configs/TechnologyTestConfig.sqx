@@ -12,7 +12,10 @@ namespace Intrusion.Common
 	public class TechnologyTestConfig : TechnologyConfig
 	{
 		// Creates a TechnologyConfig object.
-		public constructor {
+		public constructor()
+		{
+			call _base.Constructor;
+			
 			// Must match the order in TechnologyEnum.
 			_self.Technologies = [
 				[Technology.Transport, "Transport", 25] new TechnologyInfo,

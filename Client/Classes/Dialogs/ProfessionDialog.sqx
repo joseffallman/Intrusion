@@ -251,9 +251,9 @@ namespace Intrusion.Client
 
 			// Required technology: 
  			_technology = [_profession.RequiredTechnology] call _mTechnologyConfig.GetTechnology;
-			private _requiredResearch = "N/A";
+			private _requiredAdministration = "N/A";
 			if (!isNull _technology && { _technology.Technology != Technology.None } ) then {
-				_requiredResearch = _technology.Name + "  (at " + str _technology.RequiredResearch + ")";
+				_requiredAdministration = _technology.Name + "  (at " + str _technology.RequiredAdministration + ")";
 			};
 
 
@@ -307,7 +307,7 @@ namespace Intrusion.Client
  			private _description = [
 				"<t size='2.2' underline='false'>" + _profession.Name + "</t>",
 				"",
-				"Required administration: " + _requiredResearch,
+				"Required administration: " + _requiredAdministration,
 				"Required player rank: " + ([_profession.RequiredRank] call RankMeta.GetRankText),
 				"Vehicle type: " + _vehicleNames,
 				"Vehicle production cost: " + _cost,

@@ -8,6 +8,7 @@
  * A class that converts orders to tasks and keeps all logic about them.
  */
 
+using Intrusion.Communication;
 using Intrusion.Common;
 
 namespace Intrusion.Client

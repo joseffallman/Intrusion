@@ -11,7 +11,7 @@ namespace Intrusion.Common
 {
 	public interface ICommonConfig
 	{
-		// Gets the technology configs.
+		// Gets the map markers configs.
 		property IMapMarkersConfig MapMarkers { get; };
 		
 		// Gets the technology configs.

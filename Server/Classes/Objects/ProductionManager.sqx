@@ -16,10 +16,10 @@ namespace Intrusion.Server
 {
 	public class ProductionManager : IGroupChangingProfessionListener
 	{
-		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mScientist" as IScientist, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as ProfessionConfig];
+		private fields ["_mProfessionVehiclesConfig" as IProfessionVehiclesConfig, "_mVehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mResourceBook" as ResourceBook, "_mReservationQueue" as ReservationQueue, "_mSquadHandler" as ISquadHandler, "_mOfficeWorker" as IOfficeWorker, "_mMessageHandler" as IMessageHandler, "_mProfessionConfig" as ProfessionConfig];
 
 		// Creates a ProductionManager object.
-		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_scientist" as IScientist, "_messageHandler" as IMessageHandler, "_professionConfig" as ProfessionConfig, "_reservationQueue" as ReservationQueue)
+		public constructor("_professionVehiclesConfig" as IProfessionVehiclesConfig, "_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_resourceBook" as ResourceBook, "_squadHandler" as ISquadHandler, "_officeWorker" as IOfficeWorker, "_messageHandler" as IMessageHandler, "_professionConfig" as ProfessionConfig, "_reservationQueue" as ReservationQueue)
 		{
 			_mProfessionVehiclesConfig = _professionVehiclesConfig;
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
@@ -27,7 +27,7 @@ namespace Intrusion.Server
 			_mVehicleSpawner = _vehicleSpawner;
 			_mSquadHandler = _squadHandler;
 			_mResourceBook = _resourceBook;
-			_mScientist = _scientist;
+			_mOfficeWorker = _officeWorker;
 			_mMessageHandler = _messageHandler;
 			_mProfessionConfig = _professionConfig;
 			_mReservationQueue = _reservationQueue;
@@ -121,8 +121,8 @@ namespace Intrusion.Server
 		
 		// Produces vehicles from the production queue.
 		public method PerformProduction {
-			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyInvented" as Boolean];
-			private ["_profession" as Profession, "_vehiclesCount" as Scalar];
+			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyEstablished" as Boolean];
+			private ["_profession" as Profession];
 			private ["_totalProduction" as Scalar, "_cost" as Scalar];
 
 			["ProductionManager.PerformProduction (" + str _self.Side + "):"] call LogHandler.Debug;
@@ -142,6 +142,11 @@ namespace Intrusion.Server
 				_tryOneMore = false;
 				_squad = [_mReservationQueue.CurrentReservation.Group] call _mSquadHandler.GetSquadByGroup;
 				
+				if (isNull _squad) then {
+					call _mReservationQueue.RemoveCurrentReservation;
+					_tryOneMore = true;
+				};
+				
 				["_totalProduction: " + str _totalProduction] call LogHandler.Debug;
 				["_cost: " + str _cost] call LogHandler.Debug;
 				["_tryOneMore: " + str _tryOneMore] call LogHandler.Debug;
@@ -154,36 +159,25 @@ namespace Intrusion.Server
 					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
 					["_profession: " + str _profession] call LogHandler.Debug;
 					
-					_technologyInvented = [_profession.RequiredTechnology] call _mScientist.TechnologyIsInvented;
-					["_technologyInvented: " + str _technologyInvented] call LogHandler.Debug;
+					_technologyEstablished = [_profession.RequiredTechnology] call _mOfficeWorker.TechnologyIsEstablished;
+					["_technologyEstablished: " + str _technologyEstablished] call LogHandler.Debug;
 					
-					if (!_technologyInvented) then
+					if (!_technologyEstablished) then
 					{
-						["if (!_technologyInvented) then"] call LogHandler.Debug;
+						["if (!_technologyEstablished) then"] call LogHandler.Debug;
 						call _mReservationQueue.MoveCurrentReservationLast;
 					}
-					else {
-						["else (if _technologyInvented)"] call LogHandler.Debug;
-						if (_profession.MaxUnitsPerVehicle <= 0) then {
-							_vehiclesCount = 1;
-						}
-						else {
-							_vehiclesCount = ceil ((count units _squad.Group) / (_profession.MaxUnitsPerVehicle));
-						};
-
-						["_vehiclesCount: " + str _vehiclesCount] call LogHandler.Debug;
+					else
+					{
+						["else (if _technologyEstablished)"] call LogHandler.Debug;
 						
-						if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented) then
+						if (_totalProduction >= _cost && _technologyEstablished) then
 						{
-							["if (_totalProduction >= _cost * _vehiclesCount && _technologyInvented)"] call LogHandler.Debug;
+							["if (_totalProduction >= _cost * _vehiclesCount && _technologyEstablished)"] call LogHandler.Debug;
 							
-							// Create the vehicle(s)
-							for "_i" from 1 to _vehiclesCount do
-							{
-								["for '_i' from 1 to _vehiclesCount do"] call LogHandler.Debug;
-								[_squad.Group, _squad.ProfessionType, _mReservationQueue.CurrentReservation.VehicleClassName, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
-								[_cost] call _mResourceBook.WithdrawProduction;
-							};
+							// Create the vehicle
+							[_squad.Group, _squad.ProfessionType, _mReservationQueue.CurrentReservation.VehicleClassName, _cost] call _mVehicleSpawner.SpawnProfessionVehicle;
+							[_cost] call _mResourceBook.WithdrawProduction;
 
 							// Tell the group
 							["Your squad's vehicle is ready and waiting for you at the base.", _mReservationQueue.CurrentReservation.Group] call _mMessageHandler.ShowMessage;
@@ -192,11 +186,12 @@ namespace Intrusion.Server
 							call _mReservationQueue.RemoveCurrentReservation;
 
 							// Tell the next squad that their vehicle is being produced.
+							/*
 							if (call _mReservationQueue.Count > 0) then
 							{
-								["if (call _mReservationQueue.Count > 0)"] call LogHandler.Debug;
-								//[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
+								[_mReservationQueue.CurrentReservation.Group] call _self.TellSquadVehicleSoonDelivered;
 							};
+							*/
 							
 							_tryOneMore = true;
 						};

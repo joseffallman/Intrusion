@@ -1,11 +1,11 @@
 /*
- * Name:	ScientistTests
+ * Name:	OfficeWorkerTests
  * Date:	2018-12-17
  * Version: 1.0
  * Author:  Engima
  *
  * Description:
- * Tests for the Server.Scientist object.
+ * Tests for the Server.OfficeWorker object.
  */
 
 using Sqx.UnitTest;
@@ -15,23 +15,23 @@ using Intrusion.Server;
 
 namespace Intrusion.Tests.Server
 {
-	public class ScientistTests
+	public class OfficeWorkerTests
 	{
 		#region Fields
 		
 		private static fields [
 			"_mMessageHandler" as TestMessageHandler,
 			"_mResourceBook" as ResourceBook,
-			"_mInventedTechnologiesCollection" as InventedTechnologiesCollection,
-			"_mScientist" as Scientist];
+			"_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection,
+			"_mOfficeWorker" as OfficeWorker];
 		
 		#endregion
 		
 		// Creates a OrderQueueTests object.
 		public static method Init {
-			["Intrusion.Tests.Server", "ScientistTests", [
-				"NoProgress_GetsFirstTechnology_TechnologyInvented",
-				"NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented"
+			["Intrusion.Tests.Server", "OfficeWorkerTests", [
+				"NoProgress_GetsFirstTechnology_TechnologyEstablished",
+				"NoProgress_GetsNotEnoughTechnology_TechnologyNotEstablished"
 			]] call TestEngine.Register;
 		};
 		
@@ -39,25 +39,25 @@ namespace Intrusion.Tests.Server
 		private static method BeforeEach {
 			_mResourceBook = new ResourceBook;
 			_mMessageHandler = new TestMessageHandler;
-			_mInventedTechnologiesCollection = new InventedTechnologiesCollection;
-			_mScientist = [west, _mResourceBook, new TestTechnologyConfig, _mMessageHandler, _mInventedTechnologiesCollection] new Scientist;
+			_mEstablishedTechnologiesCollection = new EstablishedTechnologiesCollection;
+			_mOfficeWorker = [west, _mResourceBook, new TestTechnologyConfig, _mMessageHandler, _mEstablishedTechnologiesCollection] new OfficeWorker;
 		};
 		
 //		private static method AfterEach {
 //		};
 		
-		private static method NoProgress_GetsFirstTechnology_TechnologyInvented {
+		private static method NoProgress_GetsFirstTechnology_TechnologyEstablished {
 			private ["_message" as Message];
 		
 			// Arrange
-			call _mScientist.PerformResearch;
-			[1500] call _mResourceBook.DepositResearch;
+			call _mOfficeWorker.PerformOfficeWork;
+			[1500] call _mResourceBook.DepositAdministration;
 			
 			// Act
-			call _mScientist.PerformResearch;
+			call _mOfficeWorker.PerformOfficeWork;
 			
 			// Assert
-			[[Technology.Transport] call _mScientist.TechnologyIsInvented, "Technology Transport should be invented."] call Assert.IsTrue;
+			[[Technology.Transport] call _mOfficeWorker.TechnologyIsEstablished, "Technology Transport should be established."] call Assert.IsTrue;
 			[1, count _mMessageHandler.Messages, "Message not sent."] call Assert.AreEqual;
 			
 			if (count _mMessageHandler.Messages > 0) then {
@@ -68,16 +68,16 @@ namespace Intrusion.Tests.Server
 			};
 		};
 		
-		private static method NoProgress_GetsNotEnoughTechnology_TechnologyNotInvented {
+		private static method NoProgress_GetsNotEnoughTechnology_TechnologyNotEstablished {
 			// Arrange
-			call _mScientist.PerformResearch;
+			call _mOfficeWorker.PerformOfficeWork;
 			[300] call _mResourceBook.DepositProduction;
 			
 			// Act
-			call _mScientist.PerformResearch;
+			call _mOfficeWorker.PerformOfficeWork;
 			
 			// Assert
-			[[Technology.Transport] call _mScientist.TechnologyIsInvented, "Technology Transport should not be invented."] call Assert.IsFalse;
+			[[Technology.Transport] call _mOfficeWorker.TechnologyIsEstablished, "Technology Transport should not be established."] call Assert.IsFalse;
 			[0, count _mMessageHandler.Messages] call Assert.AreEqual;
 		};
 	};

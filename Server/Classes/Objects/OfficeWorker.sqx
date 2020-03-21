@@ -1,0 +1,72 @@
+/*
+ * Name:	OfficeWorker
+ * Date:	2017-11-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * A class modeling a side's office administration refining generated administration (i.e. unlocks new technology).
+ */
+
+using Sqx.Collections;
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class OfficeWorker : IOfficeWorker
+	{
+		private fields ["_mResourceBook" as ResourceBook, "_mTechnologyConfig" as ITechnologyConfig, "_mMessageHandler" as IMessageHandler];
+		private fields ["_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection, "_mSide" as Side];
+		private fields ["_mAllTechnologiesEstablished" as Boolean];
+		
+		// Creates a Sceintist object.
+		public constructor("_side" as Side, "_resourceBook" as ResourceBook, "_technologyConfig" as ITechnologyConfig, "_messageHandler" as IMessageHandler, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection, ["_firstTechToAdminister" as Technology, 1 as Technology])
+		{
+			_mSide = _side;
+			_mResourceBook = _resourceBook;
+			_mTechnologyConfig = _technologyConfig;
+			_mMessageHandler = _messageHandler;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
+			
+			_self.CurrentTechnology = [_firstTechToAdminister] call _mTechnologyConfig.GetTechnology;
+			_mAllTechnologiesEstablished = false;
+		};
+		
+		// Gets the technology currently being administered.
+		public property TechnologyInfo CurrentTechnology { get; private set;};
+		
+		// Sets the current technology as established, notifies players, and starts administration for next.
+		private method SetTechnologyAsEstablished()
+		{
+			private ["_technology" as Technology];
+			
+			[_mSide, _self.CurrentTechnology.Technology] call _mEstablishedTechnologiesCollection.AddEstablishedTechnology;
+			["Your side has established '" + _self.CurrentTechnology.Name + "'", _mSide] call _mMessageHandler.ShowHint;
+			
+			// Get next technology to administer
+			if (_self.CurrentTechnology.Technology != TechnologyMeta.LastTechnology) then {
+				_technology = (_self.CurrentTechnology.Technology as Scalar) + 1 as Technology;
+				_self.CurrentTechnology = [_technology] call _mTechnologyConfig.GetTechnology;
+			}
+			else {
+				_mAllTechnologiesEstablished = true;
+			};
+		};
+		
+		// Performs office work and notifies players when different technology progress steps are achieved.
+		public method PerformOfficeWork()
+		{
+			if (!_mAllTechnologiesEstablished) then {
+				if (_mResourceBook.TotalAdministration >= _self.CurrentTechnology.RequiredAdministration) then {
+					call _self.SetTechnologyAsEstablished;
+				};
+			};
+		};
+
+		// Gets whether a technology is established yet or not.
+		public method Boolean TechnologyIsEstablished("_technology" as Technology)
+		{
+			[_mSide, _technology] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished
+		};
+	};
+};

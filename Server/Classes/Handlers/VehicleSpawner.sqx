@@ -226,6 +226,20 @@ namespace Intrusion.Server
 		    _vehicleObj setDir _spawnDir;
 		    _vehicleObj setPos [_spawnPos select 0, _spawnPos select 1, 0.1];
 		    
+		    // If squad vehicle, do not automatically eject AI squads when vehicle becomes immobile.
+		    if (!isNull _group) then {
+			    _vehicleObj allowCrewInImmobile true;
+		    };
+		    
+		    private _weapons = weapons _vehicleObj;
+		    private _maxAmmoMainGun = 0;
+		    
+		    if (count _weapons > 0) then {
+		    	_maxAmmoMainGun = _vehicleObj ammo (_weapons select 0);
+		    };
+		    
+		    _vehicleObj setVariable ["MaxAmmoMaingun", _maxAmmoMainGun];
+		    
 		    clearWeaponCargoGlobal _vehicleObj;
 		    clearMagazineCargoGlobal _vehicleObj;
 		    clearBackpackCargoGlobal _vehicleObj;
@@ -233,6 +247,10 @@ namespace Intrusion.Server
 		    
         	_intrusionVehicle = [_vehicleObj, _side, _professionType, _group, _cost] new IntrusionVehicle;
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
+        	
+        	if (_professionType != ProfessionType.Fuel) then {
+	        	_vehicleObj setFuel 0.4 + random 0.3;
+        	};
         	
 	    	{
 	    		private ["_attachObj" as Object, "_attachObjInfo" as VehicleBoxAttachmentInfo];
@@ -246,7 +264,7 @@ namespace Intrusion.Server
 				
 				// Fill the weaponbox again with weapons/items.
 				{
-	            	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+	            	if (_x.ClassName isKindOf ["Bag_Base", configFile >> "CfgVehicles"]) then {
 			    		_attachObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
 			    	} else {
 	    	        	_attachObj addItemCargoGlobal [_x.ClassName, _x.Quantity];
@@ -273,7 +291,7 @@ namespace Intrusion.Server
 		    // If there are no attachments to this vehicle add cargo items to vehicle cargo .
 		    if (count _vehicleClassInfo.Attachments == 0) then {
 			    {
-			    	if (_x.ClassName isKindOf ["Bag_Base", configFile>>"CfgVehicles"]) then {
+			    	if (_x.ClassName isKindOf ["Bag_Base", configFile >> "CfgVehicles"]) then {
 			    		_vehicleObj addBackpackCargoGlobal [_x.ClassName, _x.Quantity];
 			    	} else {
 	    	        	_vehicleObj addItemCargoGlobal [_x.ClassName, _x.Quantity];

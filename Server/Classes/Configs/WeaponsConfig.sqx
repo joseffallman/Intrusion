@@ -27,6 +27,7 @@ namespace Intrusion.Server
 				[west, WeaponBoxType.Basic, Technology.None, "hgun_P07_F", ["16Rnd_9x21_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				
 				[west, WeaponBoxType.Advanced, Technology.AdvancedWeapons, "MMG_02_sand_RCO_LP_F", ["130Rnd_338_Mag"], CrateItemType.Weapon] new WeaponInfo,
+				[west, WeaponBoxType.Advanced, Technology.AdvancedWeapons, "", ["Binocular"], CrateItemType.Weapon] new WeaponInfo,
 				
 				[west, WeaponBoxType.Grenades, Technology.None, "", ["HandGrenade"], CrateItemType.Weapon] new WeaponInfo,
 				[west, WeaponBoxType.Grenades, Technology.None, "", ["SmokeShell"], CrateItemType.Weapon] new WeaponInfo,
@@ -55,6 +56,7 @@ namespace Intrusion.Server
 				[east, WeaponBoxType.Basic, Technology.None, "hgun_Rook40_F", ["16Rnd_9x21_Mag"], CrateItemType.Weapon] new WeaponInfo,
 				
 				[east, WeaponBoxType.Advanced, Technology.AdvancedWeapons, "MMG_01_hex_ARCO_LP_F", ["150Rnd_93x64_Mag"], CrateItemType.Weapon] new WeaponInfo,
+				[east, WeaponBoxType.Advanced, Technology.AdvancedWeapons, "", ["Binocular"], CrateItemType.Weapon] new WeaponInfo,
 				
 				[east, WeaponBoxType.Grenades, Technology.None, "", ["HandGrenade"], CrateItemType.Weapon] new WeaponInfo,
 				[east, WeaponBoxType.Grenades, Technology.None, "", ["SmokeShell"], CrateItemType.Weapon] new WeaponInfo,

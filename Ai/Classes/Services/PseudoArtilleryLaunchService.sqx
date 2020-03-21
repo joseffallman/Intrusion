@@ -8,6 +8,7 @@
  * A service that handles the AI's pseudo artillery launces.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 
 namespace Intrusion.Ai
@@ -18,6 +19,8 @@ namespace Intrusion.Ai
 		
 		// Creates a PseudoArtilleryService object.
 		public constructor("_targetPos" as Array) {
+			call _base.Constructor;
+			
 			_mTargetPos = _targetPos;
 		};
 		

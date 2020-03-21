@@ -8,6 +8,7 @@
  * A base class for all action services.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 
 namespace Intrusion.Ai

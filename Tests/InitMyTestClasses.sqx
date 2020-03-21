@@ -9,7 +9,7 @@ call compile preprocessFileLineNumbers "Tests\Helpers\TestMessageHandler.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Message.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestVehicleClassNamesConfig.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestProfessionVehiclesConfig.sqx";
-call compile preprocessFileLineNumbers "Tests\Helpers\TestScientist.sqx";
+call compile preprocessFileLineNumbers "Tests\Helpers\TestOfficeWorker.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestProfessionConfig.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestMissionTime.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\TestGameplayConfig.sqx";
@@ -30,10 +30,9 @@ call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestActionService.sqx";
 call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestUnitContainer.sqx";
 
 /* Include test classes */
-//call compile preprocessFileLineNumbers "Tests\Example\ExampleTests.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ReservationQueueTests.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
-//call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ScientistTests.sqx";
+//call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OfficeWorkerTests.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ResourceCollectorTests.sqx";
 
 call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\ActionPerformerNoVehicleTests.sqx";
@@ -41,10 +40,9 @@ call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\ActionPerformer
 call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMotorizedTests.sqx";
 
 /* Initialize test classes */
-//call Tests.Example.ExampleTests.Init;
 //call Intrusion.Tests.Server.ReservationQueueTests.Init;
 //call Intrusion.Tests.Server.ProductionManagerTests.Init;
-//call Intrusion.Tests.Server.ScientistTests.Init;
+//call Intrusion.Tests.Server.OfficeWorkerTests.Init;
 //call Intrusion.Tests.Server.ResourceCollectorTests.Init;
 
 call Intrusion.Tests.Ai.ActionPerformerNoVehicleTests.Init;
