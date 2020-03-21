@@ -574,6 +574,7 @@ namespace Intrusion.Tests.Ai
 			[AiSquadState.Idle, _mKnowledge.State, "AI dead but not idle."] call Assert.AreEqual;
 			[[0, 0, 0], _mWorld.LeaderPos, "AI did not respawn."] call Assert.AreEqual;
 			[_mActionPerformer.EquipMemberWithLauncherCalled, "AI picked a launcher but it's not established."] call Assert.IsFalse;
+			[_mKnowledge.Order] call Assert.IsNull;
 		};
 		
 		private static method SingleSquadMemberIsDead_Act_TakesAtLauncherAtRespawn

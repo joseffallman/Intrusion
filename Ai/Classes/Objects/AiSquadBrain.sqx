@@ -88,8 +88,8 @@ namespace Intrusion.Ai
 		// Creates a new order on own initiative.
 		private method CreateOrderOnOwnInitiative()
 		{
-			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedLocations" as Array /* of ValuedObject */];
-			private ["_count" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
+			private ["_resourceLocationCollection" as ResourceLocationCollection, "_location" as ResourceLocation, "_locations" as Array /* of ResourceLocation */, "_valuedEnemyLocations" as Array /* of ValuedObject */, "_allValuedLocations" as Array /* of ValuedObject */];
+			private ["_locationsCount" as Scalar, "_enemyLocationsCount" as Scalar, "_index" as Scalar, "_distanceFromBase" as Scalar, "_orderType" as OrderType, "_orderTimeoutTime" as Scalar];
 
 			_mKnowledge.OrderIsGivenByBrigadeLeader = false;
 
@@ -102,8 +102,10 @@ namespace Intrusion.Ai
 			if (!isNull _resourceLocationCollection) then
 			{
 				_locations = call _resourceLocationCollection.GetResourceLocations;
-				_count = 0;
-				_valuedLocations = [];
+				_locationsCount = 0;
+				_enemyLocationsCount = 0;
+				_valuedEnemyLocations = [];
+				_allValuedLocations = [];
 				
 				_location = _mKnowledge.WinnersLocation;
 				
@@ -112,29 +114,73 @@ namespace Intrusion.Ai
 				{
 					// Value the locations after distance from home base
 					{
+						_locationsCount = _locationsCount + 1;
+						_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
+						
 						if (_x.Side != side _mKnowledge.Group) then {
-							_distanceFromBase = ([_x.MarkerName] call _mMarkerHandler.GetMarkerPos) distance ([_mKnowledge.BaseMarkerInfo.BaseMarkerName] call _mMarkerHandler.GetMarkerPos);
-							_valuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
-							_count = _count + 1;
+							_valuedEnemyLocations pushBack [_x, _distanceFromBase] new ValuedObject;
+							_enemyLocationsCount = _enemyLocationsCount + 1;
 						};
+						
+						_allValuedLocations pushBack [_x, _distanceFromBase] new ValuedObject;
 					} foreach _locations as ResourceLocation;
 					
-					_valuedLocations = [_valuedLocations] call Sorter.QSort;
+					_valuedEnemyLocations = [_valuedEnemyLocations] call Sorter.QSort;
+					_allValuedLocations = [_allValuedLocations] call Sorter.QSort;
 					
-					if (_count > 3) then {
-						_count = 3;
+					private _wantsAttackOrder = ([100] call _mRandomGenerator.GetNumber) < 67;
+					
+					if (!_wantsAttackOrder) then
+					{
+						// If this group is the closest group to a friendly location, go and defend it
+						
+						private _locationFound = false;
+						private _locationIndex = 0;
+						
+						private ["_currentLocation" as ResourceLocation];
+						_currentLocation = classNull;
+						
+						while { !_locationFound && _locationIndex < _locationsCount } do
+						{
+							_currentLocation = ((_allValuedLocations select _locationIndex) as ValuedObject).Object as ResourceLocation;
+							
+							if (_currentLocation.Side == side _mKnowledge.Group) then
+							{
+								private _closestGroup = [_currentLocation.MarkerName, _currentLocation.Side] call _mWorld.GetAlliedGroupClosestToLocation;
+								
+								if (!isNull _closestGroup && { _closestGroup == _mKnowledge.Group }) then {
+									_locationFound = true;
+									_location = _currentLocation;
+									_orderType = OrderType.Defend;
+									_orderTimeoutTime = 20;
+								};
+							};
+							
+							_locationIndex = _locationIndex + 1;
+						};
+						
+						if (!_locationFound) then {
+							_wantsAttackOrder = true;
+						};
 					};
 					
-					if (_count > 0) then {
-						_index = floor ([_count] call _mRandomGenerator.GetNumber);
-						_location = ((_valuedLocations select _index) as ValuedObject).Object as ResourceLocation;
+					if (_wantsAttackOrder) then // Attack order
+					{
+						if (_enemyLocationsCount > 3) then {
+							_enemyLocationsCount = 3;
+						};
 						
-						// _location is here a copied object (since it has been sorted) but we want it to be a reference.
-						_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
-						_orderType = OrderType.Attack;
-						_orderTimeoutTime = 0;
-						
-			        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
+						if (_enemyLocationsCount > 0) then {
+							_index = floor ([_enemyLocationsCount] call _mRandomGenerator.GetNumber);
+							_location = ((_valuedEnemyLocations select _index) as ValuedObject).Object as ResourceLocation;
+							
+							// _location is here a copied object (since it has been sorted) but we want it to be a reference.
+							_location = [_location.MarkerName] call _resourceLocationCollection.GetResourceLocationByMarkerName;
+							_orderType = OrderType.Attack;
+							_orderTimeoutTime = 0;
+							
+				        	["Group " + str _mKnowledge.Group + " ordered to " + _location.MarkerName + "."] call LogHandler.Debug;
+						};
 					};
 				}
 				else {
@@ -593,6 +639,10 @@ namespace Intrusion.Ai
 					};
 				};
 			} foreach _newMembers as IUnitContainer;
+			
+			if (!_mKnowledge.OrderIsGivenByBrigadeLeader) then {
+				_mKnowledge.Order = classNull;
+			};
 		};
 		
 		#region Public Methods
