@@ -18,7 +18,7 @@ namespace Intrusion.Common
 		
 		// Gets a mission side info config object.
 		// _side (Side): The side of the config object.
-		// Returns (MissionSideInfo): A mission side config object.
-		method GetMapMarkerInfo("_side" as Side);
+		// Returns (MapMarkerInfo): A map marker config object.
+		method MapMarkerInfo GetMapMarkerInfo("_side" as Side);
 	};
 };
