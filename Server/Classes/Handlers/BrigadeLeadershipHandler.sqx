@@ -10,6 +10,7 @@
 
 using Intrusion.Common;
 using Intrusion.Communication;
+using Intrusion.Ai;
 
 namespace Intrusion.Server
 {
@@ -23,7 +24,10 @@ namespace Intrusion.Server
 		};
 		
 		// Sets the brigade leadership if it is not already occupied by another player.
-		public method TrySetBrigadeLeader("_playerUid" as String, "_side" as Side)
+		// _playerUid (String): The UID for the player.
+		// _side (Side): The player's side.
+		// Returns (Boolean): true i the brigade leader was set. Otherwise false.
+		public method Boolean TrySetBrigadeLeader("_playerUid" as String, "_side" as Side)
 		{
 			private ["_playerInfoCollection" as PlayerInfoCollection, "_newLeadershipSet" as Boolean, "_playerInfo" as PlayerInfo];
 		
@@ -42,6 +46,8 @@ namespace Intrusion.Server
 			else {
 				["ClientEventReciever.OnBrigadeLeaderRejected", [_playerUid]] call Remote.Invoke;
 			};
+			
+			return _newLeadershipSet;
 		};
 		
 		public method QuitBrigadeLeadership("_playerUid" as String)

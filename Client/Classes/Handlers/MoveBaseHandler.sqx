@@ -65,10 +65,10 @@ namespace Intrusion.Client
 			_self.RespawnPointSet && _self.CarParkPointSet && _self.WeaponsPointSet
 		};
 		
-		public method SetRespawnPoint()
+		public method SetRespawnPoint("_viewPos" as ViewPos)
 		{
 			_self.RespawnPointSet = true;
-			_mRespawnPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
+			_mRespawnPoint = _viewPos;
 			
 			if (!isNull _mRespawnArrow) then {
 				deleteVehicle _mRespawnArrow;
@@ -78,10 +78,10 @@ namespace Intrusion.Client
 			_mRespawnArrow setPos _mRespawnPoint.Position;
 		};
 		
-		public method SetCarParkPoint()
+		public method SetCarParkPoint("_viewPos" as ViewPos)
 		{
 			_self.CarParkPointSet = true;
-			_mCarParkPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
+			_mCarParkPoint = _viewPos;
 			
 			if (!isNull _mCarParkArrow) then {
 				deleteVehicle _mCarParkArrow;
@@ -91,10 +91,10 @@ namespace Intrusion.Client
 			_mCarParkArrow setPos _mCarParkPoint.Position;
 		};
 		
-		public method SetWeaponDepotPoint()
+		public method SetWeaponDepotPoint("_viewPos" as ViewPos)
 		{
 			_self.WeaponsPointSet = true;
-			_mWeaponDepotPoint = [player getPos [5, getDir player], getDir player] new ViewPos;
+			_mWeaponDepotPoint = _viewPos;
 			
 			if (!isNull _mWeaponDepotArrow) then {
 				deleteVehicle _mWeaponDepotArrow;

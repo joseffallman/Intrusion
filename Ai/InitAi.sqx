@@ -29,3 +29,4 @@ call compile preprocessFileLineNumbers "Ai\Classes\Services\DisembarkActionServi
 call compile preprocessFileLineNumbers "Ai\Classes\Services\ReviveActionService.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\PseudoArtilleryLaunchService.sqx";
 call compile preprocessFileLineNumbers "Ai\Classes\Services\PseudoArtilleryService.sqx";
+call compile preprocessFileLineNumbers "Ai\Classes\Services\AiBrigadeLeaderService.sqx";

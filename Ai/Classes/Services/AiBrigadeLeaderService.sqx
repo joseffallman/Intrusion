@@ -8,6 +8,7 @@
  * A class that models an AI brigade leader, making decisions and giving orders.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Server;
 
@@ -15,17 +16,48 @@ namespace Intrusion.Ai
 {
 	public class AiBrigadeLeaderService : Service
 	{
-		private fields ["_mSide" as Side];
+		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime];
 		
-		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler)
+		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_baseConfig" as BaseConfig, "_missionTime" as IMissionTime)
 		{
+			call _base.Constructor;
+			
 			_mSide = _side;
+			_mSquadHandler = _squadHandler;
+			_mObservationHandler = _observationHandler;
+			_mMessageHandler = _messageHandler;
+			_mMapMarkersConfig = _mapMarkersConfig;
+			_mVehicleSpawner = _vehicleSpawner;
+			_mBaseConfig = _baseConfig;
+			_mMissionTime = _missionTime;
 		};
 		
 		protected override method Run()
 		{
+			private ["_moveBaseService" as MoveBaseService, "_baseLayout" as BaseLayout, "_carParkPos" as Array];
 			
-		
+			_moveBaseService = classNull;
+			
+			while { !_self.IsCancelling } do
+			{
+				if ((call _mMissionTime.GetMissionTime) > 30 && isNull _moveBaseService) then
+				{
+					_carParkPos = [((getPos player) select 0) + (random 200) - 100, ((getPos player) select 1) + (random 200) - 100, 0];
+					private _dir = random 360;
+					
+					_baseLayout = [
+						[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
+						[_carParkPos, _dir + 180] new ViewPos,
+						[_carParkPos getPos [20, _dir], _dir + 180] new ViewPos,
+					] new BaseLayout;
+				
+					_moveBaseService = [_mSide, _baseLayout, _mMessageHandler, _mMapMarkersConfig, _mVehicleSpawner, _mBaseConfig] new MoveBaseService;
+					call _moveBaseService.RunAsync;
+				};
+				
+				sleep 1;
+			};
+			
 			call _base.Run;
 		};
 	};

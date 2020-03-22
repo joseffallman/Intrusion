@@ -8,6 +8,7 @@
  * Contains "global" server objects and services.
  */
 
+using Sqx.Services;
 using Intrusion.Common;
 using Intrusion.Ai;
 
@@ -35,6 +36,7 @@ namespace Intrusion.Server
 			_self.MissionCounterService = [gCommon.MissionParametersHandler.MatchLengthMinutes] new MissionCounterService;
 			_self.ObservationHandler = new ObservationHandler;
 			_self.SupportVehiclesService = new SupportVehiclesService;
+			_self.BrigadeLeaderWestService = [west, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, new BaseConfig, _missionTime] new AiBrigadeLeaderService;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -51,5 +53,6 @@ namespace Intrusion.Server
 		public property MissionCounterService MissionCounterService { get; private set; };
 		public property ObservationHandler ObservationHandler { get; private set; };
 		public property SupportVehiclesService SupportVehiclesService { get; private set; };
+		public property Service BrigadeLeaderWestService { get; private set; };
 	};
 };

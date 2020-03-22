@@ -7,6 +7,9 @@
  * Description:
  * Class that models the Build Base dialog.
  */
+
+using Intrusion.Common;
+
 namespace Intrusion.Client
 {
 	public class MoveBaseDialog
@@ -44,7 +47,7 @@ namespace Intrusion.Client
 		};
 		
 		public static method OnRespawnButtonPressed() {
-			call gClient.MoveBaseHandler.SetRespawnPoint;
+			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetRespawnPoint;
 			
 			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
 				call _self.CloseDialog;
@@ -52,7 +55,7 @@ namespace Intrusion.Client
 		};
 		
 		public static method OnCarParkButtonPressed() {
-			call gClient.MoveBaseHandler.SetCarParkPoint;
+			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetCarParkPoint;
 			
 			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
 				call _self.CloseDialog;
@@ -60,7 +63,7 @@ namespace Intrusion.Client
 		};
 		
 		public static method OnWeaponDepotButtonPressed() {
-			call gClient.MoveBaseHandler.SetWeaponDepotPoint;
+			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetWeaponDepotPoint;
 			
 			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
 				call _self.CloseDialog;

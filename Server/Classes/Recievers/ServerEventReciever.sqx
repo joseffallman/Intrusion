@@ -25,8 +25,13 @@ namespace Intrusion.Server
 		// Called when a player claims brigade leadership.
 		// _playerUid (String): The player's UID.
 		// _side (Side): The player's side.
-		public static method OnPlayerClaimBrigadeLeadership("_playerUid" as String, "_side" as Side) {
-			[_playerUid, _side] call gServer.BrigadeLeadershipHandler.TrySetBrigadeLeader;
+		public static method OnPlayerClaimBrigadeLeadership("_playerUid" as String, "_side" as Side)
+		{
+			private _leadershipSet = [_playerUid, _side] call gServer.BrigadeLeadershipHandler.TrySetBrigadeLeader;
+			
+			if (_leadershipSet) then {
+				call gServer.BrigadeLeaderWestService.Cancel;
+			};
 		};
 		
 		// Called when a player quits brigade leadership.
@@ -34,6 +39,7 @@ namespace Intrusion.Server
 		// _side (Side): The player's side.
 		public static method OnPlayerQuitBrigadeLeadership("_playerUid" as String) {
 			[_playerUid] call gServer.BrigadeLeadershipHandler.QuitBrigadeLeadership;
+			call gServer.BrigadeLeaderWestService.RunAsync;
 		};
 		
 		public static method OnLeaderMoveBase("_leader" as Object, "_baseLayout" as BaseLayout)
