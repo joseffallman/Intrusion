@@ -106,10 +106,11 @@ namespace Intrusion.Ai
 			_moveBaseService = classNull;
 			
 			while { !(call PublicVariableHandler.ResourceLocationCollectionHasValue) } do {
-				_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 				sleep 1;
 			};
 			
+			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+				
 			_winnerLocation = call _locationCollection.GetWinnersLocation;
 			private _winnerLocationPos = getMarkerPos _winnerLocation.MarkerName;
 			private _basePos = _winnerLocationPos getPos [150, random 360];

@@ -104,9 +104,6 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrain.sqx" FileName="Ai\Classes\Objects\AiSquadBrain.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiSquadBrain.sqx.sqf" FileName="Ai\Classes\Objects\AiSquadBrain.sqx.sqf">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiUnitBalancer.sqx" FileName="Ai\Classes\Objects\AiUnitBalancer.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
