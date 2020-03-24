@@ -18,6 +18,7 @@ namespace Intrusion.Ai
 	public class AiBrigadeLeaderService : Service
 	{
 		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime];
+		private fields ["_mNextMoveBaseTime" as Scalar];
 		
 		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_baseConfig" as BaseConfig, "_missionTime" as IMissionTime)
 		{
@@ -31,6 +32,9 @@ namespace Intrusion.Ai
 			_mVehicleSpawner = _vehicleSpawner;
 			_mBaseConfig = _baseConfig;
 			_mMissionTime = _missionTime;
+			
+			_mNextMoveBaseTime = (call _missionTime.GetMissionTime) + 5 * 60 + random (5 * 60);
+			//_mNextMoveBaseTime = (call _missionTime.GetMissionTime) + random 60;
 		};
 		
 		// Uses the smallest quadrant method to find the position closest to all counted markers.
@@ -38,13 +42,13 @@ namespace Intrusion.Ai
 		private static method Array FindClosestToMarkersPos("_markers" as Array)
 		{
 			private ["_topX" as Scalar, "_topY" as Scalar, "_bottomX" as Scalar, "_bottomY" as Scalar];
-			private ["_bestPos" as Array, "_bestQuadrantValue" as Scalar];
+			private ["_bestPos" as Array, "_quadrantValue" as Scalar, "_bestQuadrantValue" as Scalar];
 			
 			_topX = getMarkerPos (_markers select 0) select 0;
 			_topY = getMarkerPos (_markers select 0) select 1;
 			_bottomX = getMarkerPos (_markers select 0) select 0;
 			_bottomY = getMarkerPos (_markers select 0) select 1;
-
+			
 			{
 				private _pos = getMarkerPos _x;
 				
@@ -62,44 +66,78 @@ namespace Intrusion.Ai
 				};
 			} foreach _markers as String;
 			
-			private _x = _topX;
+			private _xx = _topX;
+			
 			_bestQuadrantValue = -1;
 			_bestPos = [_topX, _topY, 0];
 			
-			while { _x < _bottomX } do
+			while { _xx < _bottomX } do
 			{
 				private _y = _topY;
 				
 				while { _y > _bottomY } do
 				{
-					private _quadrantValue = -1;
+					_quadrantValue = 0;
 					
 					{
-						_quadrantValue = _quadrantValue + ([_x, _y] distance2D getMarkerPos _x) ^ 2;
+						_quadrantValue = _quadrantValue + (([_xx, _y] distance2D (getMarkerPos _x)) / 1000) ^ 2;
 					} foreach _markers as String;
 					
 					if (_bestQuadrantValue < 0 || _quadrantValue < _bestQuadrantValue) then
 					{
 						_bestQuadrantValue = _quadrantValue;
-						_bestPos = [_x, _y, 0];
+						_bestPos = [_xx, _y, 0];
 					};
 					
 					_y = _y - 200;
 				};
 				
-				_x = _x + 200;
+				_xx = _xx + 200;
 			};
 			
 			return _bestPos;
+		};
+		
+		private method Boolean TooCloseToResourceLocation("_pos" as Array)
+		{
+			private ["_locationCollection" as ResourceLocationCollection, "_resourceLocations" as Array];
+			
+			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
+			_resourceLocations = call _locationCollection.GetResourceLocations;
+			
+			{
+				if (_pos distance2D getMarkerPos _x.MarkerName < _mBaseConfig.MinDistanceFromResourceLocation) then
+				{
+					return true;
+				};
+			} foreach _resourceLocations as ResourceLocation;
+			
+			return false;
+		};
+		
+		private method Boolean TooCloseToEnemies("_pos" as Array)
+		{
+			private ["_observations" as Array /* of Observation */];
+			
+			_observations = call _mObservationHandler.GetObservations;
+			
+			{
+				if ([side group _x, _mSide] call BIS_fnc_sideIsEnemy && { _x distance _pos < 500 }) then
+				{
+					return true;
+				};
+			} foreach allUnits as Object;
+			
+			return false;
 		};
 		
 		// Finds a new base position around a given position.
 		// _markPos (Array): The position where to find a base position.
 		// _initialRadius (Scalar): Optional. The initial radius how far from the position that is ok. This
 		// value will expand until a position is found.
-		private static method Array FindBasePos("_markPos" as Array, ["_initialRadius" as Scalar, 0])
+		private method Array FindBasePos("_markPos" as Array, ["_initialRadius" as Scalar, 0])
 		{
-			private ["_roads" as Array, "_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_danger", "_foundIt", "_tries"];
+			private ["_roads" as Array, "_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_isOk" as Boolean, "_foundIt", "_tries"];
 			private ["_distanceToNearestVehicle" as Scalar, "_distanceFromBuilding" as Scalar, "_allowedSteepness" as Scalar, "_closeRoads" as Array];
 			
 			_distanceFromBuilding = 25;
@@ -111,7 +149,7 @@ namespace Intrusion.Ai
 			_tries = 0;
 			_extendedRadius = 0;
 			
-			while { true } do
+			while { _tries < 2500 } do
 			{
 				scopeName "SpawnPosGen";
 				
@@ -124,7 +162,7 @@ namespace Intrusion.Ai
 				_closeRoads = _spawnpos nearRoads (_distanceFromBuilding + 60);
 				_isFlat = _spawnpos isFlatEmpty [2, -1, _allowedSteepness, 10, 0, false, objNull ];
 				
-				_danger = false;
+				_isOk = true;
 				
 				private _trees = []; 
 				{
@@ -133,15 +171,19 @@ namespace Intrusion.Ai
 				    };
 				} forEach nearestObjects [_spawnpos, [], 30];
 				
-				{ if (floor(_spawnpos distance getPos _x) < _distanceFromBuilding) then { _danger = true; }; } forEach _houses;
-				{ if (floor(_spawnpos distance getPos _x) < _distanceToNearestVehicle) then { _danger = true; }; } forEach _vehicles;
-				if (count _roads > 0 || count _closeRoads == 0) then { _danger = true; };
-				if (count _trees > 10) then { _danger = true; };
+				{ if (floor(_spawnpos distance getPos _x) < _distanceFromBuilding) then { _isOk = false; }; } forEach _houses;
+				{ if (floor(_spawnpos distance getPos _x) < _distanceToNearestVehicle) then { _isOk = false; }; } forEach _vehicles;
+				if (count _roads > 0 || count _closeRoads == 0) then { _isOk = false; };
+				if (count _trees > 10) then { _isOk = false; };
 				
-				if (surfaceIsWater _spawnpos) then { _danger = true; };
-				if (count _isFlat < 1 ) then { _danger = true; };
+				if (surfaceIsWater _spawnpos) then { _isOk = false; };
+				if (count _isFlat < 1 ) then { _isOk = false; };
 				
-				if (!_danger) then { 
+				if (_isOk && { [_spawnpos] call _self.TooCloseToResourceLocation }) then { _isOk = false; };
+				
+				if (_isOk && { [_spawnpos] call _self.TooCloseToEnemies }) then { _isOk = false; };
+				
+				if (_isOk) then { 
 					_foundIt = true;
 					breakOut "SpawnPosGen"
 				};
@@ -171,7 +213,7 @@ namespace Intrusion.Ai
 			};
 			
 			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
-				
+			
 			//_winnerLocation = call _locationCollection.GetWinnersLocation;
 			//private _winnerLocationPos = getMarkerPos _winnerLocation.MarkerName;
 			//private _basePos = _winnerLocationPos getPos [150, random 360];
@@ -187,22 +229,31 @@ namespace Intrusion.Ai
 			
 			while { !_self.IsCancelling } do
 			{
-				if ((call _mMissionTime.GetMissionTime) > 30 && isNull _moveBaseService) then
-				{
-					_carParkPos = [_basePos] call _self.FindBasePos;
-					private _dir = random 360;
-					
-					_baseLayout = [
-						[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
-						[_carParkPos, _dir + 180] new ViewPos,
-						[_carParkPos getPos [20, _dir], _dir + 180] new ViewPos,
-					] new BaseLayout;
+				private _missionTime = call _mMissionTime.GetMissionTime;
 				
-					_moveBaseService = [_mSide, _baseLayout, _mMessageHandler, _mMapMarkersConfig, _mVehicleSpawner, _mBaseConfig] new MoveBaseService;
-					call _moveBaseService.RunAsync;
+				if (_missionTime > _mNextMoveBaseTime) then
+				{
+					_carParkPos = [_basePos, 500] call _self.FindBasePos;
+					
+					if (count _carParkPos > 0) then
+					{
+						private _dir = random 360;
+						
+						_baseLayout = [
+							[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
+							[_carParkPos, _dir + 180] new ViewPos,
+							[_carParkPos getPos [20, _dir], _dir + 180] new ViewPos,
+						] new BaseLayout;
+					
+						_moveBaseService = [_mSide, _baseLayout, _mMessageHandler, _mMapMarkersConfig, _mVehicleSpawner, _mBaseConfig] new MoveBaseService;
+						call _moveBaseService.RunAsync;
+					};
+					
+					_mNextMoveBaseTime = _mNextMoveBaseTime + 15 * 60 + (random 15) * 60;
+					//_mNextMoveBaseTime = _mNextMoveBaseTime + 5 * 60 + (random 5) * 60;
 				};
 				
-				sleep 1;
+				sleep 10;
 			};
 			
 			call _base.Run;

@@ -36,8 +36,8 @@ namespace Intrusion.Server
 			_self.MissionCounterService = [gCommon.MissionParametersHandler.MatchLengthMinutes] new MissionCounterService;
 			_self.ObservationHandler = new ObservationHandler;
 			_self.SupportVehiclesService = new SupportVehiclesService;
-			_self.BrigadeLeaderWestService = [west, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, new BaseConfig, _missionTime] new AiBrigadeLeaderService;
-			_self.BrigadeLeaderEastService = [east, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, new BaseConfig, _missionTime] new AiBrigadeLeaderService;
+			_self.BrigadeLeaderWestService = [west, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, gCommonConfig.BaseConfig, _missionTime] new AiBrigadeLeaderService;
+			_self.BrigadeLeaderEastService = [east, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, gCommonConfig.BaseConfig, _missionTime] new AiBrigadeLeaderService;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
