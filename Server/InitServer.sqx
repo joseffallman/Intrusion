@@ -77,5 +77,6 @@ gServer = [] new IntrusionServer;
 [gServer.TargetHandler, gServer.ObservationHandler, gServerConfig.Gameplay.CompetingSides] call ObservationService.Init;
 
 call gServer.BrigadeLeaderWestService.RunAsync;
+call gServer.BrigadeLeaderEastService.RunAsync;
 
 #endregion

@@ -37,6 +37,7 @@ namespace Intrusion.Server
 			_self.ObservationHandler = new ObservationHandler;
 			_self.SupportVehiclesService = new SupportVehiclesService;
 			_self.BrigadeLeaderWestService = [west, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, new BaseConfig, _missionTime] new AiBrigadeLeaderService;
+			_self.BrigadeLeaderEastService = [east, _self.ResourceLocationHandler, _self.SquadHandler, _self.ObservationHandler, _self.MessageHandler, gCommonConfig.MapMarkers, _self.VehicleSpawner, new BaseConfig, _missionTime] new AiBrigadeLeaderService;
 		};
 	
 		public property IMessageHandler MessageHandler { get; private set; };
@@ -54,5 +55,6 @@ namespace Intrusion.Server
 		public property ObservationHandler ObservationHandler { get; private set; };
 		public property SupportVehiclesService SupportVehiclesService { get; private set; };
 		public property Service BrigadeLeaderWestService { get; private set; };
+		public property Service BrigadeLeaderEastService { get; private set; };
 	};
 };

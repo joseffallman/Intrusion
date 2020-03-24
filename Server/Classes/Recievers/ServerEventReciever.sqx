@@ -30,7 +30,12 @@ namespace Intrusion.Server
 			private _leadershipSet = [_playerUid, _side] call gServer.BrigadeLeadershipHandler.TrySetBrigadeLeader;
 			
 			if (_leadershipSet) then {
-				call gServer.BrigadeLeaderWestService.Cancel;
+				if (_side == west) then {
+					call gServer.BrigadeLeaderWestService.Cancel;
+				}
+				else {
+					call gServer.BrigadeLeaderEastService.Cancel;
+				};
 			};
 		};
 		
