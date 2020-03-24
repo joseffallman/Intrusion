@@ -122,7 +122,7 @@ namespace Intrusion.Ai
 			_observations = call _mObservationHandler.GetObservations;
 			
 			{
-				if ([side group _x, _mSide] call BIS_fnc_sideIsEnemy && { _x distance _pos < 500 }) then
+				if ([side group _x, _mSide] call BIS_fnc_sideIsEnemy && { _x distance _pos < 400 }) then
 				{
 					return true;
 				};
@@ -249,7 +249,7 @@ namespace Intrusion.Ai
 						call _moveBaseService.RunAsync;
 					};
 					
-					_mNextMoveBaseTime = _mNextMoveBaseTime + 15 * 60 + (random 15) * 60;
+					_mNextMoveBaseTime = _mNextMoveBaseTime + 10 * 60 + (random 10) * 60;
 					//_mNextMoveBaseTime = _mNextMoveBaseTime + 5 * 60 + (random 5) * 60;
 				};
 				
