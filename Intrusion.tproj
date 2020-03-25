@@ -148,9 +148,6 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiBrigadeLeaderService.sqx" FileName="Ai\Classes\Services\AiBrigadeLeaderService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiBrigadeLeaderService.sqx.sqf" FileName="Ai\Classes\Services\AiBrigadeLeaderService.sqx.sqf">
-                    <SubNodes />
-                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="AiService.sqx" FileName="Ai\Classes\Services\AiService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>

@@ -17,10 +17,20 @@ namespace Intrusion.Ai
 {
 	public class AiBrigadeLeaderService : Service
 	{
-		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime];
-		private fields ["_mNextMoveBaseTime" as Scalar, "_mBaseMarkerName" as String, "_mBaseInitialPos" as Array];
+		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime, "_mGameLengtMonitor" as IGameLengthMonitor];
+		private fields ["_mNextMoveBaseTime" as Scalar, "_mBaseMarkerName" as String, "_mBaseInitialPos" as Array, "_mGamePhase" as String];
 		
-		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_baseConfig" as BaseConfig, "_missionTime" as IMissionTime)
+		public constructor(
+			"_side" as Side, 
+			"_resourceLocationHandler" as IResourceLocationHandler, 
+			"_squadHandler" as ISquadHandler, 
+			"_observationHandler" as ObservationHandler, 
+			"_messageHandler" as IMessageHandler, 
+			"_mapMarkersConfig" as IMapMarkersConfig, 
+			"_vehicleSpawner" as IVehicleSpawner, 
+			"_baseConfig" as BaseConfig, 
+			"_missionTime" as IMissionTime,
+			"_gameLengthMonitor" as IGameLengthMonitor)
 		{
 			private ["_mapMarkerInfo" as MapMarkerInfo];
 			
@@ -34,12 +44,16 @@ namespace Intrusion.Ai
 			_mVehicleSpawner = _vehicleSpawner;
 			_mBaseConfig = _baseConfig;
 			_mMissionTime = _missionTime;
-			
-			_mNextMoveBaseTime = ((call _missionTime.GetMissionTime) + 10 + random 10) * 60;
+			_mGameLengtMonitor = _gameLengthMonitor;
 			
 			_mapMarkerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
 			_mBaseMarkerName = _mapMarkerInfo.BaseMarkerName;
 			_mBaseInitialPos = getMarkerPos _mBaseMarkerName;
+			
+			private _gameTime = call _missionTime.GetMissionTime;
+			
+			_mGamePhase = "OPENING";
+			_mNextMoveBaseTime = _gameTime + (10 + random 5) * 60;
 		};
 		
 		// Uses the smallest quadrant method to find the position closest to all counted markers.
@@ -215,12 +229,35 @@ namespace Intrusion.Ai
 			_spawnpos
 		};
 		
+		private method UpdateGamePhase()
+		{
+			private ["_gamePhase" as String];
+			
+			// Game is OPENING until base is moved the first time
+			
+			_gamePhase = "OPENING";
+			
+			if (_mBaseInitialPos distance getMarkerPos _mBaseMarkerName > 10) then {
+				_gamePhase = "MIDGAME";
+			};
+			
+			// Game is MIDGAME until 20 minutes from the end
+			
+			if (_mGameLengtMonitor.RemainingMinutes < 20) then {
+				_gamePhase = "LATEGAME";
+			};
+			
+			_mGamePhase = _gamePhase;
+		};
+		
 		protected override method Run()
 		{
 			private ["_moveBaseService" as MoveBaseService, "_baseLayout" as BaseLayout, "_carParkPos" as Array];
-			private ["_locationCollection" as ResourceLocationCollection];
+			private ["_locationCollection" as ResourceLocationCollection, "_quadrantPos" as Array, "_winnerLocation" as ResourceLocation];
+			private ["_foundEndGamePosition" as Boolean];
 			
 			_moveBaseService = classNull;
+			_foundEndGamePosition = false;
 			
 			while { !(call PublicVariableHandler.ResourceLocationCollectionHasValue) } do {
 				sleep 1;
@@ -228,26 +265,43 @@ namespace Intrusion.Ai
 			
 			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 			
-			//_winnerLocation = call _locationCollection.GetWinnersLocation;
-			//private _winnerLocationPos = getMarkerPos _winnerLocation.MarkerName;
-			//private _basePos = _winnerLocationPos getPos [150, random 360];
-			private _resourceLocations = call _locationCollection.GetResourceLocations;
-			
-			private _locationMarkers = [];
-			
-			{
-				_locationMarkers pushBack _x.MarkerName;
-			} foreach _resourceLocations as ResourceLocation;
-			
-			private _basePos = [_locationMarkers] call _self.FindClosestToMarkersPos;
-			
 			while { !_self.IsCancelling } do
 			{
+				call _self.UpdateGamePhase;
+			
 				private _missionTime = call _mMissionTime.GetMissionTime;
+				private _moveBase = false;
 				
-				if (_missionTime > _mNextMoveBaseTime) then
+				if (_mGamePhase == "OPENING" && _missionTime > _mNextMoveBaseTime) then
 				{
-					_carParkPos = [_basePos, 500] call _self.FindBasePos;
+					private _resourceLocations = call _locationCollection.GetResourceLocations;
+					private _locationMarkers = [];
+					
+					{
+						if (_x.Side == _mSide) then {
+							_locationMarkers pushBack _x.MarkerName;
+						};
+					} foreach _resourceLocations as ResourceLocation;
+			
+					_quadrantPos = [_locationMarkers] call _self.FindClosestToMarkersPos;
+					_moveBase = true;
+				};
+				
+				if (_mGamePhase == "ENDGAME" && !_foundEndGamePosition) then
+				{
+					_winnerLocation = call _locationCollection.GetWinnersLocation;
+					
+					private _winnerLocationPos = getMarkerPos _winnerLocation.MarkerName;
+					
+					_quadrantPos = _winnerLocationPos getPos [150, random 360];
+					
+					_moveBase = true;
+					_foundEndGamePosition = true;
+				};
+				
+				if (_moveBase) then
+				{
+					_carParkPos = [_quadrantPos, 400] call _self.FindBasePos;
 					
 					if (count _carParkPos > 0) then
 					{
@@ -263,11 +317,10 @@ namespace Intrusion.Ai
 						call _moveBaseService.RunAsync;
 					};
 					
-					_mNextMoveBaseTime = _mNextMoveBaseTime + 10 * 60 + (random 10) * 60;
-					//_mNextMoveBaseTime = _mNextMoveBaseTime + 5 * 60 + (random 5) * 60;
+					_mNextMoveBaseTime = _mNextMoveBaseTime + (10 + random 10) * 60;
 				};
 				
-				sleep 10;
+				sleep 60;
 			};
 			
 			call _base.Run;
