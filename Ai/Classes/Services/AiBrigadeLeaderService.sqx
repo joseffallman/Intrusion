@@ -18,10 +18,12 @@ namespace Intrusion.Ai
 	public class AiBrigadeLeaderService : Service
 	{
 		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime];
-		private fields ["_mNextMoveBaseTime" as Scalar];
+		private fields ["_mNextMoveBaseTime" as Scalar, "_mBaseMarkerName" as String, "_mBaseInitialPos" as Array];
 		
 		public constructor("_side" as Side, "_resourceLocationHandler" as IResourceLocationHandler, "_squadHandler" as ISquadHandler, "_observationHandler" as ObservationHandler, "_messageHandler" as IMessageHandler, "_mapMarkersConfig" as IMapMarkersConfig, "_vehicleSpawner" as IVehicleSpawner, "_baseConfig" as BaseConfig, "_missionTime" as IMissionTime)
 		{
+			private ["_mapMarkerInfo" as MapMarkerInfo];
+			
 			call _base.Constructor;
 			
 			_mSide = _side;
@@ -33,8 +35,11 @@ namespace Intrusion.Ai
 			_mBaseConfig = _baseConfig;
 			_mMissionTime = _missionTime;
 			
-			_mNextMoveBaseTime = (call _missionTime.GetMissionTime) + 5 * 60 + random (5 * 60);
-			//_mNextMoveBaseTime = (call _missionTime.GetMissionTime) + random 60;
+			_mNextMoveBaseTime = ((call _missionTime.GetMissionTime) + 10 + random 10) * 60;
+			
+			_mapMarkerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
+			_mBaseMarkerName = _mapMarkerInfo.BaseMarkerName;
+			_mBaseInitialPos = getMarkerPos _mBaseMarkerName;
 		};
 		
 		// Uses the smallest quadrant method to find the position closest to all counted markers.
@@ -101,6 +106,7 @@ namespace Intrusion.Ai
 		private method Boolean TooCloseToResourceLocation("_pos" as Array)
 		{
 			private ["_locationCollection" as ResourceLocationCollection, "_resourceLocations" as Array];
+			private ["_mapMarkerInfo" as MapMarkerInfo];
 			
 			_locationCollection = call PublicVariableHandler.GetResourceLocationCollection;
 			_resourceLocations = call _locationCollection.GetResourceLocations;
@@ -112,15 +118,23 @@ namespace Intrusion.Ai
 				};
 			} foreach _resourceLocations as ResourceLocation;
 			
+			// Check closeness to any base
+			
+			_mapMarkerInfo = [west] call _mMapMarkersConfig.GetMapMarkerInfo;
+			if (_pos distance2D getMarkerPos _mapMarkerInfo.BaseMarkerName < _mBaseConfig.MinDistanceFromResourceLocation) then {
+				return true;
+			};
+			
+			_mapMarkerInfo = [east] call _mMapMarkersConfig.GetMapMarkerInfo;
+			if (_pos distance2D getMarkerPos _mapMarkerInfo.BaseMarkerName < _mBaseConfig.MinDistanceFromResourceLocation) then {
+				return true;
+			};
+			
 			return false;
 		};
 		
 		private method Boolean TooCloseToEnemies("_pos" as Array)
 		{
-			private ["_observations" as Array /* of Observation */];
-			
-			_observations = call _mObservationHandler.GetObservations;
-			
 			{
 				if ([side group _x, _mSide] call BIS_fnc_sideIsEnemy && { _x distance _pos < 500 }) then
 				{
