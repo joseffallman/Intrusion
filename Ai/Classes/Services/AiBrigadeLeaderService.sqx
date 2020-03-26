@@ -173,7 +173,7 @@ namespace Intrusion.Ai
 			private ["_roads" as Array, "_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_isOk" as Boolean, "_foundIt"];
 			private ["_distanceToNearestVehicle" as Scalar, "_distanceFromBuilding" as Scalar, "_allowedSteepness" as Scalar, "_closeRoads" as Array];
 			
-			_distanceFromBuilding = 25;
+			_distanceFromBuilding = 20;
 			_allowedSteepness = 0.5;
 			_distanceToNearestVehicle = 15;
 			
@@ -181,7 +181,7 @@ namespace Intrusion.Ai
 			_foundIt = false;
 			_extendedRadius = 0;
 			
-			while { _extendedRadius < 1500 } do
+			while { _extendedRadius < 1000 } do
 			{
 				scopeName "SpawnPosGen";
 				
@@ -192,7 +192,7 @@ namespace Intrusion.Ai
 				_vehicles = nearestObjects [_spawnpos, ["LandVehicle", "AirVehicle"], 25];
 				_roads = _spawnpos nearRoads _distanceFromBuilding;
 				_closeRoads = _spawnpos nearRoads (_distanceFromBuilding + 60);
-				_isFlat = _spawnpos isFlatEmpty [2, -1, _allowedSteepness, 10, 0, false, objNull ];
+				_isFlat = _spawnpos isFlatEmpty [5, -1, _allowedSteepness, 15, 0, false, objNull ];
 				
 				_isOk = true;
 				
@@ -201,12 +201,12 @@ namespace Intrusion.Ai
 				    if (str _x find ": t_" > -1) then {
 				        _trees pushBack _x;
 				    };
-				} forEach nearestObjects [_spawnpos, [], 30];
+				} forEach nearestObjects [_spawnpos, [], _distanceFromBuilding];
 				
 				{ if (floor(_spawnpos distance getPos _x) < _distanceFromBuilding) then { _isOk = false; }; } forEach _houses;
 				{ if (floor(_spawnpos distance getPos _x) < _distanceToNearestVehicle) then { _isOk = false; }; } forEach _vehicles;
 				if (count _roads > 0 || count _closeRoads == 0) then { _isOk = false; };
-				if (count _trees > 10) then { _isOk = false; };
+				if (count _trees > 15) then { _isOk = false; };
 				
 				if (surfaceIsWater _spawnpos) then { _isOk = false; };
 				if (count _isFlat < 1 ) then { _isOk = false; };
@@ -220,7 +220,7 @@ namespace Intrusion.Ai
 					breakOut "SpawnPosGen"
 				};
 				
-				_extendedRadius = _extendedRadius + 1;
+				_extendedRadius = _extendedRadius + 0.1;
 				
 				sleep 0.01;
 			};
