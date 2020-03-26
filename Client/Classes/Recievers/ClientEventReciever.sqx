@@ -274,7 +274,7 @@ namespace Intrusion.Client
 			[_mapObservations] call MapObservationsHandler.UpdateMap;
 		};
 		
-		public static method OnVehicleSupported("_supportedVehicle" as Object, "_supportVehicle" as Object, "_messageToSupported" as String, "_messageToSupporter" as String)
+		public static method OnVehicleSupported("_supportedVehicle" as Object, "_supportVehicle" as Object, "_supportProfessiontype" as ProfessionType, "_messageToSupported" as String, "_messageToSupporter" as String)
 		{
 			private ["_intrusionVehicles" as Array /* of IntrusionVehicle */];
 			
@@ -285,6 +285,21 @@ namespace Intrusion.Client
 				{
 					if (_x.Vehicle == _supportedVehicle) then
 					{
+						if (local _x.Vehicle) then {
+							switch (_supportProfessiontype) do
+							{
+								case ProfessionType.Ammo: {
+									_x.Vehicle setVehicleAmmo 1;
+								};
+								case ProfessionType.Fuel: {
+									_x.Vehicle setFuel 1;
+								};
+								case ProfessionType.Repair: {
+									_x.Vehicle setDamage 0;
+								};
+							};
+						};
+					
 						if (_x.OwnerGroup == group player) then {
 							[_messageToSupported] call ClientMessageHandler.ShowTaskInfo;
 							return;

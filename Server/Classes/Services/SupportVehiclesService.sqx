@@ -26,7 +26,7 @@ namespace Intrusion.Server
 		{
 			{
 				if (_x != _supportVehicle) then {
-					if (_x distance _supportVehicle < 20) then {
+					if (_x distance _supportVehicle < 30) then {
 						return _x;
 					};
 				};
@@ -39,9 +39,11 @@ namespace Intrusion.Server
 		{
 			private ["_intrusionVehicle" as IntrusionVehicle, "_closeVehicle" as Object];
 			
-			while { true } do {
+			while { true } do
+			{
 				{
-					private _supportValue = 0;;
+					private _supportValue = 0;
+					
 					_intrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
 					
 					// If vehicle is an intrusion vehicle of a support type
@@ -52,7 +54,8 @@ namespace Intrusion.Server
 						
 						// If there is a close vehicle near for the same faction, and if both vehicles are stationary
 						
-						if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
+						//if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
+						if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle }) then
 						{
 							if (_intrusionVehicle.OwnerProfession == ProfessionType.Repair) then
 							{
@@ -60,7 +63,7 @@ namespace Intrusion.Server
 								
 								if (_vehicleDamage > 0.1 || !canMove _closeVehicle) then {
 									_closeVehicle setDamage 0;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Repair, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
 									_supportValue = _vehicleDamage;
 								};
 							};
@@ -72,7 +75,7 @@ namespace Intrusion.Server
 								if (_vehicleFuel < 0.9) then
 								{
 									_closeVehicle setFuel 1;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was refueld by allied refuel vehicle.", "Vehicle was refueld."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Fuel, "Your vehicle was refueled by allied refuel vehicle.", "Vehicle was refueled."]] call Remote.Invoke;
 									_supportValue = 1 - _vehicleFuel;
 								};
 							};
@@ -84,7 +87,7 @@ namespace Intrusion.Server
 								if (_vehicleAmmo < 0.9) then
 								{
 									_closeVehicle setVehicleAmmo 1;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Ammo, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
 									_supportValue = 1 - _vehicleAmmo;
 								};
 							};
