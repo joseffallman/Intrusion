@@ -170,7 +170,7 @@ namespace Intrusion.Ai
 		// value will expand until a position is found.
 		private method Array FindBasePos("_markPos" as Array, ["_initialRadius" as Scalar, 0])
 		{
-			private ["_roads" as Array, "_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_isOk" as Boolean, "_foundIt", "_tries"];
+			private ["_roads" as Array, "_spawnpos", "_randir", "_extendedRadius", "_randis", "_houses", "_vehicles", "_isFlat", "_isOk" as Boolean, "_foundIt"];
 			private ["_distanceToNearestVehicle" as Scalar, "_distanceFromBuilding" as Scalar, "_allowedSteepness" as Scalar, "_closeRoads" as Array];
 			
 			_distanceFromBuilding = 25;
@@ -179,10 +179,9 @@ namespace Intrusion.Ai
 			
 			_spawnpos = [];
 			_foundIt = false;
-			_tries = 0;
 			_extendedRadius = 0;
 			
-			while { _tries < 2500 } do
+			while { _extendedRadius < 1500 } do
 			{
 				scopeName "SpawnPosGen";
 				
@@ -221,7 +220,6 @@ namespace Intrusion.Ai
 					breakOut "SpawnPosGen"
 				};
 				
-				_tries = _tries + 1;
 				_extendedRadius = _extendedRadius + 1;
 				
 				sleep 0.01;
