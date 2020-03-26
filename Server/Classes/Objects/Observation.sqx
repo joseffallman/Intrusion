@@ -85,7 +85,7 @@ namespace Intrusion.Server
 		// Gets the distance from the observer to the target.
 		public property Scalar ObservedDistance { get; set; };
 		
-		// Gets the distance of the offset of the percieved position in meters.
+		// Gets the percieved position with percivation error added.
 		public property Array PercievedOffsetPos { get; set; };
 		
 		// Converts this observation into a map observation that is optimized for broadcasting and client use.
