@@ -12,28 +12,129 @@ using Intrusion.Common;
 
 namespace Intrusion.Client
 {
+	public class MoveBaseListOptions
+	{
+		public constructor("_name" as String, "_pos" as Array)
+		{
+			_self.Name   = _name;
+			_self.Position = _pos;
+		};
+		
+		public property String Name    { get; private set; };
+		public property Array Position { get; private set; };
+		
+		public method setPosition("_pos" as Array)
+		{
+			_self.Position = _pos;
+			if (count _pos > 0 ) then
+			{
+				_self.isSet = True;
+			} else {
+				_self.isSet = False;
+			}
+		};
+		
+		public property Boolean isSet { get; private set; };
+	
+	};
+	
 	public class MoveBaseDialog
 	{
+		private static fields [
+			"_mMoveBaseHandler" as MoveBaseHandler,
+			"_mCurrentIndex" as Scalar,
+			"_mDefaultColor" as Array,
+			"_mDisabledColor" as Array,
+			"_mCurrentColor" as Array,
+			"_mOptions" as Array
+		];
+	
 		// Creates a MoveBaseDialog object.
-		public static method Init {
+		public static method Init("_moveBaseHandler" as MoveBaseHandler) 
+		{
+			_mMoveBaseHandler = _moveBaseHandler;
+			_mCurrentIndex = -1;
+			
+			_mDefaultColor = [1,1,1,1];
+			_mDisabledColor = [0.5,0.5,0.5,1];
+			_mCurrentColor = [0.85,0.4,0,1];
 			_self.IsOpen = false;
+			
+			
 		};
 		
 		// Gets whether the dialog is open or not.
 		public static property Boolean IsOpen { get; private set; };
+		
+		// Adds all Technologys to the combo box.
+		private static method AddOptions()
+		{
+			{
+				_mCurrentIndex = 0;
+				_mOptions pushBack [_x, []] new MoveBaseListOptions;
+				private _i = lbAdd [DialogControl.BaseListBox, _x];
+				lbSetValue [DialogControl.BaseListBox, _i, (count _mOptions -1)];
+			} foreach ["Respawn point", "Vehicles park", "Weapon depot"];
+
+		};
+		
+		// Change color in list.
+		private static method UpdateListBoxItemsColor()
+		{
+			//private _selectedIndex = lbCurSel (DialogControl.BaseListBox as Scalar);
+			{
+				lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mDefaultColor];
+				if (_forEachIndex == _mCurrentIndex) then 
+				{
+					lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mCurrentColor];
+				} 
+				else
+				{
+					if (count (_x.Position) > 0) then
+					{
+						lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mDisabledColor];
+					};
+				};
+			} forEach _mOptions as MoveBaseListOptions;
+		};
 		
 		// Shows the dialog.
 		// Returns (DialogResult): A dialog result.
 		public static method DialogResult ShowDialog {
 			waitUntil { !dialog };
 			
+			// Hide all markers
+			private _markers = [];
+			{
+				private _marker = _x;
+				private _alpha = markerAlpha _x;
+				_marker setMarkerAlphaLocal 0;
+				_markers pushBack [_marker, _alpha];
+			} foreach allMapMarkers;
+			
+			
 			// Create the dialog
             createDialog "IntMoveBaseDialog";
+            
+            
+            // Add options to list.
+			_mOptions = [];
+			call _self.AddOptions;
+			
+            // Change list item's color.
+			call _self.UpdateListBoxItemsColor;
 			
 			_self.IsOpen = true;
 
 			// Wait until dialog is closed
 			waitUntil { !dialog };
+			
+			// Restore markers
+			{
+				private _marker = _x select 0;
+				private _alpha = _x select 1;
+				_marker setMarkerAlphaLocal _alpha;
+			} foreach _markers;
 			
 			// Return OK.
 			DialogResult.Ok
@@ -44,6 +145,11 @@ namespace Intrusion.Client
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
+			{
+				if (_x.isSet) then {
+					deleteMarkerLocal _x.Name;
+				};	
+			} forEach _mOptions as MoveBaseListOptions;
 		};
 		
 		public static method OnRespawnButtonPressed() {
@@ -70,6 +176,50 @@ namespace Intrusion.Client
 			};
 		};
 		
+		// Called by the .hpp-dialog when a new item is selected in the ListBox.
+		public static method OnListBoxSelectChanged("_control", "_selectedIndex")
+		{
+			_mCurrentIndex = _selectedIndex;
+			call _self.UpdateListBoxItemsColor;
+		};
+		
+		// Called by the .hpp-dialog when a item is dragged from the ListBox.
+		public static method OnListBoxDrag("_control", "_listboxInfo")
+		{
+			(_listboxInfo select 0) params ["_lbText", "_lbValue", "_lbData"];
+			lbSetCurSel [DialogControl.BaseListBox, _lbValue];
+			call _self.UpdateListBoxItemsColor;
+		};
+		
+		// Called by the .hpp-dialog when a item is dragged from the ListBox and dropped somewhere.
+		public static method OnMapDrop("_control", "_xPos", "_yPos", "_listboxIDC", "_listboxInfo")
+		{
+			(_listboxInfo select 0) params ["_lbText", "_lbValue", "_lbData"];
+			private _ctrlDescription = (findDisplay 2500) displayCtrl 25532;
+			private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+			private _pos = _ctrlMap ctrlMapScreenToWorld [_xPos, _yPos];
+			
+			private "_option" as MoveBaseListOptions;
+			_option = _mOptions select _mCurrentIndex;
+			
+			if (_option.isSet) then {
+				deleteMarkerLocal _option.Name;
+			};
+			[_pos] call _option.setPosition;
+			
+			[_lbText, _pos] call _self.createMarker;
+			
+			_ctrlDescription ctrlSetStructuredText parseText (str _listboxInfo + "<br/>" + str getPos player + "<br/>" + str _pos );
+			
+		};
+		
+		public static method createMarker("_text", "_position")
+		{
+			private _markerstr = createMarkerLocal [_text,_position];
+			_markerstr setMarkerShapeLocal "ICON";
+			_markerstr setMarkerTypeLocal "mil_dot";
+		};
+				
 		// Called by the .hpp-dialog when the OK button is pressed.
 		public static method OnOkButtonPressed {
 			if (call gClient.MoveBaseHandler.StartMoveBaseService) then {

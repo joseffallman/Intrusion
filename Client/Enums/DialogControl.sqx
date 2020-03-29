@@ -13,6 +13,11 @@ namespace Intrusion.Client
 	{
 		GroupProfessionCombo = 2100,
 		GroupProfessionListBox = 2200,
-		GroupProfessionOKButton = 2210
+		GroupProfessionOKButton = 2210,
+		
+		BaseDialog = 2500,
+		BaseListBox = 2552,
+		BaseDescription = 2553
+		
 	};
 };
