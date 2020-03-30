@@ -17,7 +17,8 @@ namespace Intrusion.Client
 		
 		BaseDialog = 2500,
 		BaseListBox = 2552,
-		BaseDescription = 2553
+		BaseDescription = 2553,
+		BaseOkButton = 2551
 		
 	};
 };

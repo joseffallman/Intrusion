@@ -148,6 +148,7 @@ class IntMoveBaseDialog : IntBaseDialog
 		class OKButton : Base_OkButton 
 		{
 			text = "Move Base";
+			action = "call Intrusion_Client_MoveBaseDialog_OnOkButtonPressed;";
 		};
 		
 		class Header : Base_Header 
@@ -159,7 +160,7 @@ class IntMoveBaseDialog : IntBaseDialog
 		
 		class Description : Base_Description 
 		{
-			idc = 25532;
+			idc = 2553;
 			x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 19.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 27.5 * GUI_GRID_W;

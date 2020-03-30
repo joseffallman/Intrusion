@@ -63,7 +63,7 @@ gClient = [gCommonConfig.BaseConfig] new IntrusionClient;
 
 // Dialogs
 [gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionVehicles] call ProfessionDialog.Init;
-[gClient.MoveBaseHandler] call MoveBaseDialog.Init;
+[gClient.MoveBaseHandler, gCommonConfig.BaseConfig] call MoveBaseDialog.Init;
 
 // Create the briefing
 call BriefingHandler.CreateBriefing;
