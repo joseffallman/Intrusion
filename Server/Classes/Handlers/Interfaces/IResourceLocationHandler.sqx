@@ -23,6 +23,9 @@ namespace Intrusion.Server
 		// Gets the number of tech lab locations. 
 		property Scalar TechLabLocationsCount { get; };
 		
+		// Gets the average distance between all resource locations.
+		property Scalar ResourceLocationsAverageDistance { get; };
+		
 		// Get the number of factories owned by a side.
 		// _side (Side): The side that is asked for.
 		// Returns (Scalar): The number of factories owned by the side.
