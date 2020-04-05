@@ -31,7 +31,12 @@ namespace Intrusion.Tests.Helpers
 			
 			_self.FactoryLocationsCount = _factoryLocationsCount;
 			_self.TechLabLocationsCount = _techLabLocationsCount;
+			
+			_self.ResourceLocationsAverageDistance = 280;
 		};
+		
+		// Gets the average distance between all resource locations.
+		public property Scalar ResourceLocationsAverageDistance { get; private set; };
 		
 		public method AddFactoiesCountBySide("_side" as Side, "_sideCount" as Scalar)
 		{
