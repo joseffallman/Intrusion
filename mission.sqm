@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={5382.8423,80.173363,2949.1226};
-		dir[]={0.60701859,-0.22608927,0.76190358};
-		up[]={0.14089668,0.97410345,0.17684795};
-		aside[]={0.78215444,-5.9662852e-008,-0.62315291};
+		pos[]={6280.3066,82.967728,2873.6724};
+		dir[]={-0.79498488,-0.54651457,0.26346418};
+		up[]={-0.51876473,0.83744675,0.17192255};
+		aside[]={0.31459603,3.5151606e-007,0.94927114};
 	};
 };
 binarizationWanted=0;
@@ -256,13 +256,13 @@ class Mission
 		class Item1
 		{
 			dataType="Marker";
-			position[]={6168.7446,66.527252,3157.7732};
+			position[]={6195.2065,67.629944,3164.1421};
 			name="FACTORY1";
 			text="Production Lane (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
-			atlOffset=22.341;
+			atlOffset=22.34103;
 		};
 		class Item2
 		{
@@ -289,13 +289,13 @@ class Mission
 		class Item4
 		{
 			dataType="Marker";
-			position[]={5586.7559,162.59399,4255.4429};
-			name="OFFICE1";
-			text="Sainte Marie (Office)";
+			position[]={5785.9282,162.84801,2411.0049};
+			name="FACTORY3";
+			text="Cancon Harbor (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=6;
-			atlOffset=59.110222;
+			atlOffset=160.20905;
 		};
 		class Item5
 		{
@@ -311,8 +311,8 @@ class Mission
 		{
 			dataType="Marker";
 			position[]={4342.7241,95.500999,3572.5349};
-			name="FACTORY2";
-			text="The Cabin (Factory)";
+			name="OFFICE2";
+			text="The Cabin (Office)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=8;
@@ -321,13 +321,13 @@ class Mission
 		class Item7
 		{
 			dataType="Marker";
-			position[]={5063.1689,124.82501,4471.0376};
-			name="OFFICE2";
-			text="Training Camp (Office)";
+			position[]={3617.5791,45.658001,3226.1211};
+			name="FACTORY2";
+			text="La Riviére Harbor (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=43.025604;
+			atlOffset=43.098;
 		};
 		class Item8
 		{
@@ -353,19 +353,20 @@ class Mission
 		class Item10
 		{
 			dataType="Marker";
-			position[]={5197.79,50.586521,3149.7993};
-			name="FACTORY3";
-			text="Forrest Factory (Factory)";
+			position[]={5399.2139,49.432999,2977.313};
+			name="OFFICE1";
+			text="Cancon Office (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=151;
+			atlOffset=-1.4905319;
 		};
 		class Item11
 		{
 			dataType="Marker";
 			position[]={5380.7749,125.808,3685.967};
 			name="OFFICE3";
-			text="The Farm (Office)";
+			text="Farmer's Ranch (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=152;
