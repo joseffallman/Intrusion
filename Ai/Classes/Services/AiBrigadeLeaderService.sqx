@@ -287,6 +287,22 @@ namespace Intrusion.Ai
 			return false;
 		};
 		
+		private method Object GetClosestRoadSegment("_pos" as Array)
+		{
+			private _roads = _pos nearRoads 100;
+			private _closestDistance = 1000;
+			private _closestRoad = objNull;
+			
+			{
+				if (_x distance _pos < _closestDistance) then {
+					_closestRoad = _x;
+					_closestDistance = _x distance _pos;
+				};
+			} foreach _roads as Object;
+			
+			return _closestRoad;
+		};
+		
 		protected override method Run()
 		{
 			private ["_baseLayout" as BaseLayout, "_carParkPos" as Array];
@@ -381,6 +397,11 @@ namespace Intrusion.Ai
 						if (_locationsWithinRangeCount >= 2) then
 						{
 							private _dir = random 360;
+							
+							private _closestRoad = [_carParkPos] call _self.GetClosestRoadSegment;
+							if (!isNull _closestRoad) then {
+								_dir = (_carParkPos getDir getPos _closestRoad) - 180;
+							};
 							
 							_baseLayout = [
 								[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
