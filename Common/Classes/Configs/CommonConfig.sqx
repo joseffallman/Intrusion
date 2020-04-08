@@ -20,7 +20,8 @@ namespace Intrusion.Common
 			"_vehiclesClassNamesConfig" as IVehicleClassNamesConfig, 
 			"_professionVehiclesConfig" as IProfessionVehiclesConfig,
 			"_baseConfig" as BaseConfig,
-			"_resourceLocationConfig" as IResourceLocationConfig)
+			"_resourceLocationConfig" as IResourceLocationConfig,
+			"_supportServicesConfig" as SupportServicesConfig)
 		{
 			_self.MapMarkers = _mapMarkersConfig;
 			_self.Professions = _professionConfig;
@@ -29,6 +30,7 @@ namespace Intrusion.Common
 			_self.ProfessionVehicles = _professionVehiclesConfig;
 			_self.BaseConfig = _baseConfig;
 			_self.ResourceLocation = _resourceLocationConfig;
+			_self.SupportServicesConfig = _supportServicesConfig;
 		};
 		
 		public property IMapMarkersConfig MapMarkers { get; private set; };
@@ -49,5 +51,7 @@ namespace Intrusion.Common
 		public property BaseConfig BaseConfig { get; private set; };
 		
 		public property IResourceLocationConfig ResourceLocation { get; private set; };
+		
+		public property SupportServicesConfig SupportServicesConfig { get; private set; };
 	};
 };

@@ -418,6 +418,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="StartConfig.sqx" FileName="Common\Classes\Configs\StartConfig.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="SupportServicesConfig.sqx" FileName="Common\Classes\Configs\SupportServicesConfig.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="TechnologyConfig.sqx" FileName="Common\Classes\Configs\TechnologyConfig.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>

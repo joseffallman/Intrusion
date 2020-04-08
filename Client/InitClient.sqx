@@ -59,7 +59,7 @@ call ClientResourceLocationHandler.Init; // Initialize actions on all flags
 gClient = [gCommonConfig.BaseConfig] new IntrusionClient;
 
 // Services
-[gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig] call MapMarkerService.Init;
+[gCommonConfig.MapMarkers, gCommonConfig.Professions, gClient.SquadMarkersConfig, gCommonConfig.SupportServicesConfig] call MapMarkerService.Init;
 
 // Dialogs
 [gCommonConfig.Professions, gCommonConfig.Technology, gCommonConfig.VehicleClassNames, gCommonConfig.ProfessionVehicles] call ProfessionDialog.Init;

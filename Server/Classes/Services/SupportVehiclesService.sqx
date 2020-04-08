@@ -16,10 +16,14 @@ namespace Intrusion.Server
 {
 	public class SupportVehiclesService : Service
 	{
+		private fields ["_mSupportServicesConfig" as SupportServicesConfig];
+	
 		// Creates a SupportVehiclesService object.
-		public constructor()
+		public constructor("_supportServicesConfig" as SupportServicesConfig)
 		{
 			call _base.Constructor;
+			
+			_mSupportServicesConfig = _supportServicesConfig;
 		};
 		
 		private method Object GetClosestHealableVehicleWithinHealDistance("_supportIntrusionVehicle" as IntrusionVehicle)
@@ -90,7 +94,7 @@ namespace Intrusion.Server
 					
 					if (!isNull _supportIntrusionVehicle && { _supportIntrusionVehicle.OwnerProfession == ProfessionType.Repair || _supportIntrusionVehicle.OwnerProfession == ProfessionType.Fuel || _supportIntrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
 					{
-						_closeVehicle = [_x] call _self.GetClosestHealableVehicleWithinHealDistance;
+						_closeVehicle = [_supportIntrusionVehicle] call _self.GetClosestHealableVehicleWithinHealDistance;
 						
 						// If there is a close vehicle near for the same faction, and if both vehicles are stationary
 						
@@ -101,7 +105,7 @@ namespace Intrusion.Server
 							{
 								private _vehicleDamage = [_closeVehicle] call Functions.GetVehicleDamage;
 								
-								if (_vehicleDamage > 0.1 || !canMove _closeVehicle) then {
+								if (_vehicleDamage >= _mSupportServicesConfig.EnableRepairSupportAtDamageLevel || (!canMove _closeVehicle && _vehicleDamage > 0)) then {
 									_closeVehicle setDamage 0;
 									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Repair, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
 									_supportValue = _vehicleDamage;
@@ -112,7 +116,7 @@ namespace Intrusion.Server
 							{
 								private _vehicleFuel = fuel _closeVehicle;
 							
-								if (_vehicleFuel < 0.9) then
+								if (_vehicleFuel <= _mSupportServicesConfig.EnableFuelSupportAtFuelLevel) then
 								{
 									_closeVehicle setFuel 1;
 									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Fuel, "Your vehicle was refueled by allied refuel vehicle.", "Vehicle was refueled."]] call Remote.Invoke;
@@ -124,7 +128,7 @@ namespace Intrusion.Server
 							{
 								private _vehicleAmmo = [_closeVehicle] call Functions.GetVehicleAmmo;
 							
-								if (_vehicleAmmo < 0.9) then
+								if (_vehicleAmmo <= _mSupportServicesConfig.EnableAmmoSupportAtAmmoLevel) then
 								{
 									_closeVehicle setVehicleAmmo 1;
 									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Ammo, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
