@@ -79,4 +79,16 @@ gServer = [] new IntrusionServer;
 call gServer.BrigadeLeaderWestService.RunAsync;
 call gServer.BrigadeLeaderEastService.RunAsync;
 
+// Empty all fuel stations on the map
+
+isNil {
+	private _allFuelStations = ([0,0,0] nearObjects 150000);
+	
+	{
+		if (getFuelCargo _x > 0) then {
+			_x setFuelCargo 0;
+		};
+	} foreach _allFuelStations;
+};
+
 #endregion
