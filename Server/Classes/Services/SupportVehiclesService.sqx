@@ -22,17 +22,57 @@ namespace Intrusion.Server
 			call _base.Constructor;
 		};
 		
-		private method Object GetClosestVehicleWithinHealDistance("_supportVehicle" as Object)
+		private method Object GetClosestHealableVehicleWithinHealDistance("_supportIntrusionVehicle" as IntrusionVehicle)
 		{
+			private ["_intrusionVehicle" as IntrusionVehicle, "_possibleVehicles" as Array /* of DictionaryItem */];
+			
+			_possibleVehicles = [];
+			
 			{
-				if (_x != _supportVehicle) then {
-					if (_x distance _supportVehicle < 30) then {
-						return _x;
+				if (_x != _supportIntrusionVehicle.Vehicle && alive _x) then
+				{
+					if (_x distance _supportIntrusionVehicle.Vehicle < 30) then
+					{
+						_intrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
+				
+						if (!isNull _intrusionVehicle) then
+						{
+							if (_intrusionVehicle.Side == _supportIntrusionVehicle.Side) then
+							{
+								// An air unit must have landed and stay still, with engine off, to be supported
+								if (_intrusionVehicle.Vehicle isKindOf "Air") then
+								{
+									if ((getPosATL _intrusionVehicle.Vehicle) select 2 < 1 && !isEngineOn _intrusionVehicle.Vehicle) then {
+										_possibleVehicles pushBack [_x, _x distance _supportIntrusionVehicle.Vehicle] new DictionaryItem;
+									};
+								}
+								else {
+									_possibleVehicles pushBack [_x, _x distance _supportIntrusionVehicle.Vehicle] new DictionaryItem;
+								};
+							};
+						};
 					};
 				};
 			} foreach vehicles;
 			
-			return objNull;
+			// Get the closest one
+			
+			private ["_closestVehicleItem" as DictionaryItem];
+			
+			_closestVehicleItem = [objNull, 0] new DictionaryItem;
+			
+			{
+				if (isNull _closestVehicleItem.Key) then {
+					_closestVehicleItem = _x;
+				}
+				else {
+					if (_x.Value < _closestVehicleItem.Value) then {
+						_closestVehicleItem = _x;
+					};
+				};
+			} foreach _possibleVehicles as DictionaryItem;
+			
+			return _closestVehicleItem.Key;
 		};
 		
 		protected override method Run()
@@ -50,12 +90,12 @@ namespace Intrusion.Server
 					
 					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Repair || _intrusionVehicle.OwnerProfession == ProfessionType.Fuel || _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
 					{
-						_closeVehicle = [_x] call _self.GetClosestVehicleWithinHealDistance;
+						_closeVehicle = [_x] call _self.GetClosestHealableVehicleWithinHealDistance;
 						
 						// If there is a close vehicle near for the same faction, and if both vehicles are stationary
 						
 						//if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
-						if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle }) then
+						if (!isNull _closeVehicle) then
 						{
 							if (_intrusionVehicle.OwnerProfession == ProfessionType.Repair) then
 							{
