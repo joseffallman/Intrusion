@@ -79,6 +79,7 @@ namespace Intrusion.Server
 			call _mProductionManager.DeleteProfessionVehiclesWithNoOwner;
 			call _mProductionManager.AddReservationsForSquadsWithNoVehicle;
 			call _mProductionManager.PerformProduction;
+			call _mSquadHandler.RemoveEmptySquads;
 			
 			_factoryCount = [_self.Side] call _mResourceLocationHandler.GetFactoriesCountBySide;
 			_techLabCount = [_self.Side] call _mResourceLocationHandler.GetTechLabsCountBySide;

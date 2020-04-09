@@ -34,6 +34,8 @@ namespace Intrusion.Server
 		// Returns (Squad): The squad if it is found. Otherwise classNull.
 		method Squad GetSquadByGroup("_group" as Group);
 		
+		method RemoveEmptySquads();
+		
 		// Logs the content to diag_log.
 		method LogContent();
 	};
