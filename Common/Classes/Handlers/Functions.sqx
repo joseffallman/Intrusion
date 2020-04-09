@@ -41,7 +41,7 @@ namespace Intrusion.Common
 		// Checks wether a class name is a sub class of a parent class name.
 		// _className (String): The class name to test.
 		// _parentClassName (String): The parent class name to search for.
-		// Returns (Boolean): 
+		// Returns (Boolean): true if the class name is a sub class of the parent class name. Otherwise false.
 		public static method Boolean ClassNameIsTypeOf("_className" as String, "_parentClassName" as String)
 		{
 			private ["_config" as Config];
@@ -99,7 +99,7 @@ namespace Intrusion.Common
 		
 		// Gets vehicle ammo on a scale 0 to 1.
 		// _vehicle (Object): The vehicle to test.
-		// Returns (Scalar): 1 if vehicle is fully loaded. 0 if it is empty. If vehicle has no gun, 0 is returned.
+		// Returns (Scalar): 1 if vehicle is fully loaded. 0 if it is empty. If vehicle has no gun, 1 is returned.
 		public static method Scalar GetVehicleAmmo("_vehicle" as Object)
 		{
 			private _maxAmmoMainGun = _vehicle getVariable ["MaxAmmoMaingun", 0];
@@ -116,7 +116,7 @@ namespace Intrusion.Common
 			    return _ammoMainGun / _maxAmmoMainGun;
 		    };
 		    
-		    return 0;
+		    return 1;
 		};
 	};
 };

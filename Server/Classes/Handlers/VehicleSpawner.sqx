@@ -21,7 +21,8 @@ namespace Intrusion.Server
 			"_mMissionTime" as IMissionTime];
 	
 		// Creates a VehicleHandler object.
-		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_missionTime" as IMissionTime) {
+		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_missionTime" as IMissionTime)
+		{
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mMissionTime = _missionTime;
@@ -334,7 +335,8 @@ namespace Intrusion.Server
 		// Spawns a free vehicle on a side's car park.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
 		// Returns (IntrusionVehicle): The spawned Intrusion vehicle.
-		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {
+		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side)
+		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
         	_intrusionVehicle = [_side, ProfessionType.Undefined] call _self.SpawnIntrusionVehicle;
@@ -346,7 +348,8 @@ namespace Intrusion.Server
 		// Counts a side's free vehicles at the base.
 		// _side (Side): The side to count vehicles for.
 		// Returns (Scalar): The number of free vehicles at the side's base.
-		public method Scalar CountFreeVehiclesAtBase("_side" as Side) {
+		public method Scalar CountFreeVehiclesAtBase("_side" as Side)
+		{
 			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as MapMarkerInfo];
 			
     		_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
