@@ -56,7 +56,7 @@ namespace Intrusion.Server
 			
 			_self.FactoryLocationsCount = _number - 1;
 			
-			// Find all techlab locations
+			// Find all office locations
 			_number = 1;
 			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
 			{

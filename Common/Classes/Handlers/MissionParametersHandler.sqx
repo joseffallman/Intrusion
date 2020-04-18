@@ -15,7 +15,7 @@ namespace Intrusion.Common
 		public constructor {
 			call _self.SetDefaultValuesIfSinglePlayer;
 			
-			_self.Battle = paramsArray select 0;
+			_self.BattleLocation = paramsArray select 0;
 			_self.MatchLengthMinutes = paramsArray select 1;
 			_self.UseTeamKillPrison = if (paramsArray select 2 == 1) then { true } else { false };
 			_self.GuerillaGuardingResourceLocations = if (paramsArray select 3 == 1) then { true } else { false };
@@ -24,7 +24,7 @@ namespace Intrusion.Common
 			_self.AiSkillLevel = (paramsArray select 6) as SkillLevel;
 		};
 		
-		public property Scalar Battle { get; private set; };
+		public property Scalar BattleLocation { get; private set; };
 		
 		public property Scalar MatchLengthMinutes { get; private set; };
 		

@@ -1,12 +1,13 @@
 class Params
 {
-    class FlagConfiguration
+	// This BattleLocation class must be in sync with the information in the file BattleLocations.sqf.
+    class BattleLocation
     {
 		//paramsArray[0]
         title = "Battle Location";
-        values[] = { 1 };
-        texts[] = { "Chapoi" };
-        default = 1;
+        values[] = { 0, 1 };
+        texts[] = { "Chapoi", "Military Island" };
+        default = 0;
 	};
 	
     class MatchLengthMinutes

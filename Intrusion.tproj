@@ -633,9 +633,6 @@
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFolderNodeViewModel" Name="Description" FileName="Description">
         <SubNodes>
-          <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionParameters.ext" FileName="Description\MissionParameters.ext">
-            <SubNodes />
-          </ProjectNodeViewModel>
           <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RemoteExec.ext" FileName="Description\RemoteExec.ext">
             <SubNodes />
           </ProjectNodeViewModel>
@@ -760,6 +757,9 @@
                         <SubNodes />
                       </ProjectNodeViewModel>
                     </SubNodes>
+                  </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BattleLocationGenerator.sqx" FileName="Server\Classes\Handlers\BattleLocationGenerator.sqx">
+                    <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BrigadeLeadershipHandler.sqx" FileName="Server\Classes\Handlers\BrigadeLeadershipHandler.sqx">
                     <SubNodes />
@@ -1147,6 +1147,9 @@
           </ProjectNodeViewModel>
         </SubNodes>
       </ProjectNodeViewModel>
+      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="BattleLocations.sqf" FileName="BattleLocations.sqf">
+        <SubNodes />
+      </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Coding Policy.txt" FileName="Coding Policy.txt">
         <SubNodes />
       </ProjectNodeViewModel>
@@ -1160,6 +1163,9 @@
         <SubNodes />
       </ProjectNodeViewModel>
       <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="LICENSE" FileName="LICENSE">
+        <SubNodes />
+      </ProjectNodeViewModel>
+      <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="MissionParameters.ext" FileName="MissionParameters.ext">
         <SubNodes />
       </ProjectNodeViewModel>
     </SubNodes>
