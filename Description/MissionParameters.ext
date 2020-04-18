@@ -3,9 +3,9 @@ class Params
     class FlagConfiguration
     {
 		//paramsArray[0]
-        title = "Battle";
+        title = "Battle Location";
         values[] = { 1 };
-        texts[] = { "Battle of Chapoi" };
+        texts[] = { "Chapoi" };
         default = 1;
 	};
 	
