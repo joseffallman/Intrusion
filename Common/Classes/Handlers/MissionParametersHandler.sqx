@@ -15,13 +15,16 @@ namespace Intrusion.Common
 		public constructor {
 			call _self.SetDefaultValuesIfSinglePlayer;
 			
-			_self.MatchLengthMinutes = paramsArray select 0;
-			_self.UseTeamKillPrison = if (paramsArray select 1 == 1) then { true } else { false };
-			_self.GuerillaGuardingResourceLocations = if (paramsArray select 2 == 1) then { true } else { false };
-			_self.AiWestFrequency = (paramsArray select 3) as AiFrequency;
-			_self.AiEastFrequency = (paramsArray select 4) as AiFrequency;
-			_self.AiSkillLevel = (paramsArray select 5) as SkillLevel;
+			_self.Battle = paramsArray select 0;
+			_self.MatchLengthMinutes = paramsArray select 1;
+			_self.UseTeamKillPrison = if (paramsArray select 2 == 1) then { true } else { false };
+			_self.GuerillaGuardingResourceLocations = if (paramsArray select 3 == 1) then { true } else { false };
+			_self.AiWestFrequency = (paramsArray select 4) as AiFrequency;
+			_self.AiEastFrequency = (paramsArray select 5) as AiFrequency;
+			_self.AiSkillLevel = (paramsArray select 6) as SkillLevel;
 		};
+		
+		public property Scalar Battle { get; private set; };
 		
 		public property Scalar MatchLengthMinutes { get; private set; };
 		

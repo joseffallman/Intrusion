@@ -1,8 +1,17 @@
 class Params
 {
-    class MatchLengthMinutes
+    class FlagConfiguration
     {
 		//paramsArray[0]
+        title = "Battle";
+        values[] = { 1 };
+        texts[] = { "Battle of Chapoi" };
+        default = 1;
+	};
+	
+    class MatchLengthMinutes
+    {
+		//paramsArray[1]
         title = "Game Length Minutes";
         values[] = {30, 45, 60, 75, 90, 120, 180};
         texts[] = {"30 minutes", "45 minutes", "60 minutes", "75 minutes", "90 minutes", "120 minutes", "180 minutes"};
@@ -11,7 +20,7 @@ class Params
 	
 	class UseTeamKillPrison
 	{
-		// paramsArray[1]
+		// paramsArray[2]
 		title="Team Kill Prison";
 		values[]={1, 0};
 		texts[]={"Enabled", "Disabled"};
@@ -20,7 +29,7 @@ class Params
 	
 	class GuerillaGuardingResourceLocations
 	{
-		// paramsArray[2]
+		// paramsArray[3]
 		title="Guerilla guarding resource locations";
 		values[]={1, 0};
 		texts[]={"Yes", "No"};
@@ -29,7 +38,7 @@ class Params
 	
 	class AiWest
 	{
-		// paramsArray[3]
+		// paramsArray[4]
 		title="AI Units West Frequency";
 		values[]={0, 5, 10, 15, 20, 25, 30, 1001, 1002, 1003, 1004, 1005};
 		texts[]={"None", 5, 10, 15, 20, 25, 30, "Same as eastly units (humans and ai)", "25% more than eastly units (humans and ai)", "50% more than eastly units (humans and ai)", "75% more than eastly units (humans and ai)", "100% more than eastly units (humans and ai)"};
@@ -38,7 +47,7 @@ class Params
 	
 	class AiEast
 	{
-		// paramsArray[4]
+		// paramsArray[5]
 		title="AI Units East Frequency";
 		values[]={0, 5, 10, 15, 20, 25, 30, 1001, 1002, 1003, 1004, 1005};
 		texts[]={"None", 5, 10, 15, 20, 25, 30, "Same as westly units (humans and ai)", "25% more than westly units (humans and ai)", "50% more than westly units (humans and ai)", "75% more than westly units (humans and ai)", "100% more than westly units (humans and ai)"};
@@ -47,7 +56,7 @@ class Params
 	
 	class AiSkill
 	{
-		// paramsArray[5]
+		// paramsArray[6]
 		title="AI Skill";
 		values[]={0, 1, 2, 3, 5};
 		texts[]={"Sucks", "Bad", "Good", "Outstanding", "Elite"};

@@ -15,7 +15,7 @@ class Header
 };
 
 //onLoadName = "Intrusion";
-onLoadMission = "Intrusion - let's play war!";
+onLoadMission = "Intrusion 1.0 - Let's play war!";
 //loadScreen = "loadScreen_ca.paa"; // Preview picture
 
 OnLoadMissionTime = false;
