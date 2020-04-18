@@ -14,13 +14,13 @@ class Header
   maxPlayers = 60;
 };
 
-onLoadName = "Intrusion";
+//onLoadName = "Intrusion";
 onLoadMission = "Intrusion - let's play war!";
 //loadScreen = "loadScreen_ca.paa"; // Preview picture
 
 OnLoadMissionTime = false;
 
-overviewText = "Have your specialized group join the battle in the way Arma was meant to be played.";
+overviewText = "Have your specialized squad join the battle in a fight for freedom.";
 overviewTextLocked = "";
 //overviewPicture = "overviewPicture_ca.paa";
 author = "Engima";
