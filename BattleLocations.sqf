@@ -39,16 +39,14 @@ Intrusion_BattleLocations = [
 	        ["RespawnMarkerEast", [9472.24,3311.34,0], 271],
 	        ["VehicleMarkerEast", [9473.48,3300.9,0], 87],
 	        ["VehicleMarkerEast", [9493.38,3290.04,0], 3]
-	    ]
-    ],
-    [
+	    ],
     	[
-	        ["Production Lane (Factory)", "FACTORY", [[11611.8,4443.48,0]]],
-	        ["Engineering Room (Factory)", "FACTORY", [[10587.9,4363.85,0]]],
-	        ["Harbor (Factory)", "FACTORY", [[9349.94,3827.27,0]]],
-	        ["The Mast (Office)", "OFFICE", [[11322.6,4132.99,0]]],
-	        ["Training Camp (Office)", "OFFICE", [[10521.1,4048.53,0]]],
-	        ["Military Base (Office)", "OFFICE", [[9779.7,3919.16,0]]]
+	        ["Production Lane (Factory)", "FACTORY", [11611.8,4443.48,0]],
+	        ["Engineering Room (Factory)", "FACTORY", [10587.9,4363.85,0]],
+	        ["Harbor (Factory)", "FACTORY", [9349.94,3827.27,0]],
+	        ["The Mast (Office)", "OFFICE", [11322.6,4132.99,0]],
+	        ["Training Camp (Office)", "OFFICE", [10521.1,4048.53,0]],
+	        ["Military Base (Office)", "OFFICE", [9779.7,3919.16,0]]
 	    ]
     ]
 ];

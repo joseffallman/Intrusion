@@ -29,23 +29,24 @@ namespace Intrusion.Server
 			
 			diag_log ("    [");
 			diag_log ("        ""BATTLE LOCATION"",");
+			diag_log ("        [");
 			
 			// Bases
 			
 			_markerInfo = [west] call _mMapMarkersConfig.GetMapMarkerInfo;
 			
-			diag_log ("        [""RespawnMarkerWest"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
-			diag_log ("        [""WeaponsMarkerWest"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
-			diag_log ("        [""VehicleMarkerWest"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "],");
+			diag_log ("            [""RespawnMarkerWest"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
+			diag_log ("            [""WeaponsMarkerWest"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerWest"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "],");
 			
 			_markerInfo = [east] call _mMapMarkersConfig.GetMapMarkerInfo;
 			
-			diag_log ("        [""RespawnMarkerEast"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
-			diag_log ("        [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
-			diag_log ("        [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "]");
+			diag_log ("            [""RespawnMarkerEast"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "]");
 			
-			diag_log ("    ],");
-			diag_log ("    [");
+			diag_log ("        ],");
+			diag_log ("        [");
 			
 			// Find all factory locations
 			_number = 1;
@@ -53,7 +54,7 @@ namespace Intrusion.Server
 			{
 				_markerName = "Factory" + str _number;
 				
-				diag_log ("        [""" + markerText _markerName + """, ""FACTORY"", [" + str (getMarkerPos _markerName) + "]],");
+				diag_log ("            [""" + markerText _markerName + """, ""FACTORY"", " + str (getMarkerPos _markerName) + "],");
 				
 				deleteMarker _markerName;
 				_number = _number + 1;
@@ -65,7 +66,7 @@ namespace Intrusion.Server
 			{
 				_markerName = "Office" + str _number;
 				
-				private _text = "        [""" + markerText _markerName + """, ""OFFICE"", [" + str (getMarkerPos _markerName) + "]]";
+				private _text = "            [""" + markerText _markerName + """, ""OFFICE"", " + str (getMarkerPos _markerName) + "]";
 				
 				if (["Office" + str (_number + 1)] call MarkerHelper.MarkerExists) then {
 					_text = _text + ",";
@@ -77,6 +78,7 @@ namespace Intrusion.Server
 				_number = _number + 1;
 			};
 			
+			diag_log ("        ]");
 			diag_log ("    ]");
 		};
 		
