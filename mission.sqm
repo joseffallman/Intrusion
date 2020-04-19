@@ -16,7 +16,7 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3830.6624,93.442734,4680.98};
+		pos[]={3828.1003,95.18708,4680.7573};
 		dir[]={0.70859843,-0.43165827,-0.55817926};
 		up[]={0.33912355,0.90201819,-0.2671352};
 		aside[]={-0.61879838,-2.1551386e-007,-0.78555429};
@@ -250,12 +250,12 @@ class Mission
 		class Item0
 		{
 			dataType="Marker";
-			position[]={3870.8359,129.02426,4661.1597};
+			position[]={3870.8359,129.024,4661.1602};
 			name="respawn_west";
 			type="Empty";
-			angle=130.40631;
+			angle=130.40596;
 			id=0;
-			atlOffset=59.389381;
+			atlOffset=59.38913;
 		};
 		class Item1
 		{
@@ -304,12 +304,12 @@ class Mission
 		class Item5
 		{
 			dataType="Marker";
-			position[]={3886.1111,125.47449,4651.1309};
+			position[]={3886.1111,125.474,4651.1309};
 			name="INT_WeaponDepotMarkerWest";
 			type="Empty";
-			angle=83.777931;
+			angle=83.778;
 			id=7;
-			atlOffset=56.507149;
+			atlOffset=56.50666;
 		};
 		class Item6
 		{
@@ -346,13 +346,14 @@ class Mission
 		class Item9
 		{
 			dataType="Marker";
-			position[]={3899.9363,68.441048,4625.6284};
+			position[]={3899.936,68.441002,4625.6279};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=85.770454;
+			angle=85.769997;
 			drawBorder=1;
 			id=72;
+			atlOffset=-6.8664551e-005;
 		};
 		class Item10
 		{

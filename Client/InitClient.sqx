@@ -1,3 +1,4 @@
+isNil {
 call compile preprocessFileLineNumbers "Client\Classes\Configs\TutorialConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\SquadMarkersConfig.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Configs\OrderMarkersConfig.sqx";
@@ -30,13 +31,22 @@ call compile preprocessFileLineNumbers "Client\Classes\Services\PrisonService.sq
 call compile preprocessFileLineNumbers "Client\Classes\Services\GiveOrderService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Services\RatingService.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\IntrusionClient.sqx";
+};
 
+using Intrusion.Communication;
 using Intrusion.Client;
 using Intrusion.Common;
 
 cutText ["", "BLACK FADED"];
 
 waitUntil { player == player };
+
+// Move player to base
+
+private ["_mapMarkersConfig" as IMapMarkersConfig, "_markerInfo" as MapMarkerInfo];
+_mapMarkersConfig = gCommonConfig.MapMarkers;
+_markerInfo = [playerSide] call _mapMarkersConfig.GetMapMarkerInfo;
+player setPos getMarkerPos _markerInfo.BaseMarkerName;
 
 // Configs
 call TutorialConfig.Init;
@@ -70,6 +80,8 @@ call BriefingHandler.CreateBriefing;
 
 // Add invite player actions on all possible players
 call GroupActionHandler.UpdateAllInvitePlayerActions;
+
+//waitUntil { call PublicVariableHandler.ResourceLocationCollectionHasValue };
 
 // Start the map marker service
 call MapMarkerService.RunAsync;

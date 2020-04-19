@@ -1,3 +1,4 @@
+isNil {
 call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
@@ -44,6 +45,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerRec
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Ai\InitAi.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
+};
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -80,8 +82,6 @@ gServer = [] new IntrusionServer;
 call gServer.BrigadeLeaderWestService.RunAsync;
 call gServer.BrigadeLeaderEastService.RunAsync;
 
-// Empty all fuel stations on the map
-
 isNil {
 	private ["_battleLocationGenerator" as BattleLocationGenerator];
 	
@@ -92,6 +92,8 @@ isNil {
 	private _battleLocationItem = Intrusion_BattleLocations select _battleLocationIndex;
 	[_battleLocationItem] call _battleLocationGenerator.UpdateBattleLocations;
 };
+
+// Empty all fuel stations on the map
 
 isNil {
 	private _allFuelStations = ([0,0,0] nearObjects 150000);

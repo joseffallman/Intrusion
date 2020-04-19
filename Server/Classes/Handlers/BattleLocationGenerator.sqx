@@ -116,7 +116,7 @@ namespace Intrusion.Server
 			
 			// East base
 			
-			_markerInfo = [west] call _mMapMarkersConfig.GetMapMarkerInfo;
+			_markerInfo = [east] call _mMapMarkersConfig.GetMapMarkerInfo;
 			
 			// Respawn marker
 			_baseItem = _baseItems select 3;
