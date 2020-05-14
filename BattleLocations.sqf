@@ -48,5 +48,25 @@ Intrusion_BattleLocations = [
 	        ["Training Camp (Office)", "OFFICE", [10521.1,4048.53,0]],
 	        ["Military Base (Office)", "OFFICE", [9779.7,3919.16,0]]
 	    ]
+    ],
+    [
+        "Southern Harbors",
+        [
+            ["RespawnMarkerWest", [7569.01,6660.63,0], 61],
+            ["WeaponsMarkerWest", [7576.67,6661.99,0], 317],
+            ["VehicleMarkerWest", [7636.35,6679.25,0], 290],
+            ["RespawnMarkerEast", [6718.98,3230.26,0], 31],
+            ["VehicleMarkerEast", [6739.48,3255.97,0], 356],
+            ["VehicleMarkerEast", [6741.97,3289.75,0], 127]
+        ],
+        [
+            ["Le Port East Harbor (Factory)", "FACTORY", [8400.92,3740.41,0]],
+            ["Creative Valley (Factory)", "FACTORY", [6761.3,5390.87,0]],
+            ["Tim's Hardware (Factory)", "FACTORY", [5952.4,3438.13,0]],
+            ["Le Port West Harbor (Factory)", "FACTORY", [7818.3,3248.7,0]],
+            ["Lighthouse (Office)", "OFFICE", [8287.71,6050.43,0]],
+            ["Com Center (Office)", "OFFICE", [7391.75,4133.73,0]],
+            ["Chief's Residence (Office)", "OFFICE", [6574.68,6049.62,0]]
+        ]
     ]
 ];

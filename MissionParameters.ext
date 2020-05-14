@@ -5,8 +5,8 @@ class Params
     {
 		//paramsArray[0]
         title = "Battle Location";
-        values[] = { 0, 1 };
-        texts[] = { "Chapoi", "Military Island" };
+        values[] = { 0, 1, 2 };
+        texts[] = { "Chapoi", "Military Island", "Southern Harbors" };
         default = 0;
 	};
 	
