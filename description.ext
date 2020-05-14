@@ -14,11 +14,12 @@ class Header
   maxPlayers = 60;
 };
 
-onLoadMission = "Intrusion 1.0 - Let's play war!";
+onLoadMission = "Intrusion 1.01 - Let's play war!";
+onLoadName = "Intrusion Malden";
+briefingName = "Intrusion Malden";
 OnLoadMissionTime = false;
 
 overviewText = "Have your specialized squad join the battle in a fight for freedom.";
-overviewTextLocked = "";
 author = "Engima";
 
 disabledAI = 1;
