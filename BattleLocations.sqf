@@ -68,5 +68,24 @@ Intrusion_BattleLocations = [
             ["Com Center (Office)", "OFFICE", [7391.75,4133.73,0]],
             ["Chief's Residence (Office)", "OFFICE", [6574.68,6049.62,0]]
         ]
+    ],
+    [
+        "La Trinité",
+        [
+            ["RespawnMarkerWest", [7594.44,9342.66,0], 10],
+            ["WeaponsMarkerWest", [7594.13,9333.16,0], 348],
+            ["VehicleMarkerWest", [7554.41,9354.52,0], 182],
+            ["RespawnMarkerEast", [7122.31,6703.81,0], 279],
+            ["VehicleMarkerEast", [7120.08,6718.19,0], 349],
+            ["VehicleMarkerEast", [7143.46,6666.85,0], 355]
+        ],
+        [
+            ["Saint Louis (Factory)", "FACTORY", [7214.71,9003.71,0]],
+            ["Super Market (Factory)", "FACTORY", [7279.94,7851.56,0]],
+            ["Power Plant (Factory)", "FACTORY", [6991.09,7844.47,0]],
+            ["Dourdan (Office)", "OFFICE", [7016.98,7122.17,0]],
+            ["The Chapel (Office)", "OFFICE", [7229,8042.47,0]],
+            ["Engineering Room (Office)", "OFFICE", [7424.74,8113.81,0]]
+        ]
     ]
 ];
