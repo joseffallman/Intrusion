@@ -42,7 +42,7 @@ Intrusion_BattleLocations = [
 	    ],
     	[
 	        ["Production Lane (Factory)", "FACTORY", [11611.8,4443.48,0]],
-	        ["Engineering Room (Factory)", "FACTORY", [10587.9,4363.85,0]],
+	        ["Power Station (Factory)", "FACTORY", [10587.9,4363.85,0]],
 	        ["Harbor (Factory)", "FACTORY", [9349.94,3827.27,0]],
 	        ["The Mast (Office)", "OFFICE", [11322.6,4132.99,0]],
 	        ["Training Camp (Office)", "OFFICE", [10521.1,4048.53,0]],

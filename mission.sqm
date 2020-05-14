@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=306;
+		nextID=307;
 	};
 	class MarkerIDProvider
 	{
@@ -16,23 +16,24 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3828.1003,95.18708,4680.7573};
-		dir[]={0.70859843,-0.43165827,-0.55817926};
-		up[]={0.33912355,0.90201819,-0.2671352};
-		aside[]={-0.61879838,-2.1551386e-007,-0.78555429};
+		pos[]={10632.125,58.989037,4376.0835};
+		dir[]={-0.90389192,-0.42071629,0.078305133};
+		up[]={-0.41917229,0.90718275,0.036313247};
+		aside[]={0.086316645,7.2969124e-007,0.99634832};
 	};
 };
 binarizationWanted=0;
 addons[]=
 {
 	"A3_Ui_F",
-	"A3_Characters_F"
+	"A3_Characters_F",
+	"A3_Structures_F_Enoch_Industrial_Power"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=2;
+		items=3;
 		class Item0
 		{
 			className="A3_Ui_F";
@@ -44,6 +45,13 @@ class AddonsMetaData
 		{
 			className="A3_Characters_F";
 			name="Arma 3 Alpha - Characters and Clothing";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+		class Item2
+		{
+			className="A3_Structures_F_Enoch_Industrial";
+			name="Arma 3 Contact Platform - Industrial Structures";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
@@ -246,7 +254,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=72;
+		items=73;
 		class Item0
 		{
 			dataType="Marker";
@@ -2645,6 +2653,22 @@ class Mission
 			};
 			id=285;
 			atlOffset=3.8146973e-006;
+		};
+		class Item72
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={10570.509,29.028151,4383.2402};
+				angles[]={0,4.033721,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=306;
+			type="Land_PowerStation_01_F";
 		};
 	};
 };
