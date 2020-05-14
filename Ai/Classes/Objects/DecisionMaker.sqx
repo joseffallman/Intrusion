@@ -59,8 +59,10 @@ namespace Intrusion.Ai
 			if (_moveAction is MoveAction) then {
 				_moveActionText = " " + ([_moveAction.Type] call MoveActionTypeMeta.ToString) + ", " + _moveAction.WaypointType + ", " + _moveAction.Behavior + ", " + _moveAction.SpeedMode;
 			};
-			
-			player sideChat "New status " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString) + _moveActionText;
+
+			if (StartConfig.DisplayAiMovement) then {
+				player sideChat "New status " + str _self.Knowledge.Group + " (" + str (count units _self.Knowledge.Group) + "): " + ([_state] call AiSquadStateMeta.ToString) + _moveActionText;
+			};
 		};
 	
 		#endregion
@@ -435,7 +437,9 @@ namespace Intrusion.Ai
 					else {
 						if (_engageDetectedEnemies) then {
 				        	["Completed move #1"] call LogHandler.Debug;
-							player sideChat "Completed #1";
+							if (StartConfig.DisplayAiMovement) then {
+								player sideChat "Completed #1";
+							};
 							return true;
 						};
 					};
@@ -445,7 +449,9 @@ namespace Intrusion.Ai
 			};
 			
         	["Completed move #1 (no vehicle)"] call LogHandler.Debug;
-			player sideChat "Completed #1 (no vehicle)";
+			if (StartConfig.DisplayAiMovement) then {
+				player sideChat "Completed #1 (no vehicle)";
+			};
 			return true;
 		};
 		
@@ -458,7 +464,9 @@ namespace Intrusion.Ai
 				if (!isNull _moveAction && { _moveAction.Type != MoveActionType.ClosingIn && _moveAction.Type != MoveActionType.Patrol }) then
 				{
 		        	["Completed move (close)"] call LogHandler.Debug;
-					player sideChat "Completed (close)";
+					if (StartConfig.DisplayAiMovement) then {
+						player sideChat "Completed (close)";
+					};
 					return true;
 				};
 			};
@@ -507,7 +515,9 @@ namespace Intrusion.Ai
 					if (!isNull _order.ResourceLocation) then {
 						if (_order.ResourceLocation.MarkerName != _moveAction.LocationMarkerName) then {
 				        	["Completed move (got new order)"] call LogHandler.Debug;
-							player sideChat "Completed (got new order)";
+							if (StartConfig.DisplayAiMovement) then {
+								player sideChat "Completed (got new order)";
+							};
 							return true;
 						};
 					};
@@ -521,12 +531,14 @@ namespace Intrusion.Ai
 	        			[_self.Knowledge.Group] call _self.ActionPerformer.MakeGroupForgetAllTargets;
 	        			return true;
 	        		};
-				
+
 					// Move is completed if the squad is mounted and has detected nearby enemies
 					if (!isNull _unitContainer) then {
 						if ([_mountedVehicle, _unitContainer] call _self.CompleteMoveWhenEnemiesNearby) then {
 				        	["Completed move (enemies nearby)"] call LogHandler.Debug;
-							player sideChat "Completed (enemies nearby)";
+							if (StartConfig.DisplayAiMovement) then {
+								player sideChat "Completed (enemies nearby)";
+							};
 							return true;
 						};
 					};
@@ -537,14 +549,18 @@ namespace Intrusion.Ai
 					
 					if (_aliveCount >= 1 && _deadCount >= 1) then {
 			        	["Completed move (man down)"] call LogHandler.Debug;
-						player sideChat "Completed (man down)";
+						if (StartConfig.DisplayAiMovement) then {
+							player sideChat "Completed (man down)";
+						};
 						return true;
 					};
 					
 					// Move is completed if the squad is mounted and close to the destination
 					if ([_mountedVehicle, _leaderPos distance _moveAction.Position] call _self.CompleteMoveWhenCloseToDestination) then {
 			        	["Completed move (closing in)"] call LogHandler.Debug;
-						player sideChat "Completed (closing in)";
+						if (StartConfig.DisplayAiMovement) then {
+							player sideChat "Completed (closing in)";
+						};
 						return true;
 					};
 					
@@ -553,7 +569,9 @@ namespace Intrusion.Ai
 						// Move is completed if the squad is at the destination location
 						if (_moveAction.LocationMarkerName != "" && { _leaderPos distance ([_moveAction.LocationMarkerName] call _self.MarkerHandler.GetMarkerPos) < _self.ResourceLocationConfig.AreaRadius }) then {
 							if ([_mountedVehicle, _moveAction.LocationMarkerName] call _self.CompleteMoveWhenAtResourceLocation) then {
-								player sideChat "Completed (at location)";
+								if (StartConfig.DisplayAiMovement) then {
+									player sideChat "Completed (at location)";
+								};
 					        	["Completed move (at location)"] call LogHandler.Debug;
 								return true;
 							};
@@ -561,7 +579,9 @@ namespace Intrusion.Ai
 						else // If the move position is not related to a resource location
 						{
 							if (_leaderPos distance _moveAction.Position < 20) then {
-								player sideChat "Completed (at position)";
+								if (StartConfig.DisplayAiMovement) then {
+									player sideChat "Completed (at position)";
+								};
 					        	["Completed move (at position)"] call LogHandler.Debug;
 								return true;
 							};

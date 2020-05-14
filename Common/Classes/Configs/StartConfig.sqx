@@ -24,6 +24,7 @@ namespace Intrusion.Common
 			_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
 			_self.OnlyAllowAiBeMotorized = false;
 			_self.ShowArtilleryMarkers = false;
+			_self.DisplayAiMovement = false;
 			
 			// The following settings are live settings that override the settings above. Used only when release mode is set to Live.
 			
@@ -37,6 +38,7 @@ namespace Intrusion.Common
 				_self.OnlyOneGroupWithTwoWestlyAiUnits = false;
 				_self.OnlyAllowAiBeMotorized = false;
 				_self.ShowArtilleryMarkers = false;
+				_self.DisplayAiMovement = false;
 			};
 		};
 	
@@ -58,5 +60,7 @@ namespace Intrusion.Common
 		public static property Boolean OnlyAllowAiBeMotorized { get; private set; };
 		
 		public static property Boolean ShowArtilleryMarkers { get; private set; };
+		
+		public static property Boolean DisplayAiMovement { get; private set; };
 	};
 };
