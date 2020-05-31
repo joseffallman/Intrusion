@@ -1,0 +1,102 @@
+/*
+ * Name:	MoveBaseContextMenu
+ * Date:	2020-04-18
+ * Version: 1.0
+ * Author:  Josef
+ *
+ * Description:
+ * The right click menu for the move base dialog. 
+ */
+
+using Intrusion.Common;
+
+namespace Intrusion.Client
+{
+	public class MoveBaseContextMenu
+	{
+		private static fields [
+			"_mDisplayIDD" as Scalar
+		];
+		
+		
+		/*
+		 * Prepare a menu on given display.
+		 * Menu is created hidden.
+		 * Display param is in an array due to serializing problem with dialogs/displays in Arma 3
+		 *
+		 * Params:
+		 * 	_display = The display as the first and only item in array.
+		 */
+		public static method Init("_display" as Array)
+		{
+			_mDisplayIDD = ctrlIDD (_display select 0);
+			
+			private _control = ((_display select 0) ctrlCreate ["ContextMenu", 2560]);
+			_control ctrlAddEventHandler [
+				"KillFocus",
+				"params['_control']; call Intrusion_Client_MoveBaseContextMenu_Close;"
+			];
+			_control ctrlShow false;
+			_control ctrlEnable false;
+		};
+		
+		
+		/*
+		 * Show menu at position.
+		 * 
+		 * Params:
+		 *  _pos     = Position where on screen the menu will be placed.
+		 */
+		public static method boolean Show("_pos" as Array)
+		{
+			private _control = ((findDisplay _mDisplayIDD) displayCtrl 2560);
+			
+			if (!isNull _control) then
+			{
+				_control ctrlSetPosition _pos;
+				_control ctrlCommit 0;
+				_control lbSetCurSel -1;
+				_control ctrlShow true;
+				_control ctrlEnable true;
+				ctrlSetFocus _control;
+				return true;
+			};
+			return false;
+		};
+		
+		
+		/*
+		 * Hide context menu
+		 */
+		public static method Close()
+		{
+			private _control = ((findDisplay _mDisplayIDD) displayCtrl 2560);
+			_control ctrlShow false;
+			_control ctrlEnable false;
+			lbClear _control;
+		};
+		
+		
+		/*
+		 * Add menu options.
+		 */
+		public static method AddOptions("_option" as String)
+		{
+			lbAdd [2560, _option];
+		};
+		
+		
+		/*
+		 * Trigered when a option is selected. Eventhandler added in .hpp file
+		 */
+		public static method OnListBoxSelectChanged("_control" as Control, "_selectedIndex" as Scalar)
+		{
+			if (_selectedIndex != -1) then {
+				[_selectedIndex] call Intrusion_Client_MoveBaseDialog_onContextMenuClick;
+				call _self.Close;
+			};
+		};
+		
+		
+	};
+};

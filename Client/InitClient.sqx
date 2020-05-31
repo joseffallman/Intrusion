@@ -4,6 +4,7 @@ call compile preprocessFileLineNumbers "Client\Classes\Configs\OrderMarkersConfi
 call compile preprocessFileLineNumbers "Client\Classes\Objects\Tutorial.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\TutorialDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\ProfessionDialog.sqx";
+call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseContextMenu.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\MoveBaseDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Dialogs\OrderDialog.sqx";
 call compile preprocessFileLineNumbers "Client\Classes\Handlers\TutorialHandler.sqx";
