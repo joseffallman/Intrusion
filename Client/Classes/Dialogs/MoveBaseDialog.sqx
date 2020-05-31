@@ -174,7 +174,7 @@ namespace Intrusion.Client
 			// Set Info text:
 			private _descriptionText = [
 				"Drag item's from the list on the right, and drop it on the map in the green construction site.",
-				"When you have placed all required (*) points, the move base button will be available."
+				"When you have placed all required (*) points, the move base button will be available. Right click on them to delete or rotate."
 			];
 			_ctrlDescription ctrlSetStructuredText parseText (_descriptionText joinString "<br/>");
 			
