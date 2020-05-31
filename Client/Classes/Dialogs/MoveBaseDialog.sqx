@@ -63,7 +63,8 @@ namespace Intrusion.Client
 			"_mOptions" as Array,
 			"_mConstructionSite" as Marker,
 			"_mContextMenuOptions" as Array,
-			"_mMenu" as MoveBaseContextMenu
+			"_mMenu" as MoveBaseContextMenu,
+			"_mEventhandlersForRotate" as Array
 		];
 	
 		// Creates a MoveBaseDialog object.
@@ -95,32 +96,7 @@ namespace Intrusion.Client
 			} foreach ["Respawn point", "Vehicles park", "Weapon depot"];
 
 		};
-		
-		/*
-		// Change color in list.
-		private static method UpdateListBoxItemsColor()
-		{
-			private "_mDefaultColor" as Array;
-			private "_mDisabledColor" as Array;
-			private "_mCurrentColor" as Array;
-			_mDefaultColor    = [1,1,1,1];
-			_mDisabledColor   = [0.5,0.5,0.5,1];
-			_mCurrentColor    = [0.85,0.4,0,1];
-			{
-				lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mDefaultColor];
-				if (_forEachIndex == _mCurrentIndex) then 
-				{
-					lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mCurrentColor];
-				} 
-				else
-				{
-					if (_x.isSet) then
-					{
-						//lbSetColor[DialogControl.BaseListBox, _forEachIndex, _mDisabledColor];
-					};
-				};
-			} forEach _mOptions as MoveBaseListOption;
-		};*/
+
 		
 		/* 
 		 * Zoom and Pan map to maker.
@@ -179,7 +155,7 @@ namespace Intrusion.Client
 			_mConstructionSite = [
 				getPos player,
 				"ELLIPSE", 
-				[_mBaseConfig.BaseRadius, _mBaseConfig.BaseRadius],
+				[(_mBaseConfig.BaseRadius / 2), (_mBaseConfig.BaseRadius / 2)],
 				0,
 				"ColorGreen"
 			] call Marker.CreateShapeMarkerLocal;
@@ -187,10 +163,8 @@ namespace Intrusion.Client
 			// Create the dialog
             createDialog "IntMoveBaseDialog";
             _display = findDisplay (DialogControl.BaseDialog as Scalar);
-            //_ctrlListBox = _display displayCtrl 2553;
             _ctrlMap = _display displayCtrl 2550;
             _ctrlDescription = _display displayCtrl 2553;
-            //_ctrlOkButton = _display displayCtrl 2551;
             
             // Add options to list.
 			_mOptions = [];
@@ -217,7 +191,6 @@ namespace Intrusion.Client
 			
 			
 			// Restore markers
-			call _mConstructionSite.Hide;
 			{
 				private _marker = _x select 0;
 				private _alpha  = _x select 1;
@@ -233,10 +206,9 @@ namespace Intrusion.Client
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
+			call _mConstructionSite.Hide;
 			{
-				if (_x.isSet) then {
-					deleteMarkerLocal _x.Name;
-				};	
+				call _x.Marker.Hide;	
 			} forEach _mOptions as MoveBaseListOption;
 		};
 		
@@ -296,6 +268,10 @@ namespace Intrusion.Client
 			
 		};
 
+
+		/*
+		 * Open action menu and add items to it.
+		 */
 		public static method onMapClick("_control", "_button", "_xPos", "_yPos", "_shift", "_ctrl", "_alt")
 		{
 			if (_button == 1) then {
@@ -331,7 +307,7 @@ namespace Intrusion.Client
 			private "_option" as MoveBaseListOption;
 			_option = _mOptions select _mCurrentIndex;
 			private _menuAction = _mContextMenuOptions select _selectedMenuIndex;
-			systemChat (str _option.Name + " - " + _menuAction);
+			//systemChat (str _option.Name + " - " + _menuAction);
 			
 			switch (_menuAction) do {
 				case "Delete": 
@@ -340,10 +316,66 @@ namespace Intrusion.Client
 				};
 				case "Rotate":
 				{
-					systemChat "rotate";
+					_mEventhandlersForRotate = [];
+					private "_marker" as Marker;
+					private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+					private _dirTo = _ctrlMap ctrlMapScreenToWorld getMousePosition;
+					_marker = ([_option.Position, "ICON", [1, 1], 0, "hd_arrow", "ColorBlack", "Solid", "", 0.4, true, "LocalArrowRotatingMarker", true] new Marker);
+					_dirTo call _marker.SetDirection;
+					
+					private _EHMouseMove = _ctrlMap ctrlAddEventHandler ["MouseMoving", 
+					{
+						params ["_control", "_xPos", "_yPos", "_mouseOver"];
+						private _rotateToPos = _control ctrlMapScreenToWorld getMousePosition;
+						private _dir = (getMarkerPos "LocalArrowRotatingMarker") getDir _rotateToPos;
+						"LocalArrowRotatingMarker" setMarkerDirLocal _dir;
+						
+					}];
+					_mEventhandlersForRotate pushBack ["MouseMoving", _EHMouseMove];
+					
+					private _EHMouseDown = _ctrlMap ctrlAddEventHandler ["MouseButtonDown", 
+					{
+						params ["_control", "_button", "_xPos", "_yPos", "_shift", "_ctrl", "_alt"];
+						private _rotateToPos = _control ctrlMapScreenToWorld getMousePosition;
+						private _dir = (getMarkerPos "LocalArrowRotatingMarker") getDir _rotateToPos;
+						"LocalArrowRotatingMarker" setMarkerDirLocal _dir;
+						
+						deleteMarkerLocal "LocalArrowRotatingMarker";
+						[_dir] call Intrusion_Client_MoveBaseDialog_onRotateBaseItem;
+					}];
+					_mEventhandlersForRotate pushBack ["MouseButtonDown", _EHMouseDown];
 				};
 			};
 		};
+		
+		/*
+		 * Create a new Base item with new direction.
+		 *
+		 */
+		public static method onRotateBaseItem("_direction" as Scalar)
+		{
+			private "_option" as MoveBaseListOption;
+			private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+			_option = _mOptions select _mCurrentIndex;
+			
+			//systemChat str ( _option.Name + " " + str _direction );
+			switch (_option.Name) do {
+					case "Respawn point" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetRespawnPoint;
+					};
+					case "Vehicles park" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetCarParkPoint;
+					};
+					case "Weapon depot" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetWeaponDepotPoint;
+					};
+				};
+				
+			{
+				_ctrlMap ctrlRemoveEventHandler _x;
+			} forEach _mEventhandlersForRotate as Array;
+		};
+		
 		
 		/*
 		 * Return Index if position is within given distance from a placed option.
