@@ -1,4 +1,4 @@
-#include "Description\MissionParameters.ext"
+#include "MissionParameters.ext"
 #include "Dialogs\Defines.hpp"
 #include "Dialogs\DialogControls.hpp"
 #include "Dialogs\IntBaseDialog.hpp"
@@ -15,23 +15,19 @@ class Header
   maxPlayers = 60;
 };
 
-onLoadName = "Intrusion";
-onLoadMission = "Intrusion - let's play war!";
-//loadScreen = "loadScreen_ca.paa"; // Preview picture
-
+onLoadMission = "Intrusion 1.01 - Let's play war!";
+onLoadName = "Intrusion Malden";
+briefingName = "Intrusion Malden";
 OnLoadMissionTime = false;
 
-overviewText = "Have your specialized group join the battle in the way Arma was meant to be played.";
-overviewTextLocked = "";
-//overviewPicture = "overviewPicture_ca.paa";
+overviewText = "Have your specialized squad join the battle in a fight for freedom.";
 author = "Engima";
 
 disabledAI = 1;
 
 respawn = "BASE";
 
-//#include "Description\TutorialDialog.ext"
-
+// Remote execution
 #include "Description\RemoteExec.ext"
 
 // Revive settings

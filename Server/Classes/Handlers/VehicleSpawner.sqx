@@ -21,7 +21,8 @@ namespace Intrusion.Server
 			"_mMissionTime" as IMissionTime];
 	
 		// Creates a VehicleHandler object.
-		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_missionTime" as IMissionTime) {
+		public constructor("_vehicleClassNamesConfig" as IVehicleClassNamesConfig, "_mapMarkersConfig" as IMapMarkersConfig, "_missionTime" as IMissionTime)
+		{
 			_mVehicleClassNamesConfig = _vehicleClassNamesConfig;
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mMissionTime = _missionTime;
@@ -114,26 +115,26 @@ namespace Intrusion.Server
 		// Returns (Boolean): true if the helipad is empty and possible to spawn in a helicopter on.
 		private method Boolean HelipadIsEmpty("_helipad" as Object)
 		{
-			private ["_helicopterPresent" as Boolean, "_otherVehiclaTooClose" as Boolean];
+			private ["_helicopterPresent" as Boolean, "_otherVehicleTooClose" as Boolean];
 			
 			_helicopterPresent = false;
-			_otherVehiclaTooClose = false;
+			_otherVehicleTooClose = false;
 			
 			// Check for presence of helicopters, on the helipad or above.
 			{
-				if (_x.Vehicle isKindOf "Helicopter") then {
-					if (_x.Vehicle distance2D _helipad < 50) then {
+				if (_x isKindOf "Helicopter") then {
+					if (_x distance2D _helipad < 12) then {
 						_helicopterPresent = true;
 					};
 				}
 				else {
-					if (_x.Vehicle distance _helipad < 10) then {
-						_otherVehiclaTooClose = true;
+					if (_x distance _helipad < 9) then {
+						_otherVehicleTooClose = true;
 					};
 				};
-			} foreach _mAllIntrusionVehicles as IntrusionVehicle;
+			} foreach vehicles;
 			
-			!_helicopterPresent && !_otherVehiclaTooClose
+			return !_helicopterPresent && !_otherVehicleTooClose;
 		};
 	
 		// Gets an empty helipad position at the base.
@@ -141,15 +142,14 @@ namespace Intrusion.Server
 		// Returns (Array): The empty helipad's position. Empty array [] if no empty helipad exists around the base.
 		private method Array GetEmptyHelipadPosition("_side" as Side)
 		{
-			scopeName "main";
-		
 	    	{
-	    		if (_x.Side == _side && { [_x.Object] call _self.HelipadIsEmpty }) then {
-	    			(getPos _x.Object) breakOut "main";
+	    		if (_x.Side == _side && { [_x.Object] call _self.HelipadIsEmpty }) then
+	    		{
+	    			return (getPos _x.Object);
 	    		};
 	    	} foreach _mAllHelipads as SideObject;
 	    	
-	    	[]
+	    	return [];
 		};
 		
 		// Removes the information about helipads for a side.
@@ -182,6 +182,8 @@ namespace Intrusion.Server
 		    private ["_vehicleObj" as Object, "_vehicleClassInfo" as ProfessionVehicleClassNamesInfo, "_spawnDir" as Scalar, "_spawnPos" as Array];
 		    private ["_intrusionVehicle" as IntrusionVehicle, "_vehicleClass" as String];
 		    private ["_markerInfo" as MapMarkerInfo, "_isHelicopter" as Boolean, "_helipad" as Object, "_helipadExists" as Boolean];
+		    
+		    sleep 5; // A "temporary" fix so that helicopters do not create unneccessary helipads (since removal of choppers is delayed with a few seconds)
 		    
         	_spawnPos = [];
 		    _markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;
@@ -334,7 +336,8 @@ namespace Intrusion.Server
 		// Spawns a free vehicle on a side's car park.
 		// _side (Side): The side's carpark on which to spawn the vehicle.
 		// Returns (IntrusionVehicle): The spawned Intrusion vehicle.
-		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side) {
+		public method IntrusionVehicle SpawnFreeVehicle("_side" as Side)
+		{
 		    private ["_intrusionVehicle" as IntrusionVehicle];
 			
         	_intrusionVehicle = [_side, ProfessionType.Undefined] call _self.SpawnIntrusionVehicle;
@@ -346,7 +349,8 @@ namespace Intrusion.Server
 		// Counts a side's free vehicles at the base.
 		// _side (Side): The side to count vehicles for.
 		// Returns (Scalar): The number of free vehicles at the side's base.
-		public method Scalar CountFreeVehiclesAtBase("_side" as Side) {
+		public method Scalar CountFreeVehiclesAtBase("_side" as Side)
+		{
 			private ["_vehiclesAtBaseCount" as Scalar, "_markerInfo" as MapMarkerInfo];
 			
     		_markerInfo = [_side] call _mMapMarkersConfig.GetMapMarkerInfo;

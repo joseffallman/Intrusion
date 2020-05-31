@@ -16,98 +16,142 @@ namespace Intrusion.Server
 {
 	public class SupportVehiclesService : Service
 	{
+		private fields ["_mSupportServicesConfig" as SupportServicesConfig];
+	
 		// Creates a SupportVehiclesService object.
-		public constructor()
+		public constructor("_supportServicesConfig" as SupportServicesConfig)
 		{
 			call _base.Constructor;
+			
+			_mSupportServicesConfig = _supportServicesConfig;
 		};
 		
-		private method Object GetClosestVehicleWithinHealDistance("_supportVehicle" as Object)
+		private method Object GetClosestHealableVehicleWithinHealDistance("_supportIntrusionVehicle" as IntrusionVehicle)
 		{
+			private ["_intrusionVehicle" as IntrusionVehicle, "_possibleVehicles" as Array /* of DictionaryItem */];
+			
+			_possibleVehicles = [];
+			
 			{
-				if (_x != _supportVehicle) then {
-					if (_x distance _supportVehicle < 30) then {
-						return _x;
+				if (_x != _supportIntrusionVehicle.Vehicle && alive _x) then
+				{
+					if (_x distance _supportIntrusionVehicle.Vehicle < 30) then
+					{
+						_intrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
+				
+						if (!isNull _intrusionVehicle) then
+						{
+							if (_intrusionVehicle.Side == _supportIntrusionVehicle.Side) then
+							{
+								// An air unit must have landed and stay still, with engine off, to be supported
+								if (_intrusionVehicle.Vehicle isKindOf "Air") then
+								{
+									if ((getPosATL _intrusionVehicle.Vehicle) select 2 < 1 && !isEngineOn _intrusionVehicle.Vehicle) then {
+										_possibleVehicles pushBack [_x, _x distance _supportIntrusionVehicle.Vehicle] new DictionaryItem;
+									};
+								}
+								else {
+									_possibleVehicles pushBack [_x, _x distance _supportIntrusionVehicle.Vehicle] new DictionaryItem;
+								};
+							};
+						};
 					};
 				};
 			} foreach vehicles;
 			
-			return objNull;
+			// Get the closest one
+			
+			private ["_closestVehicleItem" as DictionaryItem];
+			
+			_closestVehicleItem = [objNull, 0] new DictionaryItem;
+			
+			{
+				if (isNull _closestVehicleItem.Key) then {
+					_closestVehicleItem = _x;
+				}
+				else {
+					if (_x.Value < _closestVehicleItem.Value) then {
+						_closestVehicleItem = _x;
+					};
+				};
+			} foreach _possibleVehicles as DictionaryItem;
+			
+			return _closestVehicleItem.Key;
 		};
 		
 		protected override method Run()
 		{
-			private ["_intrusionVehicle" as IntrusionVehicle, "_closeVehicle" as Object];
+			private ["_supportIntrusionVehicle" as IntrusionVehicle, "_closeVehicle" as Object];
 			
 			while { true } do
 			{
 				{
 					private _supportValue = 0;
 					
-					_intrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
+					_supportIntrusionVehicle = _x getVariable ["IntrusionVehicle", classNull];
 					
 					// If vehicle is an intrusion vehicle of a support type
 					
-					if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Repair || _intrusionVehicle.OwnerProfession == ProfessionType.Fuel || _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
+					if (!isNull _supportIntrusionVehicle && { _supportIntrusionVehicle.OwnerProfession == ProfessionType.Repair || _supportIntrusionVehicle.OwnerProfession == ProfessionType.Fuel || _supportIntrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
 					{
-						_closeVehicle = [_x] call _self.GetClosestVehicleWithinHealDistance;
+						_closeVehicle = [_supportIntrusionVehicle] call _self.GetClosestHealableVehicleWithinHealDistance;
 						
 						// If there is a close vehicle near for the same faction, and if both vehicles are stationary
 						
 						//if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle && { speed _intrusionVehicle.Vehicle < 0.1 && speed _closeVehicle < 0.1 }}) then
-						if (!isNull _closeVehicle && { faction _intrusionVehicle.Vehicle == faction _closeVehicle && alive _closeVehicle }) then
+						if (!isNull _closeVehicle) then
 						{
-							if (_intrusionVehicle.OwnerProfession == ProfessionType.Repair) then
+							if (_supportIntrusionVehicle.OwnerProfession == ProfessionType.Repair) then
 							{
 								private _vehicleDamage = [_closeVehicle] call Functions.GetVehicleDamage;
 								
-								if (_vehicleDamage > 0.1 || !canMove _closeVehicle) then {
+								if (_vehicleDamage >= _mSupportServicesConfig.EnableRepairSupportAtDamageLevel || (!canMove _closeVehicle && _vehicleDamage > 0)) then {
 									_closeVehicle setDamage 0;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Repair, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Repair, "Your vehicle was repaired by allied repair vehicle.", "Vehicle was repaired."]] call Remote.Invoke;
 									_supportValue = _vehicleDamage;
 								};
 							};
 							
-							if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Fuel }) then
+							if (!isNull _supportIntrusionVehicle && { _supportIntrusionVehicle.OwnerProfession == ProfessionType.Fuel }) then
 							{
 								private _vehicleFuel = fuel _closeVehicle;
 							
-								if (_vehicleFuel < 0.9) then
+								if (_vehicleFuel <= _mSupportServicesConfig.EnableFuelSupportAtFuelLevel) then
 								{
 									_closeVehicle setFuel 1;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Fuel, "Your vehicle was refueled by allied refuel vehicle.", "Vehicle was refueled."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Fuel, "Your vehicle was refueled by allied refuel vehicle.", "Vehicle was refueled."]] call Remote.Invoke;
 									_supportValue = 1 - _vehicleFuel;
 								};
 							};
 							
-							if (!isNull _intrusionVehicle && { _intrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
+							if (!isNull _supportIntrusionVehicle && { _supportIntrusionVehicle.OwnerProfession == ProfessionType.Ammo }) then
 							{
 								private _vehicleAmmo = [_closeVehicle] call Functions.GetVehicleAmmo;
 							
-								if (_vehicleAmmo < 0.9) then
+								if (_vehicleAmmo <= _mSupportServicesConfig.EnableAmmoSupportAtAmmoLevel) then
 								{
 									_closeVehicle setVehicleAmmo 1;
-									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _intrusionVehicle.Vehicle, ProfessionType.Ammo, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
+									["ClientEventReciever.OnVehicleSupported", [_closeVehicle, _supportIntrusionVehicle.Vehicle, ProfessionType.Ammo, "Your vehicle was rearmed by allied ammo vehicle.", "Vehicle was rearmed."]] call Remote.Invoke;
 									_supportValue = 1 - _vehicleAmmo;
 								};
 							};
 							
-							// Add rating
+							// Add rating to supporter
 							
 							if (_supportValue > 0) then
 							{
-								private _addingRating = [count units _intrusionVehicle.OwnerGroup, _supportValue] call gCommon.RatingCalculator.CalculateGroupRatingVehicleSupport;
+								private _addingRating = [count units _supportIntrusionVehicle.OwnerGroup, _supportValue] call gCommon.RatingCalculator.CalculateGroupRatingVehicleSupport;
 								
-								if (isPlayer leader _intrusionVehicle.OwnerGroup) then
+								if (isPlayer leader _supportIntrusionVehicle.OwnerGroup) then
 								{
-									["ClientEventReciever.OnAddSquadRating", [_addingRating, _intrusionVehicle.OwnerGroup]] call Remote.Invoke;
-						        	["Group " + str _intrusionVehicle.OwnerGroup + " recieved a rating of " + str _addingRating + " for supporting."] call LogHandler.Debug;
+									["ClientEventReciever.OnAddSquadRating", [_addingRating, _supportIntrusionVehicle.OwnerGroup]] call Remote.Invoke;
+						        	["Group " + str _supportIntrusionVehicle.OwnerGroup + " recieved a rating of " + str _addingRating + " for supporting."] call LogHandler.Debug;
 								}
 								else {
-									private _rating = (_intrusionVehicle.OwnerGroup) getVariable ["Rating", 0];
+									private _rating = (_supportIntrusionVehicle.OwnerGroup) getVariable ["Rating", 0];
 									_rating = _rating + _addingRating;
-									(_intrusionVehicle.OwnerGroup) setVariable ["Rating", _rating];
-						        	["AI group " + str _intrusionVehicle.OwnerGroup + " recieved a rating of " + str _addingRating + " for supporting."] call LogHandler.Debug;
+									(_supportIntrusionVehicle.OwnerGroup) setVariable ["Rating", _rating];
+						        	["AI group " + str _supportIntrusionVehicle.OwnerGroup + " recieved a rating of " + str _addingRating + " for supporting."] call LogHandler.Debug;
 								};
 							};
 						};

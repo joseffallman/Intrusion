@@ -1,0 +1,175 @@
+/*
+ * Name:	BattleLocationGenerator
+ * Date:	2020-04-18
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Creates a battle location entry out of the markers on the map.
+ */
+
+using Sqx.Markers;
+using Intrusion.Common;
+
+namespace Intrusion.Server
+{
+	public class BattleLocationGenerator
+	{
+		private fields ["_mMapMarkersConfig" as IMapMarkersConfig];
+	
+		// Creates a BattleLocationGenerator object.
+		public constructor("_mapMarkersConfig" as IMapMarkersConfig)
+		{
+			_mMapMarkersConfig = _mapMarkersConfig;
+		};
+		
+		public method WriteToLog()
+		{
+			private ["_number" as Scalar, "_markerName" as String, "_markerInfo" as MapMarkerInfo];
+			
+			diag_log ("    [");
+			diag_log ("        ""BATTLE LOCATION"",");
+			diag_log ("        [");
+			
+			// Bases
+			
+			_markerInfo = [west] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			diag_log ("            [""RespawnMarkerWest"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
+			diag_log ("            [""WeaponsMarkerWest"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerWest"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "],");
+			
+			_markerInfo = [east] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			diag_log ("            [""RespawnMarkerEast"", " + str getMarkerPos _markerInfo.BaseMarkerName + ", " + str (floor markerDir _markerInfo.BaseMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.WeaponDepotMarkerName + ", " + str (floor markerDir _markerInfo.WeaponDepotMarkerName) + "],");
+			diag_log ("            [""VehicleMarkerEast"", " + str getMarkerPos _markerInfo.CarParkMarkerName + ", " + str (floor markerDir _markerInfo.CarParkMarkerName) + "]");
+			
+			diag_log ("        ],");
+			diag_log ("        [");
+			
+			// Find all factory locations
+			_number = 1;
+			while { ["Factory" + str _number] call MarkerHelper.MarkerExists } do
+			{
+				_markerName = "Factory" + str _number;
+				
+				diag_log ("            [""" + markerText _markerName + """, ""FACTORY"", " + str (getMarkerPos _markerName) + "],");
+				
+				deleteMarker _markerName;
+				_number = _number + 1;
+			};
+			
+			// Find all office locations
+			_number = 1;
+			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
+			{
+				_markerName = "Office" + str _number;
+				
+				private _text = "            [""" + markerText _markerName + """, ""OFFICE"", " + str (getMarkerPos _markerName) + "]";
+				
+				if (["Office" + str (_number + 1)] call MarkerHelper.MarkerExists) then {
+					_text = _text + ",";
+				};
+				
+				diag_log (_text);
+				
+				deleteMarker _markerName;
+				_number = _number + 1;
+			};
+			
+			diag_log ("        ]");
+			diag_log ("    ]");
+		};
+		
+		public method UpdateBattleLocations("_battleLocationItem" as Array)
+		{
+			private ["_markerInfo" as MapMarkerInfo, "_pos" as Array, "_dir" as Scalar];
+		
+			private _baseItems = _battleLocationItem select 1;
+			private _locationItems = _battleLocationItem select 2;
+			
+			// West base
+			
+			_markerInfo = [west] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			// Respawn marker
+			private _baseItem = _baseItems select 0;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.BaseMarkerName setMarkerPos _pos;
+			_markerInfo.BaseMarkerName setMarkerDir _dir;
+			
+			// Weapons marker
+			_baseItem = _baseItems select 1;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.WeaponDepotMarkerName setMarkerPos _pos;
+			_markerInfo.WeaponDepotMarkerName setMarkerDir _dir;
+			
+			// Vehicle marker
+			_baseItem = _baseItems select 2;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.CarParkMarkerName setMarkerPos _pos;
+			_markerInfo.CarParkMarkerName setMarkerDir _dir;
+			
+			// East base
+			
+			_markerInfo = [east] call _mMapMarkersConfig.GetMapMarkerInfo;
+			
+			// Respawn marker
+			_baseItem = _baseItems select 3;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.BaseMarkerName setMarkerPos _pos;
+			_markerInfo.BaseMarkerName setMarkerDir _dir;
+			
+			// Weapons marker
+			_baseItem = _baseItems select 4;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.WeaponDepotMarkerName setMarkerPos _pos;
+			_markerInfo.WeaponDepotMarkerName setMarkerDir _dir;
+			
+			// Vehicle marker
+			_baseItem = _baseItems select 5;
+			_pos = _baseItem select 1;
+			_dir = _baseItem select 2;
+			_markerInfo.CarParkMarkerName setMarkerPos _pos;
+			_markerInfo.CarParkMarkerName setMarkerDir _dir;
+			
+			// Resource locations
+			
+			private _factoryNo = 0;
+			private _officeNo = 0;
+		
+			{
+				private _locationItem = _x;
+				
+				private _text = _locationItem select 0;
+				private _type = _locationItem select 1;
+				private _pos = _locationItem select 2;
+				private _markerName = "";
+				
+				if (_type == "FACTORY") then {
+					_factoryNo = _factoryNo + 1;
+					_markerName = _type + str _factoryNo;
+				}
+				else {
+					_officeNo = _officeNo + 1;
+					_markerName = _type + str _officeNo;
+				};
+				
+				diag_log ("MarkerName: " + _markerName + ", Pos: " + str _pos);
+				
+				createMarker [_markerName, _pos];
+				_markerName setMarkerText _text;
+				_markerName setMarkerShape "ICON";
+				_markerName setMarkerType "mil_objective";
+				_markerName setMarkerColor "colorIndependent";
+				
+			} foreach _locationItems as Array;
+		};
+	};
+};

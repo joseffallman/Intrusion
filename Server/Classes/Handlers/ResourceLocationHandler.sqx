@@ -33,10 +33,13 @@ namespace Intrusion.Server
 		// Gets the location selected as the Winner's location.
 		public property ResourceLocation WinnersLocation { get; private set; };
 		
+		// Gets the average distance between all resource locations.
+		public property Scalar ResourceLocationsAverageDistance { get; private set; };
+		
 		// Finds all resource locations marked on map with names "FactoryX" and "TechLabX" and creates
 		// resource locations for them all.
-		public method AquireAllResourceLocations {
-			private ["_number" as Scalar, "_markerName" as String];
+		public method AquireAllResourceLocations() {
+			private ["_number" as Scalar, "_markerName" as String, "_locationA" as ResourceLocation, "_locationB" as ResourceLocation];
 			
 			// Find all factory locations
 			_number = 1;
@@ -53,7 +56,7 @@ namespace Intrusion.Server
 			
 			_self.FactoryLocationsCount = _number - 1;
 			
-			// Find all techlab locations
+			// Find all office locations
 			_number = 1;
 			while { ["Office" + str _number] call MarkerHelper.MarkerExists } do
 			{
@@ -68,8 +71,34 @@ namespace Intrusion.Server
 			
 			_self.TechLabLocationsCount = _number - 1;
 			
+			// Calculate average distance between all resource locations.
+			
+			private _locationsCount = _self.FactoryLocationsCount + _self.TechLabLocationsCount;
+			private _totalDistance = 0;
+			private _totalDistances = 0;
+			private _locations = call _mResourceLocationCollection.GetResourceLocations;
+			
+			for "_i" from 0 to (_locationsCount - 1) do {
+				_locationA = _locations select _i;
+				
+				for "_j" from 0 to (_locationsCount - 1) do {
+					_locationB = _locations select _j;
+					
+					private _distance = getMarkerPos _locationA.MarkerName distance getMarkerPos _locationB.MarkerName;
+					
+					if (_distance > 0) then {
+						_totalDistance = _totalDistance + _distance;
+						_totalDistances = _totalDistances + 1;
+					};
+				};
+			};
+			
+			_self.ResourceLocationsAverageDistance = _totalDistance / _totalDistances;
+			
 			// Set winner's location
+			
 			private _resourceLocations = call _mResourceLocationCollection.GetResourceLocations;
+			
 			_self.WinnersLocation = selectRandom _resourceLocations;
 			_self.WinnersLocation.IsWinnersLocation = true;
 			_self.WinnersLocation.MarkerName setMarkerType _mMapMarkersConfig.WinnersLocationMarkerType;

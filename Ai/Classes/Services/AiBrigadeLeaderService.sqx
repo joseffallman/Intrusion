@@ -17,8 +17,8 @@ namespace Intrusion.Ai
 {
 	public class AiBrigadeLeaderService : Service
 	{
-		private fields ["_mSide" as Side, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime, "_mGameLengtMonitor" as IGameLengthMonitor];
-		private fields ["_mNextMoveBaseTime" as Scalar, "_mBaseMarkerName" as String, "_mBaseInitialPos" as Array, "_mGamePhase" as String, "_mMoveToWinLocMinutesFromEnd" as Scalar];
+		private fields ["_mSide" as Side, "_mResourceLocationHandler" as IResourceLocationHandler, "_mSquadHandler" as ISquadHandler, "_mObservationHandler" as ObservationHandler, "_mMessageHandler" as IMessageHandler, "_mMapMarkersConfig" as IMapMarkersConfig, "_mVehicleSpawner" as IVehicleSpawner, "_mBaseConfig" as BaseConfig, "_mMissionTime" as IMissionTime, "_mGameLengtMonitor" as IGameLengthMonitor];
+		private fields ["_mNextMoveBaseTime" as Scalar, "_mBaseMarkerName" as String, "_mBaseInitialPos" as Array, "_mGamePhase" as String, "_mMoveToWinLocMinutesFromEnd" as Scalar, "_mMoveBaseService" as Service, "_mBaseNumber" as Scalar];
 		
 		public constructor(
 			"_side" as Side, 
@@ -37,6 +37,7 @@ namespace Intrusion.Ai
 			call _base.Constructor;
 			
 			_mSide = _side;
+			_mResourceLocationHandler = _resourceLocationHandler;
 			_mSquadHandler = _squadHandler;
 			_mObservationHandler = _observationHandler;
 			_mMessageHandler = _messageHandler;
@@ -52,6 +53,7 @@ namespace Intrusion.Ai
 			
 			private _gameTime = call _missionTime.GetMissionTime;
 			
+			_mBaseNumber = 1;
 			_mGamePhase = "OPENING";
 			_mNextMoveBaseTime = _gameTime + (10 + random 5) * 60;
 			_mMoveToWinLocMinutesFromEnd = (15 + random 10);
@@ -285,13 +287,29 @@ namespace Intrusion.Ai
 			return false;
 		};
 		
+		private method Object GetClosestRoadSegment("_pos" as Array)
+		{
+			private _roads = _pos nearRoads 100;
+			private _closestDistance = 1000;
+			private _closestRoad = objNull;
+			
+			{
+				if (_x distance _pos < _closestDistance) then {
+					_closestRoad = _x;
+					_closestDistance = _x distance _pos;
+				};
+			} foreach _roads as Object;
+			
+			return _closestRoad;
+		};
+		
 		protected override method Run()
 		{
-			private ["_moveBaseService" as MoveBaseService, "_baseLayout" as BaseLayout, "_carParkPos" as Array];
+			private ["_baseLayout" as BaseLayout, "_carParkPos" as Array];
 			private ["_locationCollection" as ResourceLocationCollection, "_quadrantPos" as Array, "_winnerLocation" as ResourceLocation];
 			private ["_foundLateGamePosition" as Boolean];
 			
-			_moveBaseService = classNull;
+			_mMoveBaseService = classNull;
 			_foundLateGamePosition = false;
 			
 			while { !(call PublicVariableHandler.ResourceLocationCollectionHasValue) } do {
@@ -339,6 +357,8 @@ namespace Intrusion.Ai
 						};
 					} foreach _resourceLocations as ResourceLocation;
 			
+					_locationMarkers pushBack _mBaseMarkerName;
+						
 					_quadrantPos = [_locationMarkers] call _self.FindClosestToMarkersPos;
 					_moveBase = true;
 				};
@@ -355,25 +375,51 @@ namespace Intrusion.Ai
 					_foundLateGamePosition = true;
 				};
 				
-				if (_moveBase && count _quadrantPos > 0) then
+				private _movingBase = !isNull _mMoveBaseService && { _mMoveBaseService.IsRunning };
+	        	//["_movingBase = " + str _movingBase] call LogHandler.Debug;
+				
+				if (_moveBase && !_movingBase && count _quadrantPos > 0) then
 				{
 					_carParkPos = [_quadrantPos, 400] call _self.FindBasePos;
 					
 					if (count _carParkPos > 0) then
 					{
-						private _dir = random 360;
+						private _locationsWithinRangeCount = 0;
+						private _resourceLocations = call _locationCollection.GetResourceLocations;
 						
-						_baseLayout = [
-							[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
-							[_carParkPos, _dir + 180] new ViewPos,
-							[_carParkPos getPos [20, _dir], _dir + 180] new ViewPos,
-						] new BaseLayout;
+						{
+							if (_carParkPos distance getMarkerPos _x.MarkerName <= _mResourceLocationHandler.ResourceLocationsAverageDistance) then
+							{
+								_locationsWithinRangeCount = _locationsWithinRangeCount + 1;
+							};
+						} foreach _resourceLocations as ResourceLocation;
+						
+						if (_locationsWithinRangeCount >= 2) then
+						{
+							private _dir = random 360;
+							
+							private _closestRoad = [_carParkPos] call _self.GetClosestRoadSegment;
+							if (!isNull _closestRoad) then {
+								_dir = (_carParkPos getDir getPos _closestRoad) - 180;
+							};
+							
+							_baseLayout = [
+								[_carParkPos getPos [30, _dir], _dir + 180] new ViewPos,
+								[_carParkPos, _dir + 180] new ViewPos,
+								[_carParkPos getPos [20, _dir], _dir + 180] new ViewPos,
+							] new BaseLayout;
+							
+							_mBaseNumber = _mBaseNumber + 1;
+							
+							// Display marker where base is moved.
+							//[_carParkPos, "hd_dot", "ColorBlack", (str _mSide) + " " + str _mBaseNumber] call Sqx.Markers.Marker.CreateIconMarkerLocal;
+						
+							_mMoveBaseService = [_mSide, _baseLayout, _mMessageHandler, _mMapMarkersConfig, _mVehicleSpawner, _mBaseConfig] new MoveBaseService;
+							call _mMoveBaseService.RunAsync;
 					
-						_moveBaseService = [_mSide, _baseLayout, _mMessageHandler, _mMapMarkersConfig, _mVehicleSpawner, _mBaseConfig] new MoveBaseService;
-						call _moveBaseService.RunAsync;
+							_mNextMoveBaseTime = _mNextMoveBaseTime + (10 + random 10) * 60;
+						};
 					};
-					
-					_mNextMoveBaseTime = _mNextMoveBaseTime + (10 + random 10) * 60;
 				};
 				
 				sleep 30;

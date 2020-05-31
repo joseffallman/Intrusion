@@ -16,15 +16,16 @@ namespace Intrusion.Client
 {
 	public class MapMarkerService
 	{
-		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig];
+		private static fields ["_mMapMarkersConfig" as IMapMarkersConfig, "_mProfessionConfig" as ProfessionConfig, "_mSquadMarkersConfig" as ISquadMarkersConfig, "_mSupportServicesConfig" as SupportServicesConfig];
 		private static fields ["_mMapMarkers" as Array /* of Marker */, "_mBaseMarker" as Marker, "_mSquadVehicleMarkers" as Array /* of Marker */, "_mSquadMemberMarkers" as Array /* of Marker */];
 		private static fields ["_mSupportMarkers" as Array /* of Marker */];
 		
 		// Initializes the observation service.
-		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as ProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig) {
+		public static method Init("_mapMarkersConfig" as IMapMarkersConfig, "_professionConfig" as ProfessionConfig, "_squadMarkersConfig" as ISquadMarkersConfig, "_supportServicesConfig" as SupportServicesConfig) {
 			_mMapMarkersConfig = _mapMarkersConfig;
 			_mProfessionConfig = _professionConfig;
 			_mSquadMarkersConfig = _squadMarkersConfig;
+			_mSupportServicesConfig = _supportServicesConfig;
 			_mSquadVehicleMarkers = [];
 			_mSquadMemberMarkers = [];
 		
@@ -200,8 +201,10 @@ namespace Intrusion.Client
 				{
 					if (_professionType == ProfessionType.Repair) then
 					{
-						private _health = 1 - ([_x.Vehicle] call Functions.GetVehicleDamage);
-						if (alive _x.Vehicle && (!canMove _x.Vehicle || _health < 0.95)) then
+						private _damage = ([_x.Vehicle] call Functions.GetVehicleDamage);
+						private _health = 1 - _damage;
+						
+						if (alive _x.Vehicle && ((!canMove _x.Vehicle && _damage > 0) || _damage >= _mSupportServicesConfig.EnableRepairSupportAtDamageLevel)) then
 						{
 							if (!canMove _x.Vehicle) then {
 								_health = 0.25 * _health;
@@ -214,7 +217,7 @@ namespace Intrusion.Client
 					if (_professionType == ProfessionType.Fuel) then
 					{
 						private _fuel = fuel _x.Vehicle;
-						if (alive _x.Vehicle && _fuel < 0.5) then
+						if (alive _x.Vehicle && _fuel <= _mSupportServicesConfig.EnableFuelSupportAtFuelLevel) then
 						{
 							_vehicleNeeds pushBack [_x.Vehicle, _fuel] new DictionaryItem;
 						};
@@ -227,7 +230,7 @@ namespace Intrusion.Client
 							{
 								private _ammo = [_x.Vehicle] call Functions.GetVehicleAmmo;
 								
-								if (_ammo < 0.75) then
+								if (_ammo <= _mSupportServicesConfig.EnableAmmoSupportAtAmmoLevel) then
 								{
 									_vehicleNeeds pushBack [_x.Vehicle, _ammo] new DictionaryItem;
 								};

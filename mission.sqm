@@ -8,7 +8,7 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=306;
+		nextID=307;
 	};
 	class MarkerIDProvider
 	{
@@ -16,23 +16,24 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={5382.8423,80.173363,2949.1226};
-		dir[]={0.65062094,-0.38281912,0.65591407};
-		up[]={0.26960579,0.92381895,0.27179956};
-		aside[]={0.70999467,-1.8438732e-007,-0.70426387};
+		pos[]={10632.125,58.989037,4376.0835};
+		dir[]={-0.90389192,-0.42071629,0.078305133};
+		up[]={-0.41917229,0.90718275,0.036313247};
+		aside[]={0.086316645,7.2969124e-007,0.99634832};
 	};
 };
 binarizationWanted=0;
 addons[]=
 {
 	"A3_Ui_F",
-	"A3_Characters_F"
+	"A3_Characters_F",
+	"A3_Structures_F_Enoch_Industrial_Power"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=2;
+		items=3;
 		class Item0
 		{
 			className="A3_Ui_F";
@@ -47,12 +48,20 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
+		class Item2
+		{
+			className="A3_Structures_F_Enoch_Industrial";
+			name="Arma 3 Contact Platform - Industrial Structures";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 randomSeed=3130794;
 class ScenarioData
 {
 	author="Engima";
+	overViewPicture="Intrusion.jpg";
 	disabledAI=1;
 	respawn=3;
 	class Header
@@ -222,8 +231,11 @@ class CustomAttributes
 };
 class Mission
 {
+	assetType="Free";
 	class Intel
 	{
+		briefingName="Intrusion";
+		resistanceWest=0;
 		timeOfChanges=1800.0002;
 		startWeather=0.30000001;
 		startWind=0.1;
@@ -242,27 +254,27 @@ class Mission
 	};
 	class Entities
 	{
-		items=72;
+		items=73;
 		class Item0
 		{
 			dataType="Marker";
-			position[]={3870.8359,129.02426,4661.1597};
+			position[]={3870.8359,129.024,4661.1602};
 			name="respawn_west";
 			type="Empty";
-			angle=130.40631;
+			angle=130.40596;
 			id=0;
-			atlOffset=59.389381;
+			atlOffset=59.38913;
 		};
 		class Item1
 		{
 			dataType="Marker";
-			position[]={6168.7446,66.527252,3157.7732};
+			position[]={6195.2065,67.629944,3164.1421};
 			name="FACTORY1";
 			text="Production Lane (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=1;
-			atlOffset=22.341;
+			atlOffset=22.34103;
 		};
 		class Item2
 		{
@@ -289,30 +301,30 @@ class Mission
 		class Item4
 		{
 			dataType="Marker";
-			position[]={5586.7559,162.59399,4255.4429};
-			name="OFFICE1";
-			text="Sainte Marie (Office)";
+			position[]={5785.9282,162.84801,2411.0049};
+			name="FACTORY3";
+			text="Cancon Harbor (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=6;
-			atlOffset=59.110222;
+			atlOffset=160.20905;
 		};
 		class Item5
 		{
 			dataType="Marker";
-			position[]={3886.1111,125.47449,4651.1309};
+			position[]={3886.1111,125.474,4651.1309};
 			name="INT_WeaponDepotMarkerWest";
 			type="Empty";
-			angle=83.777931;
+			angle=83.778;
 			id=7;
-			atlOffset=56.507149;
+			atlOffset=56.50666;
 		};
 		class Item6
 		{
 			dataType="Marker";
 			position[]={4342.7241,95.500999,3572.5349};
-			name="FACTORY2";
-			text="The Cabin (Factory)";
+			name="OFFICE2";
+			text="The Cabin (Office)";
 			type="mil_objective";
 			colorName="ColorGUER";
 			id=8;
@@ -321,13 +333,13 @@ class Mission
 		class Item7
 		{
 			dataType="Marker";
-			position[]={5063.1689,124.82501,4471.0376};
-			name="OFFICE2";
-			text="Training Camp (Office)";
+			position[]={3617.5791,45.658001,3226.1211};
+			name="FACTORY2";
+			text="La Riviére Harbor (Factory)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=9;
-			atlOffset=43.025604;
+			atlOffset=43.098;
 		};
 		class Item8
 		{
@@ -342,30 +354,32 @@ class Mission
 		class Item9
 		{
 			dataType="Marker";
-			position[]={3899.9363,68.441048,4625.6284};
+			position[]={3899.936,68.441002,4625.6279};
 			name="INT_CarParkWest";
 			type="Empty";
 			fillName="Border";
-			angle=85.770454;
+			angle=85.769997;
 			drawBorder=1;
 			id=72;
+			atlOffset=-6.8664551e-005;
 		};
 		class Item10
 		{
 			dataType="Marker";
-			position[]={5197.79,50.586521,3149.7993};
-			name="FACTORY3";
-			text="Forrest Factory (Factory)";
+			position[]={5399.2139,49.432999,2977.313};
+			name="OFFICE1";
+			text="Cancon Office (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=151;
+			atlOffset=-1.4905319;
 		};
 		class Item11
 		{
 			dataType="Marker";
 			position[]={5380.7749,125.808,3685.967};
 			name="OFFICE3";
-			text="The Farm (Office)";
+			text="Farmer's Ranch (Office)";
 			type="mil_objective";
 			colorName="ColorIndependent";
 			id=152;
@@ -1264,7 +1278,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={3861.6794,70.226044,4653.3306};
+						position[]={3859.7236,70.297348,4656.4395};
 						angles[]={0.012798273,1.6631776,6.2264466};
 					};
 					side="West";
@@ -1277,14 +1291,12 @@ class Mission
 					};
 					id=216;
 					type="B_soldier_exp_F";
-					atlOffset=-1.5258789e-005;
 				};
 			};
 			class Attributes
 			{
 			};
 			id=215;
-			atlOffset=-1.5258789e-005;
 		};
 		class Item37
 		{
@@ -2641,6 +2653,22 @@ class Mission
 			};
 			id=285;
 			atlOffset=3.8146973e-006;
+		};
+		class Item72
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={10570.509,29.028151,4383.2402};
+				angles[]={0,4.033721,0};
+			};
+			side="Empty";
+			flags=5;
+			class Attributes
+			{
+			};
+			id=306;
+			type="Land_PowerStation_01_F";
 		};
 	};
 };

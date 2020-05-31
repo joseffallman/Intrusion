@@ -28,9 +28,9 @@ namespace Intrusion.Common
 		
 		// Checks if the squad contains any members or not.
 		// Returns (Boolean): true if the squad is empty.
-		public method IsEmpty {
-			//count units _self.Group == 0
-			isNull _self.Group
+		public method IsEmpty()
+		{
+			return isNull _self.Group || { count units _self.Group == 0 };
 		};
 	};
 };

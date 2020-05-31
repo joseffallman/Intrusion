@@ -1,3 +1,4 @@
+isNil {
 call compile preprocessFileLineNumbers "Common\Enums\ProfessionType.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\Technology.sqx";
 call compile preprocessFileLineNumbers "Common\Enums\SkillLevel.sqx";
@@ -24,6 +25,7 @@ call compile preprocessFileLineNumbers "Common\Classes\Configs\RatingConfig.sqx"
 call compile preprocessFileLineNumbers "Common\Classes\Configs\UniformConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ResourceLocationConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Configs\ResourceLocationTestConfig.sqx";
+call compile preprocessFileLineNumbers "Common\Classes\Configs\SupportServicesConfig.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\LogHandler.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\Functions.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\MissionParametersHandler.sqx";
@@ -60,6 +62,7 @@ call compile preprocessFileLineNumbers "Common\Classes\IntrusionCommon.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleCargoItemInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Objects\VehicleBoxAttachmentInfo.sqx";
 call compile preprocessFileLineNumbers "Common\Classes\Handlers\CommonEventHandlers.sqx";
+};
 
 using Intrusion.Common;
 

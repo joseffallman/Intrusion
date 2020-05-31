@@ -5,4 +5,7 @@ call compile preprocessFileLineNumbers "Sqx\Markers\Init.sqx.sqf"; // Added by S
 call compile preprocessFileLineNumbers "Sqx\Collections\Sorter.sqx.sqf";
 call compile preprocessFileLineNumbers "Sqx\UnitTest\Init.sqx.sqf"; // Added by Sqx.UnitTest
 call compile preprocessFileLineNumbers "Engima\FuelConsumption\Init.sqf";
+
+call compile preprocessFileLineNumbers "BattleLocations.sqf";
+
 execVM "init.sqx.sqf";

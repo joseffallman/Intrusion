@@ -49,8 +49,6 @@ namespace Intrusion.Ai
 			_mGroup setSpeedMode _moveAction.SpeedMode;
 			_mGroup setCombatMode _moveAction.CombatMode;
 			_mGroup setBehaviour _moveAction.Behavior;
-			
-			//player sideChat "expected: " + _moveAction.SpeedMode; // TODO SQX: Semicolon disappears on build.
 		};
 		
 		// Performs a capture action for an AI group.

@@ -1,0 +1,28 @@
+/*
+ * Name:	SupportServicesConfig
+ * Date:	2020-04-08
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Contains config settings for the support services.
+ */
+namespace Intrusion.Common
+{
+	public class SupportServicesConfig
+	{
+		// Creates a SupportServicesConfig object.
+		public constructor()
+		{
+			_self.EnableFuelSupportAtFuelLevel = 0.9;
+			_self.EnableAmmoSupportAtAmmoLevel = 0.9;
+			_self.EnableRepairSupportAtDamageLevel = 0.05;
+		};
+		
+		public property EnableFuelSupportAtFuelLevel { get; private set; };
+		
+		public property EnableAmmoSupportAtAmmoLevel { get; private set; };
+		
+		public property EnableRepairSupportAtDamageLevel { get; private set; };
+	};
+};

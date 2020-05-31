@@ -30,5 +30,7 @@ namespace Intrusion.Common
 		property BaseConfig BaseConfig { get; private set; };
 		
 		property IResourceLocationConfig ResourceLocation { get; };
+		
+		property SupportServicesConfig SupportServicesConfig { get; };
 	};
 };

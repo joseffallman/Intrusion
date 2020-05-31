@@ -1,3 +1,4 @@
+isNil {
 call compile preprocessFileLineNumbers "Server\Enums\WeaponBoxType.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayConfig.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Configs\GameplayTestConfig.sqx";
@@ -31,6 +32,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Handlers\MessageHandler.s
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\TargetHandler.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ServerEventHandlers.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Handlers\ObservationHandler.sqx";
+call compile preprocessFileLineNumbers "Server\Classes\Handlers\BattleLocationGenerator.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\FreeVehiclesService.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\MissionEngine.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\Services\WeaponsService.sqx";
@@ -43,6 +45,7 @@ call compile preprocessFileLineNumbers "Server\Classes\Recievers\SquadHandlerRec
 call compile preprocessFileLineNumbers "Server\Classes\Recievers\ServerEventReciever.sqx";
 call compile preprocessFileLineNumbers "Ai\InitAi.sqx";
 call compile preprocessFileLineNumbers "Server\Classes\IntrusionServer.sqx";
+};
 
 using Intrusion.Common;
 using Intrusion.Server;
@@ -78,5 +81,28 @@ gServer = [] new IntrusionServer;
 
 call gServer.BrigadeLeaderWestService.RunAsync;
 call gServer.BrigadeLeaderEastService.RunAsync;
+
+isNil {
+	private ["_battleLocationGenerator" as BattleLocationGenerator];
+	
+	_battleLocationGenerator = [gCommonConfig.MapMarkers] new BattleLocationGenerator;
+	call _battleLocationGenerator.WriteToLog;
+	
+	private _battleLocationIndex = gCommon.MissionParametersHandler.BattleLocation;
+	private _battleLocationItem = Intrusion_BattleLocations select _battleLocationIndex;
+	[_battleLocationItem] call _battleLocationGenerator.UpdateBattleLocations;
+};
+
+// Empty all fuel stations on the map
+
+isNil {
+	private _allFuelStations = ([0,0,0] nearObjects 150000);
+	
+	{
+		if (getFuelCargo _x > 0) then {
+			_x setFuelCargo 0;
+		};
+	} foreach _allFuelStations;
+};
 
 #endregion
