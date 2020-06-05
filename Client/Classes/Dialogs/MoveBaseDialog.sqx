@@ -9,31 +9,193 @@
  */
 
 using Intrusion.Common;
+using Sqx.Markers;
 
 namespace Intrusion.Client
 {
+	public class MoveBaseListOption
+	{
+		public constructor("_name" as String, "_pos" as Array, "_marker" as Marker)
+		{
+			_self.Name   = _name;
+			_self.Position = _pos;
+			_self.Required = false;
+			_self.Marker = _marker;
+		};
+		
+		public property String Name    { get; private set; };
+		public property Array Position { get; private set; };
+		public property Boolean Required { get; set; };
+		public property Marker Marker { get; private set; };
+		
+		public method setPosition("_pos" as Array)
+		{
+			_self.Position = _pos;
+			if (count _pos > 0 ) then
+			{
+				_self.isSet = True;
+				[_pos] call _self.Marker.SetPosition;
+			} else {
+				_self.isSet = False;
+				call _self.Marker.Hide;
+			}
+		};
+		
+		public property Boolean isSet { get; private set; };
+		
+		public method getDisplayName()
+		{
+			if (_self.Required) then {
+				return _self.Name + "*";
+			} else {
+				return _self.Name;
+			};
+		};
+	
+	};
+	
 	public class MoveBaseDialog
 	{
+		private static fields [
+			"_mMoveBaseHandler" as MoveBaseHandler,
+			"_mBaseConfig" as BaseConfig,
+			"_mCurrentIndex" as Scalar,
+			"_mOptions" as Array,
+			"_mConstructionSite" as Marker,
+			"_mContextMenuOptions" as Array,
+			"_mMenu" as MoveBaseContextMenu,
+			"_mEventhandlersForRotate" as Array
+		];
+	
 		// Creates a MoveBaseDialog object.
-		public static method Init {
-			_self.IsOpen = false;
+		public static method Init("_moveBaseHandler" as MoveBaseHandler, "_baseConfig" as BaseConfig) 
+		{
+			_mMoveBaseHandler = _moveBaseHandler;
+			_mBaseConfig      = _baseConfig;
+			_mCurrentIndex    = -1;
+			
+			_self.IsOpen      = false;
+			
 		};
 		
 		// Gets whether the dialog is open or not.
 		public static property Boolean IsOpen { get; private set; };
 		
-		// Shows the dialog.
-		// Returns (DialogResult): A dialog result.
+		// Adds all Base layout items to the list box.
+		private static method AddOptions()
+		{
+			{
+				private "_iteam" as MoveBaseListOption;
+				private "_marker" as Marker;
+				_marker = [[0,0], "hd_dot", "ColorBlack", _x, false] call Marker.CreateIconMarkerLocal;
+			 	_iteam = [_x, [], _marker] new MoveBaseListOption;
+				_iteam.Required = True;
+				_mOptions pushBack _iteam;
+				private _i = lbAdd [DialogControl.BaseListBox, call _iteam.getDisplayName];
+				lbSetValue [DialogControl.BaseListBox, _i, (count _mOptions -1)];
+			} foreach ["Respawn point", "Vehicles park", "Weapon depot"];
+
+		};
+
+		
+		/* 
+		 * Zoom and Pan map to maker.
+		 * Params:
+		 * 	_ctrlMapArray = The map control as the first and only item in array.
+		 * _marker        = Marker to zoom in.
+		 * _border        = A margin around marker to make sure its visible.
+		 */
+		private static method ZoomToMarker("_ctrlMapArray" as Array, "_marker" as Marker, ["_border" as Scalar, 50])
+		{
+			private _debug = false;
+			
+			private "_ctrlMap" as Control;
+			_ctrlMap = _ctrlMapArray select 0;
+			private _zoom = ctrlScale _ctrlMap;
+			private _markerTop = (_marker.Position select 1) + (_marker.Size select 1) + _border;
+			private _markerLeft = (_marker.Position select 0) - (_marker.Size select 0) - _border;
+			
+			if (_debug) then {
+				[[_markerLeft, _markerTop], "hd_dot", "ColorBlack", "MarkerLeftTop", true] call Marker.CreateIconMarkerLocal;
+			};
+			private _topLeft = _ctrlMap ctrlMapScreenToWorld [0,0];
+			while {_topLeft select 0 < _markerLeft && _topLeft select 1 > _markerTop} do {
+				_zoom = _zoom * 0.7;
+				_ctrlMap ctrlMapAnimAdd [0, _zoom, _mConstructionSite.Position];
+				ctrlMapAnimCommit _ctrlMap;
+				
+				waitUntil {ctrlMapAnimDone _ctrlMap};
+				_topLeft = _ctrlMap ctrlMapScreenToWorld [0,0];
+			};
+		};
+		
+		/*
+		 * Show the dialog.
+		 * Return (DialogResult): A dialog result enum.
+		 */
 		public static method DialogResult ShowDialog {
 			waitUntil { !dialog };
 			
+			private [
+				"_display" as Display,
+				"_ctrlMap" as Control,
+				"_ctrlDescription" as Control
+			];
+			
+			// Hide all markers
+			private _markers = [];
+			{
+				private _marker = _x;
+				private _alpha  = markerAlpha _x;
+				_marker setMarkerAlphaLocal 0;
+				_markers pushBack [_marker, _alpha];
+			} foreach allMapMarkers;
+			
+			// Create marker for where you can build.
+			_mConstructionSite = [
+				getPos player,
+				"ELLIPSE", 
+				[(_mBaseConfig.BaseRadius / 2), (_mBaseConfig.BaseRadius / 2)],
+				0,
+				"ColorGreen"
+			] call Marker.CreateShapeMarkerLocal;
+			
 			// Create the dialog
             createDialog "IntMoveBaseDialog";
+            _display = findDisplay (DialogControl.BaseDialog as Scalar);
+            _ctrlMap = _display displayCtrl 2550;
+            _ctrlDescription = _display displayCtrl 2553;
+            
+            // Add options to list.
+			_mOptions = [];
+			call _self.AddOptions;
+			ctrlEnable[DialogControl.BaseOkButton, false];
+			
+			// Set Info text:
+			private _descriptionText = [
+				"Drag item's from the list on the right, and drop it on the map in the green construction site.",
+				"When you have placed all required (*) points, the move base button will be available. Right click on them to delete or rotate."
+			];
+			_ctrlDescription ctrlSetStructuredText parseText (_descriptionText joinString "<br/>");
+			
+			// Load the right click menu
+			_mMenu = [[_display]] call MoveBaseContextMenu.Init;
+			
+			// Zoom and Pan map to construction site
+			[[_ctrlMap], _mConstructionSite] call _self.ZoomToMarker;
 			
 			_self.IsOpen = true;
 
 			// Wait until dialog is closed
 			waitUntil { !dialog };
+			
+			
+			// Restore markers
+			{
+				private _marker = _x select 0;
+				private _alpha  = _x select 1;
+				_marker setMarkerAlphaLocal _alpha;
+			} foreach _markers;
 			
 			// Return OK.
 			DialogResult.Ok
@@ -44,41 +206,214 @@ namespace Intrusion.Client
 			if (_self.IsOpen) then {
 				closeDialog 0;
 			};
+			call _mConstructionSite.Hide;
+			{
+				call _x.Marker.Hide;	
+			} forEach _mOptions as MoveBaseListOption;
 		};
 		
-		public static method OnRespawnButtonPressed() {
-			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetRespawnPoint;
+		public static method onUnload("_display", "_exitCode")
+		{
+			call _self.CloseDialog;
+		};
+		
+		
+		// Called by the .hpp-dialog when a new item is selected in the ListBox.
+		public static method OnListBoxSelectChanged("_control", "_selectedIndex")
+		{
+			_mCurrentIndex = _selectedIndex;
+		};
+		
+		// Called by the .hpp-dialog when a item is dragged from the ListBox.
+		// Change selection in listbox to match the one being dragged.
+		public static method OnListBoxDrag("_control", "_listboxInfo")
+		{
+			(_listboxInfo select 0) params ["_lbText", "_lbValue", "_lbData"];
+			lbSetCurSel [DialogControl.BaseListBox, _lbValue];
+		};
+		
+		// Called by the .hpp-dialog when a item is dragged from the ListBox and dropped somewhere.
+		public static method OnMapDrop("_control", "_xPos", "_yPos", "_listboxIDC", "_listboxInfo")
+		{
+			private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+			private _pos = _ctrlMap ctrlMapScreenToWorld [_xPos, _yPos];
 			
-			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
-				call _self.CloseDialog;
+			if (_pos inArea _mConstructionSite.Name) then {
+				
+				private "_listOption" as MoveBaseListOption;
+				_listOption = _mOptions select _mCurrentIndex;
+				
+				
+				call _listOption.Marker.Hide;
+				[_pos] call _listOption.setPosition;
+				call _listOption.Marker.Show;
+				
+				switch (_listOption.Name) do {
+					case "Respawn point" : {
+						[[_listOption.Position, getDir player] new ViewPos] call _mMoveBaseHandler.SetRespawnPoint;
+					};
+					case "Vehicles park" : {
+						[[_listOption.Position, getDir player] new ViewPos] call _mMoveBaseHandler.SetCarParkPoint;
+					};
+					case "Weapon depot" : {
+						[[_listOption.Position, getDir player] new ViewPos] call _mMoveBaseHandler.SetWeaponDepotPoint;
+					};
+				};
+				
+				// Enable/Disable move base button
+				if (call _mMoveBaseHandler.CheckAllPointsSet) then {
+					ctrlEnable[DialogControl.BaseOkButton, true];
+				};
+			};
+			
+		};
+
+
+		/*
+		 * Open action menu and add items to it.
+		 */
+		public static method onMapClick("_control", "_button", "_xPos", "_yPos", "_shift", "_ctrl", "_alt")
+		{
+			if (_button == 1) then {
+				private _pos = _control ctrlMapScreenToWorld getMousePosition;
+				private _index = [_pos, (800 * ctrlMapScale _control)] call _self.FindOptionByClick;
+				
+				if (_index != -1) then {
+					// Set this as the current active option.
+					_mCurrentIndex = _index;
+				
+					// Create new menu
+					_mContextMenuOptions = [];
+					
+					// Add Menu options
+					// Dont forget to add actions in the "onContextMenuClick" method.
+					["Rotate"] call _mMenu.AddOptions;
+					_mContextMenuOptions pushBack "Rotate";
+					
+					["Delete"] call _mMenu.AddOptions;
+					_mContextMenuOptions pushBack "Delete";
+					
+					[getMousePosition] call _mMenu.Show;
+					
+				};
 			};
 		};
 		
-		public static method OnCarParkButtonPressed() {
-			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetCarParkPoint;
+		/*
+		 * Decide what to do when a option is picked from the map context menu.
+		 */
+		public static method onContextMenuClick("_selectedMenuIndex" as Scalar)
+		{
+			private "_option" as MoveBaseListOption;
+			_option = _mOptions select _mCurrentIndex;
+			private _menuAction = _mContextMenuOptions select _selectedMenuIndex;
+			//systemChat (str _option.Name + " - " + _menuAction);
 			
-			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
-				call _self.CloseDialog;
+			switch (_menuAction) do {
+				case "Delete": 
+				{
+					[[]] call _option.setPosition;
+				};
+				case "Rotate":
+				{
+					_mEventhandlersForRotate = [];
+					private "_marker" as Marker;
+					private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+					private _dirTo = _ctrlMap ctrlMapScreenToWorld getMousePosition;
+					_marker = ([_option.Position, "ICON", [1, 1], 0, "hd_arrow", "ColorBlack", "Solid", "", 0.4, true, "LocalArrowRotatingMarker", true] new Marker);
+					_dirTo call _marker.SetDirection;
+					
+					private _EHMouseMove = _ctrlMap ctrlAddEventHandler ["MouseMoving", 
+					{
+						params ["_control", "_xPos", "_yPos", "_mouseOver"];
+						private _rotateToPos = _control ctrlMapScreenToWorld getMousePosition;
+						private _dir = (getMarkerPos "LocalArrowRotatingMarker") getDir _rotateToPos;
+						"LocalArrowRotatingMarker" setMarkerDirLocal _dir;
+						
+					}];
+					_mEventhandlersForRotate pushBack ["MouseMoving", _EHMouseMove];
+					
+					private _EHMouseDown = _ctrlMap ctrlAddEventHandler ["MouseButtonDown", 
+					{
+						params ["_control", "_button", "_xPos", "_yPos", "_shift", "_ctrl", "_alt"];
+						private _rotateToPos = _control ctrlMapScreenToWorld getMousePosition;
+						private _dir = (getMarkerPos "LocalArrowRotatingMarker") getDir _rotateToPos;
+						"LocalArrowRotatingMarker" setMarkerDirLocal _dir;
+						
+						deleteMarkerLocal "LocalArrowRotatingMarker";
+						[_dir] call Intrusion_Client_MoveBaseDialog_onRotateBaseItem;
+					}];
+					_mEventhandlersForRotate pushBack ["MouseButtonDown", _EHMouseDown];
+				};
 			};
 		};
 		
-		public static method OnWeaponDepotButtonPressed() {
-			[[player getPos [5, getDir player], getDir player] new ViewPos] call gClient.MoveBaseHandler.SetWeaponDepotPoint;
+		/*
+		 * Create a new Base item with new direction.
+		 *
+		 */
+		public static method onRotateBaseItem("_direction" as Scalar)
+		{
+			private "_option" as MoveBaseListOption;
+			private _ctrlMap = (findDisplay 2500) displayCtrl 2550;
+			_option = _mOptions select _mCurrentIndex;
 			
-			if (!(call gClient.MoveBaseHandler.CheckAllPointsSet)) then {
-				call _self.CloseDialog;
-			};
+			//systemChat str ( _option.Name + " " + str _direction );
+			switch (_option.Name) do {
+					case "Respawn point" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetRespawnPoint;
+					};
+					case "Vehicles park" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetCarParkPoint;
+					};
+					case "Weapon depot" : {
+						[[_option.Position, _direction] new ViewPos] call _mMoveBaseHandler.SetWeaponDepotPoint;
+					};
+				};
+				
+			{
+				_ctrlMap ctrlRemoveEventHandler _x;
+			} forEach _mEventhandlersForRotate as Array;
 		};
 		
+		
+		/*
+		 * Return Index if position is within given distance from a placed option.
+		 * If more than one Option is found within distance only the closets is returned.
+		 * 
+		 */
+		public static method Scalar FindOptionByClick("_position" as Array, ["_distance" as Scalar, 100])
+		{
+			private "_index" as Scalar;
+			
+			//_closests = classNull;
+			_index = -1;
+			{
+				private "_option" as MoveBaseListOption;
+				_option = _x;
+				if (_option.isSet) then {
+					//systemChat ( str (_position distance _option.Position) + " " + str (_distance));
+					if (_position distance _option.Position < _distance) then {
+						_distance = _position distance _option.Position;
+						//_closests = +_x;
+						_index = _forEachIndex;
+					};
+				};
+			} forEach _mOptions as MoveBaseListOption;
+			
+			return _index;
+		};
+
 		// Called by the .hpp-dialog when the OK button is pressed.
 		public static method OnOkButtonPressed {
-			if (call gClient.MoveBaseHandler.StartMoveBaseService) then {
+			if (call _mMoveBaseHandler.StartMoveBaseService) then {
 				call _self.CloseDialog;
 			};
 		};
-		
+
 		// Called by the .hpp-dialog when the Cancel button is pressed.
 		public static method OnCancelButtonPressed {
+			call _mMoveBaseHandler.Reset;
 			call _self.CloseDialog;
 		};
 	};

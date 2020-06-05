@@ -31,7 +31,7 @@ namespace Intrusion.Client
 			call _self.Reset;
 		};
 		
-		private method Reset()
+		public method Reset()
 		{
 			_mRespawnPoint = classNull;
 			_mCarParkPoint = classNull;

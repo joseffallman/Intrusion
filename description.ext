@@ -1,6 +1,7 @@
 #include "MissionParameters.ext"
 #include "Dialogs\Defines.hpp"
 #include "Dialogs\DialogControls.hpp"
+#include "Dialogs\IntBaseDialog.hpp"
 #include "Dialogs\TutorialDialog.hpp"
 #include "Dialogs\ProfessionDialog.hpp"
 #include "Dialogs\MoveBaseDialog.hpp"
