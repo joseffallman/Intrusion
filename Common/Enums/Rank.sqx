@@ -39,6 +39,35 @@ namespace Intrusion.Common
 			return _sRank;
 		};
 		
+		// Gets the next rank out of a rating value.
+		// _rating (Scalar): The unit's rating.
+		// Returns (Rank): Next rank. Rank.Private if there is no next rank.
+		public static method Rank GetNextRank("_rating" as Scalar)
+		{
+			private _rank = [_rating] call _self.GetRankByRating;
+			
+			if (_rank == Rank.Private) then {
+				return Rank.Corpral;
+			};
+			if (_rank == Rank.Corpral) then {
+				return Rank.Sergeant;
+			};
+			if (_rank == Rank.Sergeant) then {
+				return Rank.Lieutenant;
+			};
+			if (_rank == Rank.Lieutenant) then {
+				return Rank.Captain;
+			};
+			if (_rank == Rank.Captain) then {
+				return Rank.Major;
+			};
+			if (_rank == Rank.Major) then {
+				return Rank.Colonel;
+			};
+			
+			return Rank.Private;
+		};
+		
 		public static method GetRankByRating("_rating" as Scalar)
 		{
 		    private ["_rank" as Rank];

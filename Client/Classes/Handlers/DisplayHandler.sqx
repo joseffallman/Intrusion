@@ -55,8 +55,15 @@ namespace Intrusion.Client
 			
 			_playerText = "Rank: " + ([ClientState.CurrentRank] call RankMeta.GetRankText);
 			
-			if (name player == "Engima") then {
-				_playerText = _playerText + " (rating: " + str rating player + ")";
+			if (ClientState.CurrentRank != Rank.Colonel) then {
+				private _nextRank = [rating player] call RankMeta.GetNextRank;
+				
+				if (_nextRank != Rank.Private) then {
+					_playerText = _playerText + " (" + str rating player + "/" + str (_nextRank as Scalar) + ")";
+				}
+				else {
+					_playerText = _playerText + " (" + str rating player + ")";
+				};
 			};
 		
 			_ratingReduction = ClientState.RatingReduction;
