@@ -49,25 +49,21 @@ namespace Intrusion.Client
 		// _group (Group): The squad/group to add rating to.
 		public static method AddSquadRating("_rating" as Scalar, "_group" as Group)
 		{
-//			private ["_calculatedRating" as Scalar];
-			private ["_ratingLock" as RatingLock];
+			private ["_ratingReduction" as RatingReduction, "_reductionFactor" as Scalar];
 			
 			if (_group == group player) then
 			{
-				_ratingLock = ClientState.RatingLock;
+				_ratingReduction = ClientState.RatingReduction;
+				_reductionFactor = 1;
 			
-				if (isNull _ratingLock || { !(call _ratingLock.IsActive) }) then
+				// If player's rating is currently reduced due to a rating reduction reason.
+				if (!isNull _ratingReduction && { call _ratingReduction.IsActive }) then
 				{
-//					_calculatedRating = (_rating * (count units _group + 1) * 0.5);
-	
-//					if (_calculatedRating < 0) then {
-//						_calculatedRating = 0;
-//					};
-					
-//					player addRating _calculatedRating;
-					player addRating _rating;
-					ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
+					_reductionFactor = 0.5;
 				};
+				
+				player addRating floor (_rating * _reductionFactor);
+				ClientState.CurrentRank = ([rating player] call RankMeta.GetRankByRating);
 			};
 		};
 	};

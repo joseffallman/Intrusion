@@ -25,7 +25,7 @@ namespace Intrusion.Client
 		public method DisplayResourceReport("_report" as ResourceReport)
 		{
 			private ["_technologyInfo" as TechnologyInfo, "_text" as String, "_playerText" as String];
-			private ["_ratingLock" as RatingLock];
+			private ["_ratingReduction" as RatingReduction];
 			
 			waitUntil {!isNull findDisplay 46};
 			disableSerialization;
@@ -59,9 +59,9 @@ namespace Intrusion.Client
 				_playerText = _playerText + " (rating: " + str rating player + ")";
 			};
 		
-			_ratingLock = ClientState.RatingLock;
-			if (!isNull _ratingLock) then {
-				_playerText = _playerText + " Locked - " + _ratingLock.ReasonText;
+			_ratingReduction = ClientState.RatingReduction;
+			if (!isNull _ratingReduction) then {
+				_playerText = _playerText + " Reduced - " + _ratingReduction.ReasonText;
 			};
 			
 			_mBrigadeInfoCtrl ctrlSetStructuredText parseText format[

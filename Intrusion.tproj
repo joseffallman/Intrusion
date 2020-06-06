@@ -530,7 +530,7 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingCalculator.sqx" FileName="Common\Classes\Objects\RatingCalculator.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
-                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingLock.sqx" FileName="Common\Classes\Objects\RatingLock.sqx">
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingReduction.sqx" FileName="Common\Classes\Objects\RatingReduction.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ResourceLocation.sqx" FileName="Common\Classes\Objects\ResourceLocation.sqx">
@@ -593,7 +593,7 @@
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="Rank.sqx" FileName="Common\Enums\Rank.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
-              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingLockReason.sqx" FileName="Common\Enums\RatingLockReason.sqx">
+              <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="RatingReducedReason.sqx" FileName="Common\Enums\RatingReducedReason.sqx">
                 <SubNodes />
               </ProjectNodeViewModel>
               <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ReleaseMode.sqx" FileName="Common\Enums\ReleaseMode.sqx">

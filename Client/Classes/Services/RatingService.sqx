@@ -28,13 +28,13 @@ namespace Intrusion.Client
 		
 		protected override method Run()
 		{
-			private ["_okDistances" as Boolean, "_ratingLock" as RatingLock];
+			private ["_okDistances" as Boolean, "_ratingReduction" as RatingReduction];
 			
 			while { true } do
 			{
-				_ratingLock = ClientState.RatingLock;
+				_ratingReduction = ClientState.RatingReduction;
 				
-				if (isNull _ratingLock || { !(call _ratingLock.IsActive) || _ratingLock.Reason == RatingLockReason.GroupIsSplit }) then
+				if (isNull _ratingReduction || { !(call _ratingReduction.IsActive) || _ratingReduction.Reason == RatingReducedReason.GroupIsSplit }) then
 				{
 					_okDistances = true;
 					
@@ -45,10 +45,10 @@ namespace Intrusion.Client
 					} foreach units group player;
 						
 					if (_okDistances) then {
-						ClientState.RatingLock = classNull;
+						ClientState.RatingReduction = classNull;
 					}
 					else {
-						ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.GroupIsSplit] new RatingLock;
+						ClientState.RatingReduction = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingReducedReason.GroupIsSplit] new RatingReduction;
 					};
 				};
 				

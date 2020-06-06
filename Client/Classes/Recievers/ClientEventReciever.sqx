@@ -137,9 +137,9 @@ namespace Intrusion.Client
 
 			if (_unit != _killer && [_side, side _killer] call BIS_fnc_sideIsFriendly) then
 			{
-				// Rating lock
+				// Rating reduction
 				if (group _killer == group player) then {
-					ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.TeamKill] new RatingLock;
+					ClientState.RatingReduction = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingReducedReason.TeamKill] new RatingReduction;
 				};
 
 				// Team kill prison
@@ -187,7 +187,7 @@ namespace Intrusion.Client
 			
 			// If anyone in the player's group respawned, punish them all...!
 			if (group _player == group player) then {
-				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.Respawn] new RatingLock;
+				ClientState.RatingReduction = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingReducedReason.Respawn] new RatingReduction;
 			};
 		
 			call GroupActionHandler.UpdateAllInvitePlayerActions;
@@ -229,7 +229,7 @@ namespace Intrusion.Client
 		public static method OnGroupLostSquadVehicle("_group" as Group, "_vehicle" as Object)
 		{
 			if (_group == group player) then {
-				ClientState.RatingLock = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingLockReason.LostVehicle] new RatingLock;
+				ClientState.RatingReduction = [(call _mMissionTime.GetMissionTime) + 5 * 60, RatingReducedReason.LostVehicle] new RatingReduction;
 			};
 		};
 		
