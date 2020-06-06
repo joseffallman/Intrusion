@@ -160,6 +160,9 @@
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PseudoArtilleryService.sqx" FileName="Ai\Classes\Services\PseudoArtilleryService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>
+                  <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="PseudoRefuelService.sqx" FileName="Ai\Classes\Services\PseudoRefuelService.sqx">
+                    <SubNodes />
+                  </ProjectNodeViewModel>
                   <ProjectNodeViewModel xsi:type="ProjectFileNodeViewModel" Name="ReviveActionService.sqx" FileName="Ai\Classes\Services\ReviveActionService.sqx">
                     <SubNodes />
                   </ProjectNodeViewModel>

@@ -136,15 +136,21 @@ namespace Intrusion.Ai
 		protected override method Run()
 		{
 			private ["_westArtilleryService" as PseudoArtilleryService, "_eastArtilleryService" as PseudoArtilleryService];
+			private ["_westRefuelService" as PseudoRefuelService, "_eastRefuelService" as PseudoRefuelService];
 			private ["_allSquads" as Array];
 			
-			// Start the pseudo artillery
+			// Start the pseudo artillery and the pseudo refuel services (pseudo in this case means that they will be simulating actions and in effect when there 
+			// are no players on the side)
 			
 			_westArtilleryService = [west, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
 			_eastArtilleryService = [east, _mObservationHandler, _mEstablishedTechnologiesCollection, _mGameplayConfig.CompetingSides] new PseudoArtilleryService;
+			_westRefuelService = [west, _mVehicleSpawner, _mEstablishedTechnologiesCollection] new PseudoRefuelService;
+			_eastRefuelService = [east, _mVehicleSpawner, _mEstablishedTechnologiesCollection] new PseudoRefuelService;
 			
 			call _westArtilleryService.RunAsync;
 			call _eastArtilleryService.RunAsync;
+			call _westRefuelService.RunAsync;
+			call _eastRefuelService.RunAsync;
 			
 			// Run the ai service
 			

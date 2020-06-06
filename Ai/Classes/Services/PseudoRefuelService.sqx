@@ -1,0 +1,72 @@
+/*
+ * Name:	PseudoRefuelService
+ * Date:	2019-09-19
+ * Version: 1.0
+ * Author:  Engima
+ *
+ * Description:
+ * Service that handles a simulated artillery fire, to enable artillery for AI.
+ */
+
+using Sqx.Services;
+using Intrusion.Common;
+using Intrusion.Server;
+
+namespace Intrusion.Ai
+{
+	public class PseudoRefuelService : Service
+	{
+		private fields ["_mSide" as Side, "_mVehicleSpawner" as IVehicleSpawner, "_mEstablishedTechnologiesCollection" as EstablishedTechnologiesCollection];
+		
+		// Creates a PseudoRefuelService object.
+		public constructor("_side" as Side, "_vehicleSpawner" as IVehicleSpawner, "_establishedTechnologiesCollection" as EstablishedTechnologiesCollection) {
+			call _base.Constructor;
+			
+			_mSide = _side;
+			_mVehicleSpawner = _vehicleSpawner;
+			_mEstablishedTechnologiesCollection = _establishedTechnologiesCollection;
+		};
+		
+		protected override method Run()
+		{
+			// Wait for technology to be established
+			while { !([_mSide, Technology.Services] call _mEstablishedTechnologiesCollection.SideTechnologyIsEstablished) } do
+			{
+				if (_self.IsCancelling) then {
+					call _base.Run;
+					return;
+				};
+				
+				sleep 120;
+			};
+		
+			// If we get here, technology is established for the side. Now, find vehicles and refuel them.
+			
+			while { true } do
+			{
+				private _vehicles = call _mVehicleSpawner.GetAllVehicles;
+				private _allPlayers = call BIS_fnc_listPlayers;
+				private _sideContainsPlayers = { side group _x == _mSide } count _allPlayers > 0;
+				
+				if (!_sideContainsPlayers) then {
+					{
+						private _vehicle = _x.Vehicle;
+						
+						if (_x.Side == _mSide) then {
+							if (local _vehicle) then {
+								if (fuel _vehicle < 0.2) then {
+									_vehicle setFuel 1;
+						        	["Vehicle " + str _vehicle + " belonging to side " + str _x.Side + " was pseudo refueled."] call LogHandler.Info;
+								};
+							};
+						};
+					} foreach _vehicles as IntrusionVehicle;
+				};
+			
+				sleep 120;
+			};
+			
+			call _base.Run;
+		};
+	};
+};
