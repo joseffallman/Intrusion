@@ -36,7 +36,7 @@ namespace Intrusion.Common
 				default { _sRank = "Private"; };
 			};
 			
-			_sRank
+			return _sRank;
 		};
 		
 		public static method GetRankByRating("_rating" as Scalar)
@@ -64,7 +64,7 @@ namespace Intrusion.Common
 		        _rank = Rank.Colonel;
 		    };
 		
-		    _rank 
+		    return _rank;
 	    };
 	};
 };
