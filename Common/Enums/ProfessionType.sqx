@@ -45,5 +45,15 @@ namespace Intrusion.Common
 
 		public static property ProfessionType LastValue { get; private set; };		
 		public static property Scalar ProfessionTypeCount { get; private set; };
+		
+		public static method Boolean IsSupportType("_professionType" as ProfessionType)
+		{
+			return _professionType in [
+				ProfessionType.Transport,
+				ProfessionType.Fuel, 
+				ProfessionType.Ammo, 
+				ProfessionType.Repair
+			];
+		};
 	};
 };

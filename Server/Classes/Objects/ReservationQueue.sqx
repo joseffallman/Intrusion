@@ -110,6 +110,17 @@ namespace Intrusion.Server
 			};
 		};
 		
+		public method MoveReservationFirst("_reservation" as Reservation)
+		{
+			//private _index = [_reservation] call _self.GetReservationIndex;
+			private _index = _mReservations find _reservation;
+			
+			if (_index >= 0) then {
+				_mReservations = [_reservation] + ([_mReservations, _index] call ArrayHandler.RemoveItemAtIndex);
+				_self.CurrentReservation = _reservation;
+			};
+		};
+		
 		public method GetReservationByGroup("_group" as Group)
 		{
 			private ["_reservation" as Reservation];

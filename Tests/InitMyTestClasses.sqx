@@ -31,7 +31,7 @@ call compile preprocessFileLineNumbers "Tests\Helpers\Ai\TestUnitContainer.sqx";
 
 /* Include test classes */
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ReservationQueueTests.sqx";
-//call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
+call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ProductionManagerTests.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\OfficeWorkerTests.sqx";
 //call compile preprocessFileLineNumbers "Tests\Server\Classes\Objects\ResourceCollectorTests.sqx";
 
@@ -41,7 +41,7 @@ call compile preprocessFileLineNumbers "Tests\Ai\Classes\Objects\AiSquadBrainMot
 
 /* Initialize test classes */
 //call Intrusion.Tests.Server.ReservationQueueTests.Init;
-//call Intrusion.Tests.Server.ProductionManagerTests.Init;
+call Intrusion.Tests.Server.ProductionManagerTests.Init;
 //call Intrusion.Tests.Server.OfficeWorkerTests.Init;
 //call Intrusion.Tests.Server.ResourceCollectorTests.Init;
 

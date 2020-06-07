@@ -54,10 +54,15 @@ namespace Intrusion.Tests.Server
 				"OneGroupTwoItemsToProduce_GroupsCanAffordOne_OneItemProduced",
 				"OneGroupTwoItemsToProduce_GroupsCanAffordTwo_OneItemProduced",
 				"ItemToProduce_GroupCanAffordButTechNotEstablished_ItemNotProduced",
-				"TwoReservationsInQueue_TechNotEstablishedForFirst_ReservationMovedLast"
+				"TwoReservationsInQueue_TechNotEstablishedForFirst_ReservationMovedLast",
+				"TwoReservationsInQueue_SecondIsSupport_SupportMovedFirst",
+				"TwoSupportReservationsInQueue_Prioritized_NoChangeInPrio",
+				"TwoReservationsInQueue_SecondIsPlayer_PlayerMovedFirst",
+				"TwoPlayerReservationsInQueue_Prioritized_NoChangeInPrio",
+				"TwoReservationsInQueue_FirstPlayerSecondAiSupport_SupportPrioritized"
 			]] call TestEngine.Register;
 			
-			//["NullGroupAloneInReservationQueue_PerformProduction_NullGroupRemoved"] call TestEngine.OnlyThisOne;
+			//["TwoReservationsInQueue_SecondIsPlayer_PlayerMovedFirst"] call TestEngine.OnlyThisOne;
 		};
 		
 		// Creates a production manager and a group.
@@ -100,7 +105,7 @@ namespace Intrusion.Tests.Server
 			private ["_reservation" as Reservation];
 
 			// Arrange
-			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
 			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
@@ -120,7 +125,7 @@ namespace Intrusion.Tests.Server
 			private ["_reservation" as Reservation];
 		
 			// Arrange
-			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[100] call _mResourceBook.DepositProduction;
 			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
@@ -139,11 +144,11 @@ namespace Intrusion.Tests.Server
 			private ["_reservation" as Reservation, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
-			_reservation = [_mGroup, "", 600] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 600] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_reservation = [_group2, "", 600] new Reservation;
+			_reservation = [_group2, ProfessionType.Armored, false, "TANK", 600] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
@@ -168,11 +173,11 @@ namespace Intrusion.Tests.Server
 			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_squad2" as Squad];
 		
 			// Arrange
-			_reservation1 = [_mGroup, "", 400] new Reservation;
+			_reservation1 = [_mGroup, ProfessionType.Armored, false, "TANK", 400] new Reservation;
 			[_reservation1] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_reservation2 = [_group2, "", 400] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Armored, false, "TANK", 400] new Reservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
 			_squad2 = [_group2, ProfessionType.Armored] new Squad;
 			[_squad2] call _mSquadHandler.SetSquadToReturn;
@@ -211,7 +216,7 @@ namespace Intrusion.Tests.Server
 			private ["_reservation" as Reservation];
 			
 			// Arrange
-			_reservation = [_mGroup, "CAR", 400] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Mechanized, false, "CAR", 400] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
@@ -230,7 +235,7 @@ namespace Intrusion.Tests.Server
 		
 			// Arrange
 			_anotherGroup = [1] call TestActions.CreatePopulatedGroup;
-			_reservation = [_anotherGroup, "FUEL_TRUCK", 400] new Reservation;
+			_reservation = [_anotherGroup, ProfessionType.Fuel, false, "FUEL_TRUCK", 400] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
@@ -254,10 +259,10 @@ namespace Intrusion.Tests.Server
 			[west, ProfessionType.Repair, ["REPAIR_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			_nullGroup = grpNull;
-			_reservation1 = [_nullGroup, "REPAIR_TRUCK", 150] new Reservation;
+			_reservation1 = [_nullGroup, ProfessionType.Repair, false, "REPAIR_TRUCK", 150] new Reservation;
 			[_reservation1] call _mReservationQueue.PutReservation;
 
-			_reservation2 = [_mGroup, "TANK", 800] new Reservation;
+			_reservation2 = [_mGroup, ProfessionType.Armored, false, "TANK", 800] new Reservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[3000] call _mResourceBook.DepositProduction;
@@ -284,7 +289,7 @@ namespace Intrusion.Tests.Server
 			[west, ProfessionType.Repair, ["REPAIR_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
 			
 			_nullGroup = grpNull;
-			_reservation = [_nullGroup, "REPAIR_TRUCK", 150] new Reservation;
+			_reservation = [_nullGroup, ProfessionType.Repair, false, "REPAIR_TRUCK", 150] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 
 			[3000] call _mResourceBook.DepositProduction;
@@ -305,10 +310,10 @@ namespace Intrusion.Tests.Server
 		
 			// Arrange
 			_group1 = [1] call TestActions.CreatePopulatedGroup;
-			_reservation1 = [_group1, "BUS", 600] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "BUS", 600] new Reservation;
 			[_reservation1] call _mReservationQueue.PutReservation;
 			
-			_reservation2 = [_mGroup, "CAR", 400] new Reservation;
+			_reservation2 = [_mGroup, ProfessionType.Motorized, false, "CAR", 400] new Reservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
 
 			[west, ProfessionType.Fuel, ["FUEL_TRUCK"]] call _mVehicleClassNamesConfig.AddVehicleClassName;
@@ -361,7 +366,7 @@ namespace Intrusion.Tests.Server
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
-			_reservation = [_mGroup, "TANK", 600] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 600] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
@@ -384,7 +389,7 @@ namespace Intrusion.Tests.Server
 			_mGroup = [4] call TestActions.CreatePopulatedGroup; // An armored group can have a maximum of 3 units in a vehicle
 			_mSquad = [_mGroup, ProfessionType.Armored] new Squad;
 			[_mSquad] call _mSquadHandler.SetSquadToReturn;
-			_reservation = [_mGroup, "", 500] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 500] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
@@ -404,7 +409,7 @@ namespace Intrusion.Tests.Server
 			private ["_reservation" as Reservation];
 
 			// Arrange
-			_reservation = [_mGroup, "TANK", 1000] new Reservation;
+			_reservation = [_mGroup, ProfessionType.Armored, false, "TANK", 1000] new Reservation;
 			[_reservation] call _mReservationQueue.PutReservation;
 			[1000] call _mResourceBook.DepositProduction;
 			
@@ -420,11 +425,11 @@ namespace Intrusion.Tests.Server
 			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
 
 			// Arrange
-			_reservation1 = [_mGroup, "TANK", 800] new Reservation;
+			_reservation1 = [_mGroup, ProfessionType.Armored, false, "TANK", 800] new Reservation;
 			[_reservation1] call _mReservationQueue.PutReservation;
 			
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
-			_reservation2 = [_group2, "MECH", 500] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Mechanized, false, "MECH", 500] new Reservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
 			
 			[1000] call _mResourceBook.DepositProduction;
@@ -440,6 +445,195 @@ namespace Intrusion.Tests.Server
 			_reservations = call _mReservationQueue.GetReservations;
 			_reservation = _reservations select 1;
 			["TANK", _reservation.VehicleClassName, "Wrong vehicle in queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoReservationsInQueue_SecondIsSupport_SupportMovedFirst
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Armored, false, "TANK", 800] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Fuel, false, "FUEL_TRUCK", 50] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[800] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["FUEL_TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Support vehicle not set as current in production queue."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["FUEL_TRUCK", _reservation.VehicleClassName, "Wrong vehicle first in production queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoSupportReservationsInQueue_Prioritized_NoChangeInPrio
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Repair, false, "REPAIR_TRUCK", 50] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Fuel, false, "FUEL_TRUCK", 50] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[25] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["REPAIR_TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Support reservation lost prio."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["REPAIR_TRUCK", _reservation.VehicleClassName, "Wrong vehicle first in production queue."] call Assert.AreEqual;
+			
+			_reservation = _reservations select 1;
+			["FUEL_TRUCK", _reservation.VehicleClassName, "Wrong vehicle last in production queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoReservationsInQueue_SecondIsPlayer_PlayerMovedFirst
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Armored, false, "TANK", 800] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Motorized, true, "CAR", 800] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[500] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["CAR", _mReservationQueue.CurrentReservation.VehicleClassName, "Player vehicle not set as current in production queue."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["CAR", _reservation.VehicleClassName, "AI (not player) vehicle first in production queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoPlayerReservationsInQueue_Prioritized_NoChangeInPrio
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Armored, true, "TANK", 800] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Motorized, true, "CAR", 50] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[25] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["TANK", _mReservationQueue.CurrentReservation.VehicleClassName, "Support reservation lost prio."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["TANK", _reservation.VehicleClassName, "Wrong vehicle first in production queue."] call Assert.AreEqual;
+			
+			_reservation = _reservations select 1;
+			["CAR", _reservation.VehicleClassName, "Wrong vehicle last in production queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoReservationsInQueue_FirstAiSupportSecondIsPlayer_PlayerMovedFirst
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Ammo, false, "AMMO_TRUCK", 50] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Motorized, true, "CAR", 500] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[450] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["CAR", _mReservationQueue.CurrentReservation.VehicleClassName, "Player vehicle not set as current in production queue."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["CAR", _reservation.VehicleClassName, "AI (not player) vehicle first in production queue."] call Assert.AreEqual;
+
+			// Cleanup
+			[_group2] call TestActions.DeletePopulatedGroup;
+		};
+		
+		private static method TwoReservationsInQueue_FirstPlayerSecondAiSupport_SupportPrioritized
+		{
+			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_group2" as Group, "_reservations" as Array, "_reservation" as Reservation];
+
+			// Arrange
+			_reservation1 = [_mGroup, ProfessionType.Armored, true, "TANK", 800] new Reservation;
+			[_reservation1] call _mReservationQueue.PutReservation;
+			
+			_group2 = [1] call TestActions.CreatePopulatedGroup;
+			_reservation2 = [_group2, ProfessionType.Transport, false, "TRUCK", 50] new Reservation;
+			[_reservation2] call _mReservationQueue.PutReservation;
+			
+			[1000] call _mResourceBook.DepositProduction;
+			[Technology.HeavyArmor] call _mOfficeWorker.AddEstablishedTechnology;
+			
+			// Act
+			call _mProductionManager.PerformProduction;
+			
+			// Assert
+			[2, call _mReservationQueue.Count, "Wrong number of reservations in the queue."] call Assert.AreEqual;
+			["TRUCK", _mReservationQueue.CurrentReservation.VehicleClassName, "Support reservation not prioritized."] call Assert.AreEqual;
+
+			_reservations = call _mReservationQueue.GetReservations;
+			_reservation = _reservations select 0;
+			["TRUCK", _reservation.VehicleClassName, "Wrong vehicle first in production queue."] call Assert.AreEqual;
+			
+			_reservation = _reservations select 1;
+			["TANK", _reservation.VehicleClassName, "Wrong vehicle last in production queue."] call Assert.AreEqual;
 
 			// Cleanup
 			[_group2] call TestActions.DeletePopulatedGroup;

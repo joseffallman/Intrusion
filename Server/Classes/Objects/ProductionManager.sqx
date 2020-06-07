@@ -55,7 +55,11 @@ namespace Intrusion.Server
 				_vehicleClassName = selectRandom _vehicleClassNamesInfo.ClassNames;
 				_professionVehicle = [_professionType] call _mProfessionVehiclesConfig.GetVehicle;
 				
-				_reservation = [_group, _vehicleClassName, _professionVehicle.Cost] new Reservation;
+				// Find out if the group is a group of humans (script command isPlayer is not reliable)
+				private _allPlayers = call BIS_fnc_listPlayers;
+				private _isPlayerGroup = { group _x == _group } count _allPlayers > 0;
+				
+				_reservation = [_group, _professionType, _isPlayerGroup, _vehicleClassName, _professionVehicle.Cost] new Reservation;
 				[_reservation] call _mReservationQueue.PutReservation;
 				
 //				if (call _mReservationQueue.Count == 1) then {
@@ -120,9 +124,10 @@ namespace Intrusion.Server
 		};
 		
 		// Produces vehicles from the production queue.
-		public method PerformProduction {
+		public method PerformProduction()
+		{
 			private ["_tryOneMore" as Boolean, "_squad" as Squad, "_technologyEstablished" as Boolean];
-			private ["_profession" as Profession];
+			private ["_profession" as Profession, "_reservation" as Reservation, "_reservationToMoveUp" as Reservation];
 			private ["_totalProduction" as Scalar, "_cost" as Scalar];
 
 			["ProductionManager.PerformProduction (" + str _self.Side + "):"] call LogHandler.Debug;
@@ -133,9 +138,57 @@ namespace Intrusion.Server
 
 			["_tryOneMore: " + str _tryOneMore] call LogHandler.Debug;
 			["_mReservationQueue.CurrentReservation: " + str _mReservationQueue.CurrentReservation] call LogHandler.Debug;
+			
+			// Prioritize
+			private _count = call _mReservationQueue.Count;
+			_reservationToMoveUp = classNull;
+			
+			if (_count > 1) then
+			{
+				scopeName "prio_scope";
+					
+				private _reservations = call _mReservationQueue.GetReservations;
+
+				if (!([_mReservationQueue.CurrentReservation.ProfessionType] call ProfessionTypeMeta.IsSupportType)) then
+				{
+					for "_i" from 1 to _count - 1 do
+					{
+						_reservation = _reservations select _i;
+						
+						if ([_reservation.ProfessionType] call ProfessionTypeMeta.IsSupportType) then
+						{
+							_reservationToMoveUp = _reservation;
+							breakTo "prio_scope";
+						};
+					};					
+	
+					if (isNull _reservationToMoveUp && { !_mReservationQueue.CurrentReservation.IsPlayerGroup }) then
+					{
+						for "_i" from 1 to _count - 1 do
+						{
+							_reservation = _reservations select _i;
+							
+							if (_reservation.IsPlayerGroup) then
+							{
+								_reservationToMoveUp = _reservation;
+								breakTo "prio_scope";
+							};
+						};					
+					};
+				};
+				
+				if (!isNull _reservationToMoveUp) then
+				{
+					[_reservationToMoveUp] call _mReservationQueue.MoveReservationFirst;
+					["Reservation was prioritized: " + str _reservationToMoveUp] call LogHandler.Info;
+					return;
+				};
+			};
+			
 			while { _tryOneMore && {!isNull _mReservationQueue.CurrentReservation} } do
 			{
 				["while { _tryOneMore && {!isNull _mReservationQueue.CurrentReservation} } do"] call LogHandler.Debug;
+				
 				_totalProduction = _mResourceBook.TotalProduction;
 				_cost = _mReservationQueue.CurrentReservation.ProductionCost;
 				
@@ -157,9 +210,11 @@ namespace Intrusion.Server
 					["if (!isNull _squad) then"] call LogHandler.Debug;
 					
 					_profession = [_squad.ProfessionType] call _mProfessionConfig.GetProfession;
+					
 					["_profession: " + str _profession] call LogHandler.Debug;
 					
 					_technologyEstablished = [_profession.RequiredTechnology] call _mOfficeWorker.TechnologyIsEstablished;
+					
 					["_technologyEstablished: " + str _technologyEstablished] call LogHandler.Debug;
 					
 					if (!_technologyEstablished) then
