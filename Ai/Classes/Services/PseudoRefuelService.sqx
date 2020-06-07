@@ -54,9 +54,10 @@ namespace Intrusion.Ai
 						
 						if (_x.Side == _mSide) then {
 							if (local _vehicle) then {
-								if (fuel _vehicle < 0.2) then {
+								private _fuel = fuel _vehicle;
+								if (_fuel < 0.2) then {
 									_vehicle setFuel 1;
-						        	["Vehicle " + str _vehicle + " belonging to side " + str _x.Side + " was pseudo refueled."] call LogHandler.Info;
+						        	["Vehicle " + str _vehicle + " belonging to side " + str _x.Side + " was pseudo refueled from " + (str _fuel) + " to " + (str fuel _vehicle) + "."] call LogHandler.Info;
 								};
 							};
 						};
