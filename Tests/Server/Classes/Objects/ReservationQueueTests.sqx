@@ -9,6 +9,7 @@
  */
 
 using Sqx.UnitTest;
+using Intrusion.Common;
 using Intrusion.Server;
 using Intrusion.Tests.Helpers;
 
@@ -52,7 +53,7 @@ namespace Intrusion.Tests.Server
 		
 			// Arrange
 			_group = createGroup west;
-			_reservation = [_group, "", 0] new Reservation;
+			_reservation = [_group, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			// Act
 			[_reservation] call _mReservationQueue.PutReservation;
@@ -69,8 +70,8 @@ namespace Intrusion.Tests.Server
 			private ["_reservation1" as Reservation, "_reservation2" as Reservation, "_reservations" as Array, "_lastReservation" as Reservation];
 		
 			// Arrange
-			_reservation1 = [createGroup west, "", 0] new Reservation;
-			_reservation2 = [createGroup west, "", 0] new Reservation;
+			_reservation1 = [createGroup west, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [createGroup west, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			// Act
 			[_reservation1] call _mReservationQueue.PutReservation;
@@ -99,8 +100,8 @@ namespace Intrusion.Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group1];
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			
-			_reservation1 = [_group1, "", 0] new Reservation;
-			_reservation2 = [_group2, "", 0] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
@@ -127,8 +128,8 @@ namespace Intrusion.Tests.Server
 			_group1 = createGroup west;
 			_group2 = createGroup west;
 			
-			_reservation1 = [_group1, "", 0] new Reservation;
-			_reservation2 = [_group2, "", 0] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
@@ -157,9 +158,9 @@ namespace Intrusion.Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			"B_Soldier_F" createUnit [[0,0,100], _group3];
 			
-			_reservation1 = [_group1, "", 0] new Reservation;
-			_reservation2 = [_group2, "", 0] new Reservation;
-			_reservation3 = [_group3, "", 0] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation3 = [_group3, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
@@ -197,9 +198,9 @@ namespace Intrusion.Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group2];
 			"B_Soldier_F" createUnit [[0,0,100], _group3];
 			
-			_reservation1 = [_group1, "", 0] new Reservation;
-			_reservation2 = [_group2, "", 0] new Reservation;
-			_reservation3 = [_group3, "", 0] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation3 = [_group3, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
@@ -233,9 +234,9 @@ namespace Intrusion.Tests.Server
 			"B_Soldier_F" createUnit [[0,0,100], _group1];
 			"B_Soldier_F" createUnit [[0,0,100], _group3];
 			
-			_reservation1 = [_group1, "", 0] new Reservation;
-			_reservation2 = [_group2, "", 0] new Reservation;
-			_reservation3 = [_group3, "", 0] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "", 0] new Reservation;
+			_reservation3 = [_group3, ProfessionType.Motorized, false, "", 0] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;
@@ -264,8 +265,8 @@ namespace Intrusion.Tests.Server
 			_group1 = [1] call TestActions.CreatePopulatedGroup;
 			_group2 = [1] call TestActions.CreatePopulatedGroup;
 			
-			_reservation1 = [_group1, "CAR", 100] new Reservation;
-			_reservation2 = [_group2, "BUS", 200] new Reservation;
+			_reservation1 = [_group1, ProfessionType.Motorized, false, "CAR", 100] new Reservation;
+			_reservation2 = [_group2, ProfessionType.Motorized, false, "BUS", 200] new Reservation;
 			
 			[_reservation1] call _mReservationQueue.PutReservation;
 			[_reservation2] call _mReservationQueue.PutReservation;

@@ -7,20 +7,28 @@
  * Description:
  * Models a group's reservation.
  */
+ 
+using Intrusion.Common;
+ 
 namespace Intrusion.Server
 {
 	public class Reservation
 	{
 		// Creates a Reservation object.
-		public constructor {
-			params ["_group" as Group, "_vehicleClassName" as String, "_productionCost" as Scalar];
-			
+		public constructor("_group" as Group, "_professionType" as ProfessionType, "_isPlayerGroup" as Boolean, "_vehicleClassName" as String, "_productionCost" as Scalar)
+		{
 			_self.Group = _group;
+			_self.ProfessionType = _professionType;
+			_self.IsPlayerGroup = _isPlayerGroup;
 			_self.VehicleClassName = _vehicleClassName;
 			_self.ProductionCost = _productionCost;
 		};
 		
 		public property Group Group { get; private set; };
+		
+		public property ProfessionType ProfessionType { get; private set; };
+		
+		public property Boolean IsPlayerGroup { get; private set; };
 		
 		public property VehicleClassName { get; private set; };
 		
