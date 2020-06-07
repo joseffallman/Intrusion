@@ -52,7 +52,7 @@ namespace Intrusion.Ai
 					{
 						private _vehicle = _x.Vehicle;
 						
-						if (_x.Side == _mSide) then {
+						if (!isNull _vehicle && _x.Side == _mSide) then {
 							if (local _vehicle) then {
 								private _fuel = fuel _vehicle;
 								if (_fuel < 0.2) then {

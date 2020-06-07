@@ -251,7 +251,7 @@ namespace Intrusion.Server
         	_vehicleObj setVariable ["IntrusionVehicle", _intrusionVehicle, true];
         	
         	if (_professionType != ProfessionType.Fuel) then {
-	        	_vehicleObj setFuel 0.4 + random 0.3;
+	        	_vehicleObj setFuel 0.4 + random 0.4;
         	};
         	
 	    	{
