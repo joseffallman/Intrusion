@@ -16,8 +16,8 @@ class Header
 };
 
 onLoadMission = "Intrusion 1.01 - Let's play war!";
-onLoadName = "Intrusion Malden";
-briefingName = "Intrusion Malden";
+onLoadName = "Intrusion Tanoa";
+briefingName = "Intrusion Tanoa";
 OnLoadMissionTime = false;
 
 overviewText = "Have your specialized squad join the battle in a fight for freedom.";
